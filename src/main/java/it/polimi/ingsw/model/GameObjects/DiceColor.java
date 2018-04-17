@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model.GameObjects;
 
-public class DiceColor {
+public enum DiceColor{
+    GREEN, RED, YELLOW, BLUE, VIOLET;
 }

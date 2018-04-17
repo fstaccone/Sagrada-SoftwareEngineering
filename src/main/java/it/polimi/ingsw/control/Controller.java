@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.Database;
 import it.polimi.ingsw.model.User;
 import it.polimi.ingsw.view.RemoteBaseView;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;

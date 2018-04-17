@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.GameObjects;
+package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 
