@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.GameObjects;
+package it.polimi.ingsw.model.gameobjects;
 
 public abstract class ObjectiveCard extends Card{
     public ObjectiveCard(String name) {
