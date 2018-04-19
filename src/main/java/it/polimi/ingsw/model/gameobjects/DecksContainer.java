@@ -1,23 +1,20 @@
 package it.polimi.ingsw.model.gameobjects;
-import java.util.ArrayList;
 
 public class DecksContainer {
 
-    private ArrayList<PrivateObjectiveCard> privateObjectiveDeck;
-    private ArrayList<PublicObjectiveCard> publicObjectiveDeck;
-    private ArrayList<WindowPatternCard> windowPatternDeck;
-    private ArrayList<WindowFramePlayerBoard> windowFrameDeck;
-    private ArrayList<ToolCard> toolDeck;
+    private PrivateObjectiveDeck <PrivateObjectiveCard> privateObjectiveDeck;
+    private PublicObjectiveDeco<PublicObjectiveCard> publicObjectiveDeck;
+    private WindowPatternDeck<WindowPatternCard> windowPatternDeck;
+    private WindowFrameDeck<WindowFramePlayerBoard> windowFrameDeck;
+    private ToolDeck<ToolCard> toolDeck;
 
-    public DecksContainer(ArrayList<PrivateObjectiveCard> privateObjectiveDeck, ArrayList<PublicObjectiveCard> publicObjectiveDeck, ArrayList<WindowPatternCard> windowPatternDeck, ArrayList<WindowFramePlayerBoard> windowFrameDeck, ArrayList<ToolCard> toolDeck) {
-
-        this.privateObjectiveDeck = privateObjectiveDeck;
-        this.publicObjectiveDeck = publicObjectiveDeck;
-        this.windowPatternDeck = windowPatternDeck;
-        this.windowFrameDeck = windowFrameDeck;
-        this.toolDeck=toolDeck;
+    public DecksContainer() {
+        this.privateObjectiveDeck = new PrivateObjectiveDeck();
+        this.publicObjectiveDeck = new PublicObjectiveDeck();
+        this.windowPatternDeck = new WindowPatternDeck();
+        this.windowFrameDeck = new WindowFrameDeck();
+        this.toolDeck = new ToolDeck();
     }
-
 
     public ArrayList<PrivateObjectiveCard> getPrivateObjectiveDeck() {
         return privateObjectiveDeck;
@@ -39,7 +36,7 @@ public class DecksContainer {
         return toolDeck;
     }
 
-
+    //non credo servano
     public void setPrivateObjectiveDeck(ArrayList<PrivateObjectiveCard> privateObjectiveDeck) {
         this.privateObjectiveDeck = privateObjectiveDeck;
     }

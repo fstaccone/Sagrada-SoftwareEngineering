@@ -1,4 +1,8 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-public class DifferentColorsInARowEffect {
+public class DifferentColorsInARowEffect implements Effect{
+    @Override
+    public void applyEffect() {
+
+    }
 }
