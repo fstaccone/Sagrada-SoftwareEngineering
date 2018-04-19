@@ -7,7 +7,7 @@ import java.util.Set;
 public class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
 
     public PrivateObjectiveCardDeck() {
-        cards = new HashSet<>();
+        Set cards = new HashSet<>();
         for (Colors c: Colors.values()) {
             if(c!=Colors.NONE) {
                 cards.add(new PrivateObjectiveCard(c));

@@ -4,13 +4,13 @@ import java.util.*;
 
 public class Reserve {
 
-    private ArrayList<Dice> dices;
+    private List<Dice> dices;
 
     public Reserve(){
         dices = new ArrayList<>();
     }
 
-    public void throwDices(ArrayList<Dice> init){
+    public void throwDices(List<Dice> init){
         for(Dice dice : init){
             Random rand = new Random();
             int val = rand.nextInt(6)+1;
