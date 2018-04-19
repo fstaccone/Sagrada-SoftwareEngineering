@@ -7,6 +7,6 @@ public abstract class Deck<T> {
 
     public abstract Card pickOneCard();
 
-    public abstract Card[] pickNCards(int num);
+    public abstract Set<Card> pickNCards(int num);
 
 }

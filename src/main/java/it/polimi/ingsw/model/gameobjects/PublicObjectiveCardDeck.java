@@ -1,11 +1,15 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-public class PublicObjectiveCardDeck {
+public class PublicObjectiveCardDeck extends Deck{
 
+    public PublicObjectiveCardDeck() {
+        cards = new HashSet(); // TODO: incomplete
+    }
 
-    public List<PublicObjectiveCard> getPublicObjectiveCardDeck() {
-        return privateObjectiveDeck;
+    public Set<PublicObjectiveCard> getPublicObjectiveCardDeck() {
+        return cards;
     }
 }

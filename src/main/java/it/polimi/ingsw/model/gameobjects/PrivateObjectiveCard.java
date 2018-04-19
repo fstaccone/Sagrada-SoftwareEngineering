@@ -15,4 +15,11 @@ public class PrivateObjectiveCard extends ObjectiveCard{
 
         return score;
     }
+
+    @Override
+    public String toString() {
+        return "PrivateObjectiveCard{" +
+                "color=" + color +
+                '}';
+    }
 }
