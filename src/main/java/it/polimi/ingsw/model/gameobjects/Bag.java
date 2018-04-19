@@ -45,7 +45,7 @@ public class Bag {
         dices.add(dice);
     }
 
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         Bag bag = new Bag(2);
         System.out.println(bag.getAllDices().toString());//Just to check constructor behavior
 
@@ -55,5 +55,5 @@ public class Bag {
         Dice ex = new Dice(Colors.BLUE);
         bag.riponi(ex);
         System.out.println("Sacchetto aggiornato :"+bag.getAllDices().toString());
-    }
+    }*/
 }

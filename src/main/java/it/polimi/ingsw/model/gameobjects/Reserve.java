@@ -53,7 +53,7 @@ public class Reserve {
             return null;
         }
     }
-    public void endRound(){
+    public List<Dice> endRound(){
         System.out.println("End of the round.");
         ArrayList<Dice> dicesLeft = new ArrayList<>();
         while(dices.size()>0){
@@ -64,6 +64,8 @@ public class Reserve {
             this.showReserve();
         }
         //aggiungere dicesLeft alla RoundTrack
+        return dicesLeft;
+        //dicesLeft è ArrayList di dadi che verrà usato come parametro per il metodo putDices di RoundTrack
     }
 
     /*public static void main(String args[]){
@@ -75,6 +77,15 @@ public class Reserve {
         Dice dado = riserva.chooseDice();
         Square place = new Square(Colors.BLUE);
         place.putDice(dado);
-        riserva.endRound();
+        List<Dice> leftDices = riserva.endRound();
+        RoundTrack track = new RoundTrack();
+        track.putDices(leftDices);
+        track.showRoundTrack();
+        pescata = bag.pesca(2);
+        riserva.throwDices(pescata);
+        riserva.showReserve();
+        leftDices = riserva.endRound();
+        track.putDices(leftDices);
+        track.showRoundTrack();
     }*/
 }
