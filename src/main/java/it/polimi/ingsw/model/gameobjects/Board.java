@@ -1,9 +1,16 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
-    private ArrayList <PublicObjectiveCard> publicObjectiveCards;
-    private ArrayList <Player> players;
+    private List <PublicObjectiveCard> publicObjectiveCards;
+    private List <Player> players;
     private Reserve reserve;
+
+    public Board(Match match, List<Player> players) {
+        this.publicObjectiveCards= match.getDecksContainer().getPublicObjectiveCardDeck().pickNcards(3)
+        this.players = players;
+        this.reserve = new Reserve();
+    }
 }
+

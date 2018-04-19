@@ -16,44 +16,44 @@ public class DecksContainer {
         this.toolDeck = new ToolCardDeck();
     }
 
-    public PrivateObjectiveCardDeck getPrivateObjectiveDeck() {
+    public PrivateObjectiveCardDeck getPrivateObjectiveCardDeck() {
         return privateObjectiveDeck;
     }
 
-    public PublicObjectiveCardDeck  getPublicObjectiveDeck() {
+    public PublicObjectiveCardDeck  getPublicObjectiveCardDeck() {
         return publicObjectiveDeck;
     }
 
-    public WindowPatternCardDeck getWindowPatternDeck() {
+    public WindowPatternCardDeck getWindowPatternCardDeck() {
         return windowPatternDeck;
     }
 
-    public WindowFramePlayerBoardDeck getWindowFrameDeck() {
+    public WindowFramePlayerBoardDeck getWindowFramePlaeyrBoardDeck() {
         return windowFrameDeck;
     }
 
-    public ToolCardDeck getToolDeck() {
+    public ToolCardDeck getToolCardDeck() {
         return toolDeck;
     }
 
-    //non credo servano
-    public void setPrivateObjectiveDeck(PrivateObjectiveCardDeck privateObjectiveDeck) {
+    //may not be useful
+    public void setPrivateObjectiveCardDeck(PrivateObjectiveCardDeck privateObjectiveDeck) {
         this.privateObjectiveDeck = privateObjectiveDeck;
     }
 
-    public void setPublicObjectiveDeck(PublicObjectiveCardDeck publicObjectiveDeck) {
+    public void setPublicObjectiveCardDeck(PublicObjectiveCardDeck publicObjectiveDeck) {
         this.publicObjectiveDeck = publicObjectiveDeck;
     }
 
-    public void setWindowPatternDeck(WindowPatternCardDeck windowPatternDeck) {
+    public void setWindowPatternCardDeck(WindowPatternCardDeck windowPatternDeck) {
         this.windowPatternDeck = windowPatternDeck;
     }
 
-    public void setWindowFrameDeck(WindowFramePlayerBoardDeck windowFrameDeck) {
+    public void setWindowFramePlayerBoardDeck(WindowFramePlayerBoardDeck windowFrameDeck) {
         this.windowFrameDeck = windowFrameDeck;
     }
 
-    public void setToolDeck(ToolCardDeck toolDeck) {
+    public void setToolCardDeck(ToolCardDeck toolDeck) {
         this.toolDeck = toolDeck;
     }
 }

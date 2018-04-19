@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Bag {
 
-    private static ArrayList<Dice> dices;
+    private static List<Dice> dices;
 
     public Bag(int num) {
         dices = new ArrayList<>();
@@ -23,8 +23,8 @@ public class Bag {
         return dices;
     }
 
-    public ArrayList<Dice> pesca(int num) {
-        ArrayList<Dice> result = new ArrayList<>();
+    public List<Dice> pesca(int num) {
+        List<Dice> result = new ArrayList<>();
         int item;
         for (int i = 0; i < num; i++) {
             System.out.println("Bag size: "+dices.size());
@@ -45,10 +45,9 @@ public class Bag {
         dices.add(dice);
     }
 
-    /*public static void main(String args[]) {
+    public static void main(String args[]) {
         Bag bag = new Bag(2);
-
-        System.out.println(bag.getAllDices().toString());//Solo per test su funzionamento del costruttore
+        System.out.println(bag.getAllDices().toString());//Just to check constructor behavior
 
         List<Dice> pescata = bag.pesca(4);
         System.out.println(pescata.toString());
@@ -56,5 +55,5 @@ public class Bag {
         Dice ex = new Dice(Colors.BLUE);
         bag.riponi(ex);
         System.out.println("Sacchetto aggiornato :"+bag.getAllDices().toString());
-    }*/
+    }
 }
