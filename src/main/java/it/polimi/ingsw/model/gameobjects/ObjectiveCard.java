@@ -5,6 +5,6 @@ public abstract class ObjectiveCard extends Card{
         super(name);
     }
 
-    public abstract int getScore(WindowPatternCard card);
+    public abstract int calculatePoints(WindowPatternCard card);
 
 }
