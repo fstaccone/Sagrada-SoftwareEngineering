@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.gameobjects;
 public class DecksContainer {
 
     private PrivateObjectiveDeck <PrivateObjectiveCard> privateObjectiveDeck;
-    private PublicObjectiveDeco<PublicObjectiveCard> publicObjectiveDeck;
+    private PublicObjectiveDeck<PublicObjectiveCard> publicObjectiveDeck;
     private WindowPatternDeck<WindowPatternCard> windowPatternDeck;
     private WindowFrameDeck<WindowFramePlayerBoard> windowFrameDeck;
     private ToolDeck<ToolCard> toolDeck;

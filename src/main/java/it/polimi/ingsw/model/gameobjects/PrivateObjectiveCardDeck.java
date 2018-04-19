@@ -1,11 +1,17 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.lang.reflect.Array;
 
 public class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
 
     public PrivateObjectiveCardDeck() {
-        Array colors = Colors.
+        for (Colors c: Colors.values()) {
+            cards.add(new PrivateObjectiveCard(c));
+        }
+    }
+
+    public static void main (String[] args){
+        PrivateObjectiveCardDeck deck = new PrivateObjectiveCardDeck();
+        System.out.println(deck);
     }
 
     @Override
