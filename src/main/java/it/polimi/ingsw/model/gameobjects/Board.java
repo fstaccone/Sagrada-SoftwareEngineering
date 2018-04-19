@@ -8,7 +8,7 @@ public class Board {
     private Reserve reserve;
 
     public Board(Match match, List<Player> players) {
-        this.publicObjectiveCards= match.getDecksContainer().getPublicObjectiveCardDeck().pickNcards(3)
+        this.publicObjectiveCards= match.getDecksContainer().getPublicObjectiveCardDeck().pickNCards(3);
         this.players = players;
         this.reserve = new Reserve();
     }

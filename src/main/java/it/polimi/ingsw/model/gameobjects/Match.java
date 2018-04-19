@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import java.util.List;
+
 public class Match {
     List<Player> players;
     DecksContainer decksContainer;

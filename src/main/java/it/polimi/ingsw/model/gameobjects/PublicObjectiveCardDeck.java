@@ -6,6 +6,10 @@ public class PublicObjectiveCardDeck {
 
 
     public List<PublicObjectiveCard> getPublicObjectiveCardDeck() {
-        return privateObjectiveDeck;
+        return getPublicObjectiveCardDeck();
     }
+
+    public List<PublicObjectiveCard> pickNCards( int n){
+      return  null;
+    };
 }
