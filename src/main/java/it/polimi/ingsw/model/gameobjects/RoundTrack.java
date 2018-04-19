@@ -12,7 +12,7 @@ public class RoundTrack {
         dicesLeft = new ArrayList<>();
     }
 
-    public void putDice(ArrayList<Dice> dicesToPut){
+    public void putDices(List<Dice> dicesToPut){
         dicesLeft.add(dicesToPut);
     }
 
