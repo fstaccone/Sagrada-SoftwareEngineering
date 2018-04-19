@@ -1,22 +1,22 @@
 package it.polimi.ingsw.model.gameobjects;
 
 public class Dice {
-    private DiceColor color;
-    private DiceValue value;
+    private Colors color;
+    private int value;
 
-    public Dice (DiceColor color){
+    public Dice (Colors color){
         this.color = color;
     }
 
-    public DiceColor getColor() {
+    public Colors getColor() {
         return color;
     }
 
-    public DiceValue getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(DiceValue value) {
+    public void setValue(int value) {
         this.value = value;
     }
 
