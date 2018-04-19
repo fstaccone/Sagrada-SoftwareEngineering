@@ -55,12 +55,15 @@ public class Reserve {
     }
     public void endRound(){
         System.out.println("End of the round.");
+        ArrayList<Dice> dicesLeft = new ArrayList<>();
         while(dices.size()>0){
             System.out.println("Dice removed from reserve: "+dices.get(0));
+            dicesLeft.add(dices.get(0));
             dices.remove(0);
             //i dadi restanti nella riserva vanno rimossi e posti nella corrispondente casella del roundtrack
             this.showReserve();
         }
+        //aggiungere dicesLeft alla RoundTrack
     }
 
     /*public static void main(String args[]){

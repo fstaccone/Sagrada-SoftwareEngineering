@@ -1,17 +1,23 @@
 package it.polimi.ingsw.model.gameobjects;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
 
     public PrivateObjectiveCardDeck() {
+        cards = new HashSet<>();
         for (Colors c: Colors.values()) {
-            cards.add(new PrivateObjectiveCard(c));
+            if(c!=Colors.NONE) {
+                cards.add(new PrivateObjectiveCard(c));
+            }
         }
     }
 
     public static void main (String[] args){
         PrivateObjectiveCardDeck deck = new PrivateObjectiveCardDeck();
-        System.out.println(cards.size());
+        System.out.println(deck.cards.size());
     }
 
     @Override
