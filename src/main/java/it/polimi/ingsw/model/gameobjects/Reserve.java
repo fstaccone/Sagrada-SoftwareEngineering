@@ -1,16 +1,22 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Reserve {
 
     private ArrayList<Dice> dices;
 
-    public Reserve(ArrayList<Dice> init){
+    public Reserve(){
         dices = new ArrayList<>();
-        dices.addAll(init);
+    }
+
+    public void throwDices(ArrayList<Dice> init){
+        for(Dice dice : init){
+            Random rand = new Random();
+            int val = rand.nextInt(6)+1;
+            dice.setValue(val);
+            dices.add(dice);
+        }
     }
 
     public void showReserve(){
@@ -60,9 +66,12 @@ public class Reserve {
     /*public static void main(String args[]){
         Bag bag = new Bag(2);
         ArrayList<Dice> pescata = bag.pesca(3);
-        Reserve riserva = new Reserve(pescata);
+        Reserve riserva = new Reserve();
+        riserva.throwDices(pescata);
         riserva.showReserve();
         Dice dado = riserva.chooseDice();
+        Square place = new Square(Colors.BLUE);
+        place.putDice(dado);
         riserva.endRound();
     }*/
 }
