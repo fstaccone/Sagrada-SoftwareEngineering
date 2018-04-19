@@ -10,14 +10,12 @@ public class DecksContainer {
     private ArrayList<ToolCard> toolDeck;
 
     public DecksContainer(ArrayList<PrivateObjectiveCard> privateObjectiveDeck, ArrayList<PublicObjectiveCard> publicObjectiveDeck, ArrayList<WindowPatternCard> windowPatternDeck, ArrayList<WindowFramePlayerBoard> windowFrameDeck, ArrayList<ToolCard> toolDeck) {
-
         this.privateObjectiveDeck = privateObjectiveDeck;
         this.publicObjectiveDeck = publicObjectiveDeck;
         this.windowPatternDeck = windowPatternDeck;
         this.windowFrameDeck = windowFrameDeck;
-        this.toolDeck=toolDeck;
+        this.toolDeck = toolDeck;
     }
-
 
     public ArrayList<PrivateObjectiveCard> getPrivateObjectiveDeck() {
         return privateObjectiveDeck;

@@ -1,4 +1,8 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-public class UpsideDownDiceEffect {
+public class UpsideDownDiceEffect implements Effect {
+    @Override
+    public void applyEffect() {
+
+    }
 }
