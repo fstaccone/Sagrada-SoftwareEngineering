@@ -31,7 +31,6 @@ public class Player {
     public void setSchemeCard(WindowPatternCard schemeCard) {
         this.schemeCard = schemeCard;
     }
-
     public void setPoints(int points) {
         this.points = points;
     }
