@@ -2,58 +2,58 @@ package it.polimi.ingsw.model.gameobjects;
 
 public class DecksContainer {
 
-    private PrivateObjectiveDeck <PrivateObjectiveCard> privateObjectiveDeck;
-    private PublicObjectiveDeck<PublicObjectiveCard> publicObjectiveDeck;
-    private WindowPatternDeck<WindowPatternCard> windowPatternDeck;
-    private WindowFrameDeck<WindowFramePlayerBoard> windowFrameDeck;
-    private ToolDeck<ToolCard> toolDeck;
+    private PrivateObjectiveCardDeck  privateObjectiveDeck;
+    private PublicObjectiveCardDeck publicObjectiveDeck;
+    private WindowPatternCardDeck windowPatternDeck;
+    private WindowFramePlayerBoardDeck windowFrameDeck;
+    private ToolCardDeck toolDeck;
 
     public DecksContainer() {
-        this.privateObjectiveDeck = new PrivateObjectiveDeck();
-        this.publicObjectiveDeck = new PublicObjectiveDeck();
-        this.windowPatternDeck = new WindowPatternDeck();
-        this.windowFrameDeck = new WindowFrameDeck();
-        this.toolDeck = new ToolDeck();
+        this.privateObjectiveDeck = new PrivateObjectiveCardDeck();
+        this.publicObjectiveDeck = new PublicObjectiveCardDeck();
+        this.windowPatternDeck = new WindowPatternCardDeck();
+        this.windowFrameDeck = new WindowFramePlayerBoardDeck();
+        this.toolDeck = new ToolCardDeck();
     }
 
-    public ArrayList<PrivateObjectiveCard> getPrivateObjectiveDeck() {
+    public PrivateObjectiveCardDeck getPrivateObjectiveDeck() {
         return privateObjectiveDeck;
     }
 
-    public ArrayList<PublicObjectiveCard> getPublicObjectiveDeck() {
+    public PublicObjectiveCardDeck  getPublicObjectiveDeck() {
         return publicObjectiveDeck;
     }
 
-    public ArrayList<WindowPatternCard> getWindowPatternDeck() {
+    public WindowPatternCardDeck getWindowPatternDeck() {
         return windowPatternDeck;
     }
 
-    public ArrayList<WindowFramePlayerBoard> getWindowFrameDeck() {
+    public WindowFramePlayerBoardDeck getWindowFrameDeck() {
         return windowFrameDeck;
     }
 
-    public ArrayList<ToolCard> getToolDeck() {
+    public ToolCardDeck getToolDeck() {
         return toolDeck;
     }
 
     //non credo servano
-    public void setPrivateObjectiveDeck(ArrayList<PrivateObjectiveCard> privateObjectiveDeck) {
+    public void setPrivateObjectiveDeck(PrivateObjectiveCardDeck privateObjectiveDeck) {
         this.privateObjectiveDeck = privateObjectiveDeck;
     }
 
-    public void setPublicObjectiveDeck(ArrayList<PublicObjectiveCard> publicObjectiveDeck) {
+    public void setPublicObjectiveDeck(PublicObjectiveCardDeck publicObjectiveDeck) {
         this.publicObjectiveDeck = publicObjectiveDeck;
     }
 
-    public void setWindowPatternDeck(ArrayList<WindowPatternCard> windowPatternDeck) {
+    public void setWindowPatternDeck(WindowPatternCardDeck windowPatternDeck) {
         this.windowPatternDeck = windowPatternDeck;
     }
 
-    public void setWindowFrameDeck(ArrayList<WindowFramePlayerBoard> windowFrameDeck) {
+    public void setWindowFrameDeck(WindowFramePlayerBoardDeck windowFrameDeck) {
         this.windowFrameDeck = windowFrameDeck;
     }
 
-    public void setToolDeck(ArrayList<ToolCard> toolDeck) {
+    public void setToolDeck(ToolCardDeck toolDeck) {
         this.toolDeck = toolDeck;
     }
 }

@@ -11,7 +11,7 @@ public class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
 
     public static void main (String[] args){
         PrivateObjectiveCardDeck deck = new PrivateObjectiveCardDeck();
-        System.out.println(deck);
+        System.out.println(cards.size());
     }
 
     @Override
