@@ -15,18 +15,4 @@ public class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
         }
     }
 
-    /*public static void main (String[] args){
-        PrivateObjectiveCardDeck deck = new PrivateObjectiveCardDeck();
-        System.out.println(deck.cards.size());
-    }*/
-
-    @Override
-    public Card pickOneCard() {
-        return null;
-    }
-
-    @Override
-    public Card[] pickNCards(int num) {
-        return new Card[0];
-    }
 }

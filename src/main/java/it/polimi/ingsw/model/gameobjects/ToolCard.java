@@ -7,7 +7,13 @@ public class ToolCard{
     private String name;
     Effect effect;
 
-    public void setEffect( Effect effect ) {//da file json che associa ad ogni ToolCard uno e un solo effetto al momento della creazione
+    public ToolCard(String name, Effect effect) {
+        this.name = name;
         this.effect = effect;
     }
+
+    public void useCard(Player caller, Match match){
+        effect.applyEffect();
+    }
+
 }

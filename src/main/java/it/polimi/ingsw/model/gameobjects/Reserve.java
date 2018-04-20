@@ -68,9 +68,9 @@ public class Reserve {
         //dicesLeft è ArrayList di dadi che verrà usato come parametro per il metodo putDices di RoundTrack
     }
 
-    /*public static void main(String args[]){
+    public static void main(String args[]){
         Bag bag = new Bag(2);
-        ArrayList<Dice> pescata = bag.pesca(3);
+        List<Dice> pescata = bag.pesca(3);
         Reserve riserva = new Reserve();
         riserva.throwDices(pescata);
         riserva.showReserve();
@@ -87,5 +87,5 @@ public class Reserve {
         leftDices = riserva.endRound();
         track.putDices(leftDices);
         track.showRoundTrack();
-    }*/
+    }
 }
