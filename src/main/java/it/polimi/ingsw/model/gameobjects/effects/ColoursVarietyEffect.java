@@ -1,8 +1,12 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.model.gameobjects.Player;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
+
 public class ColoursVarietyEffect implements Effect {
+
     @Override
-    public void applyEffect() {
+    public void applyEffect(Player caller, WindowPatternCard schemecard) {
 
     }
 }

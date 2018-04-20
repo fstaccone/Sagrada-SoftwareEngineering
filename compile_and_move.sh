@@ -15,8 +15,8 @@ if [[ $? -eq 0 ]]; then
 
   # codebase
   cp $basedir/control/RemoteController.class ./classloading/common/
-  cp $basedir/model/Database.class ./classloading/common/
-  cp $basedir/model/User.class ./classloading/common/
+  cp $basedir/model/gameobjects/Match.class ./classloading/common/
+  cp $basedir/model/gameobjects/Player.class ./classloading/common/
   cp $basedir/view/RemoteBaseView.class ./classloading/common/
 
 fi

@@ -30,7 +30,7 @@ public class TextView extends UnicastRemoteObject implements RemoteBaseView {
                     receivedUsername = controller.login(username, this);
                 }
                 catch(RemoteException e) {
-                    System.err.println("Username already in use, choose a different one");
+                    System.err.println("Playername already in use, choose a different one");
                     username = "";
                 }
             }

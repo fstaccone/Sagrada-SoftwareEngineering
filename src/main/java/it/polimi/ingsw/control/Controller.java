@@ -1,7 +1,7 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.model.Database;
-import it.polimi.ingsw.model.User;
+import it.polimi.ingsw.model.gameobjects.Match;
+import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.view.RemoteBaseView;
 
 import java.rmi.RemoteException;
@@ -11,20 +11,23 @@ import java.util.Map;
 
 public class Controller extends UnicastRemoteObject implements RemoteController {
 
-    private transient final Database database;
-    private final Map<User, RemoteBaseView> views = new HashMap<>();
+    private transient final Match match;
+    private final Map<Player, RemoteBaseView> views = new HashMap<>();
 
     public Controller() throws RemoteException{
         super();
-        database= Database.get();
+        match= Match.get();
     }
 
     @Override
-    public synchronized String login(String username, RemoteBaseView view) throws RemoteException {
-        User user=database.login(username);
+    public synchronized String login(String playername, RemoteBaseView view) throws RemoteException {
+        Player player=match.login(playername);
 
-        views.put(user, view);
-        view.ack("Logged in as @" + user.getUsername());
-        return user.getUsername();//ritorna username alla view
+        views.put(player, view);
+        view.ack("Logged in as @" + player.getName());
+        return player.getName();//ritorna playername alla view
     }
+
+
+    //dopo il login il controller ha il riferimento a ciascun player quindi può chiamarne i metodi
 }
