@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import java.util.ArrayList;
+
 public class PrivateObjectiveCard extends ObjectiveCard{
     private Colors color;
 
@@ -11,7 +13,14 @@ public class PrivateObjectiveCard extends ObjectiveCard{
     @Override
     public int calculatePoints(WindowPatternCard card) {
         int score = 0;
-        // TODO: implement calculation algorithm
+        Square[][] window = card.getWindow();
+        //calculation algorithm
+        for(Square[] row : window){
+            for(Square spot : row){
+                if(spot.getDice().getColor()==color)
+                    score++;
+            }
+        }
 
         return score;
     }
