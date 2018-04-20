@@ -12,6 +12,7 @@ public class ReRollDiceEffect implements Effect {
     private Dice diceToBeRerolled;
 
     public ReRollDiceEffect() {
+
     }
 
     @Override
