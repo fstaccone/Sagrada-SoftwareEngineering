@@ -25,6 +25,10 @@ public class WindowPatternCard {
         return name;
     }
 
+    public Square[][] getWindow() {
+        return window;
+    }
+
     public boolean checkPos(Dice d, int row, int column){
         //Declaration of the four adiacent dices to check
         Dice northern;

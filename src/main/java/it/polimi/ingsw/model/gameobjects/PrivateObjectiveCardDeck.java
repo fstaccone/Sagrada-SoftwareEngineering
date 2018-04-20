@@ -15,4 +15,13 @@ public class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
         }
     }
 
+    @Override
+    public Card pickOneCard() {
+        return null;
+    }
+
+    @Override
+    public Set<Card> pickNCards(int num) {
+        return null;
+    }
 }

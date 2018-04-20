@@ -12,4 +12,14 @@ public class PublicObjectiveCardDeck extends Deck{
     public Set<PublicObjectiveCard> getPublicObjectiveCardDeck() {
         return cards;
     }
+
+    @Override
+    public Card pickOneCard() {
+        return null;
+    }
+
+    @Override
+    public Set<Card> pickNCards(int num) {
+        return null;
+    }
 }
