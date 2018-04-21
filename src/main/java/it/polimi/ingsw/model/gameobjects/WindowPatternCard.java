@@ -107,6 +107,12 @@ public class WindowPatternCard {
             window[row][column].putDiceIgnoringColorConstraint(d);
     }
 
+    public void putFirstDice(Dice d, int row, int column){
+        if(row==0 || column==0 || column == window[row].length - 1 || row == window.length - 1)
+            window[row][column].putDice(d);
+        else System.out.println("The first dice must be in one of the borders.");
+    }
+
     public Dice removeDice(int row, int column) {
         return window[row][column].removeDice();
     }

@@ -64,6 +64,12 @@ public class Square {
         else System.out.println("You have to respect color constraints.");
     }
 
+    public void putDiceIgnoringAllConstraints(Dice dice){
+        if(!occupiedSquare())
+            this.dice = dice;
+        else System.out.println("This square is already occupied");
+    }
+
     public Dice removeDice(){
         if(occupiedSquare()){
             Dice temp = this.dice;
