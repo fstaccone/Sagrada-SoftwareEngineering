@@ -10,6 +10,6 @@ public class ChooseAnotherDiceEffect implements Effect {
 
     @Override
     public void applyEffect(Player player, Match match) {
-
+        player.setPickedDice(match.getBoard().getReserve().chooseDice());
     }
 }

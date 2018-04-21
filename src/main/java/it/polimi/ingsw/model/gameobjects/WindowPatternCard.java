@@ -39,8 +39,41 @@ public class WindowPatternCard {
         return window;
     }
 
-    public boolean existsAdjacentDice(Dice north, Dice east, Dice south, Dice west){
-        return (north!=null || east!=null || south!=null || west!=null);
+    //method created by copying part of checkPos but it's useful to have both
+    public boolean existsAdjacentDice(int row, int column){
+        Dice northern;
+        Dice eastern;
+        Dice southern;
+        Dice western;
+        //If we are putting a dice in the upper border we don't have a northern square to check
+        if (row == 0) {
+            northern = null;
+        } else {
+            northern = window[row - 1][column].getDice();
+        }
+        //If we are putting a dice in the right border we don't have an eastern square to check
+        if (column == window[row].length - 1) {
+            eastern = null;
+        } else {
+            eastern = window[row][column + 1].getDice();
+        }
+        //If we are putting a dice in the bottom border we don't have an southern square to check
+        if (row == window.length - 1) {
+            southern = null;
+        } else {
+            southern = window[row + 1][column].getDice();
+        }
+        //If we are putting a dice in the left border we don't have an western square to check
+        if (column == 0) {
+            western = null;
+        } else {
+            western = window[row][column - 1].getDice();
+        }
+        return (northern!=null || eastern!=null || southern!=null || western!=null);
+    }
+    // method used by checkPos
+    public boolean existsAdjacentDice(Dice northern ,Dice eastern, Dice southern, Dice western){
+        return (northern!=null || eastern!=null || southern!=null || western!=null);
     }
 
     public boolean checkPos(Dice d, int row, int column) {
@@ -118,6 +151,10 @@ public class WindowPatternCard {
         if(row==0 || column==0 || column == window[row].length - 1 || row == window.length - 1)
             window[row][column].putDice(d);
         else System.out.println("The first dice must be in one of the borders.");
+    }
+
+    public void putDiceWithoutCheckPos(Dice d, int row, int column){
+        window[row][column].putDice(d);
     }
 
     public Dice removeDice(int row, int column) {
