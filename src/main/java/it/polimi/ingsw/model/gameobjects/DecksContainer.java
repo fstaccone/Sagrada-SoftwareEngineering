@@ -41,7 +41,7 @@ public class DecksContainer {
 
         for(int i=0;i<3;i++) {
             randomGenerator = new Random();
-            int index = randomGenerator.nextInt(toolDeck.size() -i -1);
+            int index = randomGenerator.nextInt(toolDeck.size() -1);
             String cardname = toolDeck.get(index);
             switch (cardname) {
                 // In cardname inside the case statement we must put the real card's name
