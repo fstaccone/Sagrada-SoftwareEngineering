@@ -37,8 +37,13 @@ public class WindowPatternCard {
         return window;
     }
 
+    public boolean existsAdjacentDice(Dice north, Dice east, Dice south, Dice west){
+        return (north!=null || east!=null || south!=null || west!=null);
+    }
+
     public boolean checkPos(Dice d, int row, int column) {
-        //Declaration of the four adiacent dices to check
+        //Declaration of the four adjacent dices to check
+        //We also have to check that we have at least one adjacent dice
         Dice northern;
         Dice eastern;
         Dice southern;
@@ -67,20 +72,23 @@ public class WindowPatternCard {
         } else {
             western = window[row][column - 1].getDice();
         }
-
-        //check on eventual dice in northern square with same color or value
-        if (northern != null && (northern.getColor() == d.getColor() || northern.getValue() == d.getValue()))
-            return false;
-        //check on eventual dice in eastern square with same color or value
-        if (eastern != null && (eastern.getColor() == d.getColor() || eastern.getValue() == d.getValue()))
-            return false;
-        //check on eventual dice in southern square with same color or value
-        if (southern != null && (southern.getColor() == d.getColor() || southern.getValue() == d.getValue()))
-            return false;
-        //check on eventual dice in western square with same color or value
-        if (western != null && (western.getColor() == d.getColor() || western.getValue() == d.getValue()))
-            return false;
-        return true;
+        //check if we are putting the dice next to at least another one
+        if (existsAdjacentDice(northern, eastern, southern, western)) {
+            //check on eventual dice in northern square with same color or value
+            if (northern != null && (northern.getColor() == d.getColor() || northern.getValue() == d.getValue()))
+                return false;
+            //check on eventual dice in eastern square with same color or value
+            if (eastern != null && (eastern.getColor() == d.getColor() || eastern.getValue() == d.getValue()))
+                return false;
+            //check on eventual dice in southern square with same color or value
+            if (southern != null && (southern.getColor() == d.getColor() || southern.getValue() == d.getValue()))
+                return false;
+            //check on eventual dice in western square with same color or value
+            if (western != null && (western.getColor() == d.getColor() || western.getValue() == d.getValue()))
+                return false;
+            return true;
+        }
+        return false;
     }
 
     //putDice calls checkPos, then putDice calls Square methods to check empty place and satisfied constrictions
