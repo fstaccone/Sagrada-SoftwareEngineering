@@ -11,6 +11,8 @@ public class UpsideDownDiceEffect implements Effect {
 
     @Override
     public void applyEffect(Player player, Match match) {
+        if(player.getPickedDice()==null)
+            player.setPickedDice(match.getBoard().getReserve().chooseDice());
         int val = player.getPickedDice().getValue();
         Dice modified;
 

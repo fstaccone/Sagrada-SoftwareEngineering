@@ -13,6 +13,7 @@ public class Match {
     private DecksContainer decksContainer;
     private Bag bag;
     private Board board;
+    private RoundTrack roundTrack;
 
     //LA ROOM ISTANZIA IL MATCH PASSANDO I GIOCATORI? SE Sì ALLORA IL CONTROLLER DOVREBBE RIFARSI ALLA ROOM E NON AL MATCH(RIENTRA NELLE MODIFICHE DA FARE)
     public Match(Set<Player> players) {
@@ -37,6 +38,15 @@ public class Match {
     public Board getBoard() {
         return board;
     }
+
+    public RoundTrack getRoundTrack() {
+        return roundTrack;
+    }
+
+    public void setRoundTrack(RoundTrack roundTrack) {
+        this.roundTrack = roundTrack;
+    }
+
     // TODO: understand how to manage match's flow
     public void gameInit() { }
 
