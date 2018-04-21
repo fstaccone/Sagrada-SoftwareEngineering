@@ -34,6 +34,15 @@ public class Square {
         return true;
     }
 
+    public boolean satisfiedColorConstraint(Dice dice) {
+        return getColorConstraint() == null || dice.getColor() == colorConstraint;
+    }
+
+    public boolean satisfiedValueConstraint(Dice dice){
+        return getValueConstraint() == 0 || dice.getValue() == valueConstraint;
+    }
+
+
     public void putDice(Dice dice){
         if(!occupiedSquare() && satisfiedConstraints(dice))
             this.dice = dice;
@@ -41,6 +50,18 @@ public class Square {
             //Maybe 3 different Exception: OccupiedSquareException, ColorConstraintException and ValueConstraintException
             System.out.println("Error: the selected square is already occupied or constraints ignored");
         }
+    }
+
+    public void putDiceIgnoringColorConstraint(Dice dice){
+        if(!occupiedSquare() && satisfiedValueConstraint(dice))
+            this.dice = dice;
+        else System.out.println("You have to respect value constraints.");
+    }
+
+    public void putDiceIgnoringValueConstraint(Dice dice){
+        if(!occupiedSquare() && satisfiedColorConstraint(dice))
+            this.dice = dice;
+        else System.out.println("You have to respect color constraints.");
     }
 
     public Dice removeDice(){
