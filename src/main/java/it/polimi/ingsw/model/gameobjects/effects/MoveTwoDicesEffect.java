@@ -50,6 +50,7 @@ public class MoveTwoDicesEffect implements Effect{
                 else System.out.println("Please choose a different position.");
             }
         }
+        caller.setSchemeCard(schema);
         System.out.println(schema.toString());
     }
 }

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
+import it.polimi.ingsw.model.gameobjects.RoundTrack;
 
 public class ExchangeDiceRoundTrackEffect implements Effect{
 
@@ -10,6 +12,12 @@ public class ExchangeDiceRoundTrackEffect implements Effect{
 
     @Override
     public void applyEffect(Player player, Match match) {
-
+        if(player.getPickedDice() == null)
+            player.setPickedDice(match.getBoard().getReserve().chooseDice());
+        Dice dice = player.getPickedDice();
+        RoundTrack track = match.getRoundTrack();
+        dice = track.switchDice(dice);
+        match.setRoundTrack(track);
+        player.setPickedDice(dice);
     }
 }

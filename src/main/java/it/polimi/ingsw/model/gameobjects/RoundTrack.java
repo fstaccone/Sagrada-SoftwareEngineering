@@ -54,5 +54,30 @@ public class RoundTrack {
         return null;
     }
 
-
+    //switchDice is similar to getDice but it switches the chosen dice with a new one
+    public Dice switchDice(Dice diceToSwitch){
+        showRoundTrack();
+        System.out.println("Choose the number of the list from which you want to get a dice");
+        Scanner scan = new Scanner(System.in);
+        int listNumber = scan.nextInt();
+        System.out.println(("Choose the dice id"));
+        int diceId = scan.nextInt();
+        int j=0;
+        for(List<Dice> list : dicesLeft){
+            if(j==listNumber){
+                int i=0;
+                for(Dice d : list){
+                    if(i==diceId){
+                        list.remove(diceId);
+                        list.add(diceToSwitch);
+                        return d;
+                    }
+                    i++;
+                }
+            }
+            j++;
+        }
+        System.out.println("Error: wrong parameters.");
+        return null;
+    }
 }

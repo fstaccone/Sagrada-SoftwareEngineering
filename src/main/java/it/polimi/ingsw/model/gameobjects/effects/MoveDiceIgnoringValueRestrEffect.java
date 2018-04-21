@@ -42,5 +42,6 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect{
                 result = 1;
             else System.out.println("Please choose a different position.");
         }
+        caller.setSchemeCard(schema);
     }
 }
