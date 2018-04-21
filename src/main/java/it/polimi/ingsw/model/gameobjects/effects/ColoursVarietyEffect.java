@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 public class ColoursVarietyEffect implements Effect {
 
+    public ColoursVarietyEffect() {
+    }
+
     @Override
     public void applyEffect(Player caller, WindowPatternCard schemecard) {
 

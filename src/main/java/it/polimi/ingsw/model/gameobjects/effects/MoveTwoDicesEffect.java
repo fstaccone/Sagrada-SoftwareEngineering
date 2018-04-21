@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 public class MoveTwoDicesEffect implements Effect{
 
+    public MoveTwoDicesEffect() {
+    }
 
     @Override
     public void applyEffect(Player caller, WindowPatternCard schemecard) {

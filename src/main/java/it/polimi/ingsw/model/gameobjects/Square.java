@@ -5,22 +5,10 @@ public class Square {
     private int valueConstraint;
     private Dice dice;
 
-    //3 different constructors based on the square constraint (color, value, no constraints)
-    public Square(Colors color){
-        colorConstraint = color;
-        valueConstraint = 0;
-    }
-
-    public Square(int value){
-        colorConstraint = null;
-        valueConstraint = value;
-    }
-
     public Square(){
         colorConstraint = null;
         valueConstraint = 0;
     }
-    //end of constructors
 
     //getters
     public Colors getColorConstraint() {
@@ -65,5 +53,22 @@ public class Square {
             System.out.println("Error: the selected square is empty"); //ExceptionEmptySquare
             return null;
         }
+    }
+
+    // Constraints' setters
+    public void setColorConstraint(Colors colorConstraint) {
+        this.colorConstraint = colorConstraint;
+    }
+    public void setValueConstraint(int valueConstraint) {
+        this.valueConstraint = valueConstraint;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "C=" + colorConstraint +
+                ", V=" + valueConstraint +
+                ", " + dice +
+                "}\t";
     }
 }
