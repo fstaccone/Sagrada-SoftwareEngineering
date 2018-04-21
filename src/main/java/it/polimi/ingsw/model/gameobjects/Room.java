@@ -1,14 +1,34 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import java.rmi.RemoteException;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Room {
-    private final int roomId;
+
+    //added attributes to try connectivity from view to model(MVC)
+    private static Room room;
+    private Set<Player> loggedPlayers;
+
+    private int roomId;
     private Match match;
     private Set<Player> players;
     private boolean started;
     private boolean full;
     private int numPlayers;
+
+    //useful for MVC - Later on with room introduction has to be modified/deleted
+    private Room(){
+        loggedPlayers= new HashSet<>();
+    }
+
+    //Singleton(useful for MVC) Later on with room introduction has to be modified/deleted
+    public synchronized static Room get(){
+        if (room==null){
+            room=new Room();
+        }
+        return room;
+    }
 
     public Room(int roomId, int numPlayers) {
         this.roomId = roomId;
@@ -59,5 +79,16 @@ public class Room {
 
     public void startMatch(){
         this.match = new Match(players);
+    }
+
+
+    //added to try connectivity from view to model(MVC)
+    public synchronized Player login(String username) throws RemoteException {
+        if (loggedPlayers.stream().map(Player::getName).anyMatch(u -> u.equals(username))) {
+            throw new RemoteException("Another player is already using the username you choose: " + username);
+        }
+        Player player = new Player(username,this);
+        loggedPlayers.add(player);
+        return player; //ritorna player al controller
     }
 }

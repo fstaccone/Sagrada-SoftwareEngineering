@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 public class DifferentShadesEffect implements Effect{
 
@@ -9,7 +9,7 @@ public class DifferentShadesEffect implements Effect{
     }
 
     @Override
-    public void applyEffect(Player caller, WindowPatternCard schemecard) {
+    public void applyEffect(Player caller, Match match) {
 
     }
 }

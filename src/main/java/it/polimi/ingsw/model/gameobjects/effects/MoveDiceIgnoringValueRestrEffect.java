@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gameobjects.Dice;
+import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
@@ -12,7 +13,7 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect{
     }
 
     @Override
-    public void applyEffect(Player player, WindowPatternCard schemeCard) {
+    public void applyEffect(Player player, Match match) {
         Dice dice = null;
         int token = 0;
         Scanner scan = new Scanner(System.in);

@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gameobjects.Dice;
+import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 import java.util.Scanner;
 
@@ -12,7 +12,7 @@ public class IncrDecrDiceValueEffect implements Effect{
     }
 
     @Override
-    public void applyEffect(Player player, WindowPatternCard schemeCard) {
+    public void applyEffect(Player player, Match match) {
         System.out.println("Picked dice: "+player.getPickedDice().toString()+"\n"+
         "Type '+' if you want to increment the dice value by 1 (not valid for value=6), " +
         "type '-' if you want to decrement the dice value by 1 (not valid for value=1)");

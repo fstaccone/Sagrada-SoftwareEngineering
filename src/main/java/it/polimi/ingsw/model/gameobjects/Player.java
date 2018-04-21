@@ -7,10 +7,13 @@ public class Player implements Serializable{
     private WindowPatternCard schemeCard;
     private Dice pickedDice;
     private int points;
+    private Room room;
 
-    public Player(String name){
+    public Player(String name, Room room){
         super();
         this.name = name;
+        this.room=room;
+
     }
 
     // getter
@@ -41,7 +44,8 @@ public class Player implements Serializable{
 
 
     public void useToolCard(ToolCard chosenToolCardToUse){//il controller fa player1.useToolCard(): può passare la carta scelta perchè il controller ha riferimento alla board e pertanto alle pickedToolCards(attributo di board) tra le quali fa scegliere al client quale usare(ammesso che possa-->va fatto un check)(si tratta di un'azione precedente)
-        chosenToolCardToUse.useCard(this,this.schemeCard);
+
+        chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
 
