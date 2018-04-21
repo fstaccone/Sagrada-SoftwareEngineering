@@ -29,22 +29,22 @@ public class ToolCard{
                 this.effect= new ReRollDiceEffect();
                 break;
             case "7":  cardname = "tool7";
-
+                this.effect= new ReRollAllReserveDicesEffect();
                 break;
             case "8":  cardname = "tool8";
-
+                this.effect= new ChooseAnotherDiceEffect();
                 break;
             case "9":  cardname = "tool9";
-
+                this.effect= new MoveDiceNotAdjacentToAnotherEffect();
                 break;
             case "10": cardname = "tool10";
-
+                this.effect= new UpsideDownDiceEffect();
                 break;
             case "11": cardname = "tool11";
-                ;
+                this.effect= new SubstituteDiceFromBagEffect();
                 break;
             case "12": cardname = "tool12";
-
+                this.effect= new MoveTwoDicesColorRoundTrackEffect();
                 break;
             default: cardname = "Invalid card";
                 break;

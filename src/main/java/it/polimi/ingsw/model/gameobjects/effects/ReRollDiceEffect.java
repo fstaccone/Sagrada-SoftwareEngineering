@@ -12,6 +12,7 @@ public class ReRollDiceEffect implements Effect {
     private Dice diceToBeRerolled;
 
     public ReRollDiceEffect() {
+        //the method is empty
     }
 
     @Override
@@ -19,5 +20,6 @@ public class ReRollDiceEffect implements Effect {
         Random rand = new Random();
         int val = rand.nextInt(6)+1;
         diceToBeRerolled.setValue(val);
+        player.setPickedDice(diceToBeRerolled);
     }
 }
