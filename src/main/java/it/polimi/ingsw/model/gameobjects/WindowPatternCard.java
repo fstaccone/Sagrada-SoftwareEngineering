@@ -107,6 +107,11 @@ public class WindowPatternCard {
             window[row][column].putDiceIgnoringColorConstraint(d);
     }
 
+    public void putDiceIgnoringAllConstraints(Dice d, int row, int column){
+        if(checkPos(d, row, column))
+            window[row][column]. putDiceIgnoringAllConstraints(d);
+    }
+
     public void putFirstDice(Dice d, int row, int column){
         if(row==0 || column==0 || column == window[row].length - 1 || row == window.length - 1)
             window[row][column].putDice(d);
