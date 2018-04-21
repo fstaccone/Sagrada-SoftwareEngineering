@@ -1,7 +1,7 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
+import it.polimi.ingsw.model.gameobjects.Room;
 import it.polimi.ingsw.view.RemoteBaseView;
 
 import java.rmi.RemoteException;
@@ -11,17 +11,17 @@ import java.util.Map;
 
 public class Controller extends UnicastRemoteObject implements RemoteController {
 
-    private transient final Match match;
+    private transient final Room room;
     private final Map<Player, RemoteBaseView> views = new HashMap<>();
 
     public Controller() throws RemoteException{
         super();
-        match= Match.get();
+        room= Room.get();
     }
 
     @Override
     public synchronized String login(String playername, RemoteBaseView view) throws RemoteException {
-        Player player=match.login(playername);
+        Player player=room.login(playername);
 
         views.put(player, view);
         view.ack("Logged in as @" + player.getName());

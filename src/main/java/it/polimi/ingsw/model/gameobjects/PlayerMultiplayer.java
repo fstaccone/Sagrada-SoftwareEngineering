@@ -4,8 +4,9 @@ public class PlayerMultiplayer extends Player {
     private int numFavorTokens;
     private PrivateObjectiveCard privateObjectiveCard;
     private Colors color;
-    public PlayerMultiplayer(String name){
-        super(name);
+    private Room room;
+    public PlayerMultiplayer(String name, Room room){
+        super(name, room);
     }
 
     // setter

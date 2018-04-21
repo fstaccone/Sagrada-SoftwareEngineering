@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gameobjects.Dice;
+import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 import java.util.Random;
 
@@ -15,7 +15,7 @@ public class ReRollDiceEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, WindowPatternCard schemeCard) {
+    public void applyEffect(Player player, Match match) {
         Random rand = new Random();
         int val = rand.nextInt(6)+1;
         diceToBeRerolled.setValue(val);

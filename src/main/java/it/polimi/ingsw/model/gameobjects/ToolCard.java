@@ -10,40 +10,40 @@ public class ToolCard{
     public ToolCard(String name) {
         this.cardname = name;
         switch (cardname) {
-            case "tool1":
+            case "Pinza Sgrossatrice":
                 this.effect= new IncrDecrDiceValueEffect();
                 break;
-            case "tool2":
+            case "Pennello per Eglomise":
                 this.effect= new MoveDiceIgnoringColorRestrEffect();
                 break;
-            case "tool3":
+            case "Alesatore per Lamina di Rame":
                 this.effect= new MoveDiceIgnoringValueRestrEffect();
                 break;
-            case "tool4":
+            case "Lathekin":
                 this.effect= new MoveTwoDicesEffect();
                 break;
-            case "tool5":
+            case "Taglierina Circolare":
                 this.effect= new ExchangeDiceRoundTrackEffect();
                 break;
-            case "tool6":
+            case "Pennello per Pasta Salda":
                 this.effect= new ReRollDiceEffect();
                 break;
-            case "tool7":
+            case "Martelletto":
                 this.effect= new ReRollAllReserveDicesEffect();
                 break;
-            case "tool8":
+            case "Tenaglia a Rotelle":
                 this.effect= new ChooseAnotherDiceEffect();
                 break;
-            case "tool9":
+            case "Riga in Sughero":
                 this.effect= new MoveDiceNotAdjacentToAnotherEffect();
                 break;
-            case "tool10":
+            case "Tampone Diamantato":
                 this.effect= new UpsideDownDiceEffect();
                 break;
-            case "tool11":
+            case "Diluente per Pasta Salda":
                 this.effect= new SubstituteDiceFromBagEffect();
                 break;
-            case "tool12":
+            case "Taglierina Manuale":
                 this.effect= new MoveTwoDicesColorRoundTrackEffect();
                 break;
             default: cardname = "Invalid card from ToolCard";
@@ -51,9 +51,9 @@ public class ToolCard{
         }
     }
 
-    public void useCard(Player caller, WindowPatternCard schemecard){//CONSIDERIAMO PER ESEMPIO LA TOOLCARD4
+    public void useCard(Player caller, Match match){//CONSIDERIAMO PER ESEMPIO LA TOOLCARD4
 
-        effect.applyEffect( caller,  schemecard);
+        effect.applyEffect( caller,  match);
     }
 
     public String getCardname() {
