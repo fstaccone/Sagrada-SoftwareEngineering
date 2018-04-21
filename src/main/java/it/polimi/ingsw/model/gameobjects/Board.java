@@ -5,19 +5,18 @@ import java.util.List;
 import java.util.Set;
 
 public class Board {
-    private Set<PublicObjectiveCard> pickedPublicObjectiveCards;
+    private List<PublicObjectiveCard> pickedPublicObjectiveCards;
     private Set<Player> players;
     private Reserve reserve;
     private List<ToolCard> pickedToolCards;
 
-    public Board(Match match, Set<Player> players, List <ToolCard> pickedToolCards) {
-        this.pickedPublicObjectiveCards = new HashSet<>();
-
+    public Board(Match match, Set<Player> players, List <ToolCard> pickedToolCards, List <PublicObjectiveCard> pickedPublicObjectiveCards) {
         // To be managed later, even in Match
         this.players = players;
 
         this.reserve = new Reserve();
         this.pickedToolCards = pickedToolCards;
+        this.pickedPublicObjectiveCards = pickedPublicObjectiveCards;
     }
 
     public Reserve getReserve() {
@@ -25,5 +24,12 @@ public class Board {
     }
 
 
+    public List<ToolCard> getPickedToolCards() {
+        return pickedToolCards;
+    }
+
+    public List<PublicObjectiveCard> getPickedPublicObjectiveCards() {
+        return pickedPublicObjectiveCards;
+    }
 }
 

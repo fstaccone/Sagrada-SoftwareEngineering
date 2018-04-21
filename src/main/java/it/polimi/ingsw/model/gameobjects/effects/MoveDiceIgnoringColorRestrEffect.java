@@ -44,4 +44,6 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
         }
         caller.setSchemeCard(schema);
     }
+
+
 }

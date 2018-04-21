@@ -183,7 +183,7 @@ public class WindowPatternCard {
         return result.toString();
     }
 /*
-    // Test for toString correctness and dice's placing
+     Test for toString correctness and dice's placing
     public static void main(String[] args){
         WindowPatternCard window = new LuzCelestial();
         Room room = mock(Room.class);

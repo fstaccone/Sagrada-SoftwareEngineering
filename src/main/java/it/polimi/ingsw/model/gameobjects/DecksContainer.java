@@ -19,9 +19,9 @@ public class DecksContainer {
     private List<ToolCard> pickedToolCards;
 
     public DecksContainer() {
-        this.privateObjectiveDeck = new PrivateObjectiveCardDeck();
-        this.windowPatternDeck = new WindowPatternCardDeck();
-        this.windowFrameDeck = new WindowFramePlayerBoardDeck();
+        //this.privateObjectiveDeck = new PrivateObjectiveCardDeck();
+        //this.windowPatternDeck = new WindowPatternCardDeck();
+        //this.windowFrameDeck = new WindowFramePlayerBoardDeck();
 
         this.pickedPublicObjectiveCards=new ArrayList<>();
         this.publicObjectiveDeck=new ArrayList<>();
@@ -38,8 +38,8 @@ public class DecksContainer {
 
         for(int i=0;i<3;i++) {
             randomGenerator = new Random();
-            int publicIndex = randomGenerator.nextInt(toolDeck.size() - 1);
-            String publicName = toolDeck.get(publicIndex);
+            int publicIndex = randomGenerator.nextInt(publicObjectiveDeck.size() - 1);
+            String publicName = publicObjectiveDeck.get(publicIndex);
             switch (publicName) {
 
                 case "public1":
@@ -256,8 +256,8 @@ public class DecksContainer {
     public static void main (String[] args){
         DecksContainer decks = new DecksContainer();
 
-        System.out.print(decks.getPickedToolCards().toString());
-
+        System.out.println(decks.getPickedToolCards().toString());
+        System.out.println(decks.getPickedPublicObjectiveCards().toString());
     }
-*/
+    */
 }
