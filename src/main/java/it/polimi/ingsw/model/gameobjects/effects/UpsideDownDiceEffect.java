@@ -11,6 +11,7 @@ public class UpsideDownDiceEffect implements Effect {
 
     @Override
     public void applyEffect(Player player, Match match) {
+        // TODO: Decide if the Dice has to be picked now or before using the card
         int val = player.getPickedDice().getValue();
         Dice modified;
 
