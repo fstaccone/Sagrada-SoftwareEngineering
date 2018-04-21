@@ -5,8 +5,8 @@ import it.polimi.ingsw.model.gameobjects.effects.*;
 
 public class PublicObjectiveCard {
     private String cardname;
-    private int pointsToBeAssigned;
-    Effect effect;
+
+    private Effect effect;
 
     public PublicObjectiveCard(String name) {
 
@@ -43,7 +43,7 @@ public class PublicObjectiveCard {
                 this.effect= new DifferentColorsInARowEffect();
                 break;
 
-            default: cardname = "Invalid card from ToolCard";
+            default: cardname = "Invalid card from PublicObjectiveCard";
                 break;
         }
 

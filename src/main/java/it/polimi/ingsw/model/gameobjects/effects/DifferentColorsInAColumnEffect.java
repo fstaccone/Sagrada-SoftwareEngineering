@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
 
 public class DifferentColorsInAColumnEffect implements Effect {
-
+    private final int pointsToBeAssigned=5;
     public DifferentColorsInAColumnEffect() {
     }
 

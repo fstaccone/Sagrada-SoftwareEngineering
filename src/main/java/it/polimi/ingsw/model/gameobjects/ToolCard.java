@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.gameobjects.effects.*;
 
 public class ToolCard{
     private String cardname;
-    Effect effect;
+    private Effect effect;
 
     public ToolCard(String name) {
         this.cardname = name;
