@@ -143,24 +143,27 @@ public class WindowPatternCard {
 
         return result.toString();
     }
-/*
+    /*
     // Test for toString correctness and dice's placing
     public static void main(String[] args){
         WindowPatternCard window = new LuzCelestial();
 
         Player player = new PlayerMultiplayer("francesca");
-        Dice dice = new Dice(Colors.GREEN);
-        dice.setValue(4);
+        Dice dice1 = new Dice(Colors.GREEN);
+        dice1.setValue(4);
+        Dice dice2 = new Dice(Colors.BLUE);
+        dice2.setValue(2);
 
-        player.setPickedDice(dice);
+        player.setPickedDice(dice1);
 
         System.out.print(window);
 
         player.setSchemeCard(window);
 
-        player.getSchemeCard().putDice(player.getPickedDice(),0,0);
+        player.getSchemeCard().putFirstDice(player.getPickedDice(),0,0);
         player.getSchemeCard().putDice(player.getPickedDice(),1,3);
-        player.getSchemeCard().putDice(player.getPickedDice(),0,2);
+        player.setPickedDice(dice2);
+        player.getSchemeCard().putDice(player.getPickedDice(),0,1);
         player.getSchemeCard().putDice(player.getPickedDice(),1,1);
         player.getSchemeCard().putDice(player.getPickedDice(),0,2);
         player.getSchemeCard().putDice(player.getPickedDice(),0,3);
