@@ -89,6 +89,16 @@ public class WindowPatternCard {
             window[row][column].putDice(d);
     }
 
+    public void putDiceIgnoringValueConstraint(Dice d, int row, int column){
+        if(checkPos(d, row, column))
+            window[row][column].putDiceIgnoringValueConstraint(d);
+    }
+
+    public void putDiceIgnoringColorConstraint(Dice d, int row, int column){
+        if(checkPos(d, row, column))
+            window[row][column].putDiceIgnoringColorConstraint(d);
+    }
+
     public Dice removeDice(int row, int column) {
         return window[row][column].removeDice();
     }
