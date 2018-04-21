@@ -56,7 +56,7 @@ public class Reserve {
     public List<Dice> endRound(){
         System.out.println("End of the round.");
         ArrayList<Dice> dicesLeft = new ArrayList<>();
-        while(dices.size()>0){
+        while(!dices.isEmpty()){
             System.out.println("Dice removed from reserve: "+dices.get(0));
             dicesLeft.add(dices.get(0));
             dices.remove(0);
@@ -66,6 +66,15 @@ public class Reserve {
         //aggiungere dicesLeft alla RoundTrack
         return dicesLeft;
         //dicesLeft è ArrayList di dadi che verrà usato come parametro per il metodo putDices di RoundTrack
+    }
+
+    public List<Dice> removeAllDices(){
+        ArrayList<Dice> dicesRemoved = new ArrayList<>();
+        while(!dices.isEmpty()){
+            dicesRemoved.add(dices.get(0));
+            dices.remove(0);
+        }
+        return dicesRemoved;
     }
 /*
     public static void main(String args[]){
