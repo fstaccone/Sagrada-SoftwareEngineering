@@ -18,7 +18,7 @@ public class PrivateObjectiveCard extends ObjectiveCard{
         for(Square[] row : window){
             for(Square spot : row){
                 if(spot.getDice().getColor()==color)
-                    score++;
+                    score= score+spot.getDice().getValue();
             }
         }
 

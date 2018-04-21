@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 
 import java.util.Arrays;
 
+import static org.mockito.Mockito.mock;
+
 public class WindowPatternCard {
     private String name;
 
@@ -143,12 +145,12 @@ public class WindowPatternCard {
 
         return result.toString();
     }
-    /*
+/*
     // Test for toString correctness and dice's placing
     public static void main(String[] args){
         WindowPatternCard window = new LuzCelestial();
-
-        Player player = new PlayerMultiplayer("francesca");
+        Room room = mock(Room.class);
+        Player player = new PlayerMultiplayer("francesca",room);
         Dice dice1 = new Dice(Colors.GREEN);
         dice1.setValue(4);
         Dice dice2 = new Dice(Colors.BLUE);
