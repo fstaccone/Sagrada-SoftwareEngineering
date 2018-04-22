@@ -4,7 +4,8 @@ import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.Mockito.mock;
+// commentato perchè non ho il jar
+//import static org.mockito.Mockito.mock;
 
 
 public class Match {
@@ -16,9 +17,20 @@ public class Match {
     private Bag bag;
     private Board board;
     private RoundTrack roundTrack;
+    private final static int numberOfRounds = 10;
+    private int currentRound;
+
+    public static int getNumberOfRounds() { return numberOfRounds; }
+
+    public int getCurrentRound() { return currentRound; }
+
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
+    }
 
     //LA ROOM ISTANZIA IL MATCH PASSANDO I GIOCATORI? SE Sì ALLORA IL CONTROLLER DOVREBBE RIFARSI ALLA ROOM E NON AL MATCH(RIENTRA NELLE MODIFICHE DA FARE)
-    public Match(Set<Player> players) {
+    public Match(Set<Player> players, Room room) {
+        this.room=room;
         this.players = players;
         this.decksContainer = new DecksContainer();
         this.bag = new Bag(18);

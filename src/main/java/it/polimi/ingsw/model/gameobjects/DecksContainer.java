@@ -20,7 +20,7 @@ public class DecksContainer {
 
     public DecksContainer() {
         //this.privateObjectiveDeck = new PrivateObjectiveCardDeck();
-        //this.windowPatternDeck = new WindowPatternCardDeck();
+        this.windowPatternDeck = new WindowPatternCardDeck();
         //this.windowFrameDeck = new WindowFramePlayerBoardDeck();
 
         this.pickedPublicObjectiveCards=new ArrayList<>();
@@ -246,7 +246,6 @@ public class DecksContainer {
     public List<PublicObjectiveCard> getPickedPublicObjectiveCards(){
         return pickedPublicObjectiveCards;
     }
-
 
 
 

@@ -19,6 +19,6 @@ public class ChromaticSplendor extends WindowPatternCard {
         this.getWindow()[2][3].setColorConstraint(Colors.VIOLET);
         this.getWindow()[3][0].setValueConstraint(1);
         this.getWindow()[3][2].setValueConstraint(6);
-        this.getWindow()[4][4].setValueConstraint(4);
+        this.getWindow()[3][4].setValueConstraint(4);
     }
 }
