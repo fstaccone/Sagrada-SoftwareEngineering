@@ -17,7 +17,9 @@ public class MediumShadesEffect implements Effect {
         int foursCounter = 0;
         for(Square[] row : schema){
             for(Square square : row){
-                int val = square.getDice().getValue();
+                int val = 0;
+                if(square.getDice()!=null)
+                    val = square.getDice().getValue();
                 if(val==3)
                     threesCounter++;
                 if(val==4)

@@ -21,7 +21,9 @@ public class DifferentShadesEffect implements Effect{
         int sixCounter = 0;
         for(Square[] row : schema){
             for(Square square : row){
-                int val = square.getDice().getValue();
+                int val = 0;
+                if(square.getDice()!=null)
+                    val = square.getDice().getValue();
                 switch (val) {
                     case 1:
                         onesCounter++;

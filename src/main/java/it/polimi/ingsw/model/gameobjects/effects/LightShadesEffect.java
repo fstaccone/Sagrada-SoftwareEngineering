@@ -17,7 +17,9 @@ public class LightShadesEffect implements Effect {
         int twosCounter = 0;
         for(Square[] row : schema){
             for(Square square : row){
-                int val = square.getDice().getValue();
+                int val = 0;
+                if(square.getDice()!=null)
+                    val = square.getDice().getValue();
                 if(val==1)
                     onesCounter++;
                 if(val==2)
