@@ -44,4 +44,6 @@ public class WindowPatternCardDeck extends Deck<WindowPatternCard>{
     public Set<Card> pickNCards(int num) {
         return null;
     }
+
+
 }

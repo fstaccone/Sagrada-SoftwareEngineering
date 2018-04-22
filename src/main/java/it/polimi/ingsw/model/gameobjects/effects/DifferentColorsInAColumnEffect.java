@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
+
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
@@ -8,7 +9,7 @@ import it.polimi.ingsw.model.gameobjects.Square;
 import java.util.ArrayList;
 
 public class DifferentColorsInAColumnEffect implements Effect {
-    private final int pointsToBeAssigned=5;
+    private final int pointsToBeAssigned = 5;
     public DifferentColorsInAColumnEffect() {
     }
 
