@@ -21,7 +21,7 @@ public class Room {
     private Room(){
         loggedPlayers= new HashSet<>();
     }
-
+    // TO MODIFY
     //Singleton(useful for MVC) Later on with room introduction has to be modified/deleted
     public synchronized static Room get(){
         if (room==null){
@@ -78,7 +78,7 @@ public class Room {
     public void setFull(boolean full) { this.full = full; }
 
     public void startMatch(){
-        this.match = new Match(players);
+        this.match = new Match(players,this);
     }
 
 

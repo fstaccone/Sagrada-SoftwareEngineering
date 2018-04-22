@@ -16,9 +16,11 @@ public class Match {
     private Bag bag;
     private Board board;
     private RoundTrack roundTrack;
+    private Room room;
 
     //LA ROOM ISTANZIA IL MATCH PASSANDO I GIOCATORI? SE Sì ALLORA IL CONTROLLER DOVREBBE RIFARSI ALLA ROOM E NON AL MATCH(RIENTRA NELLE MODIFICHE DA FARE)
-    public Match(Set<Player> players) {
+    public Match(Set<Player> players, Room room) {
+        this.room=room;
         this.players = players;
         this.decksContainer = new DecksContainer();
         this.bag = new Bag(18);

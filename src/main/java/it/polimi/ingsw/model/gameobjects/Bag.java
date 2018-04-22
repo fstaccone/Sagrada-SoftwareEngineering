@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Bag {
 
-    private static List<Dice> dices;
+    private List<Dice> dices;
 
     public Bag(int num) {
         dices = new ArrayList<>();
@@ -19,7 +19,7 @@ public class Bag {
         }
     }
 
-    public static List<Dice> getAllDices() {//Serve solo per test su funzionamento
+    public List<Dice> getAllDices() {//Serve solo per test su funzionamento
         return dices;
     }
 

@@ -13,7 +13,7 @@ public class Player implements Serializable{
         super();
         this.name = name;
         this.room=room;
-
+        this.points=0;
     }
 
     // getter

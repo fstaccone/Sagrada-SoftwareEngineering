@@ -51,7 +51,7 @@ public class PublicObjectiveCard {
 
     public void useCard(Player caller, Match match){//CONSIDERIAMO PER ESEMPIO LA TOOLCARD4
 
-        effect.applyEffect( caller,  match);
+        this.effect.applyEffect( caller,  match);
     }
 
     public String getCardname() {

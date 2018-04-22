@@ -11,11 +11,14 @@ public class WindowPatternCard {
 
     private int difficulty; //difficulty is a value between 3 and 6
     private Square[][] window;
-
+    int rows;
+    int columns;
     //constructor gives window a name and creates a double array of squares without constraints (for now)
     //it should be modified to allow constraints in specific squares
     public WindowPatternCard(String name, int rows, int columns) {
         this.name = name;
+        this.rows=rows;
+        this.columns=columns;
         window = new Square[rows][columns];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++)
@@ -23,6 +26,10 @@ public class WindowPatternCard {
         }
     }
 
+    public int getRows() {
+        return rows;
+    }
+    public int getColumns() { return columns;}
     public int getDifficulty() {
         return difficulty;
     }
@@ -146,6 +153,19 @@ public class WindowPatternCard {
         if(checkPos(d, row, column))
             window[row][column]. putDiceIgnoringAllConstraints(d);
     }
+    public boolean fullColumn(int z){
+            boolean res=false;
+            boolean ris=true;
+            for(int i=0;i<4;i++){
+                if (this.getWindow()[i][z].getDice()==null){
+                        res = false;
+                        ris = false;
+                    }
+                    else
+                        res= true;
+                }
+            return ris;
+        }
 
     public void putFirstDice(Dice d, int row, int column){
         if(row==0 || column==0 || column == window[row].length - 1 || row == window.length - 1)
