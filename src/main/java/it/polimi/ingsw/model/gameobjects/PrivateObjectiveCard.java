@@ -17,8 +17,11 @@ public class PrivateObjectiveCard extends ObjectiveCard{
         //calculation algorithm
         for(Square[] row : window){
             for(Square spot : row){
-                if(spot.getDice().getColor()==color)
-                    score= score+spot.getDice().getValue();
+                Colors diceColor = Colors.NONE;
+                if(spot.getDice()!=null)
+                    diceColor = spot.getDice().getColor();
+                if(diceColor==color)
+                    score = score + spot.getDice().getValue();
             }
         }
 
