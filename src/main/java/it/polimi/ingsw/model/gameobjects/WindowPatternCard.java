@@ -223,6 +223,13 @@ public class WindowPatternCard {
         player.getSchemeCard().putDice(player.getPickedDice(),2,2);
         player.setPickedDice(dice2);
         player.getSchemeCard().putDice(player.getPickedDice(),3,2);
+        player.getSchemeCard().putDice(player.getPickedDice(), 2, 3);
+        player.setPickedDice(dice1);
+        player.getSchemeCard().putDice(player.getPickedDice(),2,4);
+        player.getSchemeCard().putDice(player.getPickedDice(),3,3);
+        player.setPickedDice(dice2);
+        player.getSchemeCard().putDice(player.getPickedDice(),3,4);
+
 
         Set<Player> players = new HashSet<>();
         players.add(player);
@@ -231,7 +238,11 @@ public class WindowPatternCard {
         card.useCard(player, match);
 
         System.out.print(window);
-        System.out.println("Player score " + player.getPoints());
+        System.out.println("\nNew player score after 'Colori diversi - Colonna' card: " + player.getPoints());
+
+        PublicObjectiveCard card1 = new PublicObjectiveCard("Diagonali colorate");
+        card1.useCard(player, match);
+        System.out.println(("\nNew player score after 'Diagonali Colorate' card: " + player.getPoints()));
     }
 
 
