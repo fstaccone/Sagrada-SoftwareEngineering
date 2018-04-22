@@ -15,9 +15,9 @@ public class ExchangeDiceRoundTrackEffect implements Effect{
         if(player.getPickedDice() == null)
             player.setPickedDice(match.getBoard().getReserve().chooseDice());
         Dice dice = player.getPickedDice();
-        RoundTrack track = match.getRoundTrack();
-        dice = track.switchDice(dice);
-        match.setRoundTrack(track);
+      //  RoundTrack track = match.getRoundTrack();
+       // dice = track.switchDice(dice);
+       // match.setRoundTrack(track);
         player.setPickedDice(dice);
     }
 }

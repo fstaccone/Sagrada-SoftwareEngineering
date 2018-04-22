@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.gameobjects.*;
 
 import java.util.Scanner;
 
-public class MoveTwoDicesColorRoundTrackEffect implements Effect {
+/*public class MoveTwoDicesColorRoundTrackEffect implements Effect {
 
     public MoveTwoDicesColorRoundTrackEffect() {
     }
@@ -54,4 +54,4 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
         player.setSchemeCard(schema);
         System.out.println(schema.toString());
     }
-}
+}*/

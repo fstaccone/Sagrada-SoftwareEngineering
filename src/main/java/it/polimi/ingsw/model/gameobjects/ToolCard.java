@@ -44,7 +44,7 @@ public class ToolCard{
                 this.effect= new SubstituteDiceFromBagEffect();
                 break;
             case "Taglierina Manuale":
-                this.effect= new MoveTwoDicesColorRoundTrackEffect();
+              //  this.effect= new MoveTwoDicesColorRoundTrackEffect();
                 break;
             default: cardname = "Invalid card from ToolCard";
                 break;

@@ -9,25 +9,25 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Controller extends UnicastRemoteObject implements RemoteController {
+//public class Controller extends UnicastRemoteObject implements RemoteController {
 
-    private transient final Room room;
-    private final Map<Player, RemoteBaseView> views = new HashMap<>();
+   // private transient final Room room;
+   // private final Map<Player, RemoteBaseView> views = new HashMap<>();
 
-    public Controller() throws RemoteException{
-        super();
-        room= Room.get();
-    }
+    //public Controller() throws RemoteException{
+    //    super();
+      //  room= Room.get();
+    //}
 
-    @Override
-    public synchronized String login(String playername, RemoteBaseView view) throws RemoteException {
-        Player player=room.login(playername);
+    //@Override
+    //public synchronized String login(String playername, RemoteBaseView view) throws RemoteException {
+        //Player player=room.login(playername);
 
-        views.put(player, view);
-        view.ack("Logged in as @" + player.getName());
-        return player.getName();//ritorna playername alla view
-    }
+        //views.put(player, view);
+        //view.ack("Logged in as @" + player.getName());
+        //return player.getName();//ritorna playername alla view
+    //}
 
 
     //dopo il login il controller ha il riferimento a ciascun player quindi può chiamarne i metodi
-}
+//}

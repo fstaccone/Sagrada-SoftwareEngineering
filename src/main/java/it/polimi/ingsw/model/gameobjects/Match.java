@@ -24,7 +24,7 @@ public class Match {
         // this.players deve diventare una mappa con i player contenuti in players a cui viene associata una posizione in modo da tenerne traccia durante il gioco
         // la posizione potrebbe anche essere determinata dal colore, stabiliamo una gerarchia ed assegnamo il colore in modo casuale
         this.players = new HashMap<>();
-        this.players = players.toMap(); // con posizione associata
+        //this.players = players.toMap(); // con posizione associata
 
         this.decksContainer = new DecksContainer();
         this.bag = new Bag(18);
@@ -67,7 +67,7 @@ public class Match {
         // Fase in cui vengono svolte le operazioni da fare una sola volta
         this.roundCounter = 0;
         this.assignColors();
-        this.setFirstPlayerInTurn(this.chooseFirstPlayer());
+        //this.setFirstPlayerInTurn(this.chooseFirstPlayer());
         this.drawPrivateObjectiveCards();
         this.proposeWindowPatternCards();
         this.drawPublicObjectiveCards();
@@ -86,10 +86,10 @@ public class Match {
 
     // Sceglie il primo giocatore in modo casuale
     // Potrebbe essere scelto in base alla posizione o al colore
-    private Player chooseFirstPlayer() {
+    /*private Player chooseFirstPlayer() {
         Player p;
         return p;
-    }
+    }*/
 
     // Assegna le carte obiettivo privato
     private void drawPrivateObjectiveCards() {
@@ -126,17 +126,17 @@ public class Match {
         this.incrementRoundCounter();
 
         // Determina il prossimo giocatore primo a giocare
-        this.setFirstPlayerInTurn(this.nextFirtsPlayer());
+        //this.setFirstPlayerInTurn(this.nextFirtsPlayer());
 
         this.turnManager(firstPlayerInTurn);
 
     }
 
-    private Player nextFirtsPlayer(){
+   /* private Player nextFirstPlayer(){
         Player p;
         // ...
         return p;
-    }
+    }*/
 /* //to check if board attributes get the right values
     public static void main (String[] args) {
         Player player1 = mock(Player.class);

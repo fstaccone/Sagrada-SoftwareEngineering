@@ -22,8 +22,11 @@ public class LightShadesEffect implements Effect {
                     val = square.getDice().getValue();
                 if(val==1)
                     onesCounter++;
+                    System.out.println(onesCounter);
                 if(val==2)
                     twosCounter++;
+                System.out.println(onesCounter);
+
             }
         }
         if(onesCounter<=twosCounter)
