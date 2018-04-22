@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.gameobjects;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 
@@ -202,8 +204,8 @@ public class WindowPatternCard {
 
         return result.toString();
     }
-/*
-     Test for toString correctness and dice's placing
+
+    /* //Test for toString correctness and dice's placing
     public static void main(String[] args){
         WindowPatternCard window = new LuzCelestial();
         Room room = mock(Room.class);
@@ -212,8 +214,11 @@ public class WindowPatternCard {
         dice1.setValue(4);
         Dice dice2 = new Dice(Colors.BLUE);
         dice2.setValue(2);
-
         player.setPickedDice(dice1);
+        Dice dice3 = new Dice(Colors.YELLOW);
+        dice3.setValue(4);
+        Dice dice4 = new Dice(Colors.RED);
+        dice4.setValue(3);
 
         System.out.print(window);
 
@@ -226,11 +231,28 @@ public class WindowPatternCard {
         player.getSchemeCard().putDice(player.getPickedDice(),1,1);
         player.getSchemeCard().putDice(player.getPickedDice(),0,2);
         player.getSchemeCard().putDice(player.getPickedDice(),0,3);
-        player.getSchemeCard().putDice(player.getPickedDice(),1,0);
+        player.setPickedDice(dice1);
+        player.getSchemeCard().putDice(player.getPickedDice(),1,1);
+        player.setPickedDice(dice2);
+        player.getSchemeCard().putDice(player.getPickedDice(),1,2);
+        player.setPickedDice(dice4);
+        player.getSchemeCard().putDice(player.getPickedDice(),2,1);
+        player.getSchemeCard().putDice(player.getPickedDice(),0,2);
+        player.setPickedDice(dice3);
+        player.getSchemeCard().putDice(player.getPickedDice(),3,1);
+        player.getSchemeCard().putDice(player.getPickedDice(),2,2);
+        player.setPickedDice(dice2);
+        player.getSchemeCard().putDice(player.getPickedDice(),3,2);
+
+        Set<Player> players = new HashSet<>();
+        players.add(player);
+        Match match = new Match(players);
+        PublicObjectiveCard card = new PublicObjectiveCard("Colori diversi - Colonna");
+        card.useCard(player, match);
 
         System.out.print(window);
+        System.out.println("Player score " + player.getPoints());
     }
-
-*/
+    */
 }
 

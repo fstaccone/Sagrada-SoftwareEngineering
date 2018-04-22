@@ -3,11 +3,12 @@ package it.polimi.ingsw;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.junit.Before;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
+public class AppTest
     extends TestCase
 {
     /**
@@ -36,3 +37,4 @@ public class AppTest
         assertTrue( true );
     }
 }
+
