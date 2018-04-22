@@ -29,9 +29,9 @@ public class WindowPatternCardDeck extends Deck<WindowPatternCard>{
         cards.add(new ShadowThief());
         cards.add(new SunCatcher());
         cards.add(new SunSGlory());
-        cards.add(new SymphonyOfLight())
-        cards.add(new ViaLux())
-        cards.add(new Virtus())
+        cards.add(new SymphonyOfLight());
+        cards.add(new ViaLux());
+        cards.add(new Virtus());
         cards.add(new WaterOfLife());
     }
 
