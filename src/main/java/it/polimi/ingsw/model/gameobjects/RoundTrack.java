@@ -4,19 +4,19 @@ import java.util.*;
 
 public class RoundTrack {
     //dicesLeft is a list of (list of dices) since you may have more than one dice in the same position
-    private Map<Integer, List<Dice>> dicesLeft;
+    private List<List<Dice>> dicesLeft;
 
     public RoundTrack(){
         // It makes an ArrayList of 10 (constant declared in Match) Lists of Dices
-        dicesLeft = new HashMap<>(Match.getNumberOfRounds());
-        for(Integer i = 0; i < Match.getNumberOfRounds(); i++){
-            dicesLeft.get(i) = new ArrayList<>();
+        dicesLeft = new LinkedList<>();
+        for(int i = 0; i < Match.getNumberOfRounds(); i++){
+            dicesLeft.set(i,new ArrayList<>());
         }
     }
 
     public void putDices(List<Dice> dicesToPut, int position){
-        dicesLeft.get(position) = new ArrayList<>();
-        dicesLeft[position].add(dicesToPut);
+
+        dicesLeft.set(position,dicesToPut);
     }
 
     public void showRoundTrack(){
