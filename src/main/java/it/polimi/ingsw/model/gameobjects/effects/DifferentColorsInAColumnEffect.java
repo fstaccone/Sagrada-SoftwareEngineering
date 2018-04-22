@@ -21,7 +21,9 @@ public class DifferentColorsInAColumnEffect implements Effect {
             int count = 0;
             colorsPerColumn.clear();
             for(int i=0; i<schema.length; i++){
-                Colors color = schema[i][j].getDice().getColor();
+                Colors color = null;
+                if(schema[i][j].getDice()!=null)
+                    color = schema[i][j].getDice().getColor();
                 if(color==null || colorsPerColumn.contains(color)){
                     count = 0;
                     i = schema.length;

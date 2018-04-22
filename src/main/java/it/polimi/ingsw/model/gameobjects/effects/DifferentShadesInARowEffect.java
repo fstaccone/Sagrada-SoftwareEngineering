@@ -21,7 +21,9 @@ public class DifferentShadesInARowEffect implements Effect {
             int count = 0;
             valuesPerRow.clear();
             for(int j=0; j<schema[i].length; j++){
-                Integer value = schema[i][j].getDice().getValue();
+                Integer value = 0;
+                if(schema[i][j].getDice()!=null)
+                    value = schema[i][j].getDice().getValue();
                 if(value==0 || valuesPerRow.contains(value)){
                     j=schema[i].length;
                     count = 0;

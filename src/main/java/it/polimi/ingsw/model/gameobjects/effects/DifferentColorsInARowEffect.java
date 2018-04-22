@@ -18,7 +18,9 @@ public class DifferentColorsInARowEffect implements Effect{
             int count = 0;
             colorsPerRow.clear();
             for(int j=0; j<schema[i].length; j++){
-                Colors color = schema[i][j].getDice().getColor();
+                Colors color = null;
+                if(schema[i][j].getDice()!=null)
+                        color = schema[i][j].getDice().getColor();
                 if(color==null || colorsPerRow.contains(color)){
                     j=schema[i].length;
                     count = 0;
