@@ -43,10 +43,16 @@ public class Player implements Serializable{
 
 
 
+    // Useful methods for the game's flow
     public void useToolCard(ToolCard chosenToolCardToUse){//il controller fa player1.useToolCard(): può passare la carta scelta perchè il controller ha riferimento alla board e pertanto alle pickedToolCards(attributo di board) tra le quali fa scegliere al client quale usare(ammesso che possa-->va fatto un check)(si tratta di un'azione precedente)
 
         chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
+    // Passa il turno (può farlo anche senza aver fatto altre azioni e deve comunque farlo )
+    public void goTrough(){
+    }
+
+    public
 
 }

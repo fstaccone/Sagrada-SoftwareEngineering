@@ -1,14 +1,16 @@
 package it.polimi.ingsw.model.gameobjects;
 
 import java.rmi.RemoteException;
-import java.util.HashSet;
 import java.util.Set;
 
-public class Room {
+/*  Room is the container of players who decided to play a match
+    It has to be created with a fixed number of players (between 1 and 4)
+    ...
+    Once the room is full, a match begins and other players cannot access the room.
+ */
 
-    //added attributes to try connectivity from view to model(MVC)
-    private static Room room;
-    private Set<Player> loggedPlayers;
+
+public class Room {
 
     private int roomId;
     private Match match;
@@ -16,19 +18,6 @@ public class Room {
     private boolean started;
     private boolean full;
     private int numPlayers;
-
-    //useful for MVC - Later on with room introduction has to be modified/deleted
-    private Room(){
-        loggedPlayers= new HashSet<>();
-    }
-
-    //Singleton(useful for MVC) Later on with room introduction has to be modified/deleted
-    public synchronized static Room get(){
-        if (room==null){
-            room=new Room();
-        }
-        return room;
-    }
 
     public Room(int roomId, int numPlayers) {
         this.roomId = roomId;
@@ -60,27 +49,41 @@ public class Room {
             return;
         }
         this.players.add(player);
+
+        // if the room is full the game can begin
+        // potrebbe nascere un problema per il timer, ma comunque io credo (Paolo) che sia un bene far iniziare la partita appena la stanza è piena anche se il timer non è scaduto
+        if (this.isFull()){
+            this.setStarted();
+            this.startMatch();
+        }
     }
 
     public synchronized void removePlayer(Player player) { this.players.remove(player); }
 
+    // Can be useful for the server to have this method? If not it makes no sense
     public boolean isStarted() { return started; }
 
-    public void setStarted(boolean started) { this.started = started; }
+    private void setStarted() { this.started = true; }
 
-    public boolean isFull() {
+    private boolean isFull() {
         if(players.size() == numPlayers) {
-            setFull(true);
+            this.full = true;
         }
         return full;
     }
 
-    public void setFull(boolean full) { this.full = full; }
-
-    public void startMatch(){
+    // Crea match e fa partire il gioco
+    // Potrebbe creare la finestra di gioco nella finestra in cui girava la room
+    private void startMatch(){
         this.match = new Match(players);
+        match.gameInit();
     }
 
+    public int getRoomId() {
+        return roomId;
+    }
+
+    /*  il controllo va fatto sul server, prima di accedere alla room, in questo modo puù essere usato come identificatore
 
     //added to try connectivity from view to model(MVC)
     public synchronized Player login(String username) throws RemoteException {
@@ -91,4 +94,6 @@ public class Room {
         loggedPlayers.add(player);
         return player; //ritorna player al controller
     }
+
+    */
 }

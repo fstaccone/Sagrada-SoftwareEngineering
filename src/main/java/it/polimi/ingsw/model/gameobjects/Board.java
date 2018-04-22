@@ -9,14 +9,16 @@ public class Board {
     private Set<Player> players;
     private Reserve reserve;
     private List<ToolCard> pickedToolCards;
+    private RoundTrack roundTrack;
 
     public Board(Match match, Set<Player> players, List <ToolCard> pickedToolCards, List <PublicObjectiveCard> pickedPublicObjectiveCards) {
         // To be managed later, even in Match
         this.players = players;
-
-        this.reserve = new Reserve();
         this.pickedToolCards = pickedToolCards;
         this.pickedPublicObjectiveCards = pickedPublicObjectiveCards;
+
+        this.reserve = new Reserve();
+        this.roundTrack = new RoundTrack();
     }
 
     public Reserve getReserve() {
@@ -31,5 +33,10 @@ public class Board {
     public List<PublicObjectiveCard> getPickedPublicObjectiveCards() {
         return pickedPublicObjectiveCards;
     }
+
+    public RoundTrack getRoundTrack() {
+        return roundTrack;
+    }
+
 }
 
