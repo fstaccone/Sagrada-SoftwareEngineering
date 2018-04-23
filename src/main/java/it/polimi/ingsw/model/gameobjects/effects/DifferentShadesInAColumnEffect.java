@@ -24,7 +24,7 @@ public class DifferentShadesInAColumnEffect implements Effect {
                 Integer value = 0;
                 if(schema[i][j].getDice()!=null)
                     value = schema[i][j].getDice().getValue();
-                if(value==0 && valuesPerColumn.contains(value)){
+                if(value==0 || valuesPerColumn.contains(value)){
                     count = 0;
                     i = schema.length;
                 }
