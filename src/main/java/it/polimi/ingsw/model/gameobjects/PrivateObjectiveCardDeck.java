@@ -1,27 +1,53 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import java.util.*;
 
-import java.util.HashSet;
-import java.util.Set;
+public  class PrivateObjectiveCardDeck extends Deck{
 
-public  class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
+    Random randomGenerator;
 
-    public PrivateObjectiveCardDeck() {
-        Set cards = new HashSet<>();
+    public PrivateObjectiveCardDeck(int numOfPlayers) {//VOLENDO SENZA UTILIZZARE I GENERIC POSSO IMPLEMENTARE COME GLI ALTRI MAZZI
+        super();
         for (Colors c: Colors.values()) {
-            if(c!=Colors.NONE) {
-                cards.add(new PrivateObjectiveCard(c));
+            if (c != Colors.NONE) {
+                deck.add(c.toString());
             }
         }
-    }
 
-    @Override
-    public Card pickOneCard() {
-        return null;
-    }
+        for(int i=0;i<numOfPlayers;i++){
+                randomGenerator = new Random();
+                int privateIndex = randomGenerator.nextInt(deck.size());
+                String privateName = deck.get(privateIndex);
 
-    @Override
-    public Set<Card> pickNCards(int num) {
-        return null;
+                switch (privateName) {
+
+                    case "RED":
+                        PrivateObjectiveCard card1 = new PrivateObjectiveCard(Colors.RED);
+                        this.pickedCards.add(card1);
+                        this.deck.remove("RED");
+                        break;
+                    case "BLUE":
+                        PrivateObjectiveCard card2 = new PrivateObjectiveCard(Colors.BLUE);
+                        this.pickedCards.add(card2);
+                        this.deck.remove("BLUE");
+                        break;
+                    case "GREEN":
+                        PrivateObjectiveCard card3 = new PrivateObjectiveCard(Colors.GREEN);
+                        this.pickedCards.add(card3);
+                        this.deck.remove("GREEN");
+                        break;
+                    case "VIOLET":
+                        PrivateObjectiveCard card4 = new PrivateObjectiveCard(Colors.VIOLET);
+                        this.pickedCards.add(card4);
+                        this.deck.remove("VIOLET");
+                        break;
+                    case "YELLOW":
+                        PrivateObjectiveCard card5 = new PrivateObjectiveCard(Colors.YELLOW);
+                        this.pickedCards.add(card5);
+                        this.deck.remove("YELLOW");
+                        break;
+                }
+        }
     }
 }
+

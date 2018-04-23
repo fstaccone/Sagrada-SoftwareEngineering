@@ -1,15 +1,19 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class Deck<T> {
-    protected Set<T> cards;
+public abstract class Deck{
+    protected List<String> deck;
+    protected List<Card> pickedCards;
 
-    public abstract Card pickOneCard();
 
-    public abstract Set<Card> pickNCards(int num);
-
-    public Set<T> getCards() {
-        return cards;
+    public  Deck() {
+        this.deck=new ArrayList<>();
+        this.pickedCards=new ArrayList<>();
     }
+     public List getPickedCards(){
+        return this.pickedCards;
+    }
+
 }

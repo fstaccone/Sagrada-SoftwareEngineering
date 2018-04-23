@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.gameobjects;
 
-
 import it.polimi.ingsw.model.gameobjects.effects.*;
 
 public class PublicObjectiveCard extends ObjectiveCard{
@@ -9,8 +8,6 @@ public class PublicObjectiveCard extends ObjectiveCard{
 
     public PublicObjectiveCard(String name) {
         super(name);
-
-        this.name = name;
         switch (this.name) {
             case "Varietà di colore":
                 this.effect= new ColorsVarietyEffect();
@@ -50,17 +47,9 @@ public class PublicObjectiveCard extends ObjectiveCard{
     }
 
     @Override
-    public int calculatePoints(WindowPatternCard card) {//CONTROLLA
-        return 0;
-    }
-
     public void useCard(Player caller, Match match){
 
         this.effect.applyEffect( caller,  match);
-    }
-
-    public String getCardname() {
-        return this.name;
     }
 
     @Override

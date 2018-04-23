@@ -4,13 +4,14 @@ import java.util.*;
 
 public class MatchMultiplayer extends Match {
 
-    private List<Player> players;
+    private List<PlayerMultiplayer> players;
     private int positionOfFirstPlayerInRound;
 
     public MatchMultiplayer(int matchId, List<Player> players) {
         super(matchId);
+        // trovare un modo per fare il cast da Player a PlayerMultiplayer
         this.decksContainer = new DecksContainer(players.size());
-        this.board = new Board(this, players, decksContainer.getToolCardDeck().getPickedToolCards(), decksContainer.getPublicObjectiveCardDeck().getPickedPublicObjectiveCards());
+       // this.board = new Board(this, players, decksContainer.getToolCardDeck().getPickedToolCards(), decksContainer.getPublicObjectiveCardDeck().getPickedPublicObjectiveCards());
     }
 
     // getters
@@ -90,7 +91,7 @@ public class MatchMultiplayer extends Match {
     @Override
     public void calculateFinalScore() {
         for (Player p: players) {
-
+           // p.getPrivateObjectiveCard().useCard();
         }
     }
 

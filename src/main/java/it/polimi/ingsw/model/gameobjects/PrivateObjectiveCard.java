@@ -1,15 +1,15 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.ArrayList;
 
 public class PrivateObjectiveCard extends ObjectiveCard{
     private Colors color;
 
     public PrivateObjectiveCard(Colors color) {
-        super("PrivateObjectiveCard" + color.toString());
+        super("PrivateObjectiveCard " + color.toString());
         this.color = color;
     }
 
+    @Override
     public void useCard(Player player) {
         int temp = player.getPoints();
         Square[][] window = player.getSchemeCard().getWindow();
@@ -34,8 +34,4 @@ public class PrivateObjectiveCard extends ObjectiveCard{
                 '}';
     }
 
-    @Override
-    public int calculatePoints(WindowPatternCard card) {
-        return 0;
-    }
 }
