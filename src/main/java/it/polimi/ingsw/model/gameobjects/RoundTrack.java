@@ -15,7 +15,6 @@ public class RoundTrack {
     }
 
     public void putDices(List<Dice> dicesToPut, int position){
-
         dicesLeft.set(position,dicesToPut);
     }
 
