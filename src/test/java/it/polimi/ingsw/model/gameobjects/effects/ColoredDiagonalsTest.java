@@ -1,5 +1,6 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +21,7 @@ public class ColoredDiagonalsTest {
     public void Before() throws RemoteException {
         room = mock(Room.class);
         match = mock(Match.class);
-        player = new Player("guido", room);
+        player = new Player("player", room);
         schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 

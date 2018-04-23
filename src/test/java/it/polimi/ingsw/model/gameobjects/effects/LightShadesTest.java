@@ -1,6 +1,8 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
+import it.polimi.ingsw.model.gameobjects.*;
+import it.polimi.ingsw.model.gameobjects.windowpatterncards.ViaLux;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,46 +10,49 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DifferentShadesInAColumnTest {
-    private KaleidoscopicDream schemeCard;
+public class LightShadesTest {
+
+    private ViaLux schemeCard;
     private PublicObjectiveCard publicCard;
     private Player player;
     private Match match;
     private Room room;
+
     @Before
     public void before() {
         room = mock(Room.class);
         match=mock(Match.class);
         player = new Player("player", room);
-        schemeCard = new KaleidoscopicDream();
+        schemeCard = new ViaLux();
         player.setSchemeCard(schemeCard);
 
         Dice dy=mock(Dice.class);
-        when(dy.getValue()).thenReturn(1);
+        when(dy.getValue()).thenReturn(2);
         when(dy.getColor()).thenReturn(Colors.YELLOW);
 
         Dice dg=mock(Dice.class);
-        when(dg.getValue()).thenReturn(5);
+        when(dg.getValue()).thenReturn(1);
         when(dg.getColor()).thenReturn(Colors.GREEN);
 
-        Dice dr=mock(Dice.class);
-        when(dr.getValue()).thenReturn(3);
-        when(dr.getColor()).thenReturn(Colors.RED);
-
         Dice db=mock(Dice.class);
-        when(db.getValue()).thenReturn(2);
+        when(db.getValue()).thenReturn(1);
         when(db.getColor()).thenReturn(Colors.BLUE);
 
         Dice dv=mock(Dice.class);
         when(dv.getValue()).thenReturn(2);
         when(dv.getColor()).thenReturn(Colors.VIOLET);
 
-        player.getSchemeCard().putFirstDice(dy,0,0);
-        player.getSchemeCard().putDice(dg,1,0);
-        player.getSchemeCard().putDice(dr,2,0);
-        player.getSchemeCard().putDice(db,3,0);
+        Dice dr=mock(Dice.class);
+        when(dr.getValue()).thenReturn(1);
+        when(dr.getColor()).thenReturn(Colors.RED);
 
-        publicCard = new PublicObjectiveCard("Sfumature diverse - Colonna");
+        player.getSchemeCard().putFirstDice(dy,0,4);
+        player.getSchemeCard().putDice(dg,1,3);
+        player.getSchemeCard().putDice(db,2,4);
+        player.getSchemeCard().putDice(dv,2,3);
+        player.getSchemeCard().putDice(dr,2,2);
+
+        publicCard = new PublicObjectiveCard("Sfumature chiare");
     }
 
     @Test

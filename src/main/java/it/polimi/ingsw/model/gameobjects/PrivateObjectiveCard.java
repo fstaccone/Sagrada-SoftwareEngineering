@@ -10,10 +10,9 @@ public class PrivateObjectiveCard extends ObjectiveCard{
         this.color = color;
     }
 
-    @Override
-    public int calculatePoints(WindowPatternCard card) {
-        int score = 0;
-        Square[][] window = card.getWindow();
+    public void useCard(Player player) {
+        int temp = player.getPoints();
+        Square[][] window = player.getSchemeCard().getWindow();
         //calculation algorithm
         for(Square[] row : window){
             for(Square spot : row){
@@ -21,11 +20,11 @@ public class PrivateObjectiveCard extends ObjectiveCard{
                 if(spot.getDice()!=null)
                     diceColor = spot.getDice().getColor();
                 if(diceColor==color)
-                    score = score + spot.getDice().getValue();
+                    temp = temp + spot.getDice().getValue();
             }
         }
 
-        return score;
+        player.setPoints(temp);
     }
 
     @Override
@@ -33,5 +32,10 @@ public class PrivateObjectiveCard extends ObjectiveCard{
         return "PrivateObjectiveCard{" +
                 "color=" + color +
                 '}';
+    }
+
+    @Override
+    public int calculatePoints(WindowPatternCard card) {
+        return 0;
     }
 }

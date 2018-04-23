@@ -1,5 +1,6 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,7 +9,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DifferentColorsInAColumnTest {
+public class DifferentShadesInAColumnTest {
     private KaleidoscopicDream schemeCard;
     private PublicObjectiveCard publicCard;
     private Player player;
@@ -27,7 +28,7 @@ public class DifferentColorsInAColumnTest {
         when(dy.getColor()).thenReturn(Colors.YELLOW);
 
         Dice dg=mock(Dice.class);
-        when(dg.getValue()).thenReturn(2);
+        when(dg.getValue()).thenReturn(5);
         when(dg.getColor()).thenReturn(Colors.GREEN);
 
         Dice dr=mock(Dice.class);
@@ -35,7 +36,7 @@ public class DifferentColorsInAColumnTest {
         when(dr.getColor()).thenReturn(Colors.RED);
 
         Dice db=mock(Dice.class);
-        when(db.getValue()).thenReturn(4);
+        when(db.getValue()).thenReturn(2);
         when(db.getColor()).thenReturn(Colors.BLUE);
 
         Dice dv=mock(Dice.class);
@@ -45,14 +46,15 @@ public class DifferentColorsInAColumnTest {
         player.getSchemeCard().putFirstDice(dy,0,0);
         player.getSchemeCard().putDice(dg,1,0);
         player.getSchemeCard().putDice(dr,2,0);
-        player.getSchemeCard().putDice(dv,3,0);
+        player.getSchemeCard().putDice(db,3,0);
 
-        publicCard = new PublicObjectiveCard("Colori diversi - Colonna");
+        publicCard = new PublicObjectiveCard("Sfumature diverse - Colonna");
     }
 
     @Test
     public void checkPoints() {
         publicCard.useCard(player, match);
-        Assert.assertEquals(5,player.getPoints());
+        System.out.println(player.getSchemeCard().toString());
+        Assert.assertEquals(4,player.getPoints());
     }
 }
