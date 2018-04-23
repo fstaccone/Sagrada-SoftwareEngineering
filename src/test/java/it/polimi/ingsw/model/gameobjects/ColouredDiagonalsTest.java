@@ -40,13 +40,10 @@ public class ColouredDiagonalsTest {
         when(dice4.getValue()).thenReturn(3);
         when(dice4.getColor()).thenReturn(Colors.RED);
 
+        player.setPickedDice(dice1);
         player.getSchemeCard().putFirstDice(player.getPickedDice(), 0, 0);
-        player.getSchemeCard().putDice(player.getPickedDice(), 1, 3);
         player.setPickedDice(dice2);
         player.getSchemeCard().putDice(player.getPickedDice(), 0, 1);
-        player.getSchemeCard().putDice(player.getPickedDice(), 1, 1);
-        player.getSchemeCard().putDice(player.getPickedDice(), 0, 2);
-        player.getSchemeCard().putDice(player.getPickedDice(), 0, 3);
         player.setPickedDice(dice1);
         player.getSchemeCard().putDice(player.getPickedDice(), 1, 1);
         player.setPickedDice(dice2);
@@ -56,10 +53,11 @@ public class ColouredDiagonalsTest {
         player.getSchemeCard().putDice(player.getPickedDice(), 0, 2);
         player.setPickedDice(dice3);
         player.getSchemeCard().putDice(player.getPickedDice(), 3, 1);
-        player.getSchemeCard().putDice(player.getPickedDice(), 2, 2);
         player.setPickedDice(dice2);
         player.getSchemeCard().putDice(player.getPickedDice(), 3, 2);
         player.getSchemeCard().putDice(player.getPickedDice(), 2, 3);
+        player.setPickedDice(dice3);
+        player.getSchemeCard().putDice(player.getPickedDice(),2,2);
         player.setPickedDice(dice1);
         player.getSchemeCard().putDice(player.getPickedDice(), 2, 4);
         player.getSchemeCard().putDice(player.getPickedDice(), 3, 3);

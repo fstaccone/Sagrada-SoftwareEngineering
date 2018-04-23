@@ -56,11 +56,11 @@ public class LightShadesTest {
         Dice dr=mock(Dice.class);
         when(dr.getValue()).thenReturn(1);
         when(dr.getColor()).thenReturn(Colors.RED);
-        player.getSchemeCard().putFirstDice(dy,0,0);
-        player.getSchemeCard().putDice(dg,1,1);
-        player.getSchemeCard().putDice(db,0,3);
+        player.getSchemeCard().putFirstDice(dy,0,4);
+        player.getSchemeCard().putDice(dg,1,3);
+        player.getSchemeCard().putDice(db,2,4);
         player.getSchemeCard().putDice(dv,2,3);
-        player.getSchemeCard().putDice(dr,3,4);
+        player.getSchemeCard().putDice(dr,2,2);
 
         publicCard = new PublicObjectiveCard("Sfumature chiare");
     }

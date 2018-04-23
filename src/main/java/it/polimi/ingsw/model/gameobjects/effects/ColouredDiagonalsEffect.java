@@ -9,7 +9,8 @@ public class ColouredDiagonalsEffect implements Effect {
 
     @Override
     public void applyEffect(Player player, Match match) {
-        Square[][] schema = player.getSchemeCard().getWindow();
+        Square[][] originalSchema = player.getSchemeCard().getWindow();
+        Square[][] schema = originalSchema.clone();
         int score = player.getPoints();
         for(Colors color : Colors.values()){
             if(color!=Colors.NONE){

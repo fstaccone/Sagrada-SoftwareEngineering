@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
@@ -61,8 +62,6 @@ public class WindowPatternCard {
         //If we are putting a dice in the upper border we don't have a northern square to check
         if (row == 0) {
             northern = null;
-            northEastern = null;
-            northWestern = null;
         } else {
             northern = window[row - 1][column].getDice();
             if (column < window[row].length - 1)
@@ -74,7 +73,6 @@ public class WindowPatternCard {
         if (column == window[row].length - 1) {
             eastern = null;
             northEastern = null;
-            southEastern = null;
         } else {
             eastern = window[row][column + 1].getDice();
             if(row<window.length-1)
@@ -84,7 +82,6 @@ public class WindowPatternCard {
         if (row == window.length - 1) {
             southern = null;
             southEastern = null;
-            southWestern = null;
         } else {
             southern = window[row + 1][column].getDice();
             if(column > 0)
@@ -93,16 +90,17 @@ public class WindowPatternCard {
         //If we are putting a dice in the left border we don't have an western square to check
         if (column == 0) {
             western = null;
-            northWestern = null;
-            southWestern = null;
         } else {
             western = window[row][column - 1].getDice();
         }
         return (northern!=null || eastern!=null || southern!=null || western!=null || northEastern!=null || southEastern!=null || southWestern!=null || northWestern!=null);
     }
     // method used by checkPos
-    public boolean existsAdjacentDice(Dice northern ,Dice eastern, Dice southern, Dice western, Dice northEastern, Dice southEastern, Dice southWestern, Dice northWestern){
-        return (northern!=null || eastern!=null || southern!=null || western!=null || northEastern!=null || southEastern!=null || southWestern!=null || northWestern!=null);
+    public boolean existsAdjacentDice(Dice[] adjacentDices){
+        for(Dice dice : adjacentDices){
+            if(dice!=null) return true;
+        }
+        return false;
     }
 
     public boolean checkPos(Dice d, int row, int column) {
@@ -156,8 +154,9 @@ public class WindowPatternCard {
         } else {
             western = window[row][column - 1].getDice();
         }
+        Dice[] adjacentDices = {northern, eastern, southern, western, northEastern, southEastern, southWestern, northWestern};
         //check if we are putting the dice next to at least another one
-        if (existsAdjacentDice(northern, eastern, southern, western, northEastern, southEastern, southWestern, northWestern)) {
+        if (existsAdjacentDice(adjacentDices)) {
             //check on eventual dice in northern square with same color or value
             if (northern != null && (northern.getColor() == d.getColor() || northern.getValue() == d.getValue()))
                 return false;
@@ -244,7 +243,7 @@ public class WindowPatternCard {
 
         return result.toString();
     }
-
+/*
      //Test for toString correctness and dice's placing
     public static void main(String[] args){
         WindowPatternCard window = new LuzCelestial();
@@ -299,6 +298,6 @@ public class WindowPatternCard {
         System.out.println(player.getPoints());
         //il risultato è 11
     }
-
+*/
 }
 
