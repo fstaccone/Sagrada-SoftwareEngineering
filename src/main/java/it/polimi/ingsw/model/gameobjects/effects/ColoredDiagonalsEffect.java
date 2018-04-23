@@ -2,9 +2,9 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gameobjects.*;
 
-public class ColouredDiagonalsEffect implements Effect {
+public class ColoredDiagonalsEffect implements Effect {
     private final int pointsToBeAssigned=1;//ASTERISCO
-    public ColouredDiagonalsEffect() {
+    public ColoredDiagonalsEffect() {
     }
 
     @Override

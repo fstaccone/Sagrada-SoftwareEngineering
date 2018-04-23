@@ -3,20 +3,21 @@ package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.model.gameobjects.effects.*;
 
-public class PublicObjectiveCard {
+public class PublicObjectiveCard extends ObjectiveCard{
     private String cardname;
 
     private Effect effect;
 
     public PublicObjectiveCard(String name) {
+        super(name);
 
         this.cardname = name;
         switch (cardname) {
             case "Varietà di colore":
-                this.effect= new ColoursVarietyEffect();
+                this.effect= new ColorsVarietyEffect();
                 break;
             case "Diagonali colorate":
-                this.effect= new ColouredDiagonalsEffect();
+                this.effect= new ColoredDiagonalsEffect();
                 break;
             case "Sfumature diverse":
                 this.effect= new DifferentShadesEffect();
@@ -49,7 +50,12 @@ public class PublicObjectiveCard {
 
     }
 
-    public void useCard(Player caller, Match match){//CONSIDERIAMO PER ESEMPIO LA TOOLCARD4
+    @Override
+    public int calculatePoints(WindowPatternCard card) {//CONTROLLA
+        return 0;
+    }
+
+    public void useCard(Player caller, Match match){
 
         this.effect.applyEffect( caller,  match);
     }
