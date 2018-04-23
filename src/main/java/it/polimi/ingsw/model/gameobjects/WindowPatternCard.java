@@ -54,35 +54,55 @@ public class WindowPatternCard {
         Dice eastern;
         Dice southern;
         Dice western;
+        Dice northEastern = null;
+        Dice southEastern = null;
+        Dice southWestern = null;
+        Dice northWestern = null;
         //If we are putting a dice in the upper border we don't have a northern square to check
         if (row == 0) {
             northern = null;
+            northEastern = null;
+            northWestern = null;
         } else {
             northern = window[row - 1][column].getDice();
+            if (column < window[row].length - 1)
+                northEastern = window[row - 1][column + 1].getDice();
+            if (column > 0)
+                northWestern = window[row - 1][column - 1].getDice();
         }
         //If we are putting a dice in the right border we don't have an eastern square to check
         if (column == window[row].length - 1) {
             eastern = null;
+            northEastern = null;
+            southEastern = null;
         } else {
             eastern = window[row][column + 1].getDice();
+            if(row<window.length-1)
+                southEastern = window[row+1][column+1].getDice();
         }
         //If we are putting a dice in the bottom border we don't have an southern square to check
         if (row == window.length - 1) {
             southern = null;
+            southEastern = null;
+            southWestern = null;
         } else {
             southern = window[row + 1][column].getDice();
+            if(column > 0)
+                southWestern = window[row+1][column-1].getDice();
         }
         //If we are putting a dice in the left border we don't have an western square to check
         if (column == 0) {
             western = null;
+            northWestern = null;
+            southWestern = null;
         } else {
             western = window[row][column - 1].getDice();
         }
-        return (northern!=null || eastern!=null || southern!=null || western!=null);
+        return (northern!=null || eastern!=null || southern!=null || western!=null || northEastern!=null || southEastern!=null || southWestern!=null || northWestern!=null);
     }
     // method used by checkPos
-    public boolean existsAdjacentDice(Dice northern ,Dice eastern, Dice southern, Dice western){
-        return (northern!=null || eastern!=null || southern!=null || western!=null);
+    public boolean existsAdjacentDice(Dice northern ,Dice eastern, Dice southern, Dice western, Dice northEastern, Dice southEastern, Dice southWestern, Dice northWestern){
+        return (northern!=null || eastern!=null || southern!=null || western!=null || northEastern!=null || southEastern!=null || southWestern!=null || northWestern!=null);
     }
 
     public boolean checkPos(Dice d, int row, int column) {
@@ -92,32 +112,52 @@ public class WindowPatternCard {
         Dice eastern;
         Dice southern;
         Dice western;
+        Dice northEastern = null;
+        Dice southEastern = null;
+        Dice southWestern = null;
+        Dice northWestern = null;
         //If we are putting a dice in the upper border we don't have a northern square to check
         if (row == 0) {
             northern = null;
+            northEastern = null;
+            northWestern = null;
         } else {
             northern = window[row - 1][column].getDice();
+            if (column < window[row].length - 1)
+                northEastern = window[row - 1][column + 1].getDice();
+            if (column > 0)
+                northWestern = window[row - 1][column - 1].getDice();
         }
         //If we are putting a dice in the right border we don't have an eastern square to check
         if (column == window[row].length - 1) {
             eastern = null;
+            northEastern = null;
+            southEastern = null;
         } else {
             eastern = window[row][column + 1].getDice();
+            if(row<window.length-1)
+                southEastern = window[row+1][column+1].getDice();
         }
         //If we are putting a dice in the bottom border we don't have an southern square to check
         if (row == window.length - 1) {
             southern = null;
+            southEastern = null;
+            southWestern = null;
         } else {
             southern = window[row + 1][column].getDice();
+            if(column > 0)
+                southWestern = window[row+1][column-1].getDice();
         }
         //If we are putting a dice in the left border we don't have an western square to check
         if (column == 0) {
             western = null;
+            northWestern = null;
+            southWestern = null;
         } else {
             western = window[row][column - 1].getDice();
         }
         //check if we are putting the dice next to at least another one
-        if (existsAdjacentDice(northern, eastern, southern, western)) {
+        if (existsAdjacentDice(northern, eastern, southern, western, northEastern, southEastern, southWestern, northWestern)) {
             //check on eventual dice in northern square with same color or value
             if (northern != null && (northern.getColor() == d.getColor() || northern.getValue() == d.getValue()))
                 return false;
@@ -205,7 +245,7 @@ public class WindowPatternCard {
         return result.toString();
     }
 
-    /* //Test for toString correctness and dice's placing
+     //Test for toString correctness and dice's placing
     public static void main(String[] args){
         WindowPatternCard window = new LuzCelestial();
         Room room = mock(Room.class);
@@ -256,8 +296,9 @@ public class WindowPatternCard {
         Match match = new Match(players);
         PublicObjectiveCard card1 = new PublicObjectiveCard("Diagonali colorate");
         card1.useCard(player, match);
-        il risultato è 11
+        System.out.println(player.getPoints());
+        //il risultato è 11
     }
-    */
+
 }
 
