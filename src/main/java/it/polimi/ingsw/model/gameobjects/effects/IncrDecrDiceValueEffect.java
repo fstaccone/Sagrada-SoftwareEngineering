@@ -13,6 +13,8 @@ public class IncrDecrDiceValueEffect implements Effect{
 
     @Override
     public void applyEffect(Player player, Match match) {
+        if(player.getPickedDice()==null)
+            player.setPickedDice(match.getBoard().getReserve().chooseDice());
         System.out.println("Picked dice: "+player.getPickedDice().toString()+"\n"+
         "Type '+' if you want to increment the dice value by 1 (not valid for value=6), " +
         "type '-' if you want to decrement the dice value by 1 (not valid for value=1)");
@@ -25,14 +27,16 @@ public class IncrDecrDiceValueEffect implements Effect{
             switch (answer) {
                 case "+":
                     if(value!=6) {
-                        modified.setValue(value++);
+                        value++;
+                        modified.setValue(value);
                         token = 1;
                     }
                     else System.out.println("The value of this dice is 6, you can't increment it.");
                     break;
                 case "-":
                     if(value!=1) {
-                        modified.setValue(value--);
+                        value--;
+                        modified.setValue(value);
                         token = 1;
                     }
                     else System.out.println("The value of this dice is 1, you can't decrement it.");
@@ -42,6 +46,7 @@ public class IncrDecrDiceValueEffect implements Effect{
                     break;
             }
         }
+        System.out.println(("New dice: "+modified.toString()));
         player.setPickedDice(modified);
     }
 }
