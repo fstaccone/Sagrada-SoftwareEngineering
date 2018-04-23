@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +50,8 @@ public class MoveDiceIgnoringColorRestrTest {
         player.getSchemeCard().putDice(db,3,0);
 
         toolCard = new ToolCard("Pennello per Eglomise");
+        ByteArrayInputStream in = new ByteArrayInputStream("1 0 0 1".getBytes());
+        System.setIn(in);
     }
 
     @Test
