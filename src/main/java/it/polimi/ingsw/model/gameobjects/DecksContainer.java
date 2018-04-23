@@ -1,10 +1,5 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 public class DecksContainer {
 
     private PrivateObjectiveCardDeck  privateObjectiveDeck;
@@ -16,7 +11,7 @@ public class DecksContainer {
     public DecksContainer(int numOfPlayers) {
         this.publicObjectiveCardDeck= new PublicObjectiveCardDeck();
         this.toolCardDeck=new ToolCardDeck();
-        this.privateObjectiveDeck = new PrivateObjectiveCardDeck();
+        this.privateObjectiveDeck = new PrivateObjectiveCardDeck(numOfPlayers);
         this.windowPatternDeck = new WindowPatternCardDeck(numOfPlayers);
         //this.windowFrameDeck = new WindowFramePlayerBoardDeck();
     }
@@ -33,7 +28,7 @@ public class DecksContainer {
         return windowPatternDeck;
     }
 
-    public WindowFramePlayerBoardDeck getWindowFramePlaeyrBoardDeck() {
+    public WindowFramePlayerBoardDeck getWindowFramePlayerBoardDeck() {
         return windowFrameDeck;
     }
 
@@ -52,15 +47,6 @@ public class DecksContainer {
 
     public void setWindowFramePlayerBoardDeck(WindowFramePlayerBoardDeck windowFrameDeck) {
         this.windowFrameDeck = windowFrameDeck;
-    }
-
-    // Test for right creation of cards
-    public static void main (String[] args){
-
-        DecksContainer decks = new DecksContainer(1);
-        System.out.println(decks.getToolCardDeck().getPickedToolCards().toString());
-        System.out.println(decks.getPublicObjectiveCardDeck().getPickedPublicObjectiveCards().toString());
-        System.out.println(decks.getWindowPatternCardDeck().getPickedWindowPatternCards().toString());
     }
 
 }

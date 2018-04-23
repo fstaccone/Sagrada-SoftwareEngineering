@@ -6,8 +6,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.rmi.RemoteException;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +16,7 @@ public class ColoredDiagonalsTest {
     private Match match;
     private Room room;
     @Before
-    public void Before() throws RemoteException {
+    public void Before() {
         room = mock(Room.class);
         match = mock(Match.class);
         player = new Player("player", room);
@@ -69,7 +67,7 @@ public class ColoredDiagonalsTest {
     }
 
     @Test
-    public void checkPoints() throws RemoteException{
+    public void checkPoints() {
         publicCard.useCard(player, match);
         Assert.assertEquals(11,player.getPoints());
     }

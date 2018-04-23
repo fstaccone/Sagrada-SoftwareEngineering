@@ -1,10 +1,14 @@
 package it.polimi.ingsw.model.gameobjects;
 
-public abstract class ObjectiveCard extends Card{
+public class ObjectiveCard extends Card{
     public ObjectiveCard(String name) {
         super(name);
     }
 
-    public abstract int calculatePoints(WindowPatternCard card);
+    public void useCard(Player player){
+    }
+
+    public void useCard(Player player, Match match){
+    }
 
 }

@@ -1,12 +1,9 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.rmi.RemoteException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,7 +15,7 @@ public class PrivateObjectiveCardTest {
     private Match match;
     private Room room;
     @Before
-    public void Before() throws RemoteException {
+    public void Before(){
         room = mock(Room.class);
         match = mock(Match.class);
         player = new Player("player", room);
@@ -50,7 +47,7 @@ public class PrivateObjectiveCardTest {
     }
 
     @Test
-    public void checkPoints() throws RemoteException{
+    public void checkPoints() {
         privateObjectiveCard.useCard(player);
         System.out.println(player.getSchemeCard().toString());
         Assert.assertEquals(10,player.getPoints());

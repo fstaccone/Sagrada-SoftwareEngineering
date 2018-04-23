@@ -26,7 +26,7 @@ public class Match {
 
         this.decksContainer = new DecksContainer(players.size());
         this.bag = new Bag(18);
-        this.board = new Board(this, players, decksContainer.getToolCardDeck().getPickedToolCards(), decksContainer.getPublicObjectiveCardDeck().getPickedPublicObjectiveCards());
+        this.board = new Board(this, players, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
     }
 
     public int getMatchId() {
@@ -93,7 +93,7 @@ public class Match {
 
         for (Player p : players){
             val = rand.nextInt(colors.size()) + 1;
-            p.
+           // p.
         }
 /*
         for(Dice dice : init){
