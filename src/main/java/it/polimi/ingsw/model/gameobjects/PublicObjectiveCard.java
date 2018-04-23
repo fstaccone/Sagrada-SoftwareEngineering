@@ -4,15 +4,14 @@ package it.polimi.ingsw.model.gameobjects;
 import it.polimi.ingsw.model.gameobjects.effects.*;
 
 public class PublicObjectiveCard extends ObjectiveCard{
-    private String cardname;
 
     private Effect effect;
 
     public PublicObjectiveCard(String name) {
         super(name);
 
-        this.cardname = name;
-        switch (cardname) {
+        this.name = name;
+        switch (this.name) {
             case "Varietà di colore":
                 this.effect= new ColorsVarietyEffect();
                 break;
@@ -44,7 +43,7 @@ public class PublicObjectiveCard extends ObjectiveCard{
                 this.effect= new DifferentColorsInARowEffect();
                 break;
 
-            default: cardname = "Invalid card from PublicObjectiveCard";
+            default: this.name = "Invalid card from PublicObjectiveCard";
                 break;
         }
 
@@ -61,13 +60,13 @@ public class PublicObjectiveCard extends ObjectiveCard{
     }
 
     public String getCardname() {
-        return cardname;
+        return this.name;
     }
 
     @Override
     public String toString() {
         return "{" +
-                "cardname='" + cardname + '\'' +
+                "cardname='" + this.name + '\'' +
                 '}';
     }
 }

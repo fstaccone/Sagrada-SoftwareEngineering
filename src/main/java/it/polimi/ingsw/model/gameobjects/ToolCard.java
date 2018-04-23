@@ -3,13 +3,13 @@ package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.model.gameobjects.effects.*;
 
-public class ToolCard{
-    private String cardname;
+public class ToolCard extends Card{
+
     private Effect effect;
 
     public ToolCard(String name) {
-        this.cardname = name;
-        switch (cardname) {
+       super(name);
+        switch (this.name) {
             case "Pinza Sgrossatrice":
                 this.effect= new IncrDecrDiceValueEffect();
                 break;
@@ -46,7 +46,7 @@ public class ToolCard{
             case "Taglierina Manuale":
               //  this.effect= new MoveTwoDicesColorRoundTrackEffect();
                 break;
-            default: cardname = "Invalid card from ToolCard";
+            default: this.name = "Invalid card from ToolCard";
                 break;
         }
     }
@@ -57,13 +57,13 @@ public class ToolCard{
     }
 
     public String getCardname() {
-        return cardname;
+        return name;
     }
 
     @Override
     public String toString() {
         return "{" +
-                "cardname='" + cardname + '\'' +
+                "cardname='" + name + '\'' +
                 '}';
     }
 }

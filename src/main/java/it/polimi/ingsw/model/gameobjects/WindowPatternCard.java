@@ -7,19 +7,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.mockito.Mockito.mock;
+//import static org.mockito.Mockito.mock;
 
-public class WindowPatternCard {
-    private String name;
+public class WindowPatternCard extends Card{
 
     private int difficulty; //difficulty is a value between 3 and 6
     private Square[][] window;
-    int rows;
-    int columns;
+    private int rows;
+    private int columns;
     //constructor gives window a name and creates a double array of squares without constraints (for now)
     //it should be modified to allow constraints in specific squares
     public WindowPatternCard(String name, int rows, int columns) {
-        this.name = name;
+        super(name);
         this.rows=rows;
         this.columns=columns;
         window = new Square[rows][columns];

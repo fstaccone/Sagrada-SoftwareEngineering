@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // commentato perchè non ho il jar
 //import static org.mockito.Mockito.mock;
@@ -11,7 +9,7 @@ import java.util.Set;
 public class Match {
 
     private int matchId;
-    private Map<Integer, Player> players;
+    private List<Player> players;
     private DecksContainer decksContainer;
     private Bag bag;
     private Board board;
@@ -20,10 +18,10 @@ public class Match {
     private Player firstPlayerInRound;
 
     //LA ROOM ISTANZIA IL MATCH PASSANDO I GIOCATORI? SE Sì ALLORA IL CONTROLLER DOVREBBE RIFARSI ALLA ROOM E NON AL MATCH(RIENTRA NELLE MODIFICHE DA FARE)
-    public Match(Set<Player> players) {
+    public Match(List<Player> players) {
         // this.players deve diventare una mappa con i player contenuti in players a cui viene associata una posizione in modo da tenerne traccia durante il gioco
         // la posizione potrebbe anche essere determinata dal colore, stabiliamo una gerarchia ed assegnamo il colore in modo casuale
-        this.players = new HashMap<>();
+        this.players = players;
         //this.players = players.toMap(); // con posizione associata
 
         this.decksContainer = new DecksContainer(players.size());
@@ -82,7 +80,29 @@ public class Match {
     // Assegna il colore ai giocatori in modo casuale
     private void assignColors(){
 
-    }
+        // Creation of a list of colors (without the special value NONE) to be assigned randomly to players
+        Random rand = new Random();
+        int val;
+        List colors = new ArrayList(Colors.values().length -1);
+
+        for (Colors c : Colors.values()) {
+            if(!c.equals(Colors.NONE)){
+                colors.add(c);
+            }
+        }
+
+        for (Player p : players){
+            val = rand.nextInt(colors.size()) + 1;
+            p.
+        }
+/*
+        for(Dice dice : init){
+            Random rand = new Random();
+            int val = rand.nextInt(6)+1;
+            dice.setValue(val);
+            dices.add(dice);
+        }
+*/    }
 
     // Sceglie il primo giocatore in modo casuale
     // Potrebbe essere scelto in base alla posizione o al colore
@@ -110,8 +130,6 @@ public class Match {
     private void drawToolCards(){
 
     }
-
-
 
     // Gestore del singolo turno
     private void turnManager(Player firstPlayer){

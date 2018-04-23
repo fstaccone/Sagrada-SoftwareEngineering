@@ -11,8 +11,9 @@ public class Reserve {
     }
 
     public void throwDices(List<Dice> init){
+        Random rand = new Random();
+
         for(Dice dice : init){
-            Random rand = new Random();
             int val = rand.nextInt(6)+1;
             dice.setValue(val);
             dices.add(dice);

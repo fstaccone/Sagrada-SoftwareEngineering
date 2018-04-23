@@ -16,7 +16,7 @@ public class DecksContainer {
     public DecksContainer(int numOfPlayers) {
         this.publicObjectiveCardDeck= new PublicObjectiveCardDeck();
         this.toolCardDeck=new ToolCardDeck();
-        //this.privateObjectiveDeck = new PrivateObjectiveCardDeck();
+        this.privateObjectiveDeck = new PrivateObjectiveCardDeck();
         this.windowPatternDeck = new WindowPatternCardDeck(numOfPlayers);
         //this.windowFrameDeck = new WindowFramePlayerBoardDeck();
     }

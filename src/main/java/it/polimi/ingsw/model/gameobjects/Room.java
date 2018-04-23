@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.gameobjects;
 import it.polimi.ingsw.Server;
 
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Set;
 
 /*  Room is the container of players who decided to play a match
@@ -16,7 +17,7 @@ public class Room {
 
     private int roomId;
     private Match match;
-    private Set<Player> players;
+    private List<Player> players;
     private boolean started;
     private boolean full;
     private int numPlayers;
@@ -41,7 +42,7 @@ public class Room {
     }
 
     // if we have to return the players' set, do we need to protect the reference?
-    public Set<Player> getPlayers() { return players; }
+    public List<Player> getPlayers() { return players; }
 
     // have these cases to be managed with exceptions?
     public synchronized void addPlayer(Player player) {
