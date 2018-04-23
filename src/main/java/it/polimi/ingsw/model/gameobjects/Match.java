@@ -26,9 +26,9 @@ public class Match {
         this.players = new HashMap<>();
         //this.players = players.toMap(); // con posizione associata
 
-        this.decksContainer = new DecksContainer();
+        this.decksContainer = new DecksContainer(players.size());
         this.bag = new Bag(18);
-        this.board = new Board(this, players, decksContainer.getPickedToolCards(), decksContainer.getPickedPublicObjectiveCards());
+        this.board = new Board(this, players, decksContainer.getToolCardDeck().getPickedToolCards(), decksContainer.getPublicObjectiveCardDeck().getPickedPublicObjectiveCards());
     }
 
     public int getMatchId() {

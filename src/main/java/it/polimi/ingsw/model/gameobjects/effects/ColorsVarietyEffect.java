@@ -5,9 +5,9 @@ import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
-public class ColoursVarietyEffect implements Effect {
+public class ColorsVarietyEffect implements Effect {
     private final int pointsToBeAssigned=4;
-    public ColoursVarietyEffect() {
+    public ColorsVarietyEffect() {
 
     }
 

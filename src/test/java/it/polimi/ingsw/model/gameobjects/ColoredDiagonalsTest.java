@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ColouredDiagonalsTest {
+public class ColoredDiagonalsTest {
     private LuzCelestial schemeCard;
     private PublicObjectiveCard publicCard;
     private Player player;
