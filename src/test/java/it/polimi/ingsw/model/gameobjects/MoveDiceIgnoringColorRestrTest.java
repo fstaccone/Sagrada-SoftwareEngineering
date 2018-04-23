@@ -8,9 +8,9 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DifferentShadesInAColumnTest {
+public class MoveDiceIgnoringColorRestrTest {
     private KaleidoscopicDream schemeCard;
-    private PublicObjectiveCard publicCard;
+    private ToolCard toolCard;
     private Player player;
     private Match match;
     private Room room;
@@ -47,13 +47,13 @@ public class DifferentShadesInAColumnTest {
         player.getSchemeCard().putDice(dr,2,0);
         player.getSchemeCard().putDice(db,3,0);
 
-        publicCard = new PublicObjectiveCard("Sfumature diverse - Colonna");
+        toolCard = new ToolCard("Pennello per Eglomise");
     }
 
     @Test
     public void checkPoints() {
-        publicCard.useCard(player, match);
+        toolCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(4,player.getPoints());
+        Assert.assertEquals(Colors.GREEN,player.getSchemeCard().getWindow()[0][1].getDice().getColor());
     }
 }
