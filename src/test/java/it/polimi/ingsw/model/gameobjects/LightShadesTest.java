@@ -10,11 +10,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class LightShadesTest {
+
     private ViaLux schemeCard;
     private PublicObjectiveCard publicCard;
     private Player player;
     private Match match;
     private Room room;
+
     @Before
     public void before() {
         room = mock(Room.class);

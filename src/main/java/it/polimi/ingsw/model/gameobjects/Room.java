@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.Server;
+
 import java.rmi.RemoteException;
 import java.util.Set;
 
@@ -19,11 +21,15 @@ public class Room {
     private boolean full;
     private int numPlayers;
 
-    public Room(int roomId, int numPlayers) {
+    // Da capire come la room comunica con il server
+    private Server server;
+
+    public Room(int roomId, int numPlayers, Server server) {
         this.roomId = roomId;
         this.numPlayers = numPlayers;
         this.full = false;
         this.started = false;
+        this.server = server;
     }
 
     public Match getMatch() {
@@ -53,6 +59,7 @@ public class Room {
         // if the room is full the game can begin
         // potrebbe nascere un problema per il timer, ma comunque io credo (Paolo) che sia un bene far iniziare la partita appena la stanza è piena anche se il timer non è scaduto
         if (this.isFull()){
+            server.createNewRoom();
             this.setStarted();
             this.startMatch();
         }
@@ -75,6 +82,7 @@ public class Room {
     // Crea match e fa partire il gioco
     // Potrebbe creare la finestra di gioco nella finestra in cui girava la room
     private void startMatch(){
+
         this.match = new Match(players);
         match.gameInit();
     }
@@ -82,6 +90,8 @@ public class Room {
     public int getRoomId() {
         return roomId;
     }
+
+
 
     /*  il controllo va fatto sul server, prima di accedere alla room, in questo modo puù essere usato come identificatore
 

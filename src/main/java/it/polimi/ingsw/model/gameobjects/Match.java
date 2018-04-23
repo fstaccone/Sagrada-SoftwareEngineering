@@ -15,9 +15,9 @@ public class Match {
     private DecksContainer decksContainer;
     private Bag bag;
     private Board board;
-    private final static int numberOfRounds = 10;
+    private static final int numberOfRounds = 10;
     private int roundCounter;
-    private Player firstPlayerInTurn;
+    private Player firstPlayerInRound;
 
     //LA ROOM ISTANZIA IL MATCH PASSANDO I GIOCATORI? SE Sì ALLORA IL CONTROLLER DOVREBBE RIFARSI ALLA ROOM E NON AL MATCH(RIENTRA NELLE MODIFICHE DA FARE)
     public Match(Set<Player> players) {
@@ -55,10 +55,10 @@ public class Match {
         this.roundCounter++;
     }
 
-    public Player getFirstPlayerInTurn() { return firstPlayerInTurn; }
+    public Player getFirstPlayerInRound() { return firstPlayerInRound; }
 
-    public void setFirstPlayerInTurn(Player firstPlayerInTurn) {
-        this.firstPlayerInTurn = firstPlayerInTurn;
+    public void setFirstPlayerInRound(Player firstPlayerInRound) {
+        this.firstPlayerInRound = firstPlayerInRound;
     }
 
     // Game's initialisation
@@ -67,14 +67,14 @@ public class Match {
         // Fase in cui vengono svolte le operazioni da fare una sola volta
         this.roundCounter = 0;
         this.assignColors();
-        //this.setFirstPlayerInTurn(this.chooseFirstPlayer());
+        //this.setFirstPlayerInRound(this.chooseFirstPlayer());
         this.drawPrivateObjectiveCards();
         this.proposeWindowPatternCards();
         this.drawPublicObjectiveCards();
         this.drawToolCards();
 
         // Viene lanciata la fase a turni
-        this.turnManager(firstPlayerInTurn);
+        this.turnManager(firstPlayerInRound);
     }
 
     // Nuovi metodi utili allo svolgimento della partita
@@ -116,19 +116,24 @@ public class Match {
     // Gestore del singolo turno
     private void turnManager(Player firstPlayer){
         // Esecuzione del turno
-        this.nextTurn();
+        this.nextRound();
     }
 
-    private void nextTurn(){
+    private void nextRound(){
 
-        // mette i dadi rimanenti nella riserva
+        // mette i dadi rimanenti nella riserva in roundtrack
         //...
         this.incrementRoundCounter();
 
         // Determina il prossimo giocatore primo a giocare
-        //this.setFirstPlayerInTurn(this.nextFirtsPlayer());
+        //this.setFirstPlayerInRound(this.nextFirtsPlayer());
 
-        this.turnManager(firstPlayerInTurn);
+        if(this.roundCounter > 10){
+            // calcola punteggio
+        }
+        else {
+            this.turnManager(firstPlayerInRound);
+        }
 
     }
 
