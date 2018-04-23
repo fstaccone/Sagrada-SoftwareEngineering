@@ -42,7 +42,7 @@ public class MoveDiceIgnoringValueRestrTest {
         when(db.getColor()).thenReturn(Colors.BLUE);
 
         Dice dv=mock(Dice.class);
-        when(dv.getValue()).thenReturn(2);
+        when(dv.getValue()).thenReturn(3);
         when(dv.getColor()).thenReturn(Colors.VIOLET);
 
         player.getSchemeCard().putFirstDice(dy,0,0);
