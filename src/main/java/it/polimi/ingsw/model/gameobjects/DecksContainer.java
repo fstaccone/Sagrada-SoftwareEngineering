@@ -9,7 +9,7 @@ public class DecksContainer {
     private ToolCardDeck toolCardDeck;
 
     public DecksContainer(int numOfPlayers) {
-        this.publicObjectiveCardDeck= new PublicObjectiveCardDeck();
+        this.publicObjectiveCardDeck= new PublicObjectiveCardDeck(numOfPlayers);
         this.toolCardDeck=new ToolCardDeck();
         this.privateObjectiveDeck = new PrivateObjectiveCardDeck(numOfPlayers);
         this.windowPatternDeck = new WindowPatternCardDeck(numOfPlayers);

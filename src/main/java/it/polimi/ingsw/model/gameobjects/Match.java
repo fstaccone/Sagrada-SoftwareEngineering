@@ -32,9 +32,7 @@ public abstract class Match {
     public int getCurrentRound() { return roundCounter; }
     // end of getters
 
-    public void incrementRoundCounter() {
-        this.roundCounter++;
-    }
+    public void incrementRoundCounter() { this.roundCounter++; }
 
     public void pushLeftDicesToRoundTrack(){
         this.getBoard().getRoundTrack().putDices(this.getBoard().getReserve().endRound(), this.roundCounter);

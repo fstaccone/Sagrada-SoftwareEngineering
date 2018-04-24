@@ -14,8 +14,9 @@ public class PlayerMultiplayer extends Player {
         this.numFavorTokens = numFavorTokens;
     }
 
-    public void setPrivateObjectiveCard(PrivateObjectiveCard privateObjectiveCard) {
-        this.privateObjectiveCard = privateObjectiveCard;
+    // Cast alla carta oppure deck generic?
+    public void setPrivateObjectiveCard(Card privateObjectiveCard) {
+        this.privateObjectiveCard = (PrivateObjectiveCard) privateObjectiveCard;
     }
 
     // getter
