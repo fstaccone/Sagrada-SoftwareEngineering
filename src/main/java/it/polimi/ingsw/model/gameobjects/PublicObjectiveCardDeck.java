@@ -6,14 +6,21 @@ public  class PublicObjectiveCardDeck extends Deck{
 
     private Random randomGenerator;
 
-    public PublicObjectiveCardDeck() {
+    public PublicObjectiveCardDeck(int numOfPlayers) {
         super();
         for(int i=1; i<11; i++) {
             this.deck.add("public"+i);
         }
+        randomGenerator = new Random();
+        setReallyCreatedCards(numOfPlayers);
+    }
 
-        for(int j=0;j<3;j++) {
-            randomGenerator = new Random();
+    public void setReallyCreatedCards(int numOfPlayers){
+        int n;
+        if(numOfPlayers == 1)
+            n=2;
+        else n=3;
+        for(int j=0;j<n;j++) {
             int publicIndex = randomGenerator.nextInt(deck.size() - 1);
             String publicName = deck.get(publicIndex);
             switch (publicName) {
@@ -79,7 +86,6 @@ public  class PublicObjectiveCardDeck extends Deck{
                     this.deck.remove("public10");
                     break;
                 default:
-                    publicName = "Invalid card";
                     break;
             }
 
