@@ -22,7 +22,7 @@ public class MoveTwoDicesTest {
     public void before() {
         room = mock(Room.class);
         match = mock(Match.class);
-        player = new Player("player", room);
+        player = new PlayerMultiplayer("player", room);
         schemeCard = new SymphonyOfLight();
         player.setSchemeCard(schemeCard);
 

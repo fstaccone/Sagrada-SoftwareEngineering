@@ -8,22 +8,17 @@ import java.util.*;
 
 public abstract class Match {
 
-    private final int matchId;
     protected DecksContainer decksContainer;
     private Bag bag;
     protected Board board;
     private static final int numberOfRounds = 10;
     protected int roundCounter;
 
-    public Match(int matchId) {
-        this.matchId = matchId;
+    public Match() {
         this.bag = new Bag(18);
     }
 
     // getters
-    public int getMatchId() {
-        return matchId;
-    }
     public DecksContainer getDecksContainer() {
         return decksContainer;
     }

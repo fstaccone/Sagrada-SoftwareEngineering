@@ -23,7 +23,7 @@ public class ReRollDiceTest {
         match = mock(Match.class);
         Dice dice = new Dice(Colors.BLUE);
         dice.setValue(4);
-        player = new Player("player", room);
+        player = new PlayerMultiplayer("player", room);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);

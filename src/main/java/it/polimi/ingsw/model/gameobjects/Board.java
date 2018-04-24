@@ -6,14 +6,13 @@ import java.util.Set;
 
 public class Board {
     private List<PublicObjectiveCard> pickedPublicObjectiveCards;
-    private List<Player> players;
+    //private int numOfPlayers // potrebbe essere utile per la GUI
     private Reserve reserve;
     private List<ToolCard> pickedToolCards;
     private RoundTrack roundTrack;
 
-    public Board(Match match, List<Player> players, List <ToolCard> pickedToolCards, List <PublicObjectiveCard> pickedPublicObjectiveCards) {
+    public Board(Match match, List <ToolCard> pickedToolCards, List <PublicObjectiveCard> pickedPublicObjectiveCards) {
         // To be managed later, even in Match
-        this.players = players;
         this.pickedToolCards = pickedToolCards;
         this.pickedPublicObjectiveCards = pickedPublicObjectiveCards;
 

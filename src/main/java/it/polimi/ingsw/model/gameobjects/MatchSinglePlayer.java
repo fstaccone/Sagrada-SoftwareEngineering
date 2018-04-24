@@ -4,10 +4,17 @@ import java.util.List;
 
 public class MatchSinglePlayer extends Match{
 
-    public MatchSinglePlayer(int matchId, Player player) {
-        super(matchId);
+    private int matchId;
+    private int difficulty;
 
+    public MatchSinglePlayer(int matchId, Player player, int difficulty) {
+        super();
+        this.matchId = matchId;
+        this.difficulty = difficulty;
+        this.decksContainer = new DecksContainer(1);
     }
+
+    public int getMatchId() { return matchId; }
 
     @Override
     public void gameInit() {

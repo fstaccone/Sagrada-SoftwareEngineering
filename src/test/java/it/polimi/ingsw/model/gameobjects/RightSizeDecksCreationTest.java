@@ -17,5 +17,6 @@ public class RightSizeDecksCreationTest {
         Assert.assertEquals(decks.getPublicObjectiveCardDeck().pickedCards.size(),3);
         Assert.assertEquals(decks.getWindowPatternCardDeck().pickedCards.size(),12);
         Assert.assertEquals(decks.getPrivateObjectiveCardDeck().pickedCards.size(),3);
+        System.out.println(decks.getPrivateObjectiveCardDeck().pickedCards.get(0).toString());
     }
 }

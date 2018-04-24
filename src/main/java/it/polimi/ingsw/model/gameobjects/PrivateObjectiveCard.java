@@ -9,6 +9,8 @@ public class PrivateObjectiveCard extends ObjectiveCard{
         this.color = color;
     }
 
+    public Colors getColor() { return color; }
+
     @Override
     public void useCard(Player player) {
         int temp = player.getPoints();

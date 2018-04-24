@@ -45,7 +45,7 @@ public class Room {
     public List<Player> getPlayers() { return players; }
 
     // have these cases to be managed with exceptions?
-    public synchronized void addPlayer(Player player) {
+    public synchronized void addPlayer(PlayerMultiplayer player) {
         if (isFull()){
             System.out.println("This match is already full!");
             return;
@@ -66,7 +66,7 @@ public class Room {
         }
     }
 
-    public synchronized void removePlayer(Player player) { this.players.remove(player); }
+    public synchronized void removePlayer(PlayerMultiplayer player) { this.players.remove(player); }
 
     // Can be useful for the server to have this method? If not it makes no sense
     public boolean isStarted() { return started; }
@@ -83,8 +83,7 @@ public class Room {
     // Crea match e fa partire il gioco
     // Potrebbe creare la finestra di gioco nella finestra in cui girava la room
     private void startMatch(){
-
-        this.match = new Match(players);
+        this.match = new MatchMultiplayer(players);
         match.gameInit();
     }
 

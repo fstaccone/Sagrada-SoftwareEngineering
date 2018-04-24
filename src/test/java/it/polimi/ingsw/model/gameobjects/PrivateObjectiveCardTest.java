@@ -18,7 +18,7 @@ public class PrivateObjectiveCardTest {
     public void Before(){
         room = mock(Room.class);
         match = mock(Match.class);
-        player = new Player("player", room);
+        player = new PlayerMultiplayer("player", room);
         schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 
