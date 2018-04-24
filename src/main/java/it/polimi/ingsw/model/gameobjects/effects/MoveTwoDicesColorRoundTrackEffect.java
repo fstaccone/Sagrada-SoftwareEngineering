@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.gameobjects.*;
 
 import java.util.Scanner;
 
-/*public class MoveTwoDicesColorRoundTrackEffect implements Effect {
+public class MoveTwoDicesColorRoundTrackEffect implements Effect {
 
     public MoveTwoDicesColorRoundTrackEffect() {
     }
@@ -13,7 +13,7 @@ import java.util.Scanner;
     public void applyEffect(Player player, Match match) {
         Colors color = null;
         while(color == null)
-            color = match.getRoundTrack().getColorOfAChosenDice();
+            color = match.getBoard().getRoundTrack().getColorOfAChosenDice();
         Dice[] chosenDices = new Dice[2];
         WindowPatternCard schema = player.getSchemeCard();
         Scanner scan = new Scanner(System.in);
@@ -54,4 +54,4 @@ import java.util.Scanner;
         player.setSchemeCard(schema);
         System.out.println(schema.toString());
     }
-}*/
+}

@@ -98,7 +98,7 @@ public class MatchMultiplayer extends Match {
     @Override
     public void drawPrivateObjectiveCards() {
         for (PlayerMultiplayer p: players) {
-            //p.setPrivateObjectiveCard(this.getDecksContainer().getPrivateObjectiveCardDeck().pickedCards.get(0));
+            p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));
         }
     }
 

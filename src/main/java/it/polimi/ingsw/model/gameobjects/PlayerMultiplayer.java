@@ -14,8 +14,8 @@ public class PlayerMultiplayer extends Player {
         this.numFavorTokens = numFavorTokens;
     }
 
-    public void setPrivateObjectiveCard(PrivateObjectiveCard privateObjectiveCard) {
-        this.privateObjectiveCard = privateObjectiveCard;
+    public void setPrivateObjectiveCard(Card privateObjectiveCard) {
+        this.privateObjectiveCard = (PrivateObjectiveCard)privateObjectiveCard;
     }
 
     // getter

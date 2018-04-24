@@ -4,12 +4,12 @@ public class DecksContainer {
 
     private PrivateObjectiveCardDeck  privateObjectiveDeck;
     private WindowPatternCardDeck windowPatternDeck;
-    private WindowFramePlayerBoardDeck windowFrameDeck;
+    //private WindowFramePlayerBoardDeck windowFrameDeck;
     private PublicObjectiveCardDeck publicObjectiveCardDeck;
     private ToolCardDeck toolCardDeck;
 
     public DecksContainer(int numOfPlayers) {
-        this.publicObjectiveCardDeck= new PublicObjectiveCardDeck();
+        this.publicObjectiveCardDeck= new PublicObjectiveCardDeck(numOfPlayers);
         this.toolCardDeck=new ToolCardDeck();
         this.privateObjectiveDeck = new PrivateObjectiveCardDeck(numOfPlayers);
         this.windowPatternDeck = new WindowPatternCardDeck(numOfPlayers);
@@ -28,9 +28,9 @@ public class DecksContainer {
         return windowPatternDeck;
     }
 
-    public WindowFramePlayerBoardDeck getWindowFramePlayerBoardDeck() {
-        return windowFrameDeck;
-    }
+    //public WindowFramePlayerBoardDeck getWindowFramePlayerBoardDeck() {
+    //    return windowFrameDeck;
+    //}
 
     public ToolCardDeck getToolCardDeck() {
         return toolCardDeck;
@@ -45,8 +45,8 @@ public class DecksContainer {
         this.windowPatternDeck = windowPatternDeck;
     }
 
-    public void setWindowFramePlayerBoardDeck(WindowFramePlayerBoardDeck windowFrameDeck) {
-        this.windowFrameDeck = windowFrameDeck;
-    }
+    //public void setWindowFramePlayerBoardDeck(WindowFramePlayerBoardDeck windowFrameDeck) {
+    //    this.windowFrameDeck = windowFrameDeck;
+    //}
 
 }
