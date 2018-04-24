@@ -26,30 +26,23 @@ public class ColorsVarietyTest {
         schemeCard = new ViaLux();
         player.setSchemeCard(schemeCard);
 
-        Dice dy=mock(Dice.class);
-        when(dy.getValue()).thenReturn(2);
-        when(dy.getColor()).thenReturn(Colors.YELLOW);
+        Dice dy=new Dice(Colors.YELLOW);
+        dy.setValue(2);
 
-        Dice dg=mock(Dice.class);
-        when(dg.getValue()).thenReturn(1);
-        when(dg.getColor()).thenReturn(Colors.GREEN);
+        Dice dg=new Dice (Colors.GREEN);
+        dg.setValue(1);
 
-        Dice db=mock(Dice.class);
-        when(db.getValue()).thenReturn(4);
-        when(db.getColor()).thenReturn(Colors.BLUE);
+        Dice db=new Dice(Colors.BLUE);
+        db.setValue(4);
 
-        Dice dv=mock(Dice.class);
-        when(dv.getValue()).thenReturn(5);
-        when(dv.getColor()).thenReturn(Colors.VIOLET);
+        Dice dv=new Dice(Colors.VIOLET);
+        dv.setValue(5);
 
-        Dice dr=mock(Dice.class);
-        when(dr.getValue()).thenReturn(6);
-        when(dr.getColor()).thenReturn(Colors.RED);
+        Dice dr=new Dice(Colors.RED);
+        dr.setValue(6);
 
-        Dice dr1=mock(Dice.class);
-        when(dr1.getValue()).thenReturn(3);
-        when(dr1.getColor()).thenReturn(Colors.RED);
-
+        Dice dr1=new Dice(Colors.RED);
+        dr1.setValue(3);
 
         player.getSchemeCard().putFirstDice(dy,0,0);
         player.getSchemeCard().putDice(dg,1,1);

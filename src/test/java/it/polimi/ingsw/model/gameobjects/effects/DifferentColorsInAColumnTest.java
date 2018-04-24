@@ -23,19 +23,16 @@ public class DifferentColorsInAColumnTest {
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
 
-        Dice dy=mock(Dice.class);
-        when(dy.getValue()).thenReturn(1);
-        when(dy.getColor()).thenReturn(Colors.YELLOW);
+        Dice dy= new Dice(Colors.YELLOW);
+        dy.setValue(1);
 
-        Dice dg=mock(Dice.class);
-        when(dg.getValue()).thenReturn(2);
-        when(dg.getColor()).thenReturn(Colors.GREEN);
+        Dice dg= new Dice(Colors.GREEN);
+        dg.setValue(2);
 
-        Dice dr=mock(Dice.class);
-        when(dr.getValue()).thenReturn(3);
-        when(dr.getColor()).thenReturn(Colors.RED);
+        Dice dr= new Dice(Colors.RED);
+        dr.setValue(3);
 
-        Dice db=mock(Dice.class);
+        Dice db= new Dice(Colors.VIOLET);
         when(db.getValue()).thenReturn(4);
         when(db.getColor()).thenReturn(Colors.BLUE);
 

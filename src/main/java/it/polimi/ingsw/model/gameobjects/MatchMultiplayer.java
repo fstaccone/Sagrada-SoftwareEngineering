@@ -91,7 +91,7 @@ public class MatchMultiplayer extends Match {
     @Override
     public void calculateFinalScore() {
         for (PlayerMultiplayer p: players) {
-           //p.getPrivateObjectiveCard().useCard(p); // useCard può (dovrebbe) essere un metodo del player
+           p.getPrivateObjectiveCard().useCard(p); // useCard può (dovrebbe) essere un metodo del player
         }
     }
 

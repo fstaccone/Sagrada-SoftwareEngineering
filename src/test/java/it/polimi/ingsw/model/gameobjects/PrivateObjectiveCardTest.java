@@ -22,21 +22,17 @@ public class PrivateObjectiveCardTest {
         schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 
-        Dice dg = mock(Dice.class);
-        when(dg.getValue()).thenReturn(5);
-        when(dg.getColor()).thenReturn(Colors.GREEN);
+        Dice dg = new Dice(Colors.GREEN);
+        dg.setValue(5);
 
-        Dice db = mock(Dice.class);
-        when(db.getValue()).thenReturn(5);
-        when(db.getColor()).thenReturn(Colors.BLUE);
+        Dice db = new Dice((Colors.BLUE));
+        db.setValue(5);
 
-        Dice dy = mock(Dice.class);
-        when(dy.getValue()).thenReturn(5);
-        when(dy.getColor()).thenReturn(Colors.YELLOW);
+        Dice dy = new Dice(Colors.YELLOW);
+        dy.setValue(5);
 
-        Dice dr = mock(Dice.class);
-        when(dr.getValue()).thenReturn(6);
-        when(dr.getColor()).thenReturn(Colors.RED);
+        Dice dr = new Dice(Colors.RED);
+        dr.setValue(6);
 
         player.getSchemeCard().putFirstDice(dr, 0, 0);
         player.getSchemeCard().putDice(db, 0, 1);

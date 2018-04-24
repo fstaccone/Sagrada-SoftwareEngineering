@@ -25,21 +25,17 @@ public class MoveDiceIgnoringValueRestrTest {
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
 
-        Dice dy=mock(Dice.class);
-        when(dy.getValue()).thenReturn(2);
-        when(dy.getColor()).thenReturn(Colors.YELLOW);
+        Dice dy= new Dice(Colors.YELLOW);
+        dy.setValue(2);
 
-        Dice dg=mock(Dice.class);
-        when(dg.getValue()).thenReturn(5);
-        when(dg.getColor()).thenReturn(Colors.GREEN);
+        Dice dg= new Dice(Colors.GREEN);
+        dg.setValue(5);
 
-        Dice dr=mock(Dice.class);
-        when(dr.getValue()).thenReturn(3);
-        when(dr.getColor()).thenReturn(Colors.RED);
+        Dice dr= new Dice(Colors.RED);
+        dr.setValue(3);
 
-        Dice db=mock(Dice.class);
-        when(db.getValue()).thenReturn(2);
-        when(db.getColor()).thenReturn(Colors.BLUE);
+        Dice db= new Dice(Colors.BLUE);
+        db.setValue(2);
 
         Dice dv=mock(Dice.class);
         when(dv.getValue()).thenReturn(3);
