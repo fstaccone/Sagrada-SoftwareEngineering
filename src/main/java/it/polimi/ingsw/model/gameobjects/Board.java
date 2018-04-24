@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.gameobjects;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Board {
@@ -10,6 +11,7 @@ public class Board {
     private Reserve reserve;
     private List<ToolCard> pickedToolCards;
     private RoundTrack roundTrack;
+    private Map<Player, WindowPatternCard> windowPatternCardsMap; // Viene creata una mappa che associa la carta al giocatore
 
     public Board(Match match, List <ToolCard> pickedToolCards, List <PublicObjectiveCard> pickedPublicObjectiveCards) {
         // To be managed later, even in Match

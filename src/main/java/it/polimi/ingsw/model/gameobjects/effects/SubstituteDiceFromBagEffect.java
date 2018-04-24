@@ -16,8 +16,8 @@ public class SubstituteDiceFromBagEffect implements Effect {
     public void applyEffect(Player player, Match match) {
         if(player.getPickedDice()==null)
             player.setPickedDice(match.getBoard().getReserve().chooseDice());
-        match.getBag().riponi(player.getPickedDice());
-        Dice diceFromBag = match.getBag().pesca(1).remove(0);
+        match.getBag().putDiceInBag(player.getPickedDice());
+        Dice diceFromBag = match.getBag().pickDices(1).remove(0);
         System.out.println("You got this dice: "+diceFromBag.toString());
         Scanner scan = new Scanner(System.in);
         int token = 0;

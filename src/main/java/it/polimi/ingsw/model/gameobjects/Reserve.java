@@ -80,7 +80,7 @@ public class Reserve {
 /*
     public static void main(String args[]){
         Bag bag = new Bag(2);
-        List<Dice> pescata = bag.pesca(3);
+        List<Dice> pescata = bag.pickDices(3);
         Reserve riserva = new Reserve();
         riserva.throwDices(pescata);
         riserva.showReserve();
@@ -91,7 +91,7 @@ public class Reserve {
         RoundTrack track = new RoundTrack();
         track.putDices(leftDices);
         track.showRoundTrack();
-        pescata = bag.pesca(2);
+        pescata = bag.pickDices(2);
         riserva.throwDices(pescata);
         riserva.showReserve();
         leftDices = riserva.endRound();

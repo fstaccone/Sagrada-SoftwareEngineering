@@ -70,7 +70,7 @@ public class MatchMultiplayer extends Match {
         this.nextRound();
     }
 
-    public int positionOfNextFirstPlayer(){
+    private int positionOfNextFirstPlayer(){
         if(this.positionOfFirstPlayerInRound >= players.size()-1)
             return 0;
         return this.positionOfFirstPlayerInRound + 1;
@@ -91,7 +91,7 @@ public class MatchMultiplayer extends Match {
     @Override
     public void calculateFinalScore() {
         for (PlayerMultiplayer p: players) {
-           p.getPrivateObjectiveCard().useCard(p); // useCard può(o dovrebbe) essere un metodo del player
+           //p.getPrivateObjectiveCard().useCard(p); // useCard può (dovrebbe) essere un metodo del player
         }
     }
 
@@ -99,6 +99,7 @@ public class MatchMultiplayer extends Match {
     public void drawPrivateObjectiveCards() {
         for (PlayerMultiplayer p: players) {
             p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));
+            this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.remove(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));// TODO: chiedere al prof
         }
     }
 
