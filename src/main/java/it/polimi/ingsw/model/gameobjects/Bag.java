@@ -23,7 +23,7 @@ public class Bag {
         return dices;
     }
 
-    public List<Dice> pesca(int num) {
+    public List<Dice> pickDices(int num) {
         List<Dice> result = new ArrayList<>();
         int item;
         for (int i = 0; i < num; i++) {
@@ -40,7 +40,7 @@ public class Bag {
         return result;
     }
 
-    public void riponi(Dice dice){
+    public void putDiceInBag(Dice dice){
         System.out.println("Ripongo nel sacchetto il dado :"+dice.toString());
         dices.add(dice);
     }
@@ -49,11 +49,11 @@ public class Bag {
         Bag bag = new Bag(2);
         System.out.println(bag.getAllDices().toString());//Just to check constructor behavior
 
-        List<Dice> pescata = bag.pesca(4);
+        List<Dice> pescata = bag.pickDices(4);
         System.out.println(pescata.toString());
 
         Dice ex = new Dice(Colors.BLUE);
-        bag.riponi(ex);
+        bag.putDiceInBag(ex);
         System.out.println("Sacchetto aggiornato :"+bag.getAllDices().toString());
     }*/
 }
