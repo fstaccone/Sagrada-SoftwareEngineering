@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,8 +22,17 @@ public class MoveTwoDicesColorRoundTrackTest {
     @Before
     public void before() {
         room = mock(Room.class);
-        match=mock(Match.class);
         player = new PlayerMultiplayer("player", room);
+        List players = new ArrayList();
+        players.add(player);
+        Match match = new MatchMultiplayer(players);
+        Board board =new Board();
+
+        Dice d=new Dice(Colors.RED);
+        d.setValue(6);
+        List<Dice> dices= new ArrayList();
+        dices.add(d);
+        //roundTrack.putDices(dices,0);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
 
@@ -49,9 +60,10 @@ public class MoveTwoDicesColorRoundTrackTest {
         player.getSchemeCard().putDice(dg,1,0);
         player.getSchemeCard().putDice(dr,2,0);
         player.getSchemeCard().putDice(db,3,0);
+        player.getSchemeCard().putDice(dr,3,1);
 
         toolCard = new ToolCard("Taglierina Manuale");
-        ByteArrayInputStream in = new ByteArrayInputStream("1 0 0 1".getBytes());
+        ByteArrayInputStream in = new ByteArrayInputStream("0 0 2 0 1 1 3 1 0 2".getBytes());
         System.setIn(in);
     }
 
@@ -59,6 +71,7 @@ public class MoveTwoDicesColorRoundTrackTest {
     public void checkPoints() {
         toolCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(Colors.GREEN,player.getSchemeCard().getWindow()[0][1].getDice().getColor());
+        Assert.assertEquals(Colors.RED,player.getSchemeCard().getWindow()[2][1].getDice().getColor());
+        Assert.assertEquals(Colors.RED,player.getSchemeCard().getWindow()[0][2].getDice().getColor());
     }
 }
