@@ -32,13 +32,11 @@ public class DifferentColorsInAColumnTest {
         Dice dr= new Dice(Colors.RED);
         dr.setValue(3);
 
-        Dice db= new Dice(Colors.VIOLET);
-        when(db.getValue()).thenReturn(4);
-        when(db.getColor()).thenReturn(Colors.BLUE);
+        Dice db= new Dice(Colors.BLUE);
+        db.setValue(4);
 
-        Dice dv=mock(Dice.class);
-        when(dv.getValue()).thenReturn(2);
-        when(dv.getColor()).thenReturn(Colors.VIOLET);
+        Dice dv= new Dice(Colors.VIOLET);
+        dv.setValue(2);
 
         player.getSchemeCard().putFirstDice(dy,0,0);
         player.getSchemeCard().putDice(dg,1,0);

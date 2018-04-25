@@ -22,11 +22,16 @@ public class MoveTwoDicesColorRoundTrackTest {
     @Before
     public void before() {
         room = mock(Room.class);
+        PublicObjectiveCard pubobjcard = mock(PublicObjectiveCard.class);
         player = new PlayerMultiplayer("player", room);
         List players = new ArrayList();
         players.add(player);
+        List toolcards = new ArrayList();
+        toolcards.add(toolCard);
+        List publicobjcards = new ArrayList();
+        publicobjcards.add(pubobjcard);
         Match match = new MatchMultiplayer(players);
-        Board board =new Board();
+        Board board =new Board(match, toolcards, publicobjcards );
 
         Dice d=new Dice(Colors.RED);
         d.setValue(6);

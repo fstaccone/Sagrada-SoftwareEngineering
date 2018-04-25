@@ -50,6 +50,7 @@ public class MoveTwoDicesTest {
     @Test
     public void checkPoints() {
         toolCard.useCard(player, match);
+        System.out.println(schemeCard.toString());
         Assert.assertEquals(Colors.GREEN,player.getSchemeCard().getWindow()[3][1].getDice().getColor());
         Assert.assertEquals(3, player.getSchemeCard().getWindow()[3][1].getDice().getValue());
         Assert.assertEquals(Colors.YELLOW,player.getSchemeCard().getWindow()[1][1].getDice().getColor());

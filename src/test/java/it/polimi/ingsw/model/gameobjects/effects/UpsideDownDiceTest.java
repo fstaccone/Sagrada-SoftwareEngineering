@@ -29,8 +29,15 @@ public class UpsideDownDiceTest {
     @Test
     public void checkDice(){
         toolCard.useCard(player, match);
-        System.out.println(player.getPickedDice().toString());
         Assert.assertEquals(3, player.getPickedDice().getValue());
+        Assert.assertEquals(Colors.BLUE, player.getPickedDice().getColor());
+        player.getPickedDice().setValue(6);
+        toolCard.useCard(player, match);
+        Assert.assertEquals(1, player.getPickedDice().getValue());
+        Assert.assertEquals(Colors.BLUE, player.getPickedDice().getColor());
+        player.getPickedDice().setValue(2);
+        toolCard.useCard(player, match);
+        Assert.assertEquals(5,player.getPickedDice().getValue());
         Assert.assertEquals(Colors.BLUE, player.getPickedDice().getColor());
     }
 }
