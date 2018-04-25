@@ -10,7 +10,7 @@ public class RoundTrack {
         // It makes an ArrayList of 10 (constant declared in Match) Lists of Dices
         dicesLeft = new LinkedList<>();
         for(int i = 0; i < Match.getNumberOfRounds(); i++){
-            dicesLeft.set(i,new ArrayList<>());
+            dicesLeft.add(new ArrayList<>());
         }
     }
 
@@ -69,6 +69,8 @@ public class RoundTrack {
                 int i=0;
                 for(Dice d : list){
                     if(i==diceId){
+                        scan.close();
+                        System.out.println("You've chose the dice: "+d.toString()+" so the color of the dices you can move is: "+d.getColor().toString());
                         return d.getColor();
                     }
                     i++;
@@ -94,9 +96,9 @@ public class RoundTrack {
                 int i=0;
                 for(Dice d : list){
                     if(i==diceId){
-                        list.remove(diceId);
-                        list.add(diceToSwitch);
-                        return d;
+                        Dice result = list.get(i);
+                        list.set(i, diceToSwitch);
+                        return result;
                     }
                     i++;
                 }

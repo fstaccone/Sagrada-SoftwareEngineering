@@ -20,6 +20,10 @@ public class Reserve {
         }
     }
 
+    public boolean isEmpty(){
+        return dices.isEmpty();
+    }
+
     public void showReserve(){
         if(!(dices.isEmpty())){
             System.out.println("Dices in reserve:");

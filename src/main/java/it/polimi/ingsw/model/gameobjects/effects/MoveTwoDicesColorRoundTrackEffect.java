@@ -16,8 +16,14 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
             color = match.getBoard().getRoundTrack().getColorOfAChosenDice();
         Dice[] chosenDices = new Dice[2];
         WindowPatternCard schema = player.getSchemeCard();
+        System.out.println("How many dices do you want to move? (Choose between 1 or 2)");
         Scanner scan = new Scanner(System.in);
-        for(int i=0; i<2; i++) {
+        int answer = scan.nextInt();
+        while (answer!=1 && answer!=2){
+            System.out.println("Please type only '1' or '2'");
+            answer = scan.nextInt();
+        }
+        for(int i=0; i<answer; i++) {
             int token = 0;
             while(token == 0) {
                 System.out.println(schema.toString());
@@ -37,7 +43,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
             }
         }
         System.out.println(schema.toString());
-        for( int i=0; i<2; i++){
+        for( int i=0; i<answer; i++){
             int result = 0;
             while(result==0) {
                 System.out.println("Please put row where you want to move dice"+(i+1)+" : ");

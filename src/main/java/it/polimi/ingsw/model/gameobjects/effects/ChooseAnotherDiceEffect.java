@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
+import it.polimi.ingsw.model.gameobjects.Reserve;
 
 public class ChooseAnotherDiceEffect implements Effect {
 
@@ -10,6 +11,7 @@ public class ChooseAnotherDiceEffect implements Effect {
 
     @Override
     public void applyEffect(Player player, Match match) {
-        player.setPickedDice(match.getBoard().getReserve().chooseDice());
+        Reserve reserve = match.getBoard().getReserve();
+        player.setPickedDice(reserve.chooseDice());
     }
 }
