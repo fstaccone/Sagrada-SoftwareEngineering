@@ -11,13 +11,13 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
 
     @Override
     public void applyEffect(Player player, Match match) {
+        Scanner scan = new Scanner(System.in);
         Colors color = null;
         while(color == null)
-            color = match.getBoard().getRoundTrack().getColorOfAChosenDice();
+            color = match.getBoard().getRoundTrack().getColorOfAChosenDice(scan);
         Dice[] chosenDices = new Dice[2];
         WindowPatternCard schema = player.getSchemeCard();
         System.out.println("How many dices do you want to move? (Choose between 1 or 2)");
-        Scanner scan = new Scanner(System.in);
         int answer = scan.nextInt();
         while (answer!=1 && answer!=2){
             System.out.println("Please type only '1' or '2'");
