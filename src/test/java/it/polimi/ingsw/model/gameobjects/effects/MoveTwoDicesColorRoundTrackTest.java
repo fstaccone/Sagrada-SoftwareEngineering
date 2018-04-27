@@ -71,9 +71,11 @@ public class MoveTwoDicesColorRoundTrackTest {
         player.getSchemeCard().putDice(dy,1,1);
 
         toolCard = new ToolCard("Taglierina Manuale");
-        //TODO: input funziona per scegliere colore, poi si blocca quando bisogna dire quanti dadi si vogliono spostare.
+        //input funziona per scegliere colore, poi si blocca quando bisogna dire quanti dadi si vogliono spostare.
         //Secondo me problema è che si apre lo stream per prendere i primi due interi nella riga 16 del relativo effetto
         //poi quando al rigo 21 si prende altro input lo stream è vuoto e test non va avanti.
+        //Per farlo funzionare ho ricreato il metodo ChooseDiceColor però passandogli per parametro uno scanner
+        //Facendo così funziona.
         ByteArrayInputStream in = new ByteArrayInputStream("1 0 2 0 0 1 1 0 1 2 1 3 2".getBytes());
         setIn(in);
     }
