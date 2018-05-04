@@ -68,12 +68,15 @@ public class MoveTwoDicesColorRoundTrackTest {
         player.getSchemeCard().putDice(dr,2,0);
         player.getSchemeCard().putDice(db,3,0);
         player.getSchemeCard().putDice(dr,3,1);
+        player.getSchemeCard().putDice(dy,1,1);
 
         toolCard = new ToolCard("Taglierina Manuale");
-        //TODO: input funziona per scegliere colore, poi si blocca quando bisogna dire quanti dadi si vogliono spostare.
+        //input funziona per scegliere colore, poi si blocca quando bisogna dire quanti dadi si vogliono spostare.
         //Secondo me problema è che si apre lo stream per prendere i primi due interi nella riga 16 del relativo effetto
         //poi quando al rigo 21 si prende altro input lo stream è vuoto e test non va avanti.
-        ByteArrayInputStream in = new ByteArrayInputStream("1 0 2".getBytes());
+        //Per farlo funzionare ho ricreato il metodo ChooseDiceColor però passandogli per parametro uno scanner
+        //Facendo così funziona.
+        ByteArrayInputStream in = new ByteArrayInputStream("1 0 2 0 0 1 1 0 1 2 1 3 2".getBytes());
         setIn(in);
     }
 
@@ -82,7 +85,9 @@ public class MoveTwoDicesColorRoundTrackTest {
         System.out.println(player.getSchemeCard().toString());
         toolCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(Colors.RED,player.getSchemeCard().getWindow()[2][1].getDice().getColor());
-        Assert.assertEquals(Colors.RED,player.getSchemeCard().getWindow()[0][2].getDice().getColor());
+        Assert.assertEquals(Colors.YELLOW,player.getSchemeCard().getWindow()[2][1].getDice().getColor());
+        Assert.assertEquals(1, player.getSchemeCard().getWindow()[2][1].getDice().getValue());
+        Assert.assertEquals(Colors.YELLOW,player.getSchemeCard().getWindow()[3][2].getDice().getColor());
+        Assert.assertEquals(1, player.getSchemeCard().getWindow()[3][2].getDice().getValue());
     }
 }
