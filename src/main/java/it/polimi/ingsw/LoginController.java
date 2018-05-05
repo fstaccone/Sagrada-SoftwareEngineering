@@ -1,6 +1,9 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.Lobby;
+import it.polimi.ingsw.view.ClientController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -9,20 +12,34 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.net.URL;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
 
     private String username;
-    private boolean isRmi=true;
-    private boolean isSocket=false;
-    private boolean isGui=true;
-    private boolean isCli=false;
+    private boolean isRmi = true;
+    private boolean isSocket = false;
+    private boolean isGui = true;
+    private boolean isCli = false;
+    private boolean isSinglelayer = false;
+    private int difficulty;
     private String serverAddress;
-    private Controller controller;
+
+    // Values to be set by file on server, how can we set these here?
+    private int rmiRegistryPort = 2000;
+    private int socketPort = 2001;
+
+
+
+    // TODO: da controllare
+    Controller controller;
+    Registry registry;
 
     @FXML
     private TextField usernameInput;
@@ -41,6 +58,9 @@ public class LoginController implements Initializable {
 
     @FXML
     private CheckBox guiCheckmark;
+
+    @FXML
+    private CheckBox modeCheckmark;
 
     @FXML
     private Button playButton;
@@ -77,14 +97,16 @@ public class LoginController implements Initializable {
 
     @FXML
     private void playClicked() {
-        playButton.setEffect(new DropShadow(10,0,0,Color.BLUE));
+        playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         //playButton.setDisable(true);
         readInput();
+
+        setup();
 
         //SE VOGLIAMO CHE LA FINESTRA SI CHIUDA AL CLICK DEL BOTTONE
         /*Stage stage = (Stage) playButton.getScene().getWindow();
         stage.close();*/
-        
+
 
     }
 
@@ -95,37 +117,90 @@ public class LoginController implements Initializable {
 
     @FXML
     private void unGlowButton() {
-        playButton.setEffect(new DropShadow(10,0,0,Color.VIOLET));
+        playButton.setEffect(new DropShadow(10, 0, 0, Color.VIOLET));
     }
-
-
 
 
     private void readInput() {
         this.username = this.usernameInput.toString();
         this.isRmi = rmiCheckmark.isSelected();
-        this.isSocket=socketCheckmark.isSelected();
-        this.isGui=guiCheckmark.isSelected();
+        this.isSocket = socketCheckmark.isSelected();
+        this.isGui = guiCheckmark.isSelected();
         this.isCli = cliCheckmark.isSelected();
         this.serverAddress = serverAddressInput.toString();
 
+        //this.isSinglelayer =
+        //this.difficulty =
 
     }
 
-    private void setup(){
+    private void setup() throws RemoteException {
         boolean unique = false;
 
         // connection establishment with the selected method
-        if(isRmi) setupRmiConnection();
+        if (isRmi) setupRmiConnection();
         else setupSocketConnection();
 
         // name is controlled in the model to be sure that it's unique
         // checkName is a method that returns true if the username provided is not already present inside the model
-        while(!unique) {
+        while (!unique) {
             unique = controller.checkName(this.username);
+            if(!unique){
+                // deve notificare alla schermata di Login che occorre immettere un nuovo username
+            }
         }
 
         // view's creation and input for the model to create the Player
+        if (isRmi) createRmiView();
+        else createSocketView();
+
+    }
+
+
+    // the connection is established between client and lobby
+    private void setupRmiConnection() throws RemoteException {
+
+        registry = LocateRegistry.getRegistry(rmiRegistryPort);
+
+        try {
+            this.controller = (Controller) registry.lookup("Lobby");
+
+        } catch (NotBoundException e) {
+            System.out.println("A client can't get the controller's reference");
+            e.printStackTrace();
+        }
+
+       }
+
+    private void setupSocketConnection() {
+
+    }
+
+    private void createRmiView(){
+
+        // to create the link between this client and the Room in which he'll play
+        if(isSinglelayer)
+            // crea la view
+            // ...
+            // la passa come parametro al metodo che creerà le relazioni nel modello
+            controller.getLobby().createSingleplayerMatch();
+
+            // stessa cosa qui
+        else controller.getLobby().createMultiplayerMatch();
+    }
+
+    private void createSocketView(){
+
+        // to create the link between this client and the Room in which he'll play
+        if(isSinglelayer)
+            // crea la view
+            // ...
+            // la passa come parametro al metodo che creerà le relazioni nel modello
+            controller.getLobby().createSingleplayerMatch(this.username, this.difficulty);
+
+            // stessa cosa qui
+        else controller.getLobby().createMultiplayerMatch();
 
     }
 }
+

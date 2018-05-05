@@ -6,12 +6,14 @@ public class MatchSinglePlayer extends Match{
 
     private int matchId;
     private int difficulty;
+    PlayerSingleplayer player;
 
-    public MatchSinglePlayer(int matchId, Player player, int difficulty) {
+    public MatchSinglePlayer(int matchId, String playerName, int difficulty) {
         super();
         this.matchId = matchId;
         this.difficulty = difficulty;
         this.decksContainer = new DecksContainer(1);
+        this.player = new PlayerSingleplayer(playerName);
     }
 
     public int getMatchId() { return matchId; }

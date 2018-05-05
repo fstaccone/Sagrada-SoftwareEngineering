@@ -32,6 +32,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         return true;
     }
 
+    public Lobby getLobby() {
+        return lobby;
+    }
+
     // private transient final Room room;
    // private final Map<Player, RemoteBaseView> views = new HashMap<>();
 

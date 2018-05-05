@@ -6,7 +6,8 @@ public class PlayerMultiplayer extends Player {
     private Room room;
 
     public PlayerMultiplayer(String name, Room room) {
-        super(name, room);
+        super(name);
+        this.room = room;
     }
 
     // setter
@@ -33,6 +34,12 @@ public class PlayerMultiplayer extends Player {
     public void setSchemeCard(WindowPatternCard schemeCard) {
         this.schemeCard = schemeCard;
         this.setNumFavorTokens(schemeCard.getDifficulty());
+    }
+
+    @Override
+    public void useToolCard(ToolCard chosenToolCardToUse){//il controller fa player1.useToolCard(): può passare la carta scelta perchè il controller ha riferimento alla board e pertanto alle pickedToolCards(attributo di board) tra le quali fa scegliere al client quale usare(ammesso che possa-->va fatto un check)(si tratta di un'azione precedente)
+
+        chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
 }

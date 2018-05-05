@@ -6,9 +6,11 @@ import java.util.List;
 public class Lobby {
 
     private List<String> takenUsernames;
+    private int matchCounter;
 
     public Lobby() {
-        takenUsernames = new ArrayList<>();
+        this.takenUsernames = new ArrayList<>();
+        this.matchCounter = 0;
     }
 
     public List<String> getTakenUsernames() {
@@ -25,5 +27,15 @@ public class Lobby {
     public void removeUsername(){
 
     }
+
+    public void createSingleplayerMatch(String name, int difficulty){
+        new MatchSinglePlayer(matchCounter, name, difficulty);
+
+    }
+
+    public void createMultiplayerMatch(){
+
+    }
+
 
 }

@@ -26,6 +26,10 @@
     <Label id="choose" layoutX="285.0" layoutY="490.0" text="or"></Label>
     <CheckBox fx:id="socketCheckmark" layoutX="330.0" layoutY="490.0" onMouseClicked="#socketMarked" text="SOCKET" textFill="WHITE"></CheckBox>
 
+
+    <Label id="choose" layoutX="240.0" layoutY="595.0" text="Singleplayer"></Label>
+    <CheckBox fx:id="modeCheckmark" layoutX="205.0" layoutY="630.0" onMouseClicked="#rmiMarked" textFill="WHITE"></CheckBox>
+
     <Label id="choose" layoutX="280.0" layoutY="525.0" text="and:"></Label>
     <CheckBox fx:id="guiCheckmark" layoutX="205.0" layoutY="560.0" onMouseClicked="#guiMarked" text="GUI" textFill="WHITE"></CheckBox>
     <Label id="choose" layoutX="285.0" layoutY="560.0" text="or"></Label>

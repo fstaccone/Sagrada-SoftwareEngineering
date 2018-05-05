@@ -7,13 +7,11 @@ public abstract class Player implements Serializable{
     protected WindowPatternCard schemeCard;
     private Dice pickedDice;
     private int points;
-    private Room room;
     protected Colors color;
 
-    public Player(String name, Room room){
+    public Player(String name){
         super(); // Perchè?
         this.name = name;
-        this.room = room;
         this.points = 0;
     }
 
@@ -44,12 +42,9 @@ public abstract class Player implements Serializable{
     public void setColor(Colors color) { this.color = color; }
 
     // Useful methods for the game's flow
-    public void useToolCard(ToolCard chosenToolCardToUse){//il controller fa player1.useToolCard(): può passare la carta scelta perchè il controller ha riferimento alla board e pertanto alle pickedToolCards(attributo di board) tra le quali fa scegliere al client quale usare(ammesso che possa-->va fatto un check)(si tratta di un'azione precedente)
+    public abstract void useToolCard(ToolCard chosenToolCardToUse);
 
-        chosenToolCardToUse.useCard(this,this.room.getMatch());
-    }
-
-    // Passa il turno (può farlo anche senza aver fatto altre azioni e deve comunque farlo )
+    // Passa il turno (può farlo anche senza aver fatto altre azioni, ma deve comunque farlo? )
     public void goTrough(){
     }
 
