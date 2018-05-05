@@ -4,14 +4,14 @@
    -fx-font-family: "Courier New";
 }
 
-.label, #play{
+.label, #playButton{
     -fx-font-size: 14pt;
     -fx-font-weight:bold;
     -fx-text-fill: white;
     -fx-opacity: 1.0;
 }
 
-#username_input, #serverAddress_input{
+#usernameInput, #serverAddressInput{
     -fx-background-color:transparent;
     -fx-text-fill: white;
 }
@@ -21,7 +21,7 @@
     -fx-font-style: italic;
 }
 
-#play_button{
+#playButton{
    -fx-font-style: italic;
    -fx-border-radius:8px;
    -fx-background-radius:16px;
