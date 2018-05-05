@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Controller extends UnicastRemoteObject implements RemoteController  {
 
-    private Lobby lobby;
+    private transient Lobby lobby;
 
     public Controller() throws RemoteException{
         super();
@@ -34,6 +34,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     public Lobby getLobby() {
         return lobby;
+    }
+
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
     }
 
     // private transient final Room room;

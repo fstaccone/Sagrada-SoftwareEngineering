@@ -1,17 +1,16 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.model.gameobjects.Lobby;
-import it.polimi.ingsw.view.ClientController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.rmi.NotBoundException;
@@ -34,8 +33,6 @@ public class LoginController implements Initializable {
     // Values to be set by file on server, how can we set these here?
     private int rmiRegistryPort = 2000;
     private int socketPort = 2001;
-
-
 
     // TODO: da controllare
     Controller controller;
@@ -96,18 +93,15 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    private void playClicked() {
+    private void playClicked() throws RemoteException {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         //playButton.setDisable(true);
         readInput();
 
         setup();
 
-        //SE VOGLIAMO CHE LA FINESTRA SI CHIUDA AL CLICK DEL BOTTONE
-        /*Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.close();*/
-
-
+        Stage stage = (Stage) playButton.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
@@ -134,6 +128,10 @@ public class LoginController implements Initializable {
 
     }
 
+    private void readUsername() {
+        this.username = this.usernameInput.toString();
+    }
+
     private void setup() throws RemoteException {
         boolean unique = false;
 
@@ -142,14 +140,13 @@ public class LoginController implements Initializable {
         else setupSocketConnection();
 
         // name is controlled in the model to be sure that it's unique
-        // checkName is a method that returns true if the username provided is not already present inside the model
         while (!unique) {
             unique = controller.checkName(this.username);
-            if(!unique){
-                // deve notificare alla schermata di Login che occorre immettere un nuovo username
+            if (!unique) {
+                playButton.setTooltip(new Tooltip("username already in use"));
+                readUsername();
             }
         }
-
         // view's creation and input for the model to create the Player
         if (isRmi) createRmiView();
         else createSocketView();
@@ -170,33 +167,36 @@ public class LoginController implements Initializable {
             e.printStackTrace();
         }
 
-       }
+    }
 
     private void setupSocketConnection() {
 
     }
 
-    private void createRmiView(){
+    private void createRmiView() {
 
         // to create the link between this client and the Room in which he'll play
-        if(isSinglelayer)
+        if (isSinglelayer)
             // crea la view
             // ...
             // la passa come parametro al metodo che creerà le relazioni nel modello
-            controller.getLobby().createSingleplayerMatch();
+            controller.getLobby().createSingleplayerMatch(this.username);
 
-            // stessa cosa qui
-        else controller.getLobby().createMultiplayerMatch();
+        // stessa cosa qui
+        else {
+            System.out.println("Match multiplayer");
+            //controller.getLobby().createMultiplayerMatch();
+        }
     }
 
-    private void createSocketView(){
+    private void createSocketView() {
 
         // to create the link between this client and the Room in which he'll play
-        if(isSinglelayer)
+        if (isSinglelayer)
             // crea la view
             // ...
             // la passa come parametro al metodo che creerà le relazioni nel modello
-            controller.getLobby().createSingleplayerMatch(this.username, this.difficulty);
+            controller.getLobby().createSingleplayerMatch(this.username);
 
             // stessa cosa qui
         else controller.getLobby().createMultiplayerMatch();

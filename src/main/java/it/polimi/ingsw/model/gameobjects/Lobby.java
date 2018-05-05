@@ -28,8 +28,8 @@ public class Lobby {
 
     }
 
-    public void createSingleplayerMatch(String name, int difficulty){
-        new MatchSinglePlayer(matchCounter, name, difficulty);
+    public void createSingleplayerMatch(String name){
+        new MatchSinglePlayer(matchCounter, name);
 
     }
 

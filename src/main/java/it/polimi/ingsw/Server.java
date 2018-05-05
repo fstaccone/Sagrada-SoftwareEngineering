@@ -21,7 +21,7 @@ public class Server{
 
     public static void main(String[] args) throws RemoteException {
 
-        Controller lobby=new Controller();
+        Controller lobby = new Controller();
 
 
         //read configuration file

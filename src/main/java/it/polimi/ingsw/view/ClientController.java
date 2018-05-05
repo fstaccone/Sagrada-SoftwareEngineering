@@ -12,10 +12,4 @@ public class ClientController {
 
     }
 
-
-    public boolean checkName(){
-        // manda un messaggio con il nome al controller del modello che verifica se è unico
-        return remoteController.checkName();
-    }
-
 }

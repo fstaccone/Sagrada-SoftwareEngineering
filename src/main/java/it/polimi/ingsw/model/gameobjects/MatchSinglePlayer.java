@@ -8,15 +8,16 @@ public class MatchSinglePlayer extends Match{
     private int difficulty;
     PlayerSingleplayer player;
 
-    public MatchSinglePlayer(int matchId, String playerName, int difficulty) {
+    public MatchSinglePlayer(int matchId, String playerName) {
         super();
         this.matchId = matchId;
-        this.difficulty = difficulty;
         this.decksContainer = new DecksContainer(1);
         this.player = new PlayerSingleplayer(playerName);
     }
 
     public int getMatchId() { return matchId; }
+
+    public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
 
     @Override
     public void gameInit() {

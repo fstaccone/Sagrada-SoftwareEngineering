@@ -12,6 +12,7 @@ public class PlayerSingleplayer extends Player {
 
     @Override
     public void useToolCard(ToolCard chosenToolCardToUse) {
-
+        // non ha più modo di avere il riferimento a match
+        //chosenToolCardToUse.useCard(this,this.getMatch());
     }
 }
