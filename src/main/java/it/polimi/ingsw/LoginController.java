@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.Controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ public class LoginController implements Initializable {
     private boolean isGui=true;
     private boolean isCli=false;
     private String serverAddress;
+    private Controller controller;
 
     @FXML
     private TextField usernameInput;
@@ -100,5 +102,24 @@ public class LoginController implements Initializable {
         this.isGui=guiCheckmark.isSelected();
         this.isCli = cliCheckmark.isSelected();
         this.serverAddress = serverAddressInput.toString();
+
+
+    }
+
+    private void setup(){
+        boolean unique = false;
+
+        // connection establishment with the selected method
+        if(isRmi) setupRmiConnection();
+        else setupSocketConnection();
+
+        // name is controlled in the model to be sure that it's unique
+        // checkName is a method that returns true if the username provided is not already present inside the model
+        while(!unique) {
+            unique = controller.checkName(this.username);
+        }
+
+        // view's creation and input for the model to create the Player
+
     }
 }

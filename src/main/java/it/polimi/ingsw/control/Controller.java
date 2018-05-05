@@ -1,5 +1,6 @@
 package it.polimi.ingsw.control;
 
+import it.polimi.ingsw.model.gameobjects.Lobby;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.Room;
 import it.polimi.ingsw.view.RemoteBaseView;
@@ -9,9 +10,29 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
-//public class Controller extends UnicastRemoteObject implements RemoteController {
+public class Controller extends UnicastRemoteObject implements RemoteController  {
 
-   // private transient final Room room;
+    private Lobby lobby;
+
+    public Controller() throws RemoteException{
+        super();
+        // ...
+    }
+
+    @Override
+    public String login(String username, RemoteBaseView view) throws RemoteException {
+        return null;
+    }
+
+    public boolean checkName(String name){
+        for ( String n: lobby.getTakenUsernames()) {
+            if (name.equals(n))
+                return false;
+        }
+        return true;
+    }
+
+    // private transient final Room room;
    // private final Map<Player, RemoteBaseView> views = new HashMap<>();
 
     //public Controller() throws RemoteException{
@@ -30,4 +51,4 @@ import java.util.Map;
 
 
     //dopo il login il controller ha il riferimento a ciascun player quindi può chiamarne i metodi
-//}
+}
