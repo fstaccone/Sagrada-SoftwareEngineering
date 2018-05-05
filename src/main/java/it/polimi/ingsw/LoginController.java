@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -77,6 +78,11 @@ public class LoginController implements Initializable {
         playButton.setEffect(new DropShadow(10,0,0,Color.BLUE));
         //playButton.setDisable(true);
         readInput();
+
+        //SE VOGLIAMO CHE LA FINESTRA SI CHIUDA AL CLICK DEL BOTTONE
+        /*Stage stage = (Stage) playButton.getScene().getWindow();
+        stage.close();*/
+        
 
     }
 
