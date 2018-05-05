@@ -10,6 +10,7 @@ public class RMIView extends UnicastRemoteObject {
     private String name;
     Controller gameController;
     ClientController clientController;
+    private
 
     public RMIView(Controller gameController, ClientController clientController) throws RemoteException {
         super();
