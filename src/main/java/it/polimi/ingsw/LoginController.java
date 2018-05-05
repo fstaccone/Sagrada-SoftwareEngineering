@@ -116,8 +116,8 @@ public class LoginController implements Initializable {
         boolean unique = false;
 
         // connection establishment with the selected method
-        if(isRmi) setupRmiConnection();
-        else setupSocketConnection();
+        //if(isRmi) setupRmiConnection();
+        //else setupSocketConnection();
 
         // name is controlled in the model to be sure that it's unique
         // checkName is a method that returns true if the username provided is not already present inside the model

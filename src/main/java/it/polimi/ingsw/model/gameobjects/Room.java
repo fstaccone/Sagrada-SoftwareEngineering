@@ -60,7 +60,7 @@ public class Room {
         // if the room is full the game can begin
         // potrebbe nascere un problema per il timer, ma comunque io credo (Paolo) che sia un bene far iniziare la partita appena la stanza è piena anche se il timer non è scaduto
         if (this.isFull()){
-            server.createNewRoom();
+            //server.createNewRoom();
             this.setStarted();
             this.startMatch();
         }
