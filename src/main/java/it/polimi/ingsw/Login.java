@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.net.URL;
 
 
@@ -13,7 +12,8 @@ public class Login extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //
+
+        LoginController loginController=new LoginController();
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/login-sagrada.fxml"));
@@ -24,8 +24,6 @@ public class Login extends Application {
         primaryStage.setTitle("Sagrada");
         primaryStage.setResizable(false);
         primaryStage.show();
-
-
 
     }
 

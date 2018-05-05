@@ -6,33 +6,32 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="it.polimi.ingsw.Login"
-          prefHeight="600.0" prefWidth="600.0"
-          >
+          fx:controller="it.polimi.ingsw.LoginController"
+          prefHeight="600.0" prefWidth="600.0">
 
     <Label layoutX="255.0" layoutY="220.0" text="USERNAME" ></Label>
 
-    <TextField fx:id="username_input" layoutX="180.0" layoutY="250.0" prefHeight="23.0" prefWidth="250.0" promptText="choose a username.." ></TextField>
-    <Separator layoutX="175.0" layoutY="280.0" prefHeight="2.0" prefWidth="250.0" style="" />
+    <TextField fx:id="usernameInput" layoutX="180.0" layoutY="250.0" prefHeight="23.0" prefWidth="250.0" promptText="type here the name you desire" ></TextField>
+    <Separator layoutX="175.0" layoutY="280.0" prefHeight="2.0" prefWidth="250.0"/>
 
     <Label layoutX="220.0" layoutY="320.0" text="SERVER ADDRESS" ></Label>
 
-    <TextField fx:id="serverAddress_input" layoutX="180.0" layoutY="350.0" prefHeight="23.0" prefWidth="250.0" promptText="choose the server address.." ></TextField>
-    <Separator layoutX="175.0" layoutY="380.0" prefHeight="2.0" prefWidth="250.0" style="" />
+    <TextField fx:id="serverAddressInput" layoutX="180.0" layoutY="350.0" prefHeight="23.0" prefWidth="250.0" promptText="type here the server address" ></TextField>
+    <Separator layoutX="175.0" layoutY="380.0" prefHeight="2.0" prefWidth="250.0"/>
 
     <Label layoutX="255.0" layoutY="420.0" text="SETTINGS"></Label>
 
     <Label id="choose" layoutX="240.0" layoutY="455.0" text="Choose between:"></Label>
-    <CheckBox fx:id="RMI" layoutX="205.0" layoutY="490.0"  text="RMI" textFill="WHITE"></CheckBox>
+    <CheckBox fx:id="rmiCheckmark" layoutX="205.0" layoutY="490.0" onMouseClicked="#rmiMarked" text="RMI" textFill="WHITE"></CheckBox>
     <Label id="choose" layoutX="285.0" layoutY="490.0" text="or"></Label>
-    <CheckBox fx:id="SOCKET" layoutX="330.0" layoutY="490.0"  text="SOCKET" textFill="WHITE"></CheckBox>
+    <CheckBox fx:id="socketCheckmark" layoutX="330.0" layoutY="490.0" onMouseClicked="#socketMarked" text="SOCKET" textFill="WHITE"></CheckBox>
 
-    <Label id="choose" layoutX="252.0" layoutY="525.0" text="and between:"></Label>
-    <CheckBox fx:id="GUI" layoutX="205.0" layoutY="560.0"  text="GUI" textFill="WHITE"></CheckBox>
+    <Label id="choose" layoutX="278.0" layoutY="525.0" text="and:"></Label>
+    <CheckBox fx:id="guiCheckmark" layoutX="205.0" layoutY="560.0" onMouseClicked="#guiMarked" text="GUI" textFill="WHITE"></CheckBox>
     <Label id="choose" layoutX="285.0" layoutY="560.0" text="or"></Label>
-    <CheckBox fx:id="CLI" layoutX="330.0" layoutY="560.0"  text="CLI" textFill="WHITE"></CheckBox>
+    <CheckBox fx:id="cliCheckmark" layoutX="330.0" layoutY="560.0" onMouseClicked="#cliMarked" text="CLI" textFill="WHITE"></CheckBox>
 
-    <Button fx:id="Button" layoutX="450.0" layoutY="525.0"   prefHeight="50.0" prefWidth="130.0" style="-fx-border-color: #000000; -fx-background-color: #990099;" text="PLAY >" textFill="WHITE"></Button>
+    <Button fx:id="playButton" layoutX="450.0" layoutY="525.0" prefHeight="50.0" prefWidth="130.0" onMouseClicked="#playClicked" onMouseEntered="#glowButton" onMouseExited="#unGlowButton" style="-fx-border-color: #000000; -fx-background-color: #990099;" text="PLAY >" textFill="WHITE"></Button>
 
     <stylesheets>
         <URL value="@style.css"/>

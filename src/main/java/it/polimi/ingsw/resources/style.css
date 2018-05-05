@@ -1,11 +1,11 @@
 .root {
    -fx-background-image: url("sagrada2.jpg");
    -fx-background-size: cover;
+   -fx-font-family: "Courier New";
 }
 
-.label, #Button{
+.label, #play{
     -fx-font-size: 14pt;
-    -fx-font-family: "Courier New";
     -fx-font-weight:bold;
     -fx-text-fill: white;
     -fx-opacity: 1.0;
@@ -17,14 +17,16 @@
 }
 
 #choose{
-    -fx-font-size: 10pt;
+    -fx-font-size: 9.5pt;
     -fx-font-style: italic;
 }
 
-#Button{
+#play_button{
+   -fx-font-style: italic;
    -fx-border-radius:8px;
    -fx-background-radius:16px;
    -fx-border-width:4px;
 }
+
 
 
