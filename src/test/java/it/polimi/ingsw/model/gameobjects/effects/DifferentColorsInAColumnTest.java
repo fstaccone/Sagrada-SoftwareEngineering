@@ -20,7 +20,8 @@ public class DifferentColorsInAColumnTest {
     public void before() {
         room = mock(Room.class);
         match=mock(Match.class);
-        player = new PlayerMultiplayer("player", room);
+        // modificato in seguito all'introduzione di Lobby
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
 

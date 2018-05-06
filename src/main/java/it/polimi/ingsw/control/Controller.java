@@ -22,28 +22,29 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         return null;
     }
 
-   /* public boolean checkName(String name){
+    @Override
+    public boolean checkName(String name){
         for ( String n: lobby.getTakenUsernames()) {
-            if (name.equals(n))
+            if (name.equals(n)) {
+                System.out.println("checkname ha trovato uno username duplicato");
                 return false;
+            }
         }
         return true;
-    }*/
-
-    @Override
-    public Lobby getLobby() throws RemoteException {
-        return lobby;
     }
+
 
     @Override
     public void createMatch(String name) throws RemoteException{
-        System.out.println("ciao");
+        this.lobby.addUsername(name);
         this.lobby.createSingleplayerMatch(name);
     }
 
-   /* public void setLobby(Lobby lobby) {
-        this.lobby = lobby;
-    }*/
+    @Override
+    public void addPlayer(String name) throws RemoteException {
+        this.lobby.addUsername(name);
+        this.lobby.addToWaitingPlayers(name);
+    }
 
     // private transient final Room room;
    // private final Map<Player, ViewInterface> views = new HashMap<>();

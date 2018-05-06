@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /*  Room is the container of players who decided to play a match
     It has to be created with a fixed number of players (between 1 and 4)
@@ -87,27 +88,9 @@ public class Room {
     // Crea match e fa partire il gioco
     // Potrebbe creare la finestra di gioco nella finestra in cui girava la room
     private void startMatch(){
-        this.match = new MatchMultiplayer(players);
+        // solo per far funzionare temporaneamente, non serve
+        this.match = new MatchMultiplayer(players.stream().map(p -> p.toString()).collect(Collectors.toList()));
         match.gameInit();
     }
 
-    public int getRoomId() {
-        return roomId;
-    }
-
-
-
-    /*  il controllo va fatto sul server, prima di accedere alla room, in questo modo puù essere usato come identificatore
-
-    //added to try connectivity from view to model(MVC)
-    public synchronized Player login(String username) throws RemoteException {
-        if (loggedPlayers.stream().map(Player::getName).anyMatch(u -> u.equals(username))) {
-            throw new RemoteException("Another player is already using the username you choose: " + username);
-        }
-        Player player = new Player(username,this);
-        loggedPlayers.add(player);
-        return player; //ritorna player al controller
-    }
-
-    */
 }

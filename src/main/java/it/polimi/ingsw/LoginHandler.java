@@ -1,14 +1,11 @@
 package it.polimi.ingsw;
 
 
-import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.view.RMIView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.paint.Color;
@@ -21,7 +18,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
-public class LoginController implements Initializable {
+public class LoginHandler implements Initializable {
 
     private String username;
     private boolean isRmi = true;
@@ -40,6 +37,7 @@ public class LoginController implements Initializable {
     RemoteController controller;
 
     private Client client;
+
     @FXML
     private TextField usernameInput;
 
@@ -121,17 +119,28 @@ public class LoginController implements Initializable {
 
 
     private void readInput() {
-        this.username = this.usernameInput.getCharacters().toString();
+        this.username = this.usernameInput.getText();
         this.isRmi = rmiCheckmark.isSelected();
         this.isSocket = socketCheckmark.isSelected();
         this.isGui = guiCheckmark.isSelected();
         this.isCli = cliCheckmark.isSelected();
-        this.serverAddress = serverAddressInput.getCharacters().toString();
+        this.serverAddress = serverAddressInput.getText();
         this.isSingleplayer = modeCheckmark.isSelected();
     }
 
     private void readUsername() {
-        this.username = this.usernameInput.getCharacters().toString();
+        showAlert(Alert.AlertType.WARNING, "Invalid username!", "Username already in use, choose another please!");
+        // capire perchè viene chiusa la gui
+        // aspetta finchè non viene cliccato di nuovo play
+        this.username = this.usernameInput.getText();
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
     }
 
     private void setup() throws RemoteException {
@@ -140,17 +149,17 @@ public class LoginController implements Initializable {
         // connection establishment with the selected method
         if (isRmi) setupRmiConnection();
         else setupSocketConnection();
-/*
+
         // name is controlled in the model to be sure that it's unique
         while (!unique) {
             unique = controller.checkName(this.username);
             if (!unique) {
-                playButton.setTooltip(new Tooltip("username already in use"));
+                usernameInput.setText("Username already in use!");
                 readUsername();
             }
         }
         // view's creation and input for the model to create the Player
-*/      if (isRmi) createClientRmiView();
+            if (isRmi) createClientRmiView();
         //else createSocketView();
 
     }
@@ -177,25 +186,27 @@ public class LoginController implements Initializable {
     }
 
     private void createClientRmiView() throws RemoteException {
-        // to create the link between this client and the Room in which he'll play
+        // to create the link between this Client and the Player in the model
         if (isSingleplayer){
-            System.out.println("From createClientRmiView");
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
-                System.out.println("From createClientRmiView try");
-                System.out.println(controller.toString());
-                //controller.createMatch(this.username );
-                System.out.println("From createClientRmiView after try");
+                controller.createMatch(this.username);
             }
             catch (Exception e){
                 e.printStackTrace();
+                System.out.println("Singleplayer match can't be created!");
             }
         }
-
-        // stessa cosa qui
         else {
-            System.out.println("Match multiplayer");
-            //controller.getLobby().createMultiplayerMatch();
+            client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
+            try {
+                controller.addPlayer(this.username);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                System.out.println("Multiplayer match can't be created!");
+            }
+
         }
     }
 

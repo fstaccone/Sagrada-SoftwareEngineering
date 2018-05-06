@@ -42,7 +42,8 @@ public class ReRollAllReserveDicesTest {
         when(match.getBoard()).thenReturn(board);
         when(board.getReserve()).thenReturn(reserve);
         when(match.getBoard().getReserve()).thenReturn(reserve);
-        player = new PlayerMultiplayer("player", room);
+        // modificato in seguito all'introduzione di Lobby
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         toolCard = new ToolCard("Martelletto");

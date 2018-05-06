@@ -23,7 +23,6 @@ public class Client {
         this.state = state;
         this.clientController = new ClientControllerRMI();
         this.gameController = gameController;
-        gameController.createMatch(name);
     }
 
     public String getName() {

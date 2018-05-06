@@ -7,11 +7,13 @@ public class MatchMultiplayer extends Match {
     private List<PlayerMultiplayer> players;
     private int positionOfFirstPlayerInRound;
 
-    public MatchMultiplayer(List<Player> players) {
+    public MatchMultiplayer(List<String> clients) {
         super();
         // trovare un modo per fare il cast da Player a PlayerMultiplayer
-        this.decksContainer = new DecksContainer(players.size());
+        this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
+        // creation of players
+        //clients.stream().forEach(p -> this.players.add(new PlayerMultiplayer(p)));
     }
 
     // getters
