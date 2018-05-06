@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.view.RMIView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -148,7 +149,7 @@ public class LoginController implements Initializable {
             }
         }
         // view's creation and input for the model to create the Player
-        if (isRmi) createRmiView();
+        if (isRmi) createClientRmiView();
         else createSocketView();
 
     }
@@ -173,14 +174,15 @@ public class LoginController implements Initializable {
 
     }
 
-    private void createRmiView() {
+    private void createClientRmiView() {
 
         // to create the link between this client and the Room in which he'll play
         if (isSinglelayer)
-            // crea la view
-            // ...
-            // la passa come parametro al metodo che creerà le relazioni nel modello
-            controller.getLobby().createSingleplayerMatch(this.username);
+
+            // todo: creare direttamente la partita passando come parametro il Client
+            // todo: il Client sarà l'entità da cui si accede alla view e al Player all'interno del modello
+
+            //controller.getLobby().createSingleplayerMatch( new Client(this.username, new RMIView()));
 
         // stessa cosa qui
         else {
