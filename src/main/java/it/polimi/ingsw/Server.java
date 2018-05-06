@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.control.RemoteController;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,8 +21,7 @@ public class Server{
 
     public static void main(String[] args) throws RemoteException {
 
-        Controller lobby = new Controller();
-
+        Controller controller = new Controller();
 
         //read configuration file
         readServerConfig(serverConfig);
@@ -29,12 +29,13 @@ public class Server{
         //start RMI registry
         try {
            Registry registry = LocateRegistry.createRegistry(rmiPort);
-           registry.rebind(lobbyName,lobby);
+           registry.rebind(lobbyName,controller);
+           System.out.println("RMI server online on port " + rmiPort);
 
         } catch (RemoteException e) {
             System.out.println("Cannot start RMI registry");
         }
-        System.out.println("RMI server online on port " + rmiPort);
+
 
 
 

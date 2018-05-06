@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.Room;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.AuroraeMagnificus;
 
