@@ -27,7 +27,7 @@
 
 
     <Label id="choose" layoutX="37.0" layoutY="528.0" text="Singleplayer:" />
-    <CheckBox fx:id="modeCheckmark" layoutX="152.0" layoutY="527.0" onMouseClicked="#rmiMarked" textFill="WHITE" />
+    <CheckBox fx:id="modeCheckmark" layoutX="152.0" layoutY="527.0" onMouseClicked="#singleplayerMarked" textFill="WHITE" />
 
     <Label id="choose" layoutX="106.0" layoutY="451.0" text="and:" />
     <CheckBox fx:id="guiCheckmark" layoutX="37.0" layoutY="486.0" onMouseClicked="#guiMarked" text="GUI" textFill="WHITE" />

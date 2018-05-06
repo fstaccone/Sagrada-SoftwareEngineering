@@ -1,19 +1,29 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.view.RemoteBaseView;
+import it.polimi.ingsw.view.ClientControllerRMI;
+import it.polimi.ingsw.view.ClientControllerInterface;
+import it.polimi.ingsw.view.ViewInterface;
+
+import java.rmi.RemoteException;
 
 
 public class Client {
     private String name;
     private Player player;
-    private ClientState state;
-    private RemoteBaseView view;
+    private RemoteController gameController;
+    private ClientControllerInterface clientController;
+    private ConnectionStatus state;
+    private ViewInterface view;
 
-    private Client(String name, RemoteBaseView view, ClientState state) {
+    public Client(String name, ViewInterface view, ConnectionStatus state, RemoteController gameController) throws RemoteException {
         this.name = name;
         this.view = view;
         this.state = state;
+        this.clientController = new ClientControllerRMI();
+        this.gameController = gameController;
+        gameController.createMatch(name);
     }
 
     public String getName() {
@@ -24,11 +34,11 @@ public class Client {
         return player;
     }
 
-    public ClientState getState() {
+    public ConnectionStatus getState() {
         return state;
     }
 
-    public RemoteBaseView getView() {
+    public ViewInterface getView() {
         return view;
     }
 

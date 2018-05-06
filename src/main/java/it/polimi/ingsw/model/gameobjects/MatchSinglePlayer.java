@@ -1,18 +1,23 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.Client;
+
 import java.util.List;
 
 public class MatchSinglePlayer extends Match{
 
     private int matchId;
     private int difficulty;
+    String clientIdentifier;
     PlayerSingleplayer player;
 
-    public MatchSinglePlayer(int matchId, String playerName) {
+    public MatchSinglePlayer(int matchId, String name) {
         super();
         this.matchId = matchId;
         this.decksContainer = new DecksContainer(1);
-        this.player = new PlayerSingleplayer(playerName);
+        this.clientIdentifier = name;
+        this.player = new PlayerSingleplayer(name);
+        System.out.println("jjhkj");
     }
 
     public int getMatchId() { return matchId; }

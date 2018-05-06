@@ -1,47 +1,52 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.model.gameobjects.Lobby;
-import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.Room;
-import it.polimi.ingsw.view.RemoteBaseView;
+import it.polimi.ingsw.Client;
+import it.polimi.ingsw.Lobby;
+import it.polimi.ingsw.view.ViewInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Controller extends UnicastRemoteObject implements RemoteController  {
 
-    private transient Lobby lobby;
+    private Lobby lobby;
 
-    public Controller() throws RemoteException{
+    public Controller() throws RemoteException {
         super();
+        this.lobby = new Lobby();
         // ...
     }
 
     @Override
-    public String login(String username, RemoteBaseView view) throws RemoteException {
+    public String login(String username, ViewInterface view) throws RemoteException {
         return null;
     }
 
-    public boolean checkName(String name){
+   /* public boolean checkName(String name){
         for ( String n: lobby.getTakenUsernames()) {
             if (name.equals(n))
                 return false;
         }
         return true;
-    }
+    }*/
 
-    public Lobby getLobby() {
+    @Override
+    public Lobby getLobby() throws RemoteException {
         return lobby;
     }
 
-    public void setLobby(Lobby lobby) {
-        this.lobby = lobby;
+    @Override
+    public void createMatch(String name) throws RemoteException{
+        System.out.println("ciao");
+        this.lobby.createSingleplayerMatch(name);
     }
 
+   /* public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
+    }*/
+
     // private transient final Room room;
-   // private final Map<Player, RemoteBaseView> views = new HashMap<>();
+   // private final Map<Player, ViewInterface> views = new HashMap<>();
 
     //public Controller() throws RemoteException{
     //    super();
@@ -49,7 +54,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     //}
 
     //@Override
-    //public synchronized String login(String playername, RemoteBaseView view) throws RemoteException {
+    //public synchronized String login(String playername, ViewInterface view) throws RemoteException {
         //Player player=room.login(playername);
 
         //views.put(player, view);

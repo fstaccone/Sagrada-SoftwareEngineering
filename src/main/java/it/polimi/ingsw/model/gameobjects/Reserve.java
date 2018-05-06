@@ -62,7 +62,7 @@ public class Reserve {
         System.out.println("End of the round.");
         ArrayList<Dice> dicesLeft = new ArrayList<>();
         while(!dices.isEmpty()){
-            System.out.println("Dice removed from reserve: "+dices.get(0));
+            System.out.println("Dice removed from reserve: " + dices.get(0).toString());
             dicesLeft.add(dices.get(0));
             dices.remove(0);
             //i dadi restanti nella riserva vanno rimossi e posti nella corrispondente casella del roundtrack

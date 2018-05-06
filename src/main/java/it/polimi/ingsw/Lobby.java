@@ -1,4 +1,6 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw;
+
+import it.polimi.ingsw.model.gameobjects.MatchSinglePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +30,8 @@ public class Lobby {
 
     }
 
-    public void createSingleplayerMatch(String name){
+    public void createSingleplayerMatch( String name){
         new MatchSinglePlayer(matchCounter, name);
-
     }
 
     public void createMultiplayerMatch(){

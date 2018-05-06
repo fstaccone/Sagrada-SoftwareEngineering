@@ -1,6 +1,10 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw;
 
 import it.polimi.ingsw.Server;
+import it.polimi.ingsw.model.gameobjects.Match;
+import it.polimi.ingsw.model.gameobjects.MatchMultiplayer;
+import it.polimi.ingsw.model.gameobjects.Player;
+import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 
 import java.rmi.RemoteException;
 import java.util.List;

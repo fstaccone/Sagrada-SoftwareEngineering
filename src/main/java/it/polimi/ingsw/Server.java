@@ -1,7 +1,6 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.model.gameobjects.Lobby;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
