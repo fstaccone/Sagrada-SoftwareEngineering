@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.gameobjects;
 
 import java.util.*;
 
-public  class PublicObjectiveCardDeck extends Deck{
+public  class PublicObjectiveCardDeck extends Deck<PublicObjectiveCard>{
 
     private Random randomGenerator;
 

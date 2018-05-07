@@ -53,9 +53,11 @@ public class Lobby {
     public synchronized void createMultiplayerMatch(List<String> clients){
         multiplayerMatches.add( new MatchMultiplayer(clients));
         System.out.println("Match multiplayer creato: " + (matchCounter));
+        System.out.println("Giocatori:");
+        clients.forEach(c -> System.out.println(c));
     }
 
-    public synchronized void addToWaitingPlayers(String name) {
+    public void addToWaitingPlayers(String name) {
 
         if(waitingPlayers.size() == 1){
             this.waitingPlayers.add(name);
@@ -93,7 +95,7 @@ public class Lobby {
     // in caso di disconnessione gli fa passare il turno
     // in questo modo possiamo gestire la rinuncia alla partita semplicemente con un metodo removePlayer se il client
     // chiude prima che la partita sia iniziata
-    private void startMatch(){
+    private synchronized void startMatch(){
         // links between client and match are registered into the map
         for (String name: waitingPlayers) {
             mapClientsToRoom.put(name,matchCounter);

@@ -3,16 +3,16 @@ package it.polimi.ingsw.model.gameobjects;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Deck{
+public abstract class Deck<T extends Card>{
     protected List<String> deck;
-    protected List<Card> pickedCards;
+    protected List<T> pickedCards;
 
 
     public  Deck() {
-        this.deck=new ArrayList<>();
-        this.pickedCards=new ArrayList<>();
+        this.deck = new ArrayList<>();
+        this.pickedCards = new ArrayList<>();
     }
-     public List getPickedCards(){
+     public List<T> getPickedCards(){
         return this.pickedCards;
     }
 

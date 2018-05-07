@@ -2,9 +2,7 @@ package it.polimi.ingsw.model.gameobjects;
 
 import java.util.*;
 
-public  class ToolCardDeck extends Deck{
-
-    private Random randomGenerator;
+public  class ToolCardDeck extends Deck<ToolCard>{
 
     public ToolCardDeck() {
         super();
@@ -12,6 +10,8 @@ public  class ToolCardDeck extends Deck{
         for(int i=1;i<13;i++) {
             this.deck.add("tool"+i);
         }
+
+        Random randomGenerator;
 
         for(int j=0;j<3;j++) {
             randomGenerator = new Random();

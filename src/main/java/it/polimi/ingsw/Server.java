@@ -17,14 +17,16 @@ public class Server{
     private static int rmiPort;
     private static int socketPort;
     private static String lobbyName;
-
+    private static int waitingTime;
 
     public static void main(String[] args) throws RemoteException {
 
-        Controller controller = new Controller();
-
         //read configuration file
         readServerConfig(serverConfig);
+
+        System.out.println("waitingTime = " + waitingTime);
+        Controller controller = new Controller(waitingTime);
+
 
         //start RMI registry
         try {
@@ -119,6 +121,10 @@ public class Server{
 
                 case "rmiLobbyName":
                     Server.lobbyName = value.getValue();
+                    break;
+
+                case "waitingTime":
+                    Server.waitingTime = Integer.parseInt(value.getValue());
                     break;
 
             }
