@@ -101,10 +101,15 @@ public class LoginHandler implements Initializable {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         //playButton.setDisable(true);
         readInput();
+        
         connectionSetup();
+
+
 
         Stage stage = (Stage) playButton.getScene().getWindow();
         stage.close();
+
+        setup();
     }
 
     @FXML
@@ -159,7 +164,7 @@ public class LoginHandler implements Initializable {
             }
         }
         // view's creation and input for the model to create the Player
-            if (isRmi) createClientRmiView();
+            if (isRmi) createAndConnectClientRmi();
         //else createSocketView();
 
     }
@@ -185,7 +190,7 @@ public class LoginHandler implements Initializable {
 
     }
 
-    private void createClientRmiView() throws RemoteException {
+    private void createAndConnectClientRmi() throws RemoteException {
         // to create the link between this Client and the Player in the model
         if (isSingleplayer){
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
@@ -204,7 +209,7 @@ public class LoginHandler implements Initializable {
             }
             catch (Exception e){
                 e.printStackTrace();
-                System.out.println("Multiplayer match can't be created!");
+                System.out.println("Player " + this.username + " can't be added to a multiplayer match!");
             }
 
         }

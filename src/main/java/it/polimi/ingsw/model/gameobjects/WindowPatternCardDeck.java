@@ -3,15 +3,15 @@ package it.polimi.ingsw.model.gameobjects;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.*;
 import java.util.*;
 
-public class WindowPatternCardDeck extends Deck{
-
-    private Random randomGenerator;
+public class WindowPatternCardDeck extends Deck<WindowPatternCard>{
 
     public WindowPatternCardDeck(int numOfPlayers) {
         super();
         for(int i=1;i<25;i++) {
             this.deck.add("window"+i);
         }
+
+        Random randomGenerator;
 
         for(int j=0;j<4*numOfPlayers;j++) {
             randomGenerator = new Random();

@@ -16,14 +16,16 @@ public class LaunchServer {
     private static int rmiPort;
     private static int socketPort;
     private static String lobbyName;
-
+    private static int waitingTime;
 
     public static void main(String[] args) throws IOException {
 
-        Controller controller = new Controller();
-
         //read configuration file
         readServerConfig(serverConfig);
+
+        System.out.println("waitingTime = " + waitingTime);
+        Controller controller = new Controller(waitingTime);
+
 
         //start RMI registry
         try {
@@ -124,6 +126,10 @@ public class LaunchServer {
 
                 case "rmiLobbyName":
                     LaunchServer.lobbyName = value.getValue();
+                    break;
+
+                case "waitingTime":
+                    Server.waitingTime = Integer.parseInt(value.getValue());
                     break;
 
             }
