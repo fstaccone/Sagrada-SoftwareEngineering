@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import it.polimi.ingsw.Room;
-
 public class PlayerMultiplayer extends Player {
     private int numFavorTokens;
     private PrivateObjectiveCard privateObjectiveCard;

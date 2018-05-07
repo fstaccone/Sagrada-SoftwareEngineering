@@ -50,7 +50,7 @@ public class Lobby {
 
     public synchronized void createMultiplayerMatch(List<String> clients){
         multiplayerMatches.add( new MatchMultiplayer(clients));
-        System.out.println("Match multiplayer creato: " + (matchCounter - 1));
+        System.out.println("Match multiplayer creato: " + (matchCounter));
     }
 
     public synchronized void addToWaitingPlayers(String name){
