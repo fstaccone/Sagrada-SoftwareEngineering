@@ -11,6 +11,7 @@ import javafx.scene.effect.Glow;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -37,6 +38,7 @@ public class LoginHandler implements Initializable {
     RemoteController controller;
 
     private Client client;
+    private SocketClient socketClient;
 
     @FXML
     private TextField usernameInput;
@@ -97,19 +99,16 @@ public class LoginHandler implements Initializable {
     }
 
     @FXML
-    private void playClicked() throws RemoteException {
+    private void playClicked() throws IOException, InterruptedException {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         //playButton.setDisable(true);
         readInput();
-        
+
         connectionSetup();
 
+        /*Stage stage = (Stage) playButton.getScene().getWindow();
+        stage.close();*/
 
-
-        Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.close();
-
-        setup();
     }
 
     @FXML
@@ -148,7 +147,7 @@ public class LoginHandler implements Initializable {
         alert.show();
     }
 
-    private void connectionSetup() throws RemoteException {
+    private void connectionSetup() throws IOException, InterruptedException {
         boolean unique = false;
 
         // connection establishment with the selected method
@@ -157,15 +156,24 @@ public class LoginHandler implements Initializable {
 
         // name is controlled in the model to be sure that it's unique
         while (!unique) {
-            unique = controller.checkName(this.username);
+            if(isRmi)
+                unique = controller.checkName(this.username);
+            else{
+                socketClient.request(new CheckUsernameRequest(this.username));
+                socketClient.nextResponse().handle(socketClient);//se usassimo un clientcontroller sarebbe: handle(controller) poichè sarebbe quello a implementare ResponseHandler
+                unique=!( socketClient.isNameTaken());}
+
+                System.out.println(unique);
             if (!unique) {
-                usernameInput.setText("Username already in use!");
+                usernameInput.setText("Insert another name here:");
+                //PROBABILMENTE CI VUOLE UN EVENTHANDLER
                 readUsername();
-            }
+                System.out.println("nuovo nome preso,al momento lo prende vuoto");
+            } else System.out.println("apposto");
         }
         // view's creation and input for the model to create the Player
             if (isRmi) createAndConnectClientRmi();
-        //else createSocketView();
+
 
     }
 
@@ -186,8 +194,9 @@ public class LoginHandler implements Initializable {
 
     }
 
-    private void setupSocketConnection() {
-
+    private void setupSocketConnection() throws IOException {
+        this.socketClient=new SocketClient(serverAddress,socketPort);
+        socketClient.init();
     }
 
     private void createAndConnectClientRmi() throws RemoteException {

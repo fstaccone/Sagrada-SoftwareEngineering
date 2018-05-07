@@ -38,14 +38,12 @@ public class LaunchServer {
         }
 
         //start Socket connection
-        SocketServer server=new SocketServer(socketPort);
+        SocketServer server=new SocketServer(socketPort,controller);
         try{
             server.run();
         } finally {
             server.close();
         }
-
-
 
 
     }
@@ -129,7 +127,7 @@ public class LaunchServer {
                     break;
 
                 case "waitingTime":
-                    Server.waitingTime = Integer.parseInt(value.getValue());
+                    LaunchServer.waitingTime = Integer.parseInt(value.getValue());
                     break;
 
             }

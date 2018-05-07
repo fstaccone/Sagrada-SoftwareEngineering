@@ -1,13 +1,12 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.Lobby;
+import it.polimi.ingsw.*;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Controller extends UnicastRemoteObject implements RemoteController  {
+public class Controller extends UnicastRemoteObject implements RemoteController,RequestHandler {
 
     private Lobby lobby;
 
@@ -44,6 +43,17 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     public void addPlayer(String name) throws RemoteException {
         this.lobby.addUsername(name);
         this.lobby.addToWaitingPlayers(name);
+    }
+
+    @Override
+    public Response handle(CheckUsernameRequest request) {
+        for ( String n: lobby.getTakenUsernames()) {
+            if (request.username.equals(n)) {
+                System.out.println("checkname ha trovato uno username duplicato");
+                return new NameAlreadyTakenResponse(true);
+            }
+        }
+        return new NameAlreadyTakenResponse(false);
     }
 
     // private transient final Room room;
