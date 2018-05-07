@@ -1,14 +1,11 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Server;
 import it.polimi.ingsw.model.gameobjects.Match;
 import it.polimi.ingsw.model.gameobjects.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 
-import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /*  Room is the container of players who decided to play a match
@@ -28,9 +25,9 @@ public class Room {
     private int numPlayers;
 
     // Da capire come la room comunica con il server
-    private Server server;
+    private LaunchServer server;
 
-    public Room(int roomId, int numPlayers, Server server) {
+    public Room(int roomId, int numPlayers, LaunchServer server) {
         this.roomId = roomId;
         this.numPlayers = numPlayers;
         this.full = false;

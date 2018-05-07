@@ -1,7 +1,6 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.control.RemoteController;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,7 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
 
-public class Server{
+public class LaunchServer {
 
     private static String serverConfig = "./src/main/java/it/polimi/ingsw/server.config";
     private static int rmiPort;
@@ -19,7 +18,7 @@ public class Server{
     private static String lobbyName;
 
 
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[] args) throws IOException {
 
         Controller controller = new Controller();
 
@@ -36,7 +35,13 @@ public class Server{
             System.out.println("Cannot start RMI registry");
         }
 
-
+        //start Socket connection
+        SocketServer server=new SocketServer(socketPort);
+        try{
+            server.run();
+        } finally {
+            server.close();
+        }
 
 
 
@@ -110,15 +115,15 @@ public class Server{
             switch (value.getKey()) {
 
                 case "socketPort":
-                    Server.socketPort = Integer.parseInt(value.getValue());
+                    LaunchServer.socketPort = Integer.parseInt(value.getValue());
                     break;
 
                 case "rmiPort":
-                    Server.rmiPort = Integer.parseInt(value.getValue());
+                    LaunchServer.rmiPort = Integer.parseInt(value.getValue());
                     break;
 
                 case "rmiLobbyName":
-                    Server.lobbyName = value.getValue();
+                    LaunchServer.lobbyName = value.getValue();
                     break;
 
             }

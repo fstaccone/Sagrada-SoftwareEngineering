@@ -101,7 +101,7 @@ public class LoginHandler implements Initializable {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         //playButton.setDisable(true);
         readInput();
-        setup();
+        connectionSetup();
 
         Stage stage = (Stage) playButton.getScene().getWindow();
         stage.close();
@@ -143,7 +143,7 @@ public class LoginHandler implements Initializable {
         alert.show();
     }
 
-    private void setup() throws RemoteException {
+    private void connectionSetup() throws RemoteException {
         boolean unique = false;
 
         // connection establishment with the selected method
