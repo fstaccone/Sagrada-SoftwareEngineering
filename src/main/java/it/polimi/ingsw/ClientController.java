@@ -3,20 +3,21 @@ package it.polimi.ingsw;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
-public class SocketClient implements ResponseHandler{
-
-    private Socket socket;
-
-    public void setSocket(Socket socket) {
-        this.socket=socket;
+public class ClientController implements ResponseHandler {
+    public boolean isMatchCreated() {
+        return matchCreated;
     }
 
+    private boolean matchCreated=false;
+    private boolean nameAlreadyTaken=false;
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-
+    public ClientController(ObjectInputStream in, ObjectOutputStream out) {
+        this.in = in;
+        this.out = out;
+    }
 
     public void request(Request request) {
         try {
@@ -24,12 +25,6 @@ public class SocketClient implements ResponseHandler{
         } catch (IOException e) {
             System.err.println("Exception on network: " + e.getMessage());
         }
-    }
-
-
-    @Override
-    public void handle(NameAlreadyTakenResponse response) { //DA TOGLIERE
-       // nameTaken=response.nameAlreadyTaken;
     }
 
     public Response nextResponse() {
@@ -42,5 +37,21 @@ public class SocketClient implements ResponseHandler{
         }
 
         return null;
+    }
+
+
+
+    public boolean isNameAlreadyTaken() {
+        return nameAlreadyTaken;
+    }
+
+    @Override
+    public void handle(NameAlreadyTakenResponse response) {
+        this.nameAlreadyTaken=response.nameAlreadyTaken;
+    }
+
+    @Override
+    public void handle(CreatedMatchResponse response) {
+        this.matchCreated=response.matchCreated;
     }
 }

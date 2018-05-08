@@ -58,10 +58,12 @@ public class Lobby {
 
     public void addToWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
-            //debug
-            System.out.println("Players already waiting: " + waitingPlayers.size());
 
             this.waitingPlayers.add(name);
+            //debug
+            System.out.println("Players waiting: " + waitingPlayers.size());
+
+
 
             if (waitingPlayers.size() == 2) {
                 // L'inizializzazione di timer e task va messa qui perchè altrimenti dopo la prima volta che
