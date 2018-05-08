@@ -12,6 +12,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.SocketException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -19,8 +23,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
-public class LoginHandler implements Initializable {
+public class LoginHandler implements Initializable{
 
+    private ClientController clientController;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
     private String username;
     private boolean isRmi = true;
     private boolean isSocket = false;
@@ -34,11 +41,10 @@ public class LoginHandler implements Initializable {
     private int rmiRegistryPort = 1100;
     private int socketPort = 1101;
 
-    Registry registry;
-    RemoteController controller;
+    private Registry registry;
+    private RemoteController controller;
 
     private Client client;
-    private SocketClient socketClient;
 
     @FXML
     private TextField usernameInput;
@@ -106,8 +112,8 @@ public class LoginHandler implements Initializable {
 
         connectionSetup();
 
-        /*Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.close();*/
+        Stage stage = (Stage) playButton.getScene().getWindow();
+        stage.close();
 
     }
 
@@ -133,10 +139,10 @@ public class LoginHandler implements Initializable {
     }
 
     private void readUsername() {
-        showAlert(Alert.AlertType.WARNING, "Invalid username!", "Username already in use, choose another please!");
+
         // capire perchè viene chiusa la gui
         // aspetta finchè non viene cliccato di nuovo play
-        this.username = this.usernameInput.getText();
+        //this.username = this.usernameInput.getText();
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
@@ -155,24 +161,30 @@ public class LoginHandler implements Initializable {
         else setupSocketConnection();
 
         // name is controlled in the model to be sure that it's unique
-        while (!unique) {
+        if (!unique) {
             if(isRmi)
                 unique = controller.checkName(this.username);
             else{
-                socketClient.request(new CheckUsernameRequest(this.username));
-                socketClient.nextResponse().handle(socketClient);//se usassimo un clientcontroller sarebbe: handle(controller) poichè sarebbe quello a implementare ResponseHandler
-                unique=!( socketClient.isNameTaken());}
+                clientController.request(new CheckUsernameRequest(this.username));
+                clientController.nextResponse().handle(clientController);
+                unique=!( clientController.isNameAlreadyTaken());}
 
-                System.out.println(unique);
             if (!unique) {
-                usernameInput.setText("Insert another name here:");
+                //usernameInput.setText("Insert another name here:");
                 //PROBABILMENTE CI VUOLE UN EVENTHANDLER
-                readUsername();
-                System.out.println("nuovo nome preso,al momento lo prende vuoto");
-            } else System.out.println("apposto");
+                //readUsername();
+                System.out.println("Invalid username");
+                showAlert(Alert.AlertType.WARNING, "Invalid username!", "Username already in use, open another window and choose another one please!");
+                //System.out.println("nuovo nome preso,al momento lo prende vuoto");
+            }
+            else {
+                System.out.println("Valid username");
+                if (isRmi) createClientRmi();
+                else createClientSocket();
+            }
         }
         // view's creation and input for the model to create the Player
-            if (isRmi) createAndConnectClientRmi();
+
 
 
     }
@@ -195,11 +207,21 @@ public class LoginHandler implements Initializable {
     }
 
     private void setupSocketConnection() throws IOException {
-        this.socketClient = new SocketClient(serverAddress,socketPort);
-        socketClient.init();
+
+        Socket socket=null;
+
+        try{ socket= new Socket(serverAddress, socketPort);
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in= new ObjectInputStream(socket.getInputStream());
+            clientController=new ClientController(in,out);
+        }
+        catch(SocketException e){
+            System.out.println("Unable to create socket connection");
+        }
+        finally{ /*socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM*/;}
     }
 
-    private void createAndConnectClientRmi() throws RemoteException {
+    private void createClientRmi() throws RemoteException {
         // to create the link between this Client and the Player in the model
         if (isSingleplayer){
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
@@ -224,17 +246,35 @@ public class LoginHandler implements Initializable {
         }
     }
 
-/*
-    private void createSocketView() {
 
-        // to create the link between this client and the Room in which he'll play
-        if (isSingleplayer)
-            // crea la view
-            // ...
 
-            // stessa cosa qui
-        else controller.getLobby().createMultiplayerMatch();
+    private void createClientSocket() throws RemoteException{
 
-    }*/
+        // to create the link between this Client and the Player in the model
+        if (isSingleplayer){
+            client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
+            try {
+                clientController.request(new CreateMatchRequest(this.username));
+                clientController.nextResponse().handle(clientController);
+                System.out.println(clientController.isMatchCreated());
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                System.out.println("Singleplayer match can't be created!");
+            }
+        }
+        else {
+            client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
+            try {
+                clientController.request(new AddPlayerRequest(this.username));
+                clientController.nextResponse().handle(clientController);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                System.out.println("Player " + this.username + " can't be added to a multiplayer match!");
+            }
+
+        }
+    }
 }
 

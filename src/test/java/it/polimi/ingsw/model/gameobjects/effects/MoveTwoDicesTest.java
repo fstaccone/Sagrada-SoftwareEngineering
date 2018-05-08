@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.Room;
 import it.polimi.ingsw.model.gameobjects.*;
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.SymphonyOfLight;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,7 +10,6 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class MoveTwoDicesTest {
     private SymphonyOfLight schemeCard;

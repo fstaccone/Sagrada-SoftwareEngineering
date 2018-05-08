@@ -7,25 +7,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable{
+public class SocketHandler implements Runnable{
     private Socket socket;
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
     private final Controller controller;
 
 
-    public ClientHandler(Socket s, Controller controller) throws IOException {
+    public SocketHandler(Socket socket, Controller controller) throws IOException {
 
-        this.socket = s;
-        this.out = new ObjectOutputStream(s.getOutputStream());
-        this.in = new ObjectInputStream(s.getInputStream());
+        this.socket = socket;
+        this.out = new ObjectOutputStream(socket.getOutputStream());
+        this.in = new ObjectInputStream(socket.getInputStream());
         this.controller=controller;
     }
 
     @Override
     public void run() {
-        System.out.println("arrivo qui");
-
         try {
             do {
                 Response response = ((Request) in.readObject()).handle(controller);
@@ -34,7 +32,7 @@ public class ClientHandler implements Runnable{
                 }
             } while (socket!=null);
         } catch (Exception e) {
-            System.out.println("non prende la risposta");
+            System.out.println("Connection down");
         }
 
         //close();

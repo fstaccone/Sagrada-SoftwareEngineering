@@ -17,7 +17,15 @@ public class Client{
     private ConnectionStatus state;
     private ViewInterface view;
 
-    public Client(String name, ViewInterface view, ConnectionStatus state, RemoteController gameController) throws RemoteException {
+    public Client(String name, ViewInterface view, ConnectionStatus state, RemoteController gameController){
+        this.name = name;
+        this.view = view;
+        this.state = state;
+        this.clientController = new ClientControllerRMI();
+        this.gameController = gameController;
+    }
+
+    public Client(String name, ViewInterface view, ConnectionStatus state, ClientController clientController, RemoteController gameController)  {
         this.name = name;
         this.view = view;
         this.state = state;

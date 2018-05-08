@@ -5,18 +5,25 @@ import it.polimi.ingsw.control.Controller;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class LaunchServer {
+public class Server {
 
     private static String serverConfig = "./src/main/java/it/polimi/ingsw/server.config";
     private static int rmiPort;
     private static int socketPort;
     private static String lobbyName;
     private static int waitingTime;
+
+    private static ServerSocket serverSocket;
+    private static ExecutorService threadPool;
 
     public static void main(String[] args) throws IOException {
 
@@ -38,14 +45,17 @@ public class LaunchServer {
         }
 
         //start Socket connection
-        SocketServer server=new SocketServer(socketPort,controller);
-        try{
-            server.run();
-        } finally {
-            server.close();
+        serverSocket=new ServerSocket(socketPort);
+        threadPool = Executors.newCachedThreadPool();
+        System.out.println("Socket server online on port " + socketPort);
+
+        while (serverSocket!=null) {
+            Socket Socket = serverSocket.accept();
+            System.out.println("New socket connection: " + Socket.getRemoteSocketAddress());
+            threadPool.submit( new SocketHandler(Socket, controller));
         }
-
-
+        serverSocket.close();
+        threadPool.shutdown();
     }
 
 
@@ -115,19 +125,19 @@ public class LaunchServer {
             switch (value.getKey()) {
 
                 case "socketPort":
-                    LaunchServer.socketPort = Integer.parseInt(value.getValue());
+                    Server.socketPort = Integer.parseInt(value.getValue());
                     break;
 
                 case "rmiPort":
-                    LaunchServer.rmiPort = Integer.parseInt(value.getValue());
+                    Server.rmiPort = Integer.parseInt(value.getValue());
                     break;
 
                 case "rmiLobbyName":
-                    LaunchServer.lobbyName = value.getValue();
+                    Server.lobbyName = value.getValue();
                     break;
 
                 case "waitingTime":
-                    LaunchServer.waitingTime = Integer.parseInt(value.getValue());
+                    Server.waitingTime = Integer.parseInt(value.getValue());
                     break;
 
             }

@@ -9,6 +9,7 @@ public class MatchMultiplayer extends Match {
 
     public MatchMultiplayer(List<String> clients) {
         super();
+        System.out.println("match creato");
         // trovare un modo per fare il cast da Player a PlayerMultiplayer
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());

@@ -3,31 +3,20 @@ package it.polimi.ingsw;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
-public class SocketClient implements ResponseHandler{
-
-    private boolean nameTaken;
-    private final String host;
-    private final int port;
-    private Socket connection;
-
-    public Socket getConnection() {
-        return connection;
+public class ClientController implements ResponseHandler {
+    public boolean isMatchCreated() {
+        return matchCreated;
     }
 
+    private boolean matchCreated=false;
+    private boolean nameAlreadyTaken=false;
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    public SocketClient(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
-
-    public void init() throws IOException {
-        connection = new Socket(host, port);
-        out = new ObjectOutputStream(connection.getOutputStream());
-        in = new ObjectInputStream(connection.getInputStream());
+    public ClientController(ObjectInputStream in, ObjectOutputStream out) {
+        this.in = in;
+        this.out = out;
     }
 
     public void request(Request request) {
@@ -36,16 +25,6 @@ public class SocketClient implements ResponseHandler{
         } catch (IOException e) {
             System.err.println("Exception on network: " + e.getMessage());
         }
-    }
-
-    public boolean isNameTaken() {
-        return nameTaken;
-    }
-
-    @Override
-    public void handle(NameAlreadyTakenResponse response) {
-        nameTaken=response.nameAlreadyTaken;
-
     }
 
     public Response nextResponse() {
@@ -58,5 +37,21 @@ public class SocketClient implements ResponseHandler{
         }
 
         return null;
+    }
+
+
+
+    public boolean isNameAlreadyTaken() {
+        return nameAlreadyTaken;
+    }
+
+    @Override
+    public void handle(NameAlreadyTakenResponse response) {
+        this.nameAlreadyTaken=response.nameAlreadyTaken;
+    }
+
+    @Override
+    public void handle(CreatedMatchResponse response) {
+        this.matchCreated=response.matchCreated;
     }
 }
