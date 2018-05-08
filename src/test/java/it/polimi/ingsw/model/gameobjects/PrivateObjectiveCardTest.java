@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.Room;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class PrivateObjectiveCardTest {
     private LuzCelestial schemeCard;

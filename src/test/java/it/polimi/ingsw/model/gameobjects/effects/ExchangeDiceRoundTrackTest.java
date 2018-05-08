@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.Room;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import org.junit.Assert;
@@ -7,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
