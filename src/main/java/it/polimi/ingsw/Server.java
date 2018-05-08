@@ -30,9 +30,7 @@ public class Server {
         //read configuration file
         readServerConfig(serverConfig);
 
-        System.out.println("waitingTime = " + waitingTime);
         Controller controller = new Controller(waitingTime);
-
 
         //start RMI registry
         try {

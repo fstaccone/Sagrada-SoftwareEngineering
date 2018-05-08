@@ -4,14 +4,14 @@ import it.polimi.ingsw.Client;
 
 import java.util.List;
 
-public class MatchSinglePlayer extends Match implements Runnable{
+public class MatchSingleplayer extends Match implements Runnable{
 
     private int matchId;
     private int difficulty;
     String clientIdentifier;
     PlayerSingleplayer player;
 
-    public MatchSinglePlayer(int matchId, String name) {
+    public MatchSingleplayer(int matchId, String name) {
         super();
         this.matchId = matchId;
         this.decksContainer = new DecksContainer(1);

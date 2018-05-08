@@ -149,8 +149,9 @@ public class LoginHandler implements Initializable{
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
+        alert.setResizable(false);
         alert.setContentText(message);
-        alert.show();
+        alert.showAndWait();
     }
 
     private void connectionSetup() throws IOException, InterruptedException {

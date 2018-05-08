@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.gameobjects;
 
 import java.util.*;
 
-public class MatchMultiplayer extends Match {
+public class MatchMultiplayer extends Match implements Runnable{
 
     private List<PlayerMultiplayer> players;
     private int positionOfFirstPlayerInRound;
@@ -102,7 +102,7 @@ public class MatchMultiplayer extends Match {
     public void drawPrivateObjectiveCards() {
         for (PlayerMultiplayer p: players) {
             p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));
-            this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.remove(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));// TODO: chiedere al prof
+            this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.remove(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));
         }
     }
 
@@ -118,6 +118,11 @@ public class MatchMultiplayer extends Match {
 
     @Override
     public void drawToolCards() {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }
