@@ -64,6 +64,8 @@ public class Lobby {
             this.waitingPlayers.add(name);
 
             if (waitingPlayers.size() == 2) {
+                // L'inizializzazione di timer e task va messa qui perchè altrimenti dopo la prima volta che
+                // viene chiamato il metodo timer.cancel() il timer non è più utilizzabile
                 this.timer = new Timer();
                 task = new MatchStarter(this);
                 timer.schedule(task, waitingTime);
