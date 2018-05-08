@@ -7,28 +7,16 @@ import java.net.Socket;
 
 public class SocketClient implements ResponseHandler{
 
-    private boolean nameTaken;
-    private final String host;
-    private final int port;
-    private Socket connection;
+    private Socket socket;
 
-    public Socket getConnection() {
-        return connection;
+    public void setSocket(Socket socket) {
+        this.socket=socket;
     }
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    public SocketClient(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
 
-    public void init() throws IOException {
-        connection = new Socket(host, port);
-        out = new ObjectOutputStream(connection.getOutputStream());
-        in = new ObjectInputStream(connection.getInputStream());
-    }
 
     public void request(Request request) {
         try {
@@ -38,14 +26,10 @@ public class SocketClient implements ResponseHandler{
         }
     }
 
-    public boolean isNameTaken() {
-        return nameTaken;
-    }
 
     @Override
-    public void handle(NameAlreadyTakenResponse response) {
-        nameTaken=response.nameAlreadyTaken;
-
+    public void handle(NameAlreadyTakenResponse response) { //DA TOGLIERE
+       // nameTaken=response.nameAlreadyTaken;
     }
 
     public Response nextResponse() {

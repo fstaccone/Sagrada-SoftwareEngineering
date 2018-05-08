@@ -12,6 +12,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -19,7 +22,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
-public class LoginHandler implements Initializable {
+public class LoginHandler implements Initializable, ResponseHandler{
 
     private String username;
     private boolean isRmi = true;
@@ -29,6 +32,9 @@ public class LoginHandler implements Initializable {
     private boolean isSingleplayer = false;
     private int difficulty;
     private String serverAddress;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private boolean nameAlreadyTaken=false;
 
     // Values to be set by file on server, how can we set these here?
     private int rmiRegistryPort = 1100;
@@ -159,9 +165,9 @@ public class LoginHandler implements Initializable {
             if(isRmi)
                 unique = controller.checkName(this.username);
             else{
-                socketClient.request(new CheckUsernameRequest(this.username));
-                socketClient.nextResponse().handle(socketClient);//se usassimo un clientcontroller sarebbe: handle(controller) poichè sarebbe quello a implementare ResponseHandler
-                unique=!( socketClient.isNameTaken());}
+                request(new CheckUsernameRequest(this.username));
+                nextResponse().handle(this);
+                unique=!( this.isNameAlreadyTaken());}
 
                 System.out.println(unique);
             if (!unique) {
@@ -195,8 +201,15 @@ public class LoginHandler implements Initializable {
     }
 
     private void setupSocketConnection() throws IOException {
-        this.socketClient=new SocketClient(serverAddress,socketPort);
-        socketClient.init();
+
+        Socket socket=null;
+
+        try{ socket= new Socket(serverAddress, socketPort);
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in= new ObjectInputStream(socket.getInputStream());}
+        finally {
+          // socket.close();
+        }
     }
 
     private void createAndConnectClientRmi() throws RemoteException {
@@ -224,7 +237,36 @@ public class LoginHandler implements Initializable {
         }
     }
 
-/*
+    public void request(Request request) {
+        try {
+            out.writeObject(request);
+        } catch (IOException e) {
+            System.err.println("Exception on network: " + e.getMessage());
+        }
+    }
+
+    public Response nextResponse() {
+        try {
+            return ((Response) in.readObject());
+        } catch (IOException e) {
+            System.err.println("Exception on network: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Wrong deserialization: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    @Override
+    public void handle(NameAlreadyTakenResponse response) {
+         this.nameAlreadyTaken=response.nameAlreadyTaken;
+    }
+
+    public boolean isNameAlreadyTaken() {
+        return nameAlreadyTaken;
+    }
+
+    /*
     private void createSocketView() {
 
         // to create the link between this client and the Room in which he'll play
