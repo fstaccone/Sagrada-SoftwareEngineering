@@ -195,7 +195,7 @@ public class LoginHandler implements Initializable {
     }
 
     private void setupSocketConnection() throws IOException {
-        this.socketClient=new SocketClient(serverAddress,socketPort);
+        this.socketClient = new SocketClient(serverAddress,socketPort);
         socketClient.init();
     }
 

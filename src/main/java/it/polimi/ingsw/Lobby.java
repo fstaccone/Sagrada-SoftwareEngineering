@@ -54,7 +54,7 @@ public class Lobby {
         multiplayerMatches.add( new MatchMultiplayer(clients));
         System.out.println("Match multiplayer creato: " + (matchCounter));
         System.out.println("Giocatori:");
-        clients.forEach(c -> System.out.println(c));
+        clients.forEach(System.out::println);
     }
 
     public void addToWaitingPlayers(String name) {
@@ -67,7 +67,7 @@ public class Lobby {
             this.waitingPlayers.add(name);
         }
         // just for debug
-        this.waitingPlayers.forEach(p -> System.out.println(p));
+        this.waitingPlayers.forEach(System.out::println);
     }
 
     // deve fare anche il controllo sul timer

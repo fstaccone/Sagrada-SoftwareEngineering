@@ -15,7 +15,7 @@ public class SocketServer {
 
     public SocketServer(int port, Controller controller) throws IOException {
 
-        this.controller=controller;
+        this.controller = controller;
         serverSocket = new ServerSocket(port);
         threadPool = Executors.newCachedThreadPool();
         System.out.println("Socket server online on port " + port);
