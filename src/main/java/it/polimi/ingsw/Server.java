@@ -5,41 +5,57 @@ import it.polimi.ingsw.control.Controller;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Server{
+public class Server {
 
     private static String serverConfig = "./src/main/java/it/polimi/ingsw/server.config";
     private static int rmiPort;
     private static int socketPort;
     private static String lobbyName;
+    private static int waitingTime;
 
+    private static ServerSocket serverSocket;
+    private static ExecutorService threadPool;
 
-    public static void main(String[] args) throws RemoteException {
-
-        Controller lobby = new Controller();
-
+    public static void main(String[] args) throws IOException {
 
         //read configuration file
         readServerConfig(serverConfig);
 
+        System.out.println("waitingTime = " + waitingTime);
+        Controller controller = new Controller(waitingTime);
+
+
         //start RMI registry
         try {
            Registry registry = LocateRegistry.createRegistry(rmiPort);
-           registry.rebind(lobbyName,lobby);
+           registry.rebind(lobbyName,controller);
+           System.out.println("RMI server online on port " + rmiPort);
 
         } catch (RemoteException e) {
             System.out.println("Cannot start RMI registry");
         }
-        System.out.println("RMI server online on port " + rmiPort);
 
+        //start Socket connection
+        serverSocket=new ServerSocket(socketPort);
+        threadPool = Executors.newCachedThreadPool();
+        System.out.println("Socket server online on port " + socketPort);
 
-
-
-
+        while (serverSocket!=null) {
+            Socket Socket = serverSocket.accept();
+            System.out.println("New socket connection: " + Socket.getRemoteSocketAddress());
+            threadPool.submit( new SocketHandler(Socket, controller));
+        }
+        serverSocket.close();
+        threadPool.shutdown();
     }
 
 
@@ -118,6 +134,10 @@ public class Server{
 
                 case "rmiLobbyName":
                     Server.lobbyName = value.getValue();
+                    break;
+
+                case "waitingTime":
+                    Server.waitingTime = Integer.parseInt(value.getValue());
                     break;
 
             }

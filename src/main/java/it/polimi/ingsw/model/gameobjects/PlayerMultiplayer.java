@@ -1,15 +1,11 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import it.polimi.ingsw.Room;
-
 public class PlayerMultiplayer extends Player {
     private int numFavorTokens;
     private PrivateObjectiveCard privateObjectiveCard;
-    private Room room;
 
-    public PlayerMultiplayer(String name, Room room) {
+    public PlayerMultiplayer(String name) {
         super(name);
-        this.room = room;
     }
 
     // setter
@@ -40,8 +36,8 @@ public class PlayerMultiplayer extends Player {
 
     @Override
     public void useToolCard(ToolCard chosenToolCardToUse){//il controller fa player1.useToolCard(): può passare la carta scelta perchè il controller ha riferimento alla board e pertanto alle pickedToolCards(attributo di board) tra le quali fa scegliere al client quale usare(ammesso che possa-->va fatto un check)(si tratta di un'azione precedente)
-
-        chosenToolCardToUse.useCard(this,this.room.getMatch());
+        // non ha più modo di avere il riferimento a match
+        //chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
 }

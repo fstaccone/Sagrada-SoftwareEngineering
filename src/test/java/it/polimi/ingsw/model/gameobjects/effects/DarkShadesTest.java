@@ -20,7 +20,8 @@ public class DarkShadesTest {
     public void Before() {
         room = mock(Room.class);
         match = mock(Match.class);
-        player = new PlayerMultiplayer("player", room);
+        // modificato in seguito all'introduzione di Lobby
+        player = new PlayerMultiplayer("player");
         schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 

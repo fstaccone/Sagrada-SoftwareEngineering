@@ -4,7 +4,7 @@ import it.polimi.ingsw.Client;
 
 import java.util.List;
 
-public class MatchSinglePlayer extends Match{
+public class MatchSinglePlayer extends Match implements Runnable{
 
     private int matchId;
     private int difficulty;
@@ -17,7 +17,7 @@ public class MatchSinglePlayer extends Match{
         this.decksContainer = new DecksContainer(1);
         this.clientIdentifier = name;
         this.player = new PlayerSingleplayer(name);
-        System.out.println("jjhkj");
+        System.out.println("Nuova partita singleplayer: " + this.matchId);
     }
 
     public int getMatchId() { return matchId; }
@@ -56,6 +56,11 @@ public class MatchSinglePlayer extends Match{
 
     @Override
     public void calculateFinalScore() {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }

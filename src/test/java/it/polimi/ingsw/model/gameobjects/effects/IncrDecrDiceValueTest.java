@@ -21,7 +21,8 @@ public class IncrDecrDiceValueTest {
     public void before() {
         room = mock(Room.class);
         match = mock(Match.class);
-        player = new PlayerMultiplayer("player", room);
+        // modificato in seguito all'introduzione di Lobby
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         Dice dice = new Dice(Colors.BLUE);

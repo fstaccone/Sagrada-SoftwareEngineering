@@ -13,7 +13,7 @@ public class Login extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        LoginController loginController=new LoginController();
+        LoginHandler loginHandler =new LoginHandler();
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/login-sagrada.fxml"));

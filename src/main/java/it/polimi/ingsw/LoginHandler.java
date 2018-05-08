@@ -1,19 +1,20 @@
 package it.polimi.ingsw;
 
 
-import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.view.RMIView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -21,7 +22,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
-public class LoginController implements Initializable {
+public class LoginHandler implements Initializable, ResponseHandler{
 
     private String username;
     private boolean isRmi = true;
@@ -31,6 +32,9 @@ public class LoginController implements Initializable {
     private boolean isSingleplayer = false;
     private int difficulty;
     private String serverAddress;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private boolean nameAlreadyTaken=false;
 
     // Values to be set by file on server, how can we set these here?
     private int rmiRegistryPort = 1100;
@@ -40,6 +44,8 @@ public class LoginController implements Initializable {
     RemoteController controller;
 
     private Client client;
+    private SocketClient socketClient;
+
     @FXML
     private TextField usernameInput;
 
@@ -99,14 +105,16 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    private void playClicked() throws RemoteException {
+    private void playClicked() throws IOException, InterruptedException {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         //playButton.setDisable(true);
         readInput();
-        setup();
 
-        Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.close();
+        connectionSetup();
+
+        /*Stage stage = (Stage) playButton.getScene().getWindow();
+        stage.close();*/
+
     }
 
     @FXML
@@ -121,37 +129,57 @@ public class LoginController implements Initializable {
 
 
     private void readInput() {
-        this.username = this.usernameInput.getCharacters().toString();
+        this.username = this.usernameInput.getText();
         this.isRmi = rmiCheckmark.isSelected();
         this.isSocket = socketCheckmark.isSelected();
         this.isGui = guiCheckmark.isSelected();
         this.isCli = cliCheckmark.isSelected();
-        this.serverAddress = serverAddressInput.getCharacters().toString();
+        this.serverAddress = serverAddressInput.getText();
         this.isSingleplayer = modeCheckmark.isSelected();
     }
 
     private void readUsername() {
-        this.username = this.usernameInput.getCharacters().toString();
+        showAlert(Alert.AlertType.WARNING, "Invalid username!", "Username already in use, choose another please!");
+        // capire perchè viene chiusa la gui
+        // aspetta finchè non viene cliccato di nuovo play
+        this.username = this.usernameInput.getText();
     }
 
-    private void setup() throws RemoteException {
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
+    }
+
+    private void connectionSetup() throws IOException, InterruptedException {
         boolean unique = false;
 
         // connection establishment with the selected method
         if (isRmi) setupRmiConnection();
         else setupSocketConnection();
-/*
+
         // name is controlled in the model to be sure that it's unique
         while (!unique) {
-            unique = controller.checkName(this.username);
+            if(isRmi)
+                unique = controller.checkName(this.username);
+            else{
+                request(new CheckUsernameRequest(this.username));
+                nextResponse().handle(this);
+                unique=!( this.isNameAlreadyTaken());}
+
+                System.out.println(unique);
             if (!unique) {
-                playButton.setTooltip(new Tooltip("username already in use"));
+                usernameInput.setText("Insert another name here:");
+                //PROBABILMENTE CI VUOLE UN EVENTHANDLER
                 readUsername();
-            }
+                System.out.println("nuovo nome preso,al momento lo prende vuoto");
+            } else System.out.println("apposto");
         }
         // view's creation and input for the model to create the Player
-*/      if (isRmi) createClientRmiView();
-        //else createSocketView();
+            if (isRmi) createAndConnectClientRmi();
+
 
     }
 
@@ -172,34 +200,73 @@ public class LoginController implements Initializable {
 
     }
 
-    private void setupSocketConnection() {
+    private void setupSocketConnection() throws IOException {
 
+        Socket socket=null;
+
+        try{ socket= new Socket(serverAddress, socketPort);
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in= new ObjectInputStream(socket.getInputStream());}
+        finally {
+          // socket.close();
+        }
     }
 
-    private void createClientRmiView() throws RemoteException {
-        // to create the link between this client and the Room in which he'll play
+    private void createAndConnectClientRmi() throws RemoteException {
+        // to create the link between this Client and the Player in the model
         if (isSingleplayer){
-            System.out.println("From createClientRmiView");
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
-                System.out.println("From createClientRmiView try");
-                System.out.println(controller.toString());
-                //controller.createMatch(this.username );
-                System.out.println("From createClientRmiView after try");
+                controller.createMatch(this.username);
             }
             catch (Exception e){
                 e.printStackTrace();
+                System.out.println("Singleplayer match can't be created!");
             }
         }
-
-        // stessa cosa qui
         else {
-            System.out.println("Match multiplayer");
-            //controller.getLobby().createMultiplayerMatch();
+            client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
+            try {
+                controller.addPlayer(this.username);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                System.out.println("Player " + this.username + " can't be added to a multiplayer match!");
+            }
+
         }
     }
 
-/*
+    public void request(Request request) {
+        try {
+            out.writeObject(request);
+        } catch (IOException e) {
+            System.err.println("Exception on network: " + e.getMessage());
+        }
+    }
+
+    public Response nextResponse() {
+        try {
+            return ((Response) in.readObject());
+        } catch (IOException e) {
+            System.err.println("Exception on network: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Wrong deserialization: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    @Override
+    public void handle(NameAlreadyTakenResponse response) {
+         this.nameAlreadyTaken=response.nameAlreadyTaken;
+    }
+
+    public boolean isNameAlreadyTaken() {
+        return nameAlreadyTaken;
+    }
+
+    /*
     private void createSocketView() {
 
         // to create the link between this client and the Room in which he'll play

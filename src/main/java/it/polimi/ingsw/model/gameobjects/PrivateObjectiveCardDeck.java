@@ -2,11 +2,11 @@ package it.polimi.ingsw.model.gameobjects;
 
 import java.util.*;
 
-public  class PrivateObjectiveCardDeck extends Deck{
+public  class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
 
-    Random randomGenerator;
+    private Random randomGenerator;
 
-    public PrivateObjectiveCardDeck(int numOfPlayers) {//VOLENDO SENZA UTILIZZARE I GENERIC POSSO IMPLEMENTARE COME GLI ALTRI MAZZI
+    public PrivateObjectiveCardDeck(int numOfPlayers) {
         super();
         for (Colors c: Colors.values()) {
             if (c != Colors.NONE) {

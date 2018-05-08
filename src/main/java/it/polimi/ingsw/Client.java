@@ -9,7 +9,7 @@ import it.polimi.ingsw.view.ViewInterface;
 import java.rmi.RemoteException;
 
 
-public class Client {
+public class Client{
     private String name;
     private Player player;
     private RemoteController gameController;
@@ -23,7 +23,6 @@ public class Client {
         this.state = state;
         this.clientController = new ClientControllerRMI();
         this.gameController = gameController;
-        gameController.createMatch(name);
     }
 
     public String getName() {
@@ -46,6 +45,7 @@ public class Client {
     public void setPlayer(Player player) {
         this.player = player;
     }
+
 
 
 }

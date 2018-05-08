@@ -9,7 +9,9 @@ import java.rmi.RemoteException;
 
 public interface RemoteController extends Remote{
 
-    public String login(String username, ViewInterface view) throws RemoteException;
-    public Lobby getLobby() throws RemoteException;
-    public void createMatch(String name) throws  RemoteException;
+    String login(String username, ViewInterface view) throws RemoteException;
+    void createMatch(String name) throws  RemoteException;
+    boolean checkName(String name) throws RemoteException;
+    void addPlayer(String name) throws RemoteException;
+
 }

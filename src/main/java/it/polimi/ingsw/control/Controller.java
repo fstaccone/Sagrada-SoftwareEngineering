@@ -1,19 +1,18 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.Lobby;
+import it.polimi.ingsw.*;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Controller extends UnicastRemoteObject implements RemoteController  {
+public class Controller extends UnicastRemoteObject implements RemoteController,RequestHandler {
 
     private Lobby lobby;
 
-    public Controller() throws RemoteException {
+    public Controller(int time) throws RemoteException {
         super();
-        this.lobby = new Lobby();
+        this.lobby = new Lobby(time);
         // ...
     }
 
@@ -22,28 +21,40 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         return null;
     }
 
-   /* public boolean checkName(String name){
+    @Override
+    public boolean checkName(String name){
         for ( String n: lobby.getTakenUsernames()) {
-            if (name.equals(n))
+            if (name.equals(n)) {
+                System.out.println("checkname ha trovato uno username duplicato");
                 return false;
+            }
         }
         return true;
-    }*/
-
-    @Override
-    public Lobby getLobby() throws RemoteException {
-        return lobby;
     }
+
 
     @Override
     public void createMatch(String name) throws RemoteException{
-        System.out.println("ciao");
+        this.lobby.addUsername(name);
         this.lobby.createSingleplayerMatch(name);
     }
 
-   /* public void setLobby(Lobby lobby) {
-        this.lobby = lobby;
-    }*/
+    @Override
+    public void addPlayer(String name) throws RemoteException {
+        this.lobby.addUsername(name);
+        this.lobby.addToWaitingPlayers(name);
+    }
+
+    @Override
+    public Response handle(CheckUsernameRequest request) {
+        for ( String n: lobby.getTakenUsernames()) {
+            if (request.username.equals(n)) {
+                System.out.println("checkname ha trovato uno username duplicato");
+                return new NameAlreadyTakenResponse(true);
+            }
+        }
+        return new NameAlreadyTakenResponse(false);
+    }
 
     // private transient final Room room;
    // private final Map<Player, ViewInterface> views = new HashMap<>();

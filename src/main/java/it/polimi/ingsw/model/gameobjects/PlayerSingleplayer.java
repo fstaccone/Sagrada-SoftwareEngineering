@@ -5,6 +5,7 @@ public class PlayerSingleplayer extends Player {
     public PlayerSingleplayer(String name){
         super(name);
         this.setColor(Colors.NONE);
+        System.out.println("Player creato: " + name);
     }
 
     @Override

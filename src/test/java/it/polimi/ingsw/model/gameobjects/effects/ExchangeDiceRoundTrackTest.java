@@ -27,7 +27,8 @@ public class ExchangeDiceRoundTrackTest {
         Board board = mock(Board.class);
         Dice dice = new Dice(Colors.BLUE);
         dice.setValue(4);
-        player = new PlayerMultiplayer("player", room);
+        // modificato in seguito all'introduzione di Lobby
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
