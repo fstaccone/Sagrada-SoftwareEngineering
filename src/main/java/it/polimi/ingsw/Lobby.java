@@ -57,16 +57,20 @@ public class Lobby {
     }
 
     public void addToWaitingPlayers(String name) {
-        synchronized (waitingPlayers){
-            if (waitingPlayers.size() == 1) {
-                addToWaitingPlayers(name);
+        synchronized (waitingPlayers) {
+            //debug
+            System.out.println("Players already waiting: " + waitingPlayers.size());
+
+            this.waitingPlayers.add(name);
+
+            if (waitingPlayers.size() == 2) {
+                this.timer = new Timer();
+                task = new MatchStarter(this);
                 timer.schedule(task, waitingTime);
             }
 
-
-            if (waitingPlayers.size() == 3) {
+            if (waitingPlayers.size() == 4) {
                 timer.cancel();
-                this.waitingPlayers.add(name);
                 startMatch();
                 // just for debug
                 this.waitingPlayers.forEach(p -> System.out.println(p));
