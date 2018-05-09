@@ -21,8 +21,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+
+    // da gestire il caso di riconnessione
     @Override
     public boolean checkName(String name){
+
         for ( String n: lobby.getTakenUsernames()) {
             if (name.equals(n)) {
                 System.out.println("checkname ha trovato uno username duplicato");

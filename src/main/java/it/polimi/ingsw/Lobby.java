@@ -9,6 +9,8 @@ public class Lobby {
 
     private List<String> takenUsernames;
     private int matchCounter;
+    // mappa per tenere traccia dei giocatori in fase di riconnessione
+    private Map<Client, ConnectionStatus> players;
     private List<String> waitingPlayers;
     private int waitingTime;
     // map that contains the link between a client(only multiplayer clients) and the matchId useful for reconnection
