@@ -7,10 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ReRollDiceTest {
     private KaleidoscopicDream schemeCard;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.gameobjects.MatchMultiplayer;
-import it.polimi.ingsw.model.gameobjects.MatchSinglePlayer;
+import it.polimi.ingsw.model.gameobjects.MatchSingleplayer;
 
 import java.util.*;
 
@@ -9,15 +9,14 @@ public class Lobby {
 
     private List<String> takenUsernames;
     private int matchCounter;
-    // mappa per tenere traccia dei giocatori in fase di riconnessione
-    private Map<Client, ConnectionStatus> players;
-    private List<String> waitingPlayers;
+    private final List<String> waitingPlayers;
     private int waitingTime;
     // map that contains the link between a client(only multiplayer clients) and the matchId useful for reconnection
     private Map<String, Integer> mapClientsToRoom;
     private List<MatchMultiplayer> multiplayerMatches;
-    Timer timer;
-    MatchStarter task;
+    // to simulate the timer before creating a match
+    private Timer timer;
+    private MatchStarter task;
 
     public Lobby(int waitingTime) {
         this.takenUsernames = new ArrayList<>();
@@ -29,8 +28,7 @@ public class Lobby {
     }
 
     public List<String> getTakenUsernames() {
-        // this must return a copy of the instance (only for reading)
-        return takenUsernames;
+        return new ArrayList<>(takenUsernames);
     }
 
     // to add a new username to the list
@@ -38,70 +36,88 @@ public class Lobby {
         this.takenUsernames.add(name);
     }
 
-    // to remove usernames at the end of a match
+    // to remove usernames at the end of a match or when a player leave a match before its creation
     public synchronized void removeUsername(String name) {
         this.takenUsernames.remove(name);
     }
 
     public synchronized void createSingleplayerMatch(String name) {
-        new MatchSinglePlayer(matchCounter, name);
+        new MatchSingleplayer(matchCounter, name);
         matchCounter++;
-        for (int i = 0; i < takenUsernames.size(); i++) {
-            System.out.println("Usernames: " + takenUsernames.toArray()[i].toString());
+
+        // debug
+        System.out.println("By lobby: Match number: " + matchCounter + " type: singleplayer");
+        System.out.println("By lobby: Player: " + name);
+    }
+
+    private synchronized void createMultiplayerMatch(List<String> clients) {
+        multiplayerMatches.add(new MatchMultiplayer(matchCounter, clients));
+        System.out.println("By lobby: Match number: " + matchCounter + " type: multiplayer");
+        System.out.println("By lobby: Players: ");
+        clients.forEach(c -> System.out.print(c + "\t"));
+        System.out.println("\n");
+    }
+
+    public void removeFromWaitingPlayers(String name) {
+        synchronized (waitingPlayers) {
+
+            if(waitingPlayers.size() == 2) {
+                waitingPlayers.remove(name);
+                timer.cancel();
+                System.out.println("Player " + name + " has left the room!");
+                System.out.println("Timer has been reset, only one waiting player left!");
+            }
+            else{
+                waitingPlayers.remove(name);
+                // debug
+                System.out.println("Player " + name + " has left the room!");
+            }
+
         }
     }
 
-    public synchronized void createMultiplayerMatch(List<String> clients) {
-        multiplayerMatches.add(new MatchMultiplayer(clients));
-        System.out.println("Match multiplayer creato: " + (matchCounter));
-        System.out.println("Giocatori:");
-        clients.forEach(c -> System.out.println(c));
-    }
 
     public void addToWaitingPlayers(String name) {
-        synchronized (waitingPlayers){
-            if (waitingPlayers.size() == 1) {
-                addToWaitingPlayers(name);
+        synchronized (waitingPlayers) {
+
+            waitingPlayers.add(name);
+            //debug
+            if (waitingPlayers.size()==1) System.out.println("There is 1 player waiting for a match.");
+            else System.out.println("There are " + waitingPlayers.size() + " players waiting for a match.");
+
+
+            // if there are two players waiting for the match beginning, the timer is set
+            if (waitingPlayers.size() == 2) {
+                System.out.println("Timer started: 30 seconds from now!");
+                this.timer = new Timer();
+                task = new MatchStarter(this);
                 timer.schedule(task, waitingTime);
             }
 
-
-            if (waitingPlayers.size() == 3) {
+            if (waitingPlayers.size() == 4) {
                 timer.cancel();
-                this.waitingPlayers.add(name);
                 startMatch();
-                // just for debug
-                this.waitingPlayers.forEach(p -> System.out.println(p));
             }
         }
     }
 
-        // potrebbe controllare che tutti i giocatori aggiunti siano connessi prima di creare la partita
-        // in caso di disconnessione gli fa passare il turno
-        // in questo modo possiamo gestire la rinuncia alla partita semplicemente con un metodo removePlayer se il client
-        // chiude prima che la partita sia iniziata
-
-        public void startMatch () {
-            synchronized (waitingPlayers) {
-                // links between client and match are registered into the map
-                for (String name : waitingPlayers) {
-                    mapClientsToRoom.put(name, matchCounter);
-                }
-                createMultiplayerMatch(waitingPlayers);
-                matchCounter++;
-                refreshWaitingList();
+    public void startMatch() {
+        synchronized (waitingPlayers) {
+            // links between client and match are registered into the map
+            for (String name : waitingPlayers) {
+                mapClientsToRoom.put(name, matchCounter);
             }
-        }
-
-        public List<String> getWaitingPlayers () {
-            return waitingPlayers;
-        }
-
-        public List<MatchMultiplayer> getMultiplayerMatches () {
-            return multiplayerMatches;
-        }
-
-        private void refreshWaitingList () {
-            this.waitingPlayers = new ArrayList<>();
+            createMultiplayerMatch(waitingPlayers);
+            matchCounter++;
+            waitingPlayers.clear();
         }
     }
+
+    public List<String> getWaitingPlayers() {
+        return waitingPlayers;
+    }
+
+    public List<MatchMultiplayer> getMultiplayerMatches() {
+        return multiplayerMatches;
+    }
+}

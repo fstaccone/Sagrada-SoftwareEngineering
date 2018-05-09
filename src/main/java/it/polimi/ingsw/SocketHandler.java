@@ -32,7 +32,7 @@ public class SocketHandler implements Runnable{
                 }
             } while (socket!=null);
         } catch (Exception e) {
-            System.out.println("non prende la risposta");
+            System.out.println("Connection down");
         }
 
         //close();

@@ -28,7 +28,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
         for ( String n: lobby.getTakenUsernames()) {
             if (name.equals(n)) {
-                System.out.println("checkname ha trovato uno username duplicato");
+                System.out.println("checkName found a double name");
                 return false;
             }
         }
@@ -37,26 +37,33 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
 
     @Override
-    public void createMatch(String name) throws RemoteException{
+    public void createMatch(String name){
         this.lobby.addUsername(name);
         this.lobby.createSingleplayerMatch(name);
     }
 
     @Override
-    public void addPlayer(String name) throws RemoteException {
+    public void addPlayer(String name){
         this.lobby.addUsername(name);
         this.lobby.addToWaitingPlayers(name);
     }
 
     @Override
     public Response handle(CheckUsernameRequest request) {
-        for ( String n: lobby.getTakenUsernames()) {
-            if (request.username.equals(n)) {
-                System.out.println("checkname ha trovato uno username duplicato");
-                return new NameAlreadyTakenResponse(true);
-            }
-        }
-        return new NameAlreadyTakenResponse(false);
+
+        return new NameAlreadyTakenResponse(!checkName(request.username));
+    }
+
+    @Override
+    public Response handle(CreateMatchRequest request) {
+        createMatch(request.username);
+        return null;
+    }
+
+    @Override
+    public Response handle(AddPlayerRequest request) {
+        addPlayer(request.username);
+        return null;
     }
 
     // private transient final Room room;

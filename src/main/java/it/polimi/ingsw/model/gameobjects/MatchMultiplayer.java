@@ -2,13 +2,17 @@ package it.polimi.ingsw.model.gameobjects;
 
 import java.util.*;
 
-public class MatchMultiplayer extends Match {
+public class MatchMultiplayer extends Match implements Runnable{
 
+    private int matchCounter;
     private List<PlayerMultiplayer> players;
     private int positionOfFirstPlayerInRound;
 
-    public MatchMultiplayer(List<String> clients) {
+    public MatchMultiplayer(int matchCounter, List<String> clients) {
         super();
+        this.matchCounter=matchCounter;
+        System.out.println("New multiplayer matchId: "+ matchCounter);
+        // trovare un modo per fare il cast da Player a PlayerMultiplayer
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
         this.players = new ArrayList<>();
@@ -100,7 +104,7 @@ public class MatchMultiplayer extends Match {
     public void drawPrivateObjectiveCards() {
         for (PlayerMultiplayer p: players) {
             p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));
-            this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.remove(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));// TODO: chiedere al prof
+            this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.remove(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));
         }
     }
 
@@ -116,6 +120,11 @@ public class MatchMultiplayer extends Match {
 
     @Override
     public void drawToolCards() {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }
