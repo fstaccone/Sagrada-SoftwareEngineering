@@ -1,11 +1,18 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.ConnectionStatus;
+
 public class PlayerMultiplayer extends Player {
     private int numFavorTokens;
     private PrivateObjectiveCard privateObjectiveCard;
+    private ConnectionStatus status;
+    private int turnsLeft;
+    private boolean myTurn;
 
     public PlayerMultiplayer(String name) {
         super(name);
+        status = ConnectionStatus.READY;
+        myTurn = false;
     }
 
     // setter
@@ -13,11 +20,18 @@ public class PlayerMultiplayer extends Player {
         this.numFavorTokens = numFavorTokens;
     }
 
-    public void setPrivateObjectiveCard(Card privateObjectiveCard) {
-        this.privateObjectiveCard = (PrivateObjectiveCard)privateObjectiveCard;
+
+    public void setPrivateObjectiveCard(PrivateObjectiveCard privateObjectiveCard) {
+        this.privateObjectiveCard = privateObjectiveCard;
     }
 
-    // getter
+    public void setStatus(ConnectionStatus status) { this.status = status; }
+
+    public void setTurnsLeft(int turnsLeft) { this.turnsLeft = turnsLeft; }
+
+    public void setMyTurn(boolean myTurn) { this.myTurn = myTurn; }
+
+    // getters
     public int getNumFavorTokens() {
         return numFavorTokens;
     }
@@ -27,6 +41,12 @@ public class PlayerMultiplayer extends Player {
     }
 
     public Colors getColor() { return this.color; }
+
+    public ConnectionStatus getStatus() { return status; }
+
+    public int getTurnsLeft() { return turnsLeft; }
+
+    public boolean isMyTurn() { return myTurn; }
 
     @Override
     public void setSchemeCard(WindowPatternCard schemeCard) {

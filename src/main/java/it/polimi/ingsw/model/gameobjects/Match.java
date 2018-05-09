@@ -47,13 +47,6 @@ public abstract class Match {
     // Propone le carte schema
     public abstract void proposeWindowPatternCards();
 
-    // Distribuisce le carte obiettivo pubblico
-    public abstract void drawPublicObjectiveCards();
-
-    // Distribuisce le tool cards
-    public abstract void drawToolCards();
-
-
     public abstract void nextRound();
 
     public abstract void calculateFinalScore();

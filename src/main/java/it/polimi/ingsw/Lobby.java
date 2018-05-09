@@ -56,6 +56,8 @@ public class Lobby {
         System.out.println("By lobby: Players: ");
         clients.forEach(c -> System.out.print(c + "\t"));
         System.out.println("\n");
+        // da rivedere la chiamata
+        multiplayerMatches.get(multiplayerMatches.size()-1).run();
     }
 
     public void removeFromWaitingPlayers(String name) {

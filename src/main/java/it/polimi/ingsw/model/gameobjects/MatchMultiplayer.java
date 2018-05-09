@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.model.gamelogic.TurnTimer;
+
+import java.net.PortUnreachableException;
 import java.util.*;
 
 public class MatchMultiplayer extends Match implements Runnable{
@@ -7,6 +10,8 @@ public class MatchMultiplayer extends Match implements Runnable{
     private int matchCounter;
     private List<PlayerMultiplayer> players;
     private int positionOfFirstPlayerInRound;
+    private Timer timer;
+    private TurnTimer task;
 
     public MatchMultiplayer(int matchCounter, List<String> clients) {
         super();
@@ -37,9 +42,7 @@ public class MatchMultiplayer extends Match implements Runnable{
         Collections.shuffle(this.players); // shuffles players to determine the sequence flow of rounds
         this.setPositionOfFirstPlayerInRound(0); // the first player is always in the first position due to the shuffle
         this.drawPrivateObjectiveCards();
-        this.proposeWindowPatternCards();
-        this.drawPublicObjectiveCards();
-        this.drawToolCards();
+        //this.proposeWindowPatternCards();
 
         // Viene lanciata la fase a turni
         this.turnManager(positionOfFirstPlayerInRound);
@@ -51,7 +54,7 @@ public class MatchMultiplayer extends Match implements Runnable{
         // Creation of a list of colors (without the special value NONE) to be assigned randomly to players
         Random rand = new Random();
         int val;
-        List colors = new ArrayList(Colors.values().length - 1);
+        List colors = new ArrayList();
 
         // This block creates an ArrayList of colors. A color, once assigned, must be removed from the ArrayList
         for (Colors c : Colors.values()) {
@@ -61,7 +64,7 @@ public class MatchMultiplayer extends Match implements Runnable{
         }
 
         for (Player p : players) {
-            val = rand.nextInt(colors.size()) + 1;
+            val = rand.nextInt(colors.size());
             p.setColor((Colors) colors.get(val));  // Da testare, non ne sono convinto
             colors.remove(val);
         }
@@ -70,7 +73,6 @@ public class MatchMultiplayer extends Match implements Runnable{
     // Gestore del singolo turno
     private void turnManager (int positionOfFirstPlayerInRound){
 
-        // Esecuzione del turno
 
         this.nextRound();
     }
@@ -95,9 +97,27 @@ public class MatchMultiplayer extends Match implements Runnable{
 
     @Override
     public void calculateFinalScore() {
+        // points assigned by the private objective card
         for (PlayerMultiplayer p: players) {
-           p.getPrivateObjectiveCard().useCard(p); // useCard può (dovrebbe) essere un metodo del player
+           p.getPrivateObjectiveCard().useCard(p);
         }
+        // points assigned by public objective cards
+        for(int i = 0; i < board.getPickedPublicObjectiveCards().size(); i++){
+            for (PlayerMultiplayer p: players) {
+                board.getPickedPublicObjectiveCards().get(i).useCard(p, this);
+            }
+        }
+        // points due to free cells
+        for (PlayerMultiplayer p: players) {
+            p.setPoints(p.getPoints() - p.getSchemeCard().countFreeSquares());
+        }
+        // points due to remaining favor tokens
+        for (PlayerMultiplayer p: players) {
+            p.setPoints(p.getPoints() + p.getNumFavorTokens());
+        }
+
+        // just for now todo: implements and test
+        System.out.println("The winner is: " + players.stream().max(Comparator.comparing(p -> p.getPoints() > p.getPoints())));
     }
 
     @Override
@@ -114,17 +134,11 @@ public class MatchMultiplayer extends Match implements Runnable{
     }
 
     @Override
-    public void drawPublicObjectiveCards() {
-
-    }
-
-    @Override
-    public void drawToolCards() {
-
-    }
-
-    @Override
     public void run() {
-
+        System.out.println("Players before game init:");
+        players.stream().map(Player::getName).forEach(System.out::println);
+        gameInit();
+        System.out.println("Players after game init:");
+        players.stream().map(Player::getName).forEach(System.out::println);
     }
 }

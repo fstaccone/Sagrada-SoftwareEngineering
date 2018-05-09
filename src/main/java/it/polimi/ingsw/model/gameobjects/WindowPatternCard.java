@@ -242,7 +242,18 @@ public class WindowPatternCard extends Card{
 
         return result.toString();
     }
+
+
+    // it returns the number of free cells (to be used for points' calculation)
+    public int countFreeSquares(){
+       return (int) Arrays.stream(window)
+                .flatMap( x -> Arrays.stream(x))
+                .filter(s -> s.getDice() != null)
+                .count();
+    }
 /*
+
+
      //Test for toString correctness and dice's placing
     public static void main(String[] args){
         WindowPatternCard window = new LuzCelestial();

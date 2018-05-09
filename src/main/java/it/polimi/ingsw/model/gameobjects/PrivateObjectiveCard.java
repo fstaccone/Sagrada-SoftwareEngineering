@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.gameobjects;
 
 
+import java.util.Arrays;
+
 public class PrivateObjectiveCard extends ObjectiveCard{
     private Colors color;
 
