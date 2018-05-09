@@ -9,6 +9,6 @@ public class CreateMatchRequest implements Request {
 
     @Override
     public Response handle(RequestHandler handler) {
-            return null;
+          return handler.handle(this);
     }
 }

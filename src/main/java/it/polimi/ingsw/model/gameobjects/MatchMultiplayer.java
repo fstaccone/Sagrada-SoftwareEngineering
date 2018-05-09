@@ -4,12 +4,14 @@ import java.util.*;
 
 public class MatchMultiplayer extends Match implements Runnable{
 
+    private int matchCounter;
     private List<PlayerMultiplayer> players;
     private int positionOfFirstPlayerInRound;
 
-    public MatchMultiplayer(List<String> clients) {
+    public MatchMultiplayer(int matchCounter, List<String> clients) {
         super();
-        System.out.println("match creato");
+        this.matchCounter=matchCounter;
+        System.out.println("New multiplayer matchId: "+ matchCounter);
         // trovare un modo per fare il cast da Player a PlayerMultiplayer
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());

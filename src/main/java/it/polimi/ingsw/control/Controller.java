@@ -53,17 +53,14 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(CreateMatchRequest request) {
-        boolean ok=false;
-        this.lobby.addUsername(request.username);
-        this.lobby.createSingleplayerMatch(request.username);
-        if (this.lobby.getTakenUsernames().size()==1) ok=true;
-        System.out.println(ok);
-        return new CreatedMatchResponse(ok);
+        createMatch(request.username);
+        return null;
     }
 
     @Override
-    public void handle(AddPlayerRequest request) {
+    public Response handle(AddPlayerRequest request) {
         addPlayer(request.username);
+        return null;
     }
 
     // private transient final Room room;

@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 public class LoginHandler implements Initializable{
 
+    private Socket socket=null;
     private ClientController clientController;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -112,8 +113,8 @@ public class LoginHandler implements Initializable{
 
         connectionSetup();
 
-        Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.close();
+        /*Stage stage = (Stage) playButton.getScene().getWindow();
+        stage.close();*/
 
     }
 
@@ -177,6 +178,7 @@ public class LoginHandler implements Initializable{
                 System.out.println("Invalid username");
                 showAlert(Alert.AlertType.WARNING, "Invalid username!", "Username already in use, open another window and choose another one please!");
                 //System.out.println("nuovo nome preso,al momento lo prende vuoto");
+                socket.close();
             }
             else {
                 System.out.println("Valid username");
@@ -198,7 +200,6 @@ public class LoginHandler implements Initializable{
 
         try {
             this.controller = (RemoteController) registry.lookup("Lobby");
-            System.out.println("Connection established");
 
         } catch (NotBoundException e) {
             System.out.println("A client can't get the controller's reference");
@@ -208,8 +209,6 @@ public class LoginHandler implements Initializable{
     }
 
     private void setupSocketConnection() throws IOException {
-
-        Socket socket=null;
 
         try{ socket= new Socket(serverAddress, socketPort);
             this.out = new ObjectOutputStream(socket.getOutputStream());
@@ -256,8 +255,6 @@ public class LoginHandler implements Initializable{
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
                 clientController.request(new CreateMatchRequest(this.username));
-                clientController.nextResponse().handle(clientController);
-                System.out.println(clientController.isMatchCreated());
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -268,7 +265,6 @@ public class LoginHandler implements Initializable{
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
                 clientController.request(new AddPlayerRequest(this.username));
-                clientController.nextResponse().handle(clientController);
             }
             catch (Exception e){
                 e.printStackTrace();

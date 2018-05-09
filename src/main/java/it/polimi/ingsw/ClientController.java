@@ -5,11 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class ClientController implements ResponseHandler {
-    public boolean isMatchCreated() {
-        return matchCreated;
-    }
 
-    private boolean matchCreated=false;
     private boolean nameAlreadyTaken=false;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -39,8 +35,6 @@ public class ClientController implements ResponseHandler {
         return null;
     }
 
-
-
     public boolean isNameAlreadyTaken() {
         return nameAlreadyTaken;
     }
@@ -48,10 +42,5 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(NameAlreadyTakenResponse response) {
         this.nameAlreadyTaken=response.nameAlreadyTaken;
-    }
-
-    @Override
-    public void handle(CreatedMatchResponse response) {
-        this.matchCreated=response.matchCreated;
     }
 }

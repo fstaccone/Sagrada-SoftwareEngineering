@@ -17,7 +17,7 @@ public class MatchSingleplayer extends Match implements Runnable{
         this.decksContainer = new DecksContainer(1);
         this.clientIdentifier = name;
         this.player = new PlayerSingleplayer(name);
-        System.out.println("Nuova partita singleplayer: " + this.matchId);
+        System.out.println("New singleplayer matchId: " + this.matchId);
     }
 
     public int getMatchId() { return matchId; }

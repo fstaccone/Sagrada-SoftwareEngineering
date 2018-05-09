@@ -46,15 +46,16 @@ public class Lobby {
         matchCounter++;
 
         // debug
-        System.out.println("Match singleplayer created: " + matchCounter);
-        System.out.println("Player: " + name);
+        System.out.println("By lobby: Match number: " + matchCounter + " type: singleplayer");
+        System.out.println("By lobby: Player: " + name);
     }
 
     private synchronized void createMultiplayerMatch(List<String> clients) {
-        multiplayerMatches.add(new MatchMultiplayer(clients));
-        System.out.println("Match multiplayer created: " + matchCounter);
-        System.out.println("Players: ");
+        multiplayerMatches.add(new MatchMultiplayer(matchCounter, clients));
+        System.out.println("By lobby: Match number: " + matchCounter + " type: multiplayer");
+        System.out.println("By lobby: Players: ");
         clients.forEach(c -> System.out.print(c + "\t"));
+        System.out.println("\n");
     }
 
     public void removeFromWaitingPlayers(String name) {
@@ -81,11 +82,13 @@ public class Lobby {
 
             waitingPlayers.add(name);
             //debug
-            System.out.println("There are " + waitingPlayers.size() + " players waiting for a match.");
+            if (waitingPlayers.size()==1) System.out.println("There is 1 player waiting for a match.");
+            else System.out.println("There are " + waitingPlayers.size() + " players waiting for a match.");
 
 
             // if there are two players waiting for the match beginning, the timer is set
             if (waitingPlayers.size() == 2) {
+                System.out.println("Timer started: 30 seconds from now!");
                 this.timer = new Timer();
                 task = new MatchStarter(this);
                 timer.schedule(task, waitingTime);
