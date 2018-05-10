@@ -28,5 +28,11 @@
    -fx-border-width:4px;
 }
 
+#waiting {
+    -fx-background-image: url("waiting.jpg");
+    -fx-background-size: cover;
+    -fx-font-family: "Algeria";
+}
+
 
 
