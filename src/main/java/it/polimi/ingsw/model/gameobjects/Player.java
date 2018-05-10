@@ -51,7 +51,7 @@ public abstract class Player implements Serializable{
     }
 
     // play a single turn
-    public void playTurn(Match match){
+    public void playTurn(){
 
     }
 }

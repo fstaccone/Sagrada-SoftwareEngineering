@@ -64,12 +64,14 @@ public class PlayerMultiplayer extends Player {
         //chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
-    // todo: controllo ereditarietà del metodo
+    // todo: controllo
     @Override
-    public void playTurn(Match match) {
-        // attesa di azioni da parte del giocatore
-
+    public void playTurn() {
+        if(status == ConnectionStatus.READY) {
+            // attesa di azioni da parte del client
+        }
         turnsLeft--;
+        goTrough();
     }
 
     @Override
@@ -77,7 +79,8 @@ public class PlayerMultiplayer extends Player {
         // passa il turno
         match.getTimer().cancel();
     }
-
+    
+    // it'll be called by the timer if it would go out of time
     public void expiredTimer(){
         // passa ma senza richiamare la cancel sul timer
     }
