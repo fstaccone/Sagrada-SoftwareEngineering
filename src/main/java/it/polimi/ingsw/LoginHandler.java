@@ -4,7 +4,9 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.view.RMIView;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
@@ -106,7 +108,7 @@ public class LoginHandler implements Initializable{
     }
 
     @FXML
-    private void playClicked() throws IOException, InterruptedException {
+    private void playClicked() throws Exception {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         //playButton.setDisable(true);
         readInput();
@@ -115,6 +117,17 @@ public class LoginHandler implements Initializable{
 
         /*Stage stage = (Stage) playButton.getScene().getWindow();
         stage.close();*/
+      /*  Stage window = (Stage) playButton.getScene().getWindow();
+        FXMLLoader fx = new FXMLLoader();
+        fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
+        Scene waiting = new Scene(fx.load());
+        window.setScene(waiting);
+        window.setTitle("Waiting for players");
+        window.setResizable(false);
+        window.show();   */
+        Stage stage = (Stage) playButton.getScene().getWindow();
+        stage.setScene(new WaitingScreen().sceneInit());
+
 
     }
 
