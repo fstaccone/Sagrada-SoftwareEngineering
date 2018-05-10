@@ -1,7 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.gameobjects.MatchMultiplayer;
-
 import java.util.TimerTask;
 
 public class MatchStarter extends TimerTask{

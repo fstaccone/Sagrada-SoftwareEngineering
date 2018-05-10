@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.ConnectionStatus;
+import it.polimi.ingsw.model.gamelogic.Match;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 
 public class PlayerMultiplayer extends Player {
     private int numFavorTokens;
@@ -8,11 +10,13 @@ public class PlayerMultiplayer extends Player {
     private ConnectionStatus status;
     private int turnsLeft;
     private boolean myTurn;
+    private MatchMultiplayer match;
 
-    public PlayerMultiplayer(String name) {
+    public PlayerMultiplayer(String name, MatchMultiplayer match) {
         super(name);
         status = ConnectionStatus.READY;
         myTurn = false;
+        this.match = match;
     }
 
     // setter
@@ -60,4 +64,21 @@ public class PlayerMultiplayer extends Player {
         //chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
+    // todo: controllo ereditarietà del metodo
+    @Override
+    public void playTurn(Match match) {
+        // attesa di azioni da parte del giocatore
+
+        turnsLeft--;
+    }
+
+    @Override
+    public void goTrough() {
+        // passa il turno
+        match.getTimer().cancel();
+    }
+
+    public void expiredTimer(){
+        // passa ma senza richiamare la cancel sul timer
+    }
 }

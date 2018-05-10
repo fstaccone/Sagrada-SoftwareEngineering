@@ -247,8 +247,8 @@ public class WindowPatternCard extends Card{
     // it returns the number of free cells (to be used for points' calculation)
     public int countFreeSquares(){
        return (int) Arrays.stream(window)
-                .flatMap( x -> Arrays.stream(x))
-                .filter(s -> s.getDice() != null)
+                .flatMap(Arrays::stream)
+                .filter(s -> s.getDice() == null)
                 .count();
     }
 /*

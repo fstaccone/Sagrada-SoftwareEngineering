@@ -1,4 +1,8 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gamelogic;
+
+import it.polimi.ingsw.model.gameobjects.Bag;
+import it.polimi.ingsw.model.gameobjects.Board;
+import it.polimi.ingsw.model.gameobjects.DecksContainer;
 
 import java.util.*;
 

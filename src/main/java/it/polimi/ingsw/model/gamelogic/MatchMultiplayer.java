@@ -1,8 +1,7 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.model.gamelogic.TurnTimer;
+import it.polimi.ingsw.model.gameobjects.*;
 
-import java.net.PortUnreachableException;
 import java.util.*;
 
 public class MatchMultiplayer extends Match implements Runnable{
@@ -10,22 +9,26 @@ public class MatchMultiplayer extends Match implements Runnable{
     private int matchCounter;
     private List<PlayerMultiplayer> players;
     private int positionOfFirstPlayerInRound;
+    private int turnTime;
     private Timer timer;
     private TurnTimer task;
 
-    public MatchMultiplayer(int matchCounter, List<String> clients) {
+    public MatchMultiplayer(int matchCounter, List<String> clients, int turnTime) {
         super();
         this.matchCounter=matchCounter;
-        System.out.println("New multiplayer matchId: "+ matchCounter);
+        System.out.println("New multiplayer matchId: " + matchCounter);
         // trovare un modo per fare il cast da Player a PlayerMultiplayer
+        this.turnTime = turnTime;
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
         this.players = new ArrayList<>();
-        clients.forEach(p -> this.players.add(new PlayerMultiplayer(p)));
+        clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
     }
 
     // getters
     public int getPositionOfFirstPlayerInRound() { return positionOfFirstPlayerInRound; }
+
+    public Timer getTimer() { return timer; }
     // end of getters
 
     // setters
@@ -43,7 +46,7 @@ public class MatchMultiplayer extends Match implements Runnable{
         this.setPositionOfFirstPlayerInRound(0); // the first player is always in the first position due to the shuffle
         this.drawPrivateObjectiveCards();
         //this.proposeWindowPatternCards();
-
+        timer = new Timer();
         // Viene lanciata la fase a turni
         this.turnManager(positionOfFirstPlayerInRound);
     }
@@ -53,7 +56,7 @@ public class MatchMultiplayer extends Match implements Runnable{
 
         // Creation of a list of colors (without the special value NONE) to be assigned randomly to players
         Random rand = new Random();
-        int val;
+        int index;
         List colors = new ArrayList();
 
         // This block creates an ArrayList of colors. A color, once assigned, must be removed from the ArrayList
@@ -64,17 +67,48 @@ public class MatchMultiplayer extends Match implements Runnable{
         }
 
         for (Player p : players) {
-            val = rand.nextInt(colors.size());
-            p.setColor((Colors) colors.get(val));  // Da testare, non ne sono convinto
-            colors.remove(val);
+            index = rand.nextInt(colors.size());
+            p.setColor((Colors) colors.get(index));  // Da testare, non ne sono convinto
+            colors.remove(index);
         }
     }
 
-    // Gestore del singolo turno
+    // Gestore del singolo round
     private void turnManager (int positionOfFirstPlayerInRound){
+        // capire come gestire il primo giocatore
+        List<PlayerMultiplayer> rightOrder = new ArrayList<>();
 
+        // da controllare, troppo contorto
+
+        // prepara ordine diretto
+        for(int i = positionOfFirstPlayerInRound; i < players.size(); i++){
+            rightOrder.add(players.get(i));
+        }
+        for(int i = 0; i < positionOfFirstPlayerInRound; i++){
+            rightOrder.add(players.get(i));
+        }
+
+        // prepara ordine inverso
+        List<PlayerMultiplayer> reverseOrder = new ArrayList<>(rightOrder);
+        Collections.reverse(reverseOrder);
+
+        for(PlayerMultiplayer p : rightOrder){
+            p.playTurn(this);
+            task = new TurnTimer(p);
+            timer.schedule(task, turnTime);
+        }
+
+        for(PlayerMultiplayer p : reverseOrder){
+            p.playTurn(this);
+            task = new TurnTimer(p);
+            timer.schedule(task, turnTime);
+        }
 
         this.nextRound();
+    }
+
+    private void nextTurn(){
+
     }
 
     private int positionOfNextFirstPlayer(){
@@ -123,8 +157,8 @@ public class MatchMultiplayer extends Match implements Runnable{
     @Override
     public void drawPrivateObjectiveCards() {
         for (PlayerMultiplayer p: players) {
-            p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));
-            this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.remove(this.decksContainer.getPrivateObjectiveCardDeck().pickedCards.get(0));
+            p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().get(0));
+            this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().remove(this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().get(0));
         }
     }
 
@@ -135,10 +169,6 @@ public class MatchMultiplayer extends Match implements Runnable{
 
     @Override
     public void run() {
-        System.out.println("Players before game init:");
-        players.stream().map(Player::getName).forEach(System.out::println);
         gameInit();
-        System.out.println("Players after game init:");
-        players.stream().map(Player::getName).forEach(System.out::println);
     }
 }

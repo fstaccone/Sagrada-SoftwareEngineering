@@ -10,9 +10,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     private Lobby lobby;
 
-    public Controller(int time) throws RemoteException {
+    public Controller(Lobby lobby) throws RemoteException {
         super();
-        this.lobby = new Lobby(time);
+        this.lobby = lobby;
         // ...
     }
 

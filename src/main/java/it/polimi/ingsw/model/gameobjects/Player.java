@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.model.gamelogic.Match;
+
 import java.io.Serializable;
 
 public abstract class Player implements Serializable{
@@ -48,4 +50,8 @@ public abstract class Player implements Serializable{
     public void goTrough(){
     }
 
+    // play a single turn
+    public void playTurn(Match match){
+
+    }
 }

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.model.gamelogic.Match;
+
 import java.util.*;
 
 public class RoundTrack {

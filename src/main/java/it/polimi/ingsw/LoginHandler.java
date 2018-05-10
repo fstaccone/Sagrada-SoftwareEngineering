@@ -212,8 +212,8 @@ public class LoginHandler implements Initializable{
 
         try{ socket= new Socket(serverAddress, socketPort);
             this.out = new ObjectOutputStream(socket.getOutputStream());
-            this.in= new ObjectInputStream(socket.getInputStream());
-            clientController=new ClientController(in,out);
+            this.in = new ObjectInputStream(socket.getInputStream());
+            clientController = new ClientController(in,out);
         }
         catch(SocketException e){
             System.out.println("Unable to create socket connection");

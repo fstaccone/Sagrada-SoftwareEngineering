@@ -15,20 +15,12 @@ public class PrivateObjectiveCard extends ObjectiveCard{
 
     @Override
     public void useCard(Player player) {
-        int temp = player.getPoints();
-        Square[][] window = player.getSchemeCard().getWindow();
-        //calculation algorithm
-        for(Square[] row : window){
-            for(Square spot : row){
-                Colors diceColor = Colors.NONE;
-                if(spot.getDice()!=null)
-                    diceColor = spot.getDice().getColor();
-                if(diceColor==color)
-                    temp = temp + spot.getDice().getValue();
-            }
-        }
-
-        player.setPoints(temp);
+        player.setPoints(player.getPoints() +
+                Arrays.stream(player.getSchemeCard().getWindow())
+                .flatMap(Arrays::stream)
+                .filter(s -> s.getDice() != null)
+                .filter(s -> s.getDice().getColor() == color)
+                .mapToInt(s -> s.getDice().getValue()).sum());
     }
 
     @Override

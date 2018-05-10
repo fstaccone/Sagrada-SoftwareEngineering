@@ -1,11 +1,10 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.Match;
+import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.Reserve;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ReRollAllReserveDicesEffect implements Effect{

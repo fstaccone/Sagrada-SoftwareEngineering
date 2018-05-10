@@ -16,11 +16,12 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
-    private static String serverConfig = "./src/main/java/it/polimi/ingsw/server.config";
+    private static final String serverConfig = "./src/main/java/it/polimi/ingsw/server.config";
     private static int rmiPort;
     private static int socketPort;
     private static String lobbyName;
     private static int waitingTime;
+    private static int turnTime;
 
     private static ServerSocket serverSocket;
     private static ExecutorService threadPool;
@@ -30,7 +31,8 @@ public class Server {
         //read configuration file
         readServerConfig(serverConfig);
 
-        Controller controller = new Controller(waitingTime);
+        Lobby lobby = new Lobby(waitingTime, turnTime);
+        Controller controller = new Controller(lobby);
 
         //start RMI registry
         try {
@@ -138,6 +140,12 @@ public class Server {
                     Server.waitingTime = Integer.parseInt(value.getValue());
                     break;
 
+                case "turnTime":
+                    Server.turnTime = Integer.parseInt(value.getValue());
+                    break;
+
+                default:
+                    System.out.println("Unknown parameter in config file");
             }
         }
 

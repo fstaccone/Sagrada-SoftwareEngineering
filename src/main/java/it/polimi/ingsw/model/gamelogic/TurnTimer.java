@@ -17,7 +17,7 @@ public class TurnTimer extends TimerTask {
     public void run() {
         // debug
         System.out.println("Player " + player.getName() + " is not READY");
-        player.goTrough();
+        player.expiredTimer();
         player.setStatus(ConnectionStatus.CONNECTED);
     }
 }

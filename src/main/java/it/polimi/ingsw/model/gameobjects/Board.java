@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.HashSet;
+import it.polimi.ingsw.model.gamelogic.Match;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Board {
     private List<PublicObjectiveCard> pickedPublicObjectiveCards;
