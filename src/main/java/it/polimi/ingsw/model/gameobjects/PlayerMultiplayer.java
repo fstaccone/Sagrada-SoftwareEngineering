@@ -1,11 +1,22 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.ConnectionStatus;
+import it.polimi.ingsw.model.gamelogic.Match;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+
 public class PlayerMultiplayer extends Player {
     private int numFavorTokens;
     private PrivateObjectiveCard privateObjectiveCard;
+    private ConnectionStatus status;
+    private int turnsLeft;
+    private boolean myTurn;
+    private MatchMultiplayer match;
 
-    public PlayerMultiplayer(String name) {
+    public PlayerMultiplayer(String name, MatchMultiplayer match) {
         super(name);
+        status = ConnectionStatus.READY;
+        myTurn = false;
+        this.match = match;
     }
 
     // setter
@@ -13,11 +24,18 @@ public class PlayerMultiplayer extends Player {
         this.numFavorTokens = numFavorTokens;
     }
 
-    public void setPrivateObjectiveCard(Card privateObjectiveCard) {
-        this.privateObjectiveCard = (PrivateObjectiveCard)privateObjectiveCard;
+
+    public void setPrivateObjectiveCard(PrivateObjectiveCard privateObjectiveCard) {
+        this.privateObjectiveCard = privateObjectiveCard;
     }
 
-    // getter
+    public void setStatus(ConnectionStatus status) { this.status = status; }
+
+    public void setTurnsLeft(int turnsLeft) { this.turnsLeft = turnsLeft; }
+
+    public void setMyTurn(boolean myTurn) { this.myTurn = myTurn; }
+
+    // getters
     public int getNumFavorTokens() {
         return numFavorTokens;
     }
@@ -27,6 +45,12 @@ public class PlayerMultiplayer extends Player {
     }
 
     public Colors getColor() { return this.color; }
+
+    public ConnectionStatus getStatus() { return status; }
+
+    public int getTurnsLeft() { return turnsLeft; }
+
+    public boolean isMyTurn() { return myTurn; }
 
     @Override
     public void setSchemeCard(WindowPatternCard schemeCard) {
@@ -40,4 +64,21 @@ public class PlayerMultiplayer extends Player {
         //chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
+    // todo: controllo ereditarietà del metodo
+    @Override
+    public void playTurn(Match match) {
+        // attesa di azioni da parte del giocatore
+
+        turnsLeft--;
+    }
+
+    @Override
+    public void goTrough() {
+        // passa il turno
+        match.getTimer().cancel();
+    }
+
+    public void expiredTimer(){
+        // passa ma senza richiamare la cancel sul timer
+    }
 }

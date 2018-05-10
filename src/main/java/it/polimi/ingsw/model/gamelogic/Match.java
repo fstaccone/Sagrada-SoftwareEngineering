@@ -1,4 +1,8 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gamelogic;
+
+import it.polimi.ingsw.model.gameobjects.Bag;
+import it.polimi.ingsw.model.gameobjects.Board;
+import it.polimi.ingsw.model.gameobjects.DecksContainer;
 
 import java.util.*;
 
@@ -46,13 +50,6 @@ public abstract class Match {
 
     // Propone le carte schema
     public abstract void proposeWindowPatternCards();
-
-    // Distribuisce le carte obiettivo pubblico
-    public abstract void drawPublicObjectiveCards();
-
-    // Distribuisce le tool cards
-    public abstract void drawToolCards();
-
 
     public abstract void nextRound();
 

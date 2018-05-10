@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.gameobjects.MatchMultiplayer;
-import it.polimi.ingsw.model.gameobjects.MatchSingleplayer;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 
 import java.util.*;
 
@@ -11,6 +11,7 @@ public class Lobby {
     private int matchCounter;
     private final List<String> waitingPlayers;
     private int waitingTime;
+    private int turnTime;
     // map that contains the link between a client(only multiplayer clients) and the matchId useful for reconnection
     private Map<String, Integer> mapClientsToRoom;
     private List<MatchMultiplayer> multiplayerMatches;
@@ -18,13 +19,14 @@ public class Lobby {
     private Timer timer;
     private MatchStarter task;
 
-    public Lobby(int waitingTime) {
+    public Lobby(int waitingTime, int turnTime) {
         this.takenUsernames = new ArrayList<>();
         this.matchCounter = 0;
         this.waitingPlayers = new ArrayList<>();
         this.mapClientsToRoom = new HashMap<>();
         this.multiplayerMatches = new ArrayList<>();
         this.waitingTime = waitingTime;
+        this.turnTime = turnTime;
     }
 
     public List<String> getTakenUsernames() {
@@ -51,11 +53,13 @@ public class Lobby {
     }
 
     private synchronized void createMultiplayerMatch(List<String> clients) {
-        multiplayerMatches.add(new MatchMultiplayer(matchCounter, clients));
+        multiplayerMatches.add(new MatchMultiplayer(matchCounter, clients, turnTime));
         System.out.println("By lobby: Match number: " + matchCounter + " type: multiplayer");
         System.out.println("By lobby: Players: ");
         clients.forEach(c -> System.out.print(c + "\t"));
         System.out.println("\n");
+        // da rivedere la chiamata
+        multiplayerMatches.get(multiplayerMatches.size()-1).run();
     }
 
     public void removeFromWaitingPlayers(String name) {

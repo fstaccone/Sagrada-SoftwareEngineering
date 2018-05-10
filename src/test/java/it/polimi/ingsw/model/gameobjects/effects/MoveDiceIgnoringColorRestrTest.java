@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.Room;
+import it.polimi.ingsw.model.gamelogic.Match;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import org.junit.Assert;
@@ -15,14 +17,14 @@ public class MoveDiceIgnoringColorRestrTest {
     private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private Player player;
-    private Match match;
+    private MatchMultiplayer match;
     private Room room;
     @Before
     public void before() {
         room = mock(Room.class);
-        match=mock(Match.class);
+        match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player");
+        player = new PlayerMultiplayer("player", match);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
 

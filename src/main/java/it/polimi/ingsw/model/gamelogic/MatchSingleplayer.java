@@ -1,8 +1,7 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.Client;
-
-import java.util.List;
+import it.polimi.ingsw.model.gameobjects.DecksContainer;
+import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
 
 public class MatchSingleplayer extends Match implements Runnable{
 
@@ -36,16 +35,6 @@ public class MatchSingleplayer extends Match implements Runnable{
 
     @Override
     public void proposeWindowPatternCards() {
-
-    }
-
-    @Override
-    public void drawPublicObjectiveCards() {
-
-    }
-
-    @Override
-    public void drawToolCards() {
 
     }
 

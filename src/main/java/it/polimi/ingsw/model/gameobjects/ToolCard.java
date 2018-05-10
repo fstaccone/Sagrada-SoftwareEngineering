@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
 
+import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gameobjects.effects.*;
 
 public class ToolCard extends Card{
