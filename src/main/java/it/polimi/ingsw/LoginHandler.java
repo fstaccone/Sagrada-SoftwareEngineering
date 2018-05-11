@@ -23,9 +23,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 import java.util.ResourceBundle;
 
-public class LoginHandler implements Initializable{
+public class LoginHandler extends UnicastRemoteObject implements Initializable,LobbyObserver{
 
     private Socket socket=null;
     private ClientController clientController;
@@ -72,6 +74,10 @@ public class LoginHandler implements Initializable{
 
     @FXML
     private Button playButton;
+
+    public LoginHandler() throws RemoteException {
+        super();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -194,7 +200,6 @@ public class LoginHandler implements Initializable{
                 socket.close();
             }
             else {
-                System.out.println("Valid username");
                 if (isRmi) createClientRmi();
                 else createClientSocket();
             }
@@ -240,6 +245,10 @@ public class LoginHandler implements Initializable{
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
                 controller.createMatch(this.username);
+                if(isCli) {
+                    new CommandLineInterface(username).launch();//per il momento null
+                } else
+                {}
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -249,6 +258,7 @@ public class LoginHandler implements Initializable{
         else {
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
+                controller.observeLobby(this);
                 controller.addPlayer(this.username);
             }
             catch (Exception e){
@@ -285,6 +295,13 @@ public class LoginHandler implements Initializable{
             }
 
         }
+    }
+
+    @Override //QUESTA INFORMAZIONE è DA PASSARE ALLA FINESTRA WAITING PLAYERS, per ora è stampata
+    public void onWaitingPlayers(List<String> waitingPlayers) {
+        System.out.println("Current waiting players for the next starting match are: (disposed in order of access to the lobby)");
+        waitingPlayers.stream().forEachOrdered(System.out::println);
+        System.out.println();
     }
 }
 

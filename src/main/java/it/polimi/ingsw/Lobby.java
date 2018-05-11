@@ -3,10 +3,12 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 
+import java.rmi.RemoteException;
 import java.util.*;
 
 public class Lobby {
 
+    private List<LobbyObserver> observers;
     private List<String> takenUsernames;
     private int matchCounter;
     private final List<String> waitingPlayers;
@@ -20,6 +22,7 @@ public class Lobby {
     private MatchStarter task;
 
     public Lobby(int waitingTime, int turnTime) {
+        this.observers=new LinkedList<>();
         this.takenUsernames = new ArrayList<>();
         this.matchCounter = 0;
         this.waitingPlayers = new ArrayList<>();
@@ -85,6 +88,14 @@ public class Lobby {
         synchronized (waitingPlayers) {
 
             waitingPlayers.add(name);
+
+            for (LobbyObserver observer : observers) {
+                try {
+                    observer.onWaitingPlayers(waitingPlayers);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
             //debug
             if (waitingPlayers.size()==1) System.out.println("There is 1 player waiting for a match.");
             else System.out.println("There are " + waitingPlayers.size() + " players waiting for a match.");
@@ -123,5 +134,9 @@ public class Lobby {
 
     public List<MatchMultiplayer> getMultiplayerMatches() {
         return multiplayerMatches;
+    }
+
+    public void observeLobby(LobbyObserver lobbyObserver){
+        observers.add(lobbyObserver);
     }
 }
