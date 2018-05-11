@@ -66,6 +66,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+    public void observeLobby(LobbyObserver lobbyObserver){
+        lobby.observeLobby(lobbyObserver);
+    }
+
     // private transient final Room room;
    // private final Map<Player, ViewInterface> views = new HashMap<>();
 
