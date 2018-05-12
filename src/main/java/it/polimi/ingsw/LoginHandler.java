@@ -268,7 +268,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
             try {
                 controller.observeLobby(this);
                 controller.addPlayer(this.username);
-                CommandLineInterface thread=new CommandLineInterface(username,controller);
+                CommandLineInterface thread= new CommandLineInterface(username,controller);
                 thread.run();
             }
             catch (Exception e){

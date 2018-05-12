@@ -143,7 +143,7 @@ public class Lobby {
 
     public void observeMatch(String username, MatchObserver observer){
         for (MatchMultiplayer match:multiplayerMatches) {
-            if (match.getMatchCounter()== mapClientsToRoom.get(username))
+            if (match.getMatchId()== mapClientsToRoom.get(username))
                 match.observeMatch(observer);
         }
     }

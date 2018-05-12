@@ -19,7 +19,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         super();
         this.matchId = matchId;
         System.out.println("New multiplayer matchId: " + matchId);
-        this.observers=new LinkedList<>();
+        this.observers = new LinkedList<>();
 
         System.out.println("New multiplayer matchId: " + matchId);
         // trovare un modo per fare il cast da Player a PlayerMultiplayer
@@ -30,16 +30,20 @@ public class MatchMultiplayer extends Match implements Runnable {
         clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
     }
 
-    public Timer getTimer() { return timer; }
+    public Timer getTimer() {
+        return timer;
+    }
 
-    public int getMatchId() { return matchId; }
+    public int getMatchId() {
+        return matchId;
+    }
 
     // game's initialisation
     @Override
     public void gameInit() {
         // todo: revision of the creation of this arraylist
-        List<String> playersNames= new ArrayList<>();
-        players.forEach(p->playersNames.add(p.getName()));
+        List<String> playersNames = new ArrayList<>();
+        players.forEach(p -> playersNames.add(p.getName()));
 
         for (MatchObserver observer : observers) {
             try {
@@ -89,24 +93,38 @@ public class MatchMultiplayer extends Match implements Runnable {
     private void turnManager() {
         TurnTimer task;
 
+        System.out.println("Round " + (roundCounter + 1));
+        System.out.println("First player: " + players.get(0).getName());
+
+        for (PlayerMultiplayer player : players) {
+            player.setTurnsLeft(2);
+        }
+
         // todo: capire se c'è un modo per riutilizzare timer
 
         // first turn
         for (PlayerMultiplayer player : players) {
-            System.out.println("Turno ok");
+            System.out.println("From match : Turn 1 - round " + (roundCounter + 1) + " player: " + player.getName());
+
             timer = new Timer();
             task = new TurnTimer(player);
             timer.schedule(task, turnTime);
+
             player.playTurn();
         }
 
         // second turn
         for (int i = players.size() - 1; i >= 0; i--) {
             if (players.get(i).getTurnsLeft() > 0) {
+                System.out.println("From match : Turn 2 - round " + (roundCounter + 1) + " player: " + players.get(i).getName());
+
                 timer = new Timer();
                 task = new TurnTimer(players.get(i));
                 timer.schedule(task, turnTime);
+
                 players.get(i).playTurn();
+            } else {
+                System.out.println("Player " + players.get(i).getName() + " has no turns left");
             }
         }
 
@@ -123,7 +141,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         this.incrementRoundCounter();
 
         if (this.roundCounter >= 10) {
-            this.calculateFinalScore();
+            //this.calculateFinalScore();
         } else {
             this.turnManager();
         }
@@ -152,7 +170,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     }
 
-    public void theWinnerIs(){
+    public void theWinnerIs() {
         // occorre il metodo del controller che lo notifichi a tutti gli observer del match
         // se non abbiamo intenzione di implementare la funzionalità avanzata "persistenza" non ci serve salvare il vincitore
 
@@ -178,12 +196,13 @@ public class MatchMultiplayer extends Match implements Runnable {
         gameInit();
     }
 
-    public void observeMatch(MatchObserver observer){
+    public void observeMatch(MatchObserver observer) {
 
         this.observers.add(observer);
-        System.out.println("Gli observers del match"+ this.matchId +" al momento sono: "+observers.size());
-        System.out.println("Il numero dei players nel match"+this.matchId + " è: "+ players.size());
-        if (this.players.size()==this.observers.size()){
-            run();}
+        System.out.println("Gli observers del match" + this.matchId + " al momento sono: " + observers.size());
+        System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
+        if (this.players.size() == this.observers.size()) {
+            run();
+        }
     }
 }
