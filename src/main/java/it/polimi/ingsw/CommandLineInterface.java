@@ -1,10 +1,19 @@
 package it.polimi.ingsw;
 
-public class CommandLineInterface {
+import it.polimi.ingsw.control.RemoteController;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
+
+public class CommandLineInterface extends UnicastRemoteObject implements Runnable,MatchObserver{
 
     private String username;
-    public CommandLineInterface(String username) {
+    private RemoteController controller;
+    public CommandLineInterface(String username, RemoteController controller) throws RemoteException {
+        super();
         this.username=username;
+        this.controller=controller;
     }
 
     public void launch() {
@@ -26,7 +35,34 @@ public class CommandLineInterface {
                         "@|_____/_/@@@@\\_\\_____|_|@@\\_\\/_/@@@@\\_\\_____/_/@@@@\\_\\@@@@@@@@@@..@.@  &.... #..@.@..@@@@@@@@@\n" +
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" + "\n\nWelcome to the game, " + username.toUpperCase() + "\n");
+                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" + "\n\nWelcome to the game, " + username.toUpperCase() + "! A new match is starting soon :)\n\nYou can find the state of the waiting list at the moment you joined the game above the SAGRADA logo. Here follow the updates of the waiting list:\n\n");
+        try {
+            Thread.sleep(40000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            controller.observeMatch(username,this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            System.out.println("CASINO IN CLI.LAUNCH");
+        }
 
+    }
+
+    @Override
+    public void onPlayers(List<String> playersNames)  {
+
+        System.out.println("\n\nGame starts now! You are playing SAGRADA against:");
+        for(String name:playersNames){
+            if (!name.equals(username)){
+                System.out.println("-"+name.toUpperCase());
+            }
+        }
+    }
+
+    @Override
+    public void run() {
+        launch();
     }
 }

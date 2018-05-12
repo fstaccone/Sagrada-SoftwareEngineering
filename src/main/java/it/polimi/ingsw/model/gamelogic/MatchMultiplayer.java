@@ -1,15 +1,15 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.LobbyObserver;
+import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.Timer;
+import java.rmi.RemoteException;
+import java.util.*;
 
 public class MatchMultiplayer extends Match implements Runnable {
 
+    private List<MatchObserver> observers;
     private int matchId;
     private List<PlayerMultiplayer> players;
     private int turnTime;
@@ -19,6 +19,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         super();
         this.matchId = matchId;
         System.out.println("New multiplayer matchId: " + matchId);
+        this.observers=new LinkedList<>();
+
+        System.out.println("New multiplayer matchId: " + matchId);
+        // trovare un modo per fare il cast da Player a PlayerMultiplayer
         this.turnTime = turnTime;
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
@@ -28,14 +32,23 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     public Timer getTimer() { return timer; }
 
-    public int getMatchId() {
-        return matchId;
-    }
+    public int getMatchId() { return matchId; }
 
     // game's initialisation
     @Override
     public void gameInit() {
+        // todo: revision of the creation of this arraylist
+        List<String> playersNames= new ArrayList<>();
+        players.forEach(p->playersNames.add(p.getName()));
 
+        for (MatchObserver observer : observers) {
+            try {
+                observer.onPlayers(playersNames);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        // actions to be performed once only
         this.roundCounter = 0;
         this.assignColors();
 
@@ -67,7 +80,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         for (Player p : players) {
             index = rand.nextInt(colors.size());
-            p.setColor((Colors) colors.get(index));  // Da testare, non ne sono convinto
+            p.setColor(colors.get(index));  // Da testare, non ne sono convinto
             colors.remove(index);
         }
     }
@@ -163,5 +176,14 @@ public class MatchMultiplayer extends Match implements Runnable {
     @Override
     public void run() {
         gameInit();
+    }
+
+    public void observeMatch(MatchObserver observer){
+
+        this.observers.add(observer);
+        System.out.println("Gli observers del match"+ this.matchId +" al momento sono: "+observers.size());
+        System.out.println("Il numero dei players nel match"+this.matchId + " è: "+ players.size());
+        if (this.players.size()==this.observers.size()){
+            run();}
     }
 }

@@ -119,6 +119,15 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         //playButton.setDisable(true);
         readInput();
 
+        if(!isSingleplayer){
+            //NON CAPISCO PERCHè NON PARTE SUBITO
+            Stage stage = (Stage) playButton.getScene().getWindow();
+            try {
+                stage.setScene(new WaitingScreen().sceneInit());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         connectionSetup();
 
         /*Stage stage = (Stage) playButton.getScene().getWindow();
@@ -131,8 +140,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         window.setTitle("Waiting for players");
         window.setResizable(false);
         window.show();   */
-        Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.setScene(new WaitingScreen().sceneInit());
+
 
 
     }
@@ -246,7 +254,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
             try {
                 controller.createMatch(this.username);
                 if(isCli) {
-                    new CommandLineInterface(username).launch();//per il momento null
+                    new CommandLineInterface(username,controller).launch();//per il momento null
                 } else
                 {}
             }
@@ -260,6 +268,8 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
             try {
                 controller.observeLobby(this);
                 controller.addPlayer(this.username);
+                CommandLineInterface thread=new CommandLineInterface(username,controller);
+                thread.run();
             }
             catch (Exception e){
                 e.printStackTrace();

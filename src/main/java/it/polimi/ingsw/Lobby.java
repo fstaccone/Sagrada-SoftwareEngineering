@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 
@@ -62,7 +63,7 @@ public class Lobby {
         clients.forEach(c -> System.out.print(c + "\t"));
         System.out.println("\n");
         // da rivedere la chiamata
-        multiplayerMatches.get(multiplayerMatches.size()-1).run();
+        //multiplayerMatches.get(multiplayerMatches.size()-1).waitForViews();
     }
 
     public void removeFromWaitingPlayers(String name) {
@@ -138,5 +139,12 @@ public class Lobby {
 
     public void observeLobby(LobbyObserver lobbyObserver){
         observers.add(lobbyObserver);
+    }
+
+    public void observeMatch(String username, MatchObserver observer){
+        for (MatchMultiplayer match:multiplayerMatches) {
+            if (match.getMatchCounter()== mapClientsToRoom.get(username))
+                match.observeMatch(observer);
+        }
     }
 }

@@ -35,6 +35,7 @@ public class Login extends Application {
         primaryStage.setOnCloseRequest(event -> {
                     event.consume();
                     onClosing();
+                    System.exit(1);
                 }
         );
 
