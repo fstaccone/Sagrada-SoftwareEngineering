@@ -1,7 +1,6 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.Lobby;
+
 import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.view.ViewInterface;
 

@@ -49,6 +49,7 @@ public class Login extends Application {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
+            System.exit(1);
         }
     }
 

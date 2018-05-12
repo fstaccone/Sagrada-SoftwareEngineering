@@ -71,17 +71,28 @@ public class PlayerMultiplayer extends Player {
             // attesa di azioni da parte del client
         }
         turnsLeft--;
-        goTrough();
+        // solo per ora, il giocatore potrà decidere quando passare e in quel caso verrà chiamata la cancel
+        match.getTimer().cancel();
     }
 
     @Override
     public void goTrough() {
         // passa il turno
-        match.getTimer().cancel();
+
     }
-    
+
     // it'll be called by the timer if it would go out of time
     public void expiredTimer(){
         // passa ma senza richiamare la cancel sul timer
     }
+
+    // todo: aggiornare metodo chooseDice di Reserve
+    public void chooseDice(){
+        setPickedDice(match.getBoard().getReserve().chooseDice());
+    }
+    /* todo: gestire la sequenza di passaggi di parametri
+    public void putDiceInWindow(){
+        getSchemeCard().putDice();
+    }
+    */
 }

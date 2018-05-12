@@ -50,7 +50,7 @@ public class Reserve {
             }
             Dice choice = dices.get(i);
             dices.remove(i);
-            System.out.println("Chosen dice: "+choice.toString());
+            System.out.println("Chosen dice: " + choice.toString());
             return choice;
         }
         else {
@@ -59,7 +59,7 @@ public class Reserve {
         }
     }
     public List<Dice> endRound(){
-        System.out.println("End of the round.");
+        System.out.println("From Reserve : End of the round");
         ArrayList<Dice> dicesLeft = new ArrayList<>();
         while(!dices.isEmpty()){
             System.out.println("Dice removed from reserve: " + dices.get(0).toString());

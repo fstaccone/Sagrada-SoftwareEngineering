@@ -300,7 +300,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
     @Override //QUESTA INFORMAZIONE è DA PASSARE ALLA FINESTRA WAITING PLAYERS, per ora è stampata
     public void onWaitingPlayers(List<String> waitingPlayers) {
         System.out.println("Current waiting players for the next starting match are: (disposed in order of access to the lobby)");
-        waitingPlayers.stream().forEachOrdered(System.out::println);
+        waitingPlayers.forEach(System.out::println);
         System.out.println();
     }
 }

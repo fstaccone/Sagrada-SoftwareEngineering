@@ -26,9 +26,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
     }
 
-    public Timer getTimer() {
-        return timer;
-    }
+    public Timer getTimer() { return timer; }
 
     public int getMatchId() {
         return matchId;
@@ -78,19 +76,24 @@ public class MatchMultiplayer extends Match implements Runnable {
     private void turnManager() {
         TurnTimer task;
 
+        // todo: capire se c'è un modo per riutilizzare timer
+
         // first turn
         for (PlayerMultiplayer player : players) {
-            player.playTurn();
+            System.out.println("Turno ok");
+            timer = new Timer();
             task = new TurnTimer(player);
             timer.schedule(task, turnTime);
+            player.playTurn();
         }
 
         // second turn
         for (int i = players.size() - 1; i >= 0; i--) {
             if (players.get(i).getTurnsLeft() > 0) {
-                players.get(i).playTurn();
+                timer = new Timer();
                 task = new TurnTimer(players.get(i));
                 timer.schedule(task, turnTime);
+                players.get(i).playTurn();
             }
         }
 
@@ -106,7 +109,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         this.pushLeftDicesToRoundTrack();
         this.incrementRoundCounter();
 
-        if (this.roundCounter > 10) {
+        if (this.roundCounter >= 10) {
             this.calculateFinalScore();
         } else {
             this.turnManager();

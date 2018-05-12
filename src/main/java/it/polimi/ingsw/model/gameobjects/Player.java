@@ -11,6 +11,8 @@ public abstract class Player implements Serializable{
     private int points;
     protected Colors color;
 
+
+    // todo: check inheritance
     public Player(String name){
         super(); // Perchè?
         this.name = name;
@@ -45,6 +47,12 @@ public abstract class Player implements Serializable{
 
     // Useful methods for the game's flow
     public abstract void useToolCard(ToolCard chosenToolCardToUse);
+
+    // potrebbe essere uguale per entrambi i tipi di match, ma forse è più facile gestirlo diversamente
+    /*
+    public void chooseDice(){
+    }
+    */
 
     // Passa il turno (può farlo anche senza aver fatto altre azioni, ma deve comunque farlo? )
     public void goTrough(){
