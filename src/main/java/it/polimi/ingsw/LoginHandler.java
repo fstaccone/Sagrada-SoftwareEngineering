@@ -26,7 +26,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class LoginHandler extends UnicastRemoteObject implements Serializable,Initializable,LobbyObserver{
+public class LoginHandler extends UnicastRemoteObject implements Initializable,LobbyObserver{
 
     private transient Socket socket=null;
     private transient ClientController clientController;

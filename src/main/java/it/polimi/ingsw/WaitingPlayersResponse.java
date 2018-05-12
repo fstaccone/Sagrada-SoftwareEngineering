@@ -5,11 +5,9 @@ import java.util.List;
 public class WaitingPlayersResponse implements Response {
 
     List<String> waitingPlayers;
-    LobbyObserver observer;
 
-    public WaitingPlayersResponse(List<String> waitingPlayers, LobbyObserver observer) {
+    public WaitingPlayersResponse(List<String> waitingPlayers) {
         this.waitingPlayers = waitingPlayers;
-        this.observer=observer;
     }
 
     @Override

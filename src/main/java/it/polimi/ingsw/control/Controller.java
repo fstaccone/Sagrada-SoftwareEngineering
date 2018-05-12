@@ -73,12 +73,18 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+    @Override
+    public Response handle(ObserveMatchRequest request) {
+        lobby.observeMatchSocket(request.username,request.matchObserver);
+        return null;
+    }
+
     public void observeLobby(LobbyObserver lobbyObserver){
         lobby.observeLobbyRemote(lobbyObserver);
     }
 
     public void observeMatch(String username, MatchObserver observer){
-        lobby.observeMatch(username,observer);
+        lobby.observeMatchRemote(username,observer);
     }
 
     // private transient final Room room;

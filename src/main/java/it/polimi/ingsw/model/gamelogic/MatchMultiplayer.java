@@ -202,9 +202,18 @@ public class MatchMultiplayer extends Match implements Runnable {
         gameInit();
     }
 
-    public void observeMatch(MatchObserver observer) {
+    public void observeMatchRemote(MatchObserver observer) {
         this.remoteObservers.add(observer);
         System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
+        System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
+        if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
+            run();
+        }
+    }
+
+    public void observeMatchSocket(MatchObserver observer) {
+        this.socketObservers.add(observer);
+        System.out.println("Gli observers socket del match" + this.matchId + " al momento sono: " + socketObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
         if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
             run();

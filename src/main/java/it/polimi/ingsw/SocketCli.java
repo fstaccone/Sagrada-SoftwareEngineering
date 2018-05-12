@@ -1,12 +1,13 @@
 package it.polimi.ingsw;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.List;
 
-public class SocketCli implements Serializable,Runnable {
+public class SocketCli implements Serializable,Runnable,MatchObserver {
 
     private String username;
-    private ClientController controller;
+    private transient ClientController controller;
 
     public SocketCli(String username, ClientController controller){
         this.username=username;
@@ -35,7 +36,16 @@ public class SocketCli implements Serializable,Runnable {
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" + "\n\nWelcome to the game, " + username.toUpperCase() + "! A new match is starting soon :)\n\nYou can find the state of the waiting list at the moment you joined the game above the SAGRADA logo. Here follow the updates of the waiting list:\n\n");
 
         //DA CAPIRE SE POSSA ESSERE FATTO COSì
-        new Thread(new NotifiersHandler(controller)).start();
+       // new Thread(new NotifiersHandler(controller)).start();
+
+        try {
+            Thread.sleep(40000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        controller.request(new ObserveMatchRequest(username,this));
+
     }
 
 
@@ -44,5 +54,9 @@ public class SocketCli implements Serializable,Runnable {
         launch();
     }
 
+    //DA CAPIRE COME CONVIENE FARE, UN'ALTRA INTERFACCIA MATCHOBSERVERSOCKET? discorso != da loginhandler, qui si doppia socket cli e rmi cli
+    @Override
+    public void onPlayers(List<String> playersNames) throws RemoteException {
 
+    }
 }

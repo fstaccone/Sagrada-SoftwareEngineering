@@ -94,9 +94,9 @@ public class Lobby {
         synchronized (waitingPlayers) {
 
             waitingPlayers.add(name);
-            System.out.println("Lobby:rmi observers size: "+remoteObservers.size()+"\n");
+            System.out.println("Lobby: lobby rmi observers size: "+remoteObservers.size()+"\n");
             System.out.println("Lobby: waitingplayers size: "+waitingPlayers.size()+"\n");
-            System.out.println("Lobby:socket observers size: "+socketObservers.size()+"\n");
+            System.out.println("Lobby: lobby socket observers size: "+socketObservers.size()+"\n");
 
             //notifico ai remoteObservers i waitingplayers ogni volta che uno waiting player è aggiunto
             for (LobbyObserver observer : remoteObservers) {
@@ -109,7 +109,7 @@ public class Lobby {
             //notifico ai socketObservers i waitingplayers ogni volta che uno waiting player è aggiunto
             //NON SO COME NOTIFICARE GLI OBSERVER ATTRAVERSO LE RESPONSES, ma dubbio: sono effettivamente delle responses?
             for (LobbyObserver observer:socketObservers){
-                new WaitingPlayersResponse(waitingPlayers,observer);
+                new WaitingPlayersResponse(waitingPlayers);
             }
 
 
@@ -160,10 +160,17 @@ public class Lobby {
         socketObservers.add(lobbyObserver);
     }
     
-    public void observeMatch(String username, MatchObserver observer){
+    public void observeMatchRemote(String username, MatchObserver observer){
         for (MatchMultiplayer match:multiplayerMatches) {
             if (match.getMatchId()== mapClientsToRoom.get(username))
-                match.observeMatch(observer);
+                match.observeMatchRemote(observer);
+        }
+    }
+
+    public void observeMatchSocket(String username, MatchObserver observer){
+        for (MatchMultiplayer match:multiplayerMatches) {
+            if (match.getMatchId()== mapClientsToRoom.get(username))
+                match.observeMatchSocket(observer);
         }
     }
 }
