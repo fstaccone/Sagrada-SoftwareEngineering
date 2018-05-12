@@ -9,7 +9,8 @@ import java.util.*;
 
 public class MatchMultiplayer extends Match implements Runnable {
 
-    private List<MatchObserver> observers;
+    private List<MatchObserver> remoteObservers;
+    private List<MatchObserver> socketObservers;
     private int matchId;
     private List<PlayerMultiplayer> players;
     private int turnTime;
@@ -19,7 +20,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         super();
         this.matchId = matchId;
         System.out.println("New multiplayer matchId: " + matchId);
-        this.observers = new LinkedList<>();
+        this.remoteObservers = new LinkedList<>();
+        this.socketObservers=new LinkedList<>();
 
         System.out.println("New multiplayer matchId: " + matchId);
         // trovare un modo per fare il cast da Player a PlayerMultiplayer
@@ -45,13 +47,17 @@ public class MatchMultiplayer extends Match implements Runnable {
         List<String> playersNames = new ArrayList<>();
         players.forEach(p -> playersNames.add(p.getName()));
 
-        for (MatchObserver observer : observers) {
+        for (MatchObserver observer : remoteObservers) {
             try {
                 observer.onPlayers(playersNames);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
+
+        /*
+            DA FARE LA STESSA COSA DI QUI SOPRA MA CON I SOCKET
+        */
         // actions to be performed once only
         this.roundCounter = 0;
         this.assignColors();
@@ -197,11 +203,10 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public void observeMatch(MatchObserver observer) {
-
-        this.observers.add(observer);
-        System.out.println("Gli observers del match" + this.matchId + " al momento sono: " + observers.size());
+        this.remoteObservers.add(observer);
+        System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
-        if (this.players.size() == this.observers.size()) {
+        if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
             run();
         }
     }

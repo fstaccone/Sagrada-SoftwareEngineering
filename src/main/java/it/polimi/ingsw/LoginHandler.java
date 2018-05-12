@@ -4,9 +4,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.view.RMIView;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
@@ -16,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
@@ -27,53 +26,53 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class LoginHandler extends UnicastRemoteObject implements Initializable,LobbyObserver{
+public class LoginHandler extends UnicastRemoteObject implements Serializable,Initializable,LobbyObserver{
 
-    private Socket socket=null;
-    private ClientController clientController;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private transient Socket socket=null;
+    private transient ClientController clientController;
+    private transient ObjectInputStream in;
+    private transient ObjectOutputStream out;
     private String username;
-    private boolean isRmi = true;
-    private boolean isSocket = false;
-    private boolean isGui = true;
-    private boolean isCli = false;
-    private boolean isSingleplayer = false;
-    private int difficulty;
-    private String serverAddress;
+    private transient boolean isRmi = true;
+    private transient boolean isSocket = false;
+    private transient boolean isGui = true;
+    private transient boolean isCli = false;
+    private transient boolean isSingleplayer = false;
+    private transient int difficulty;
+    private transient String serverAddress;
 
     // Values to be set by file on server, how can we set these here?
-    private int rmiRegistryPort = 1100;
-    private int socketPort = 1101;
+    private transient int rmiRegistryPort = 1100;
+    private transient int socketPort = 1101;
 
-    private Registry registry;
-    private RemoteController controller;
+    private transient Registry registry;
+    private transient RemoteController controller;
 
-    private Client client;
-
-    @FXML
-    private TextField usernameInput;
+    private transient Client client;
 
     @FXML
-    private TextField serverAddressInput;
+    private transient TextField usernameInput;
 
     @FXML
-    private CheckBox rmiCheckmark;
+    private transient TextField serverAddressInput;
 
     @FXML
-    private CheckBox socketCheckmark;
+    private transient CheckBox rmiCheckmark;
 
     @FXML
-    private CheckBox cliCheckmark;
+    private transient CheckBox socketCheckmark;
 
     @FXML
-    private CheckBox guiCheckmark;
+    private transient CheckBox cliCheckmark;
 
     @FXML
-    private CheckBox modeCheckmark;
+    private transient CheckBox guiCheckmark;
 
     @FXML
-    private Button playButton;
+    private transient CheckBox modeCheckmark;
+
+    @FXML
+    private transient Button playButton;
 
     public LoginHandler() throws RemoteException {
         super();
@@ -195,7 +194,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
                 unique = controller.checkName(this.username);
             else{
                 clientController.request(new CheckUsernameRequest(this.username));
-                clientController.nextResponse().handle(clientController);
+                clientController.nextResponse().handleResponse(clientController);
                 unique=!( clientController.isNameAlreadyTaken());}
 
             if (!unique) {
@@ -254,7 +253,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
             try {
                 controller.createMatch(this.username);
                 if(isCli) {
-                    new CommandLineInterface(username,controller).launch();//per il momento null
+                    new RmiCli(username,controller).launch();//per il momento null
                 } else
                 {}
             }
@@ -268,8 +267,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
             try {
                 controller.observeLobby(this);
                 controller.addPlayer(this.username);
-                CommandLineInterface thread= new CommandLineInterface(username,controller);
-                thread.run();
+                new Thread(new RmiCli(username,controller)).start();
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -297,7 +295,10 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         else {
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
+                clientController.request(new ObserveLobbyRequest(this));
                 clientController.request(new AddPlayerRequest(this.username));
+                new Thread(new SocketCli(username,clientController)).start();
+
             }
             catch (Exception e){
                 e.printStackTrace();

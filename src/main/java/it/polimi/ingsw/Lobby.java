@@ -1,5 +1,8 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.LobbyObserver;
+import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.MatchStarter;
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
@@ -9,7 +12,8 @@ import java.util.*;
 
 public class Lobby {
 
-    private List<LobbyObserver> observers;
+    private List<LobbyObserver> remoteObservers;
+    private List<LobbyObserver> socketObservers;
     private List<String> takenUsernames;
     private int matchCounter;
     private final List<String> waitingPlayers;
@@ -23,7 +27,8 @@ public class Lobby {
     private MatchStarter task;
 
     public Lobby(int waitingTime, int turnTime) {
-        this.observers=new LinkedList<>();
+        this.socketObservers=new LinkedList<>();
+        this.remoteObservers=new LinkedList<>();
         this.takenUsernames = new ArrayList<>();
         this.matchCounter = 0;
         this.waitingPlayers = new ArrayList<>();
@@ -89,14 +94,25 @@ public class Lobby {
         synchronized (waitingPlayers) {
 
             waitingPlayers.add(name);
+            System.out.println("Lobby:rmi observers size: "+remoteObservers.size()+"\n");
+            System.out.println("Lobby: waitingplayers size: "+waitingPlayers.size()+"\n");
+            System.out.println("Lobby:socket observers size: "+socketObservers.size()+"\n");
 
-            for (LobbyObserver observer : observers) {
+            //notifico ai remoteObservers i waitingplayers ogni volta che uno waiting player è aggiunto
+            for (LobbyObserver observer : remoteObservers) {
                 try {
                     observer.onWaitingPlayers(waitingPlayers);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             }
+            //notifico ai socketObservers i waitingplayers ogni volta che uno waiting player è aggiunto
+            //NON SO COME NOTIFICARE GLI OBSERVER ATTRAVERSO LE RESPONSES, ma dubbio: sono effettivamente delle responses?
+            for (LobbyObserver observer:socketObservers){
+                new WaitingPlayersResponse(waitingPlayers,observer);
+            }
+
+
             //debug
             if (waitingPlayers.size()==1) System.out.println("There is 1 player waiting for a match.");
             else System.out.println("There are " + waitingPlayers.size() + " players waiting for a match.");
@@ -137,10 +153,13 @@ public class Lobby {
         return multiplayerMatches;
     }
 
-    public void observeLobby(LobbyObserver lobbyObserver){
-        observers.add(lobbyObserver);
+    public void observeLobbyRemote(LobbyObserver lobbyObserver){
+        remoteObservers.add(lobbyObserver);
     }
-
+    public void observeLobbySocket(LobbyObserver lobbyObserver){
+        socketObservers.add(lobbyObserver);
+    }
+    
     public void observeMatch(String username, MatchObserver observer){
         for (MatchMultiplayer match:multiplayerMatches) {
             if (match.getMatchId()== mapClientsToRoom.get(username))

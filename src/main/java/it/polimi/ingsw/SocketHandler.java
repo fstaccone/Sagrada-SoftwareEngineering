@@ -26,7 +26,7 @@ public class SocketHandler implements Runnable{
     public void run() {
         try {
             do {
-                Response response = ((Request) in.readObject()).handle(controller);
+                Response response = ((Request) in.readObject()).handleRequest(controller);
                 if (response != null) {
                     respond(response);
                 }

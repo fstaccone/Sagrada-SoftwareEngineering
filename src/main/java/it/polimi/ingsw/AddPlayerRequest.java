@@ -8,7 +8,7 @@ public class AddPlayerRequest implements Request {
     }
 
     @Override
-    public Response handle(RequestHandler handler) {
+    public Response handleRequest(RequestHandler handler) {
          return handler.handle(this);
     }
 }

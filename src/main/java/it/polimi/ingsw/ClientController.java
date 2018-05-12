@@ -1,14 +1,19 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.Controller;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 public class ClientController implements ResponseHandler {
 
+    private List<String> waitingPlayers;
     private boolean nameAlreadyTaken=false;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+
 
     public ClientController(ObjectInputStream in, ObjectOutputStream out) {
         this.in = in;
@@ -16,6 +21,7 @@ public class ClientController implements ResponseHandler {
     }
 
     public void request(Request request) {
+
         try {
             out.writeObject(request);
         } catch (IOException e) {
@@ -39,8 +45,26 @@ public class ClientController implements ResponseHandler {
         return nameAlreadyTaken;
     }
 
+    public List<String> getWaitingPlayers() {
+        return waitingPlayers;
+    }
+
     @Override
     public void handle(NameAlreadyTakenResponse response) {
         this.nameAlreadyTaken=response.nameAlreadyTaken;
     }
+    @Override
+    public void handle(WaitingPlayersResponse response){
+        this.waitingPlayers=response.waitingPlayers;
+        System.out.println("dimensione della lista di wplayers: "+waitingPlayers.size());
+    }
+
+    public ObjectInputStream getIn() {
+        return in;
+    }
+
+    public ObjectOutputStream getOut() {
+        return out;
+    }
+
 }

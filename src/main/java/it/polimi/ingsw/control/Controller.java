@@ -1,8 +1,8 @@
 package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.*;
+import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.view.ViewInterface;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -67,8 +67,14 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+    @Override
+    public Response handle(ObserveLobbyRequest request){
+        lobby.observeLobbySocket(request.lobbyObserver);
+        return null;
+    }
+
     public void observeLobby(LobbyObserver lobbyObserver){
-        lobby.observeLobby(lobbyObserver);
+        lobby.observeLobbyRemote(lobbyObserver);
     }
 
     public void observeMatch(String username, MatchObserver observer){

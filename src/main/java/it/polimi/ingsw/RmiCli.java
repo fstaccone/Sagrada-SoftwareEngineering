@@ -6,11 +6,12 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class CommandLineInterface extends UnicastRemoteObject implements Runnable,MatchObserver{
+public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserver{
 
     private String username;
     private RemoteController controller;
-    public CommandLineInterface(String username, RemoteController controller) throws RemoteException {
+
+    public RmiCli(String username, RemoteController controller) throws RemoteException {
         super();
         this.username=username;
         this.controller=controller;
@@ -45,7 +46,6 @@ public class CommandLineInterface extends UnicastRemoteObject implements Runnabl
             controller.observeMatch(username,this);
         } catch (RemoteException e) {
             e.printStackTrace();
-            System.out.println("CASINO IN CLI.LAUNCH");
         }
 
     }

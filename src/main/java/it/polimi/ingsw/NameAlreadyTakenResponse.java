@@ -8,7 +8,7 @@ public class NameAlreadyTakenResponse implements Response {
     }
 
     @Override
-    public void handle(ResponseHandler handler) {
+    public void handleResponse(ResponseHandler handler) {
         handler.handle(this);
     }
 }
