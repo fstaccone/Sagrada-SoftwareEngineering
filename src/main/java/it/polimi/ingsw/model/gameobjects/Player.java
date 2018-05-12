@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.gamelogic.Match;
 import java.io.Serializable;
 
 public abstract class Player implements Serializable{
-    private final String name;
+    protected final String name;
     protected WindowPatternCard schemeCard;
     private Dice pickedDice;
     private int points;

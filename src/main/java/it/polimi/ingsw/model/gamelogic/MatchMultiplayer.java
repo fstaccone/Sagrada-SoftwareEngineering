@@ -1,11 +1,15 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.LobbyObserver;
+import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 
+import java.rmi.RemoteException;
 import java.util.*;
 
 public class MatchMultiplayer extends Match implements Runnable{
 
+    private List<MatchObserver> observers;
     private int matchCounter;
     private List<PlayerMultiplayer> players;
     private int positionOfFirstPlayerInRound;
@@ -15,6 +19,7 @@ public class MatchMultiplayer extends Match implements Runnable{
 
     public MatchMultiplayer(int matchCounter, List<String> clients, int turnTime) {
         super();
+        this.observers=new LinkedList<>();
         this.matchCounter=matchCounter;
         System.out.println("New multiplayer matchId: " + matchCounter);
         // trovare un modo per fare il cast da Player a PlayerMultiplayer
@@ -38,7 +43,16 @@ public class MatchMultiplayer extends Match implements Runnable{
     // game's initialisation
     @Override
     public void gameInit(){
+        List<String> playersNames= new ArrayList<>();
+        players.forEach(p->playersNames.add(p.getName()));
 
+        for (MatchObserver observer : observers) {
+            try {
+                observer.onPlayers(playersNames);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
         // actions to be performed once only
         this.roundCounter = 0;
         this.assignColors();
@@ -170,5 +184,19 @@ public class MatchMultiplayer extends Match implements Runnable{
     @Override
     public void run() {
         gameInit();
+    }
+
+
+    public int getMatchCounter(){
+        return matchCounter;
+    }
+
+    public void observeMatch(MatchObserver observer){
+
+        this.observers.add(observer);
+        System.out.println("Gli observers del match"+this.matchCounter +" al momento sono: "+observers.size());
+        System.out.println("Il numero dei players nel match"+this.matchCounter + " è: "+ players.size());
+        if (this.players.size()==this.observers.size()){
+            run();}
     }
 }

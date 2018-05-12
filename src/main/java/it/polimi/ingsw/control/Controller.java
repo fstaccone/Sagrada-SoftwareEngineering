@@ -2,6 +2,7 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.view.ViewInterface;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -68,6 +69,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     public void observeLobby(LobbyObserver lobbyObserver){
         lobby.observeLobby(lobbyObserver);
+    }
+
+    public void observeMatch(String username, MatchObserver observer){
+        lobby.observeMatch(username,observer);
     }
 
     // private transient final Room room;
