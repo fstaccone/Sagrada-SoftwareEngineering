@@ -162,15 +162,19 @@ public class Lobby {
     
     public void observeMatchRemote(String username, MatchObserver observer){
         for (MatchMultiplayer match:multiplayerMatches) {
-            if (match.getMatchId()== mapClientsToRoom.get(username))
-                match.observeMatchRemote(observer);
+            if (match.getMatchId()== mapClientsToRoom.get(username)){
+                match.observeMatchRemote(observer, username);
+                break;
+            }
         }
     }
 
     public void observeMatchSocket(String username, MatchObserver observer){
         for (MatchMultiplayer match:multiplayerMatches) {
-            if (match.getMatchId()== mapClientsToRoom.get(username))
-                match.observeMatchSocket(observer);
+            if (match.getMatchId()== mapClientsToRoom.get(username)) {
+                match.observeMatchSocket(observer, username);
+                break;
+            }
         }
     }
 }

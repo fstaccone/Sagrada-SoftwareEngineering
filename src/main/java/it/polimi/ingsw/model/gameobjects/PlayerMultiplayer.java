@@ -44,17 +44,11 @@ public class PlayerMultiplayer extends Player {
         return privateObjectiveCard;
     }
 
-    public Colors getColor() { return this.color; }
-
     public ConnectionStatus getStatus() { return status; }
 
     public int getTurnsLeft() { return turnsLeft; }
 
     public boolean isMyTurn() { return myTurn; }
-
-    public String getName(){
-        return this.name;
-    }
 
     @Override
     public void setSchemeCard(WindowPatternCard schemeCard) {
@@ -72,6 +66,7 @@ public class PlayerMultiplayer extends Player {
     @Override
     public void playTurn() {
         if(status == ConnectionStatus.READY) {
+
             // attesa di azioni da parte del client
         }
         turnsLeft--;

@@ -36,14 +36,18 @@ public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserve
                         "@|_____/_/@@@@\\_\\_____|_|@@\\_\\/_/@@@@\\_\\_____/_/@@@@\\_\\@@@@@@@@@@..@.@  &.... #..@.@..@@@@@@@@@\n" +
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" + "\n\nWelcome to the game, " + username.toUpperCase() + "! A new match is starting soon :)\n\nYou can find the state of the waiting list at the moment you joined the game above the SAGRADA logo. Here follow the updates of the waiting list:\n\n");
+                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
+                        "\n\nWelcome to the game, " + username.toUpperCase() + "! A new match is starting soon :)\n\nYou can find " +
+                        "the state of the waiting list at the moment you joined the game above the SAGRADA logo. Here follow the updates of the waiting list:\n\n");
         try {
+            // waiting time choose in server side + 10s
             Thread.sleep(40000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         try {
             controller.observeMatch(username,this);
+            // new Thread( new InputListener(this)).start();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -56,7 +60,7 @@ public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserve
         System.out.println("\n\nGame starts now! You are playing SAGRADA against:");
         for(String name:playersNames){
             if (!name.equals(username)){
-                System.out.println("-"+name.toUpperCase());
+                System.out.println("-" + name.toUpperCase());
             }
         }
     }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 
@@ -9,25 +8,28 @@ import java.util.*;
 
 public class MatchMultiplayer extends Match implements Runnable {
 
-    private List<MatchObserver> remoteObservers;
-    private List<MatchObserver> socketObservers;
+    private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
+    private Map<PlayerMultiplayer, MatchObserver> socketObservers;
+
     private int matchId;
-    private List<PlayerMultiplayer> players;
     private int turnTime;
     private Timer timer;
+
+    private List<PlayerMultiplayer> players;
 
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime) {
         super();
         this.matchId = matchId;
         System.out.println("New multiplayer matchId: " + matchId);
-        this.remoteObservers = new LinkedList<>();
-        this.socketObservers=new LinkedList<>();
+        this.remoteObservers = new HashMap<>();
+        this.socketObservers = new HashMap<>();
 
         System.out.println("New multiplayer matchId: " + matchId);
-        // trovare un modo per fare il cast da Player a PlayerMultiplayer
+
         this.turnTime = turnTime;
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
+
         this.players = new ArrayList<>();
         clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
     }
@@ -47,9 +49,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         List<String> playersNames = new ArrayList<>();
         players.forEach(p -> playersNames.add(p.getName()));
 
-        for (MatchObserver observer : remoteObservers) {
+        // notification to remote observers
+        for (PlayerMultiplayer p : remoteObservers.keySet()) {
             try {
-                observer.onPlayers(playersNames);
+                remoteObservers.get(p).onPlayers(playersNames);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -106,7 +109,6 @@ public class MatchMultiplayer extends Match implements Runnable {
             player.setTurnsLeft(2);
         }
 
-        // todo: capire se c'è un modo per riutilizzare timer
 
         // first turn
         for (PlayerMultiplayer player : players) {
@@ -202,8 +204,15 @@ public class MatchMultiplayer extends Match implements Runnable {
         gameInit();
     }
 
-    public void observeMatchRemote(MatchObserver observer) {
-        this.remoteObservers.add(observer);
+    public void observeMatchRemote(MatchObserver observer, String username) {
+
+        for(PlayerMultiplayer p : players){
+            if(p.getName().equals(username)){
+                this.remoteObservers.put(p, observer);
+                break;
+            }
+        }
+
         System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
         if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
@@ -211,8 +220,15 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public void observeMatchSocket(MatchObserver observer) {
-        this.socketObservers.add(observer);
+    public void observeMatchSocket(MatchObserver observer, String username) {
+
+        for(PlayerMultiplayer p : players){
+            if(p.getName().equals(username)){
+                this.socketObservers.put(p, observer);
+                break;
+            }
+        }
+
         System.out.println("Gli observers socket del match" + this.matchId + " al momento sono: " + socketObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
         if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
