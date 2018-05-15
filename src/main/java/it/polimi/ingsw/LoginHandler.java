@@ -41,6 +41,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
     private boolean isSingleplayer = false;
     private int difficulty;
     private String serverAddress;
+    private String waitingPlayersString;
 
     // Values to be set by file on server, how can we set these here?
     private int rmiRegistryPort = 1100;
@@ -118,22 +119,24 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         //playButton.setDisable(true);
         readInput();
-
         connectionSetup();
 
-        /*Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.close();*/
-      /*  Stage window = (Stage) playButton.getScene().getWindow();
-        FXMLLoader fx = new FXMLLoader();
+        Stage window = (Stage) playButton.getScene().getWindow();
+        //stage.close();
+        //window = new Stage();
+        FXMLLoader fx = new FXMLLoader(getClass().getResource("waiting-for-players.fxml"));
         fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
         Scene waiting = new Scene(fx.load());
         window.setScene(waiting);
         window.setTitle("Waiting for players");
         window.setResizable(false);
-        window.show();   */
-        Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.setScene(new WaitingScreen().sceneInit());
-
+        //CONTROLLER
+        WaitingScreenHandler handler = fx.getController();
+        controller.observeLobby(handler);
+        handler.setString("Players waiting...\n" + waitingPlayersString);
+        window.show();
+        /* Stage stage = (Stage) playButton.getScene().getWindow();
+        stage.setScene(new WaitingScreen().sceneInit(controller));*/
 
     }
 
@@ -174,7 +177,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         alert.showAndWait();
     }
 
-    private void connectionSetup() throws IOException, InterruptedException {
+    private void connectionSetup() throws IOException {
         boolean unique = false;
 
         // connection establishment with the selected method
@@ -236,7 +239,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         catch(SocketException e){
             System.out.println("Unable to create socket connection");
         }
-        finally{ /*socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM*/;}
+        finally{ /*socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM*/}
     }
 
     private void createClientRmi() throws RemoteException {
@@ -302,6 +305,8 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         System.out.println("Current waiting players for the next starting match are: (disposed in order of access to the lobby)");
         waitingPlayers.stream().forEachOrdered(System.out::println);
         System.out.println();
+        waitingPlayersString = waitingPlayers.toString();
     }
+
 }
 

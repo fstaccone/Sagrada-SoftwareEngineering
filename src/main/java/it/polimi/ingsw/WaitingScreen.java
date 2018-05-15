@@ -1,5 +1,6 @@
-package it.polimi.ingsw;
+/*package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.RemoteController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,16 +11,20 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 
-public class WaitingScreen extends Application {
+public class WaitingScreen extends Application {*/
 
-    Stage window;
+    //Stage window;
+
+    /*private RemoteController controller;
+
+    private Stage window;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        window = primaryStage;
+        System.out.println("Ingresso in start");
 
-        WaitingScreenHandler handler = new WaitingScreenHandler();
+        window = primaryStage;
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
@@ -48,12 +53,20 @@ public class WaitingScreen extends Application {
         if (alert.getResult() == ButtonType.YES) {
             window.close();
         }
-    }
+    }*/
 
-    public Scene sceneInit() throws Exception{
+
+   /* public Scene sceneInit(RemoteController controller) throws Exception{
+        this.controller = controller;
+        WaitingScreenHandler handler = new WaitingScreenHandler();
+        controller.observeLobby(handler);
+        //debug
+        System.out.println("Ora WaitingScreenHandler è observer di Lobby");
+        //debug
+        System.out.println("Controller di scena: " + controller.toString());
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
         Parent root = fxmlLoader.load();
         return new Scene(root);
-    }
-}
+    }*/
+//}
