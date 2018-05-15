@@ -35,6 +35,7 @@ public class Login extends Application {
         primaryStage.setOnCloseRequest(event -> {
                     event.consume();
                     onClosing();
+                    System.exit(1);
                 }
         );
 
@@ -49,6 +50,7 @@ public class Login extends Application {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
+            System.exit(1);
         }
     }
 

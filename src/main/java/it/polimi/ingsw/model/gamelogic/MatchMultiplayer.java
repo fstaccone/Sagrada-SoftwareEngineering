@@ -1,54 +1,79 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 
+import java.rmi.RemoteException;
 import java.util.*;
 
-public class MatchMultiplayer extends Match implements Runnable{
+public class MatchMultiplayer extends Match implements Runnable {
 
-    private int matchCounter;
-    private List<PlayerMultiplayer> players;
-    private int positionOfFirstPlayerInRound;
+    private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
+    private Map<PlayerMultiplayer, MatchObserver> socketObservers;
+
+    private int matchId;
     private int turnTime;
     private Timer timer;
-    private TurnTimer task;
 
-    public MatchMultiplayer(int matchCounter, List<String> clients, int turnTime) {
+    private List<PlayerMultiplayer> players;
+
+    public MatchMultiplayer(int matchId, List<String> clients, int turnTime) {
         super();
-        this.matchCounter=matchCounter;
-        System.out.println("New multiplayer matchId: " + matchCounter);
-        // trovare un modo per fare il cast da Player a PlayerMultiplayer
+        this.matchId = matchId;
+        System.out.println("New multiplayer matchId: " + matchId);
+        this.remoteObservers = new HashMap<>();
+        this.socketObservers = new HashMap<>();
+
+        System.out.println("New multiplayer matchId: " + matchId);
+
         this.turnTime = turnTime;
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
+
         this.players = new ArrayList<>();
         clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
     }
 
-    // getters
-    public int getPositionOfFirstPlayerInRound() { return positionOfFirstPlayerInRound; }
+    public Timer getTimer() {
+        return timer;
+    }
 
-    public Timer getTimer() { return timer; }
-    // end of getters
-
-    // setters
-    public void setPositionOfFirstPlayerInRound(int positionOfFirstPlayerInRound) { this.positionOfFirstPlayerInRound = positionOfFirstPlayerInRound; }
-    // end of setters
+    public int getMatchId() {
+        return matchId;
+    }
 
     // game's initialisation
     @Override
-    public void gameInit(){
+    public void gameInit() {
+        // todo: revision of the creation of this arraylist
+        List<String> playersNames = new ArrayList<>();
+        players.forEach(p -> playersNames.add(p.getName()));
 
+        // notification to remote observers
+        for (PlayerMultiplayer p : remoteObservers.keySet()) {
+            try {
+                remoteObservers.get(p).onPlayers(playersNames);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /*
+            DA FARE LA STESSA COSA DI QUI SOPRA MA CON I SOCKET
+        */
         // actions to be performed once only
         this.roundCounter = 0;
         this.assignColors();
-        Collections.shuffle(this.players); // shuffles players to determine the sequence flow of rounds
-        this.setPositionOfFirstPlayerInRound(0); // the first player is always in the first position due to the shuffle
+
+        // it shuffles players to determine the sequence flow of rounds. Furthermore the first player is always in the first position.
+        Collections.shuffle(this.players);
+
         this.drawPrivateObjectiveCards();
         //this.proposeWindowPatternCards();
+
         timer = new Timer();
-        // Viene lanciata la fase a turni
-        this.turnManager(positionOfFirstPlayerInRound);
+
+        this.turnManager();
     }
 
     // Assegna il colore ai giocatori in modo casuale
@@ -57,7 +82,7 @@ public class MatchMultiplayer extends Match implements Runnable{
         // Creation of a list of colors (without the special value NONE) to be assigned randomly to players
         Random rand = new Random();
         int index;
-        List colors = new ArrayList();
+        List<Colors> colors = new ArrayList<>();
 
         // This block creates an ArrayList of colors. A color, once assigned, must be removed from the ArrayList
         for (Colors c : Colors.values()) {
@@ -68,95 +93,102 @@ public class MatchMultiplayer extends Match implements Runnable{
 
         for (Player p : players) {
             index = rand.nextInt(colors.size());
-            p.setColor((Colors) colors.get(index));  // Da testare, non ne sono convinto
+            p.setColor(colors.get(index));  // Da testare, non ne sono convinto
             colors.remove(index);
         }
     }
 
-    // Gestore del singolo round
-    private void turnManager (int positionOfFirstPlayerInRound){
-        // capire come gestire il primo giocatore
-        List<PlayerMultiplayer> rightOrder = new ArrayList<>();
+    // to manage the match's flow
+    private void turnManager() {
+        TurnTimer task;
 
-        // da controllare, troppo contorto
+        System.out.println("Round " + (roundCounter + 1));
+        System.out.println("First player: " + players.get(0).getName());
 
-        // prepara ordine diretto
-        for(int i = positionOfFirstPlayerInRound; i < players.size(); i++){
-            rightOrder.add(players.get(i));
-        }
-        for(int i = 0; i < positionOfFirstPlayerInRound; i++){
-            rightOrder.add(players.get(i));
+        for (PlayerMultiplayer player : players) {
+            player.setTurnsLeft(2);
         }
 
-        // prepara ordine inverso
-        List<PlayerMultiplayer> reverseOrder = new ArrayList<>(rightOrder);
-        Collections.reverse(reverseOrder);
 
-        for(PlayerMultiplayer p : rightOrder){
-            p.playTurn(this);
-            task = new TurnTimer(p);
+        // first turn
+        for (PlayerMultiplayer player : players) {
+            System.out.println("From match : Turn 1 - round " + (roundCounter + 1) + " player: " + player.getName());
+
+            timer = new Timer();
+            task = new TurnTimer(player);
             timer.schedule(task, turnTime);
+
+            player.playTurn();
         }
 
-        for(PlayerMultiplayer p : reverseOrder){
-            p.playTurn(this);
-            task = new TurnTimer(p);
-            timer.schedule(task, turnTime);
+        // second turn
+        for (int i = players.size() - 1; i >= 0; i--) {
+            if (players.get(i).getTurnsLeft() > 0) {
+                System.out.println("From match : Turn 2 - round " + (roundCounter + 1) + " player: " + players.get(i).getName());
+
+                timer = new Timer();
+                task = new TurnTimer(players.get(i));
+                timer.schedule(task, turnTime);
+
+                players.get(i).playTurn();
+            } else {
+                System.out.println("Player " + players.get(i).getName() + " has no turns left");
+            }
         }
+
+        // rearrange players to keep the right order in next round
+        // following the idea that the first player in this round will be the last in the next round
+        players.add(players.get(0));
+        players.remove(0);
 
         this.nextRound();
     }
 
-    private void nextTurn(){
-
-    }
-
-    private int positionOfNextFirstPlayer(){
-        if(this.positionOfFirstPlayerInRound >= players.size()-1)
-            return 0;
-        return this.positionOfFirstPlayerInRound + 1;
-    }
-
-    public void nextRound () {
+    public void nextRound() {
         this.pushLeftDicesToRoundTrack();
         this.incrementRoundCounter();
-        this.setPositionOfFirstPlayerInRound(this.positionOfNextFirstPlayer());
 
-        if (this.roundCounter > 10) {
-            this.calculateFinalScore();
+        if (this.roundCounter >= 10) {
+            //this.calculateFinalScore();
         } else {
-            this.turnManager(positionOfFirstPlayerInRound);
+            this.turnManager();
         }
     }
 
     @Override
     public void calculateFinalScore() {
         // points assigned by the private objective card
-        for (PlayerMultiplayer p: players) {
-           p.getPrivateObjectiveCard().useCard(p);
+        for (PlayerMultiplayer p : players) {
+            p.getPrivateObjectiveCard().useCard(p);
         }
         // points assigned by public objective cards
-        for(int i = 0; i < board.getPickedPublicObjectiveCards().size(); i++){
-            for (PlayerMultiplayer p: players) {
+        for (int i = 0; i < board.getPickedPublicObjectiveCards().size(); i++) {
+            for (PlayerMultiplayer p : players) {
                 board.getPickedPublicObjectiveCards().get(i).useCard(p, this);
             }
         }
         // points due to free cells
-        for (PlayerMultiplayer p: players) {
+        for (PlayerMultiplayer p : players) {
             p.setPoints(p.getPoints() - p.getSchemeCard().countFreeSquares());
         }
         // points due to remaining favor tokens
-        for (PlayerMultiplayer p: players) {
+        for (PlayerMultiplayer p : players) {
             p.setPoints(p.getPoints() + p.getNumFavorTokens());
         }
 
-        // just for now todo: implements and test
-        System.out.println("The winner is: " + players.stream().max(Comparator.comparing(p -> p.getPoints() > p.getPoints())));
+    }
+
+    public void theWinnerIs() {
+        // occorre il metodo del controller che lo notifichi a tutti gli observer del match
+        // se non abbiamo intenzione di implementare la funzionalità avanzata "persistenza" non ci serve salvare il vincitore
+
+        //il metodo prenderà come parametro il player restituito dal seguente metodo todo: test del metodo
+        //players.stream().max(Comparator.comparing(p -> p.getPoints() > p.getPoints()));
     }
 
     @Override
     public void drawPrivateObjectiveCards() {
-        for (PlayerMultiplayer p: players) {
+        for (PlayerMultiplayer p : players) {
             p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().get(0));
             this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().remove(this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().get(0));
         }
@@ -164,11 +196,43 @@ public class MatchMultiplayer extends Match implements Runnable{
 
     @Override
     public void proposeWindowPatternCards() {
-
+        // todo: implement
     }
 
     @Override
     public void run() {
         gameInit();
+    }
+
+    public void observeMatchRemote(MatchObserver observer, String username) {
+
+        for(PlayerMultiplayer p : players){
+            if(p.getName().equals(username)){
+                this.remoteObservers.put(p, observer);
+                break;
+            }
+        }
+
+        System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
+        System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
+        if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
+            run();
+        }
+    }
+
+    public void observeMatchSocket(MatchObserver observer, String username) {
+
+        for(PlayerMultiplayer p : players){
+            if(p.getName().equals(username)){
+                this.socketObservers.put(p, observer);
+                break;
+            }
+        }
+
+        System.out.println("Gli observers socket del match" + this.matchId + " al momento sono: " + socketObservers.size());
+        System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
+        if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
+            run();
+        }
     }
 }

@@ -20,13 +20,14 @@ public class SocketHandler implements Runnable{
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
         this.controller=controller;
+
     }
 
     @Override
     public void run() {
         try {
             do {
-                Response response = ((Request) in.readObject()).handle(controller);
+                Response response = ((Request) in.readObject()).handleRequest(controller);
                 if (response != null) {
                     respond(response);
                 }

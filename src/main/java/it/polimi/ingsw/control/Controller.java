@@ -1,6 +1,7 @@
 package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.*;
+import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.rmi.RemoteException;
@@ -66,8 +67,24 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+    @Override
+    public Response handle(ObserveLobbyRequest request){
+        lobby.observeLobbySocket(request.lobbyObserver);
+        return null;
+    }
+
+    @Override
+    public Response handle(ObserveMatchRequest request) {
+        lobby.observeMatchSocket(request.username,request.matchObserver);
+        return null;
+    }
+
     public void observeLobby(LobbyObserver lobbyObserver){
-        lobby.observeLobby(lobbyObserver);
+        lobby.observeLobbyRemote(lobbyObserver);
+    }
+
+    public void observeMatch(String username, MatchObserver observer){
+        lobby.observeMatchRemote(username,observer);
     }
 
     // private transient final Room room;

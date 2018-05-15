@@ -39,6 +39,7 @@ public class WaitingScreen extends Application {*/
         primaryStage.setOnCloseRequest(event -> {
                     event.consume();
                     onClosing();
+                    System.exit(1);
                 }
         );
     }
@@ -52,6 +53,7 @@ public class WaitingScreen extends Application {*/
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
+            System.exit(0);
         }
     }*/
 
