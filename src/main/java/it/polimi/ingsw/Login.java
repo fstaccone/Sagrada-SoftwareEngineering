@@ -35,21 +35,15 @@ public class Login extends Application {
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(event -> {
-            try {
                 event.consume();
                 onClosing();
                 System.exit(1);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-                // debug
-                System.out.println("Errore in chiusura in login");
-            }
-            }
-        );
 
+
+
+        });
     }
-
-    private void onClosing() throws RemoteException {
+    private void onClosing() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
         alert.setTitle("Exit");
         alert.setHeaderText(null);
@@ -58,7 +52,6 @@ public class Login extends Application {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
-//            loginHandler.getController().removePlayer(loginHandler.getUsername());
             System.exit(1);
         }
     }

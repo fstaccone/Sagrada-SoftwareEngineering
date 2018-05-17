@@ -155,7 +155,7 @@ public class Lobby {
             //notifico ai remoteObservers i waitingplayers ogni volta che uno waiting player è aggiunto
             for (LobbyObserver observer : remoteObservers) {
                 try {
-                    observer.onWaitingPlayers(waitingPlayers);
+                    observer.onWaitingPlayers(waitingPlayers); // todo: eliminare observers quando viene eliminato il giocatore
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -213,7 +213,7 @@ public class Lobby {
     public void observeLobbySocket(LobbyObserver lobbyObserver){
         socketObservers.add(lobbyObserver);
     }
-    
+
     public void observeMatchRemote(String username, MatchObserver observer){
         for (MatchMultiplayer match:multiplayerMatches) {
             if (match.getMatchId()== mapClientsToRoom.get(username)){
@@ -230,5 +230,10 @@ public class Lobby {
                 break;
             }
         }
+    }
+
+    public void removeObserver(String name) {
+        boolean isRemote = false;
+        // todo: da completare
     }
 }

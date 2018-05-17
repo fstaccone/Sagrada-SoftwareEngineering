@@ -10,12 +10,16 @@ public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserve
 
     private String username;
     private RemoteController controller;
+    boolean myTurn;
 
     public RmiCli(String username, RemoteController controller) throws RemoteException {
         super();
-        this.username=username;
-        this.controller=controller;
+        this.username = username;
+        this.controller = controller;
+        this.myTurn = false;
     }
+
+    public boolean isMyTurn() { return myTurn; }
 
     public void launch() {
         System.out.println(
@@ -47,7 +51,7 @@ public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserve
         }
         try {
             controller.observeMatch(username,this);
-            // new Thread( new InputListener(this)).start();
+                new Thread( new InputListener(this)).start();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
