@@ -55,6 +55,8 @@ public abstract class Match {
 
     public abstract void calculateFinalScore();
 
+    public abstract void terminateMatch();
+
 /* //to check if board attributes get the right values
     public static void main (String[] args) {
         Player player1 = mock(Player.class);

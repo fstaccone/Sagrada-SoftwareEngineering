@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 
@@ -41,6 +42,15 @@ public class MatchMultiplayer extends Match implements Runnable {
     public int getMatchId() {
         return matchId;
     }
+
+    public List<PlayerMultiplayer> getPlayers() { return players; }
+
+    // todo: controllare, come gestiamo i player CONNECTED?
+    // it returns the number of READY players
+    public int checkConnection(){
+        return (int) players.stream().map(p -> p.getStatus().equals(ConnectionStatus.READY)).count();
+    }
+
 
     // game's initialisation
     @Override
@@ -197,6 +207,15 @@ public class MatchMultiplayer extends Match implements Runnable {
     @Override
     public void proposeWindowPatternCards() {
         // todo: implement
+    }
+
+    @Override
+    public void terminateMatch() {
+        for(PlayerMultiplayer p : players){
+            // chiudi le connessioni
+        }
+        System.out.println("Match multiplayer " + matchId + " has been closed.");
+        System.exit(0);
     }
 
     @Override

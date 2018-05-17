@@ -45,8 +45,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public void addPlayer(String name){
-        this.lobby.addUsername(name);
+        this.lobby.addUsername(name); // todo: ha senso che sia qui?
         this.lobby.addToWaitingPlayers(name);
+    }
+
+    @Override
+    public void removePlayer(String name) throws RemoteException {
+        lobby.removeFromWaitingPlayers(name);
     }
 
     @Override
@@ -78,6 +83,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeMatchSocket(request.username,request.matchObserver);
         return null;
     }
+
 
     public void observeLobby(LobbyObserver lobbyObserver){
         lobby.observeLobbyRemote(lobbyObserver);

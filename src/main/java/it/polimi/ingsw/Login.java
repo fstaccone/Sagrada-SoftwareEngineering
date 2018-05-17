@@ -9,18 +9,20 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.rmi.RemoteException;
 
 
 public class Login extends Application {
 
-    Stage window;
+    private Stage window;
+    private LoginHandler loginHandler;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         window = primaryStage;
 
-        LoginHandler loginHandler = new LoginHandler();
+        loginHandler = new LoginHandler();
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/login-sagrada.fxml"));
@@ -33,15 +35,21 @@ public class Login extends Application {
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(event -> {
-                    event.consume();
-                    onClosing();
-                    System.exit(1);
-                }
+            try {
+                event.consume();
+                onClosing();
+                System.exit(1);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                // debug
+                System.out.println("Errore in chiusura in login");
+            }
+            }
         );
 
     }
 
-    private void onClosing(){
+    private void onClosing() throws RemoteException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
         alert.setTitle("Exit");
         alert.setHeaderText(null);
@@ -50,6 +58,7 @@ public class Login extends Application {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
+//            loginHandler.getController().removePlayer(loginHandler.getUsername());
             System.exit(1);
         }
     }
