@@ -4,6 +4,7 @@ import it.polimi.ingsw.*;
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.view.ViewInterface;
 
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -87,6 +88,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeMatchRemote(username,observer);
     }
 
+    public void addSocketOut(ObjectOutputStream out){
+        lobby.addSocketOut(out);
+    }
     // private transient final Room room;
    // private final Map<Player, ViewInterface> views = new HashMap<>();
 

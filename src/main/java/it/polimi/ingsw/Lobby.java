@@ -7,6 +7,8 @@ import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -25,6 +27,7 @@ public class Lobby {
     // to simulate the timer before creating a match
     private Timer timer;
     private MatchStarter task;
+    private List<ObjectOutputStream> SocketsOut;
 
     public Lobby(int waitingTime, int turnTime) {
         this.socketObservers=new LinkedList<>();
@@ -36,6 +39,7 @@ public class Lobby {
         this.multiplayerMatches = new ArrayList<>();
         this.waitingTime = waitingTime;
         this.turnTime = turnTime;
+        this.SocketsOut=new ArrayList<>();
     }
 
     public List<String> getTakenUsernames() {
@@ -108,9 +112,19 @@ public class Lobby {
             }
             //notifico ai socketObservers i waitingplayers ogni volta che uno waiting player è aggiunto
             //NON SO COME NOTIFICARE GLI OBSERVER ATTRAVERSO LE RESPONSES, ma dubbio: sono effettivamente delle responses?
-            for (LobbyObserver observer:socketObservers){
+           /* for (LobbyObserver observer:socketObservers){
                 new WaitingPlayersResponse(waitingPlayers);
+            }*/
+            WaitingPlayersResponse response= new WaitingPlayersResponse(waitingPlayers);
+            for (ObjectOutputStream out: SocketsOut){
+                try {
+                    out.writeObject(response);
+                    out.reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+
 
 
             //debug
@@ -176,5 +190,9 @@ public class Lobby {
                 break;
             }
         }
+    }
+
+    public void addSocketOut(ObjectOutputStream out){
+        this.SocketsOut.add(out);
     }
 }

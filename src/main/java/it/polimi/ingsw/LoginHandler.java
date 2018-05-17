@@ -145,7 +145,9 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         window.setResizable(false);
         //CONTROLLER
         WaitingScreenHandler handler = fx.getController();
-        controller.observeLobby(handler);
+        if (isRmi) {
+            controller.observeLobby(handler);
+        }
         handler.setString("Players waiting...\n" + waitingPlayersString);
         window.show();
         /* Stage stage = (Stage) playButton.getScene().getWindow();
@@ -303,7 +305,8 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         else {
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
-                clientController.request(new ObserveLobbyRequest(this));
+                //clientController.request(new ObserveLobbyRequest(this));
+                new Thread(new SocketListener(clientController)).start();
                 clientController.request(new AddPlayerRequest(this.username));
                 new Thread(new SocketCli(username,clientController)).start();
 

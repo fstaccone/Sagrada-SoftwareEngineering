@@ -56,7 +56,7 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(WaitingPlayersResponse response){
         this.waitingPlayers=response.waitingPlayers;
-        System.out.println("dimensione della lista di wplayers: "+waitingPlayers.size());
+        System.out.println("lista di waiting players: "+waitingPlayers);
     }
 
     public ObjectInputStream getIn() {

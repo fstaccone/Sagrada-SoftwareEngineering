@@ -20,6 +20,7 @@ public class SocketHandler implements Runnable{
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
         this.controller=controller;
+        controller.addSocketOut(out);
 
     }
 
