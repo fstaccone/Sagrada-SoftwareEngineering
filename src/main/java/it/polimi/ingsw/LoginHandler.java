@@ -28,13 +28,15 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class LoginHandler extends UnicastRemoteObject implements Initializable,LobbyObserver{
+public class LoginHandler extends UnicastRemoteObject implements Initializable,LobbyObserver {
 
-    private transient Socket socket=null;
+    private transient Socket socket = null;
     private transient ClientController clientController;
     private transient ObjectInputStream in;
     private transient ObjectOutputStream out;
     private String username;
+
+    private Stage window;
 
     private transient boolean isRmi = true;
     private transient boolean isSocket = false;
@@ -87,8 +89,9 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         this.rmiCheckmark.setSelected(true);
         this.guiCheckmark.setSelected(true);
     }
+
     @FXML
-    private void singleplayerMarked(){
+    private void singleplayerMarked() {
         modeCheckmark.setSelected(true);
     }
 
@@ -116,6 +119,8 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         guiCheckmark.setSelected(false);
     }
 
+
+
     @FXML
     private void playClicked() throws Exception {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
@@ -134,7 +139,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
 
         connectionSetup();
 
-        Stage window = (Stage) playButton.getScene().getWindow();
+        window = (Stage) playButton.getScene().getWindow();
         //stage.close();
         //window = new Stage();
         FXMLLoader fx = new FXMLLoader(getClass().getResource("waiting-for-players.fxml"));
@@ -152,7 +157,33 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         window.show();
         /* Stage stage = (Stage) playButton.getScene().getWindow();
         stage.setScene(new WaitingScreen().sceneInit(controller));*/
+        window.setOnCloseRequest(event -> {
+            try {
+                event.consume();
+                onClosing();
+                System.exit(1);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        } );
+
     }
+
+
+    private void onClosing() throws RemoteException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Exit");
+        alert.setHeaderText(null);
+        alert.setResizable(false);
+        alert.setGraphic(null);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.YES) {
+            window.close();
+            controller.removePlayer(this.username);
+            System.exit(1);
+        }
+    }
+
 
     @FXML
     private void glowButton() {

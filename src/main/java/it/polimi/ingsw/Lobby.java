@@ -1,11 +1,8 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.LobbyObserver;
-import it.polimi.ingsw.MatchObserver;
-import it.polimi.ingsw.MatchStarter;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
+import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -21,9 +18,13 @@ public class Lobby {
     private final List<String> waitingPlayers;
     private int waitingTime;
     private int turnTime;
+
     // map that contains the link between a client(only multiplayer clients) and the matchId useful for reconnection
     private Map<String, Integer> mapClientsToRoom;
+
+    private List<MatchSingleplayer> singleplayerMatches;
     private List<MatchMultiplayer> multiplayerMatches;
+
     // to simulate the timer before creating a match
     private Timer timer;
     private MatchStarter task;
@@ -37,6 +38,7 @@ public class Lobby {
         this.waitingPlayers = new ArrayList<>();
         this.mapClientsToRoom = new HashMap<>();
         this.multiplayerMatches = new ArrayList<>();
+        this.singleplayerMatches = new ArrayList<>();
         this.waitingTime = waitingTime;
         this.turnTime = turnTime;
         this.SocketsOut=new ArrayList<>();
@@ -57,7 +59,7 @@ public class Lobby {
     }
 
     public synchronized void createSingleplayerMatch(String name) {
-        new MatchSingleplayer(matchCounter, name);
+        singleplayerMatches.add(new MatchSingleplayer(matchCounter, name));
         matchCounter++;
 
         // debug
@@ -77,22 +79,74 @@ public class Lobby {
 
     public void removeFromWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
+            if(isLogged(name)) {
+                // copre il caso di giocatore che aspetta di entrare in partita multiplayer
+                if(isWaiting(name)) {
+                    // Ha senso il try-catch?
+                    try {
+                        if (waitingPlayers.size() == 2) {
+                            timer.cancel();
+                            waitingPlayers.remove(name);
+                            removeUsername(name); // todo: ha senso questo metodo?
+                            System.out.println("Player " + name + " has left the room!");
+                            // todo: convertire in invio agli observer
+                            System.out.println("Timer has been canceled, only one waiting player left!");
+                        } else {
+                            waitingPlayers.remove(name);
+                            // debug
+                            System.out.println("Player " + name + " has left the room!");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("From lobby: Something wants to delete a name that doesn't exist!");
+                    }
+                }
+                // copre i casi singleplayer e partita multiplayer iniziata
+                else{
+                    boolean wasSingle = false;
 
-            if(waitingPlayers.size() == 2) {
-                waitingPlayers.remove(name);
-                timer.cancel();
-                System.out.println("Player " + name + " has left the room!");
-                System.out.println("Timer has been reset, only one waiting player left!");
+                    // se single player termina la partita
+                    for(MatchSingleplayer m : singleplayerMatches){
+                        if(m.getPlayer().getName().equals(name)){
+                            m.terminateMatch();
+                            removeUsername(name); // todo: ha senso questo metodo?
+                            wasSingle = true;
+                            break;
+                        }
+                    }
+                    // altrimenti disconnette il player, nella mappa ci sarà il riferimento
+                    if(!wasSingle){
+                        try {
+                            for (MatchMultiplayer m : multiplayerMatches) {
+                                if (m.getMatchId() == mapClientsToRoom.get(name)) {
+                                    for (PlayerMultiplayer p : m.getPlayers()) {
+                                        if (p.getName().equals(name)) {
+                                            p.setStatus(ConnectionStatus.DISCONNECTED);
+                                            // check per capire se il match va chiuso
+                                            if(m.checkConnection() < 2 ) {
+                                                m.terminateMatch();
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }catch(Exception e){
+                            e.printStackTrace();
+                            // debug
+                            System.out.println("From lobby: il match cercato non esiste.");
+                        }
+                    }
+                }
+            }else {
+                System.out.println("From lobby: the name has not been registered as taken yet");
             }
-            else{
-                waitingPlayers.remove(name);
-                // debug
-                System.out.println("Player " + name + " has left the room!");
-            }
-
         }
     }
 
+    public boolean isLogged(String name){ return takenUsernames.contains(name); }
+    public boolean isWaiting(String name){ return waitingPlayers.contains(name); }
 
     public void addToWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
@@ -105,7 +159,7 @@ public class Lobby {
             //notifico ai remoteObservers i waitingplayers ogni volta che uno waiting player è aggiunto
             for (LobbyObserver observer : remoteObservers) {
                 try {
-                    observer.onWaitingPlayers(waitingPlayers);
+                    observer.onWaitingPlayers(waitingPlayers); // todo: eliminare observers quando viene eliminato il giocatore
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -173,7 +227,7 @@ public class Lobby {
     public void observeLobbySocket(LobbyObserver lobbyObserver){
         socketObservers.add(lobbyObserver);
     }
-    
+
     public void observeMatchRemote(String username, MatchObserver observer){
         for (MatchMultiplayer match:multiplayerMatches) {
             if (match.getMatchId()== mapClientsToRoom.get(username)){
@@ -192,7 +246,12 @@ public class Lobby {
         }
     }
 
-    public void addSocketOut(ObjectOutputStream out){
+
+    public void addSocketOut(ObjectOutputStream out) {
         this.SocketsOut.add(out);
+    }
+    public void removeObserver(String name) {
+        boolean isRemote = false;
+        // todo: da completare
     }
 }

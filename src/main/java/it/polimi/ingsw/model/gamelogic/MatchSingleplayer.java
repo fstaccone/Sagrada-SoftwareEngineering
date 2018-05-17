@@ -23,6 +23,8 @@ public class MatchSingleplayer extends Match implements Runnable{
 
     public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
 
+    public PlayerSingleplayer getPlayer() { return player; }
+
     @Override
     public void gameInit() {
 
@@ -46,6 +48,14 @@ public class MatchSingleplayer extends Match implements Runnable{
     @Override
     public void calculateFinalScore() {
 
+    }
+
+    @Override
+    public void terminateMatch() {
+        // todo: "ottimizzare" la chiusura della partita.
+        // Chiusura connessioni? Dovrebe avvenire automaticamente per socket
+        System.out.println("Match singleplayer " + matchId + " has been closed.");
+        System.exit(0);
     }
 
     @Override
