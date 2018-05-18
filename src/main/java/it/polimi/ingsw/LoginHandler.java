@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
@@ -24,20 +23,16 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class LoginHandler extends UnicastRemoteObject implements Initializable,LobbyObserver {
+public class LoginHandler implements Initializable{
 
     private transient Socket socket = null;
     private transient ClientController clientController;
     private transient ObjectInputStream in;
     private transient ObjectOutputStream out;
     private String username;
-
     private Stage window;
-
     private transient boolean isRmi = true;
     private transient boolean isSocket = false;
     private transient boolean isGui = true;
@@ -45,7 +40,7 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
     private transient boolean isSingleplayer = false;
     private transient int difficulty;
     private transient String serverAddress;
-    private String waitingPlayersString;
+    private WaitingScreenHandler handler;
 
     // Values to be set by file on server, how can we set these here?
     private transient int rmiRegistryPort = 1100;
@@ -80,9 +75,6 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
     @FXML
     private transient Button playButton;
 
-    public LoginHandler() throws RemoteException {
-        super();
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -124,39 +116,23 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
     @FXML
     private void playClicked() throws Exception {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
-        //playButton.setDisable(true);
         readInput();
 
-        /*if(!isSingleplayer){
-            //NON CAPISCO PERCHè NON PARTE SUBITO
-            Stage stage = (Stage) playButton.getScene().getWindow();
-            try {
-                stage.setScene(new WaitingScreen().sceneInit());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
+
+        window = (Stage) playButton.getScene().getWindow();
+        FXMLLoader fx = new FXMLLoader();
+        fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
+        Scene waiting = new Scene(fx.load());
+        //CONTROLLER
+        handler = fx.getController();
 
         connectionSetup();
 
-        window = (Stage) playButton.getScene().getWindow();
-        //stage.close();
-        //window = new Stage();
-        FXMLLoader fx = new FXMLLoader(getClass().getResource("waiting-for-players.fxml"));
-        fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
-        Scene waiting = new Scene(fx.load());
         window.setScene(waiting);
-        window.setTitle("Waiting for players");
+        window.setTitle("Waiting room");
         window.setResizable(false);
-        //CONTROLLER
-        WaitingScreenHandler handler = fx.getController();
-        if (isRmi) {
-            controller.observeLobby(handler);
-        }
-        handler.setString("Players waiting...\n" + waitingPlayersString);
         window.show();
-        /* Stage stage = (Stage) playButton.getScene().getWindow();
-        stage.setScene(new WaitingScreen().sceneInit(controller));*/
+
         window.setOnCloseRequest(event -> {
             try {
                 event.consume();
@@ -206,13 +182,6 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         this.isSingleplayer = modeCheckmark.isSelected();
     }
 
-    private void readUsername() {
-
-        // capire perchè viene chiusa la gui
-        // aspetta finchè non viene cliccato di nuovo play
-        //this.username = this.usernameInput.getText();
-    }
-
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -239,23 +208,17 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
                 unique=!( clientController.isNameAlreadyTaken());}
 
             if (!unique) {
-                //usernameInput.setText("Insert another name here:");
-                //PROBABILMENTE CI VUOLE UN EVENTHANDLER
-                //readUsername();
+
                 System.out.println("Invalid username");
-                showAlert(Alert.AlertType.WARNING, "Invalid username!", "Username already in use, open another window and choose another one please!");
-                //System.out.println("nuovo nome preso,al momento lo prende vuoto");
+                showAlert(Alert.AlertType.WARNING, "Invalid username!", "Username already in use, insert another one please!");
                 socket.close();
             }
             else {
+                // views' creation and input for the model to create the Player
                 if (isRmi) createClientRmi();
                 else createClientSocket();
             }
         }
-        // view's creation and input for the model to create the Player
-
-
-
     }
 
 
@@ -306,8 +269,9 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
         else {
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
-                controller.observeLobby(this);
+                controller.observeLobby(handler);
                 controller.addPlayer(this.username);
+
                 new Thread(new RmiCli(username,controller)).start();
             }
             catch (Exception e){
@@ -349,14 +313,5 @@ public class LoginHandler extends UnicastRemoteObject implements Initializable,L
 
         }
     }
-
-    @Override //QUESTA INFORMAZIONE è DA PASSARE ALLA FINESTRA WAITING PLAYERS, per ora è stampata
-    public void onWaitingPlayers(List<String> waitingPlayers) {
-        System.out.println("Current waiting players for the next starting match are: (disposed in order of access to the lobby)");
-        waitingPlayers.forEach(System.out::println);
-        System.out.println();
-        waitingPlayersString = waitingPlayers.toString();
-    }
-
 }
 

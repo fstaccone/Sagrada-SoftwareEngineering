@@ -41,8 +41,7 @@ public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserve
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
-                        "\n\nWelcome to the game, " + username.toUpperCase() + "! A new match is starting soon :)\n\nYou can find " +
-                        "the state of the waiting list at the moment you joined the game above the SAGRADA logo. Here follow the updates of the waiting list:\n\n");
+                        "\n\nWelcome to the game, " + username.toUpperCase() + "! A new match is starting soon :)\n\n");
         try {
             // waiting time choose in server side + 10s
             Thread.sleep(40000);

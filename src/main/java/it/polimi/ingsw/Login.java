@@ -21,19 +21,15 @@ public class Login extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         window = primaryStage;
-
         loginHandler = new LoginHandler();
-
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/login-sagrada.fxml"));
         Parent root = fxmlLoader.load();
-
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Sagrada");
         primaryStage.setResizable(false);
         primaryStage.show();
-
         primaryStage.setOnCloseRequest(event -> {
                 event.consume();
                 onClosing();

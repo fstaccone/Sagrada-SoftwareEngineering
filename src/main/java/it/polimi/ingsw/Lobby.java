@@ -179,8 +179,6 @@ public class Lobby {
                 }
             }
 
-
-
             //debug
             if (waitingPlayers.size()==1) System.out.println("There is 1 player waiting for a match.");
             else System.out.println("There are " + waitingPlayers.size() + " players waiting for a match.");
