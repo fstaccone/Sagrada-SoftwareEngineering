@@ -10,7 +10,8 @@
 <URL value="@style.css" />
 </stylesheets>
    <children>
-      <Label layoutX="163.0" layoutY="78.0" prefHeight="45.0" prefWidth="376.0" text="Welcome to the Waiting Room of Sagrada!" />
+      <Label layoutX="163.0" layoutY="78.0" prefHeight="45.0" prefWidth="450.0" text="Welcome to the Waiting Room of Sagrada!" />
       <TextArea id="text" fx:id="text" editable="false" layoutX="155.0" layoutY="153.0" prefHeight="45.0" prefWidth="391.0" />
+      <TextArea id="text" fx:id="log" editable="false" layoutX="155.0" layoutY="253.0" prefHeight="45.0" prefWidth="391.0" />
    </children>
 </AnchorPane>

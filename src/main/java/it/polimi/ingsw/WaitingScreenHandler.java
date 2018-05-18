@@ -1,20 +1,10 @@
 package it.polimi.ingsw;
 
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyObserver {
 
@@ -24,6 +14,9 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     @FXML
     private TextArea text = new TextArea();
+
+    @FXML
+    private TextArea log = new TextArea();
 
     public void setString(String string){
         text.setText(string);
@@ -37,10 +30,20 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
         super();
     }
 
+    @Override
+    public void onPlayerExit(String name) throws RemoteException {
+        log.setText("Player " + name + " has left the room!");
+    }
+
+    @Override
+    public void onLastPlayer(String name) throws RemoteException {
+        log.setText(name + ", you are the only one, timer has been canceled!");
+    }
 
     @Override
     public void onWaitingPlayers(List<String> waitingPlayers) {
         text.setText("Ordered list of waiting players (including you):\n" + waitingPlayers.toString());
+        log.setText("");
     }
 
     @Override

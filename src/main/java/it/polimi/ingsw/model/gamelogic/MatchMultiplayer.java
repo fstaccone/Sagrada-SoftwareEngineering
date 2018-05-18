@@ -43,6 +43,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         return matchId;
     }
 
+    public Map<PlayerMultiplayer, MatchObserver> getRemoteObservers() {
+        return remoteObservers;
+    }
+
     public List<PlayerMultiplayer> getPlayers() { return players; }
 
     // todo: controllare, come gestiamo i player CONNECTED?
@@ -213,6 +217,11 @@ public class MatchMultiplayer extends Match implements Runnable {
     public void terminateMatch() {
         for(PlayerMultiplayer p : players){
             // chiudi le connessioni
+            //...
+
+            // rimuove i nomi da takenUsernames
+            // ha bisogno il riferimento a lobby, al momento sono cancellati prima di chiamare questa funzione
+
         }
         System.out.println("Match multiplayer " + matchId + " has been closed.");
         System.exit(0);
