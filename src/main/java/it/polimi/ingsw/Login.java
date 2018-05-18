@@ -9,7 +9,6 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.rmi.RemoteException;
 
 
 public class Login extends Application {

@@ -11,37 +11,46 @@ import java.util.*;
 
 public class Lobby {
 
-    private List<LobbyObserver> remoteObservers;
-    private List<LobbyObserver> socketObservers;
-    private List<String> takenUsernames;
     private int matchCounter;
-    private final List<String> waitingPlayers;
     private int waitingTime;
     private int turnTime;
 
-    // map that contains the link between a client(only multiplayer clients) and the matchId useful for reconnection
-    private Map<String, Integer> mapClientsToRoom;
+    // to ensure that a username is unique
+    private List<String> takenUsernames;
+    // waiting list before the  beginning of a new multiplayer match
+    private final List<String> waitingPlayers;
 
-    private List<MatchSingleplayer> singleplayerMatches;
-    private List<MatchMultiplayer> multiplayerMatches;
+    // to store relation between client and match
+    private Map<String, MatchSingleplayer> singleplayerMatches;
+    private Map<String, MatchMultiplayer> multiplayerMatches;
+
+    // to store observers
+    private Map<String, LobbyObserver> remoteObservers;
+    private List<LobbyObserver> socketObservers;
+    private List<ObjectOutputStream> SocketsOut;// uno dei due va eliminato
 
     // to simulate the timer before creating a match
     private Timer timer;
     private MatchStarter task;
-    private List<ObjectOutputStream> SocketsOut;
+
 
     public Lobby(int waitingTime, int turnTime) {
-        this.socketObservers=new LinkedList<>();
-        this.remoteObservers=new LinkedList<>();
-        this.takenUsernames = new ArrayList<>();
+
         this.matchCounter = 0;
+
+        this.takenUsernames = new ArrayList<>();
+
         this.waitingPlayers = new ArrayList<>();
-        this.mapClientsToRoom = new HashMap<>();
-        this.multiplayerMatches = new ArrayList<>();
-        this.singleplayerMatches = new ArrayList<>();
+
+        this.multiplayerMatches = new HashMap<>();
+        this.singleplayerMatches = new HashMap<>();
+
+        this.remoteObservers = new HashMap<>();
+        this.socketObservers = new LinkedList<>();
+        this.SocketsOut = new ArrayList<>(); // uno dei due va eliminato
+
         this.waitingTime = waitingTime;
         this.turnTime = turnTime;
-        this.SocketsOut=new ArrayList<>();
     }
 
     public List<String> getTakenUsernames() {
@@ -59,7 +68,8 @@ public class Lobby {
     }
 
     public synchronized void createSingleplayerMatch(String name) {
-        singleplayerMatches.add(new MatchSingleplayer(matchCounter, name));
+
+        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name));
         matchCounter++;
 
         // debug
@@ -68,15 +78,23 @@ public class Lobby {
     }
 
     private synchronized void createMultiplayerMatch(List<String> clients) {
-        multiplayerMatches.add(new MatchMultiplayer(matchCounter, clients, turnTime));
+
+        MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime);
+        for(String s : clients) {
+            multiplayerMatches.put(s, match);
+        }
+
         System.out.println("By lobby: Match number: " + matchCounter + " type: multiplayer");
         System.out.println("By lobby: Players: ");
+
         clients.forEach(c -> System.out.print(c + "\t"));
         System.out.println("\n");
         // da rivedere la chiamata
         //multiplayerMatches.get(multiplayerMatches.size()-1).waitForViews();
     }
 
+
+    // todo: metodo da semplificare, anche splittandolo se serve
     public void removeFromWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
             if(isLogged(name)) {
@@ -87,6 +105,8 @@ public class Lobby {
                         if (waitingPlayers.size() == 2) {
                             timer.cancel();
                             waitingPlayers.remove(name);
+                            remoteObservers.remove(name); // elimina observer rmi
+
                             removeUsername(name); // todo: ha senso questo metodo?
                             System.out.println("Player " + name + " has left the room!");
                             // todo: convertire in invio agli observer
@@ -106,7 +126,7 @@ public class Lobby {
                     boolean wasSingle = false;
 
                     // se single player termina la partita
-                    for(MatchSingleplayer m : singleplayerMatches){
+                    for(MatchSingleplayer m : singleplayerMatches.values()){
                         if(m.getPlayer().getName().equals(name)){
                             m.terminateMatch();
                             removeUsername(name); // todo: ha senso questo metodo?
@@ -117,8 +137,8 @@ public class Lobby {
                     // altrimenti disconnette il player, nella mappa ci sarà il riferimento
                     if(!wasSingle){
                         try {
-                            for (MatchMultiplayer m : multiplayerMatches) {
-                                if (m.getMatchId() == mapClientsToRoom.get(name)) {
+                            for (MatchMultiplayer m : multiplayerMatches.values()) {
+                                if (m == multiplayerMatches.get(name)) {
                                     for (PlayerMultiplayer p : m.getPlayers()) {
                                         if (p.getName().equals(name)) {
                                             p.setStatus(ConnectionStatus.DISCONNECTED);
@@ -142,11 +162,19 @@ public class Lobby {
             }else {
                 System.out.println("From lobby: the name has not been registered as taken yet");
             }
+            for (LobbyObserver observer : remoteObservers.values()) {
+                try {
+                    observer.onWaitingPlayers(waitingPlayers);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
     }
 
-    public boolean isLogged(String name){ return takenUsernames.contains(name); }
-    public boolean isWaiting(String name){ return waitingPlayers.contains(name); }
+    private boolean isLogged(String name){ return takenUsernames.contains(name); }
+    private boolean isWaiting(String name){ return waitingPlayers.contains(name); }
 
     public void addToWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
@@ -158,9 +186,9 @@ public class Lobby {
 
             // ANY TIME A WAITING PLAYER IS ADDED, THE NOTIFICATION IS SENT TO THE WAITINGSCREENHANDLER BOTH FOR RMI AND SOCKETS
             //RMI
-            for (LobbyObserver observer : remoteObservers) {
+            for (LobbyObserver observer : remoteObservers.values()) {
                 try {
-                    observer.onWaitingPlayers(waitingPlayers); // todo: eliminare observers quando viene eliminato il giocatore
+                    observer.onWaitingPlayers(waitingPlayers);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -200,16 +228,12 @@ public class Lobby {
     public void startMatch() {
 
         synchronized (waitingPlayers) {
-            // links between client and match are registered into the map
-            for (String name : waitingPlayers) {
-                mapClientsToRoom.put(name, matchCounter);
-            }
 
             createMultiplayerMatch(waitingPlayers);
             //NOTIFIES TO ALL THE LOBBY OBSERVERS THE CREATION OF THE MATCH, SO FROM THEN THE CLIENTS CAN START THE GUI/CLI AND OBSERVE THE MATCH
 
             //RMI
-            for (LobbyObserver observer : remoteObservers) {
+            for (LobbyObserver observer : remoteObservers.values()) {
                 try {
                     observer.onMatchStarted();
                 } catch (RemoteException e) {
@@ -231,20 +255,16 @@ public class Lobby {
         return waitingPlayers;
     }
 
-    public List<MatchMultiplayer> getMultiplayerMatches() {
-        return multiplayerMatches;
-    }
-
-    public void observeLobbyRemote(LobbyObserver lobbyObserver){
-        remoteObservers.add(lobbyObserver);
+    public void observeLobbyRemote(String name, LobbyObserver lobbyObserver){
+        remoteObservers.put(name, lobbyObserver);
     }
     public void observeLobbySocket(LobbyObserver lobbyObserver){
         socketObservers.add(lobbyObserver);
     }
 
     public void observeMatchRemote(String username, MatchObserver observer){
-        for (MatchMultiplayer match:multiplayerMatches) {
-            if (match.getMatchId()== mapClientsToRoom.get(username)){
+        for (MatchMultiplayer match : multiplayerMatches.values()) {
+            if (match == multiplayerMatches.get(username)){
                 match.observeMatchRemote(observer, username);
                 break;
             }
@@ -252,8 +272,8 @@ public class Lobby {
     }
 
     public void observeMatchSocket(String username, MatchObserver observer){
-        for (MatchMultiplayer match:multiplayerMatches) {
-            if (match.getMatchId()== mapClientsToRoom.get(username)) {
+        for (MatchMultiplayer match : multiplayerMatches.values()) {
+            if (match == multiplayerMatches.get(username)) {
                 match.observeMatchSocket(observer, username);
                 break;
             }

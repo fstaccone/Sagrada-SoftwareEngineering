@@ -86,8 +86,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
 
-    public void observeLobby(LobbyObserver lobbyObserver){
-        lobby.observeLobbyRemote(lobbyObserver);
+    public void observeLobby(String name, LobbyObserver lobbyObserver){
+        lobby.observeLobbyRemote(name, lobbyObserver);
     }
 
     public void observeMatch(String username, MatchObserver observer){

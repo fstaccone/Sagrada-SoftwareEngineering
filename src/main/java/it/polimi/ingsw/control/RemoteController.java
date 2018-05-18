@@ -15,7 +15,7 @@ public interface RemoteController extends Remote{
     void createMatch(String name) throws  RemoteException;
     boolean checkName(String name) throws RemoteException;
     void addPlayer(String name) throws RemoteException;
-    void observeLobby(LobbyObserver lobbyObserver) throws RemoteException;
+    void observeLobby(String name, LobbyObserver lobbyObserver) throws RemoteException;
     void observeMatch(String username, MatchObserver observer) throws RemoteException;
     void removePlayer(String name) throws RemoteException;
 }

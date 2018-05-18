@@ -269,7 +269,7 @@ public class LoginHandler implements Initializable{
         else {
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
-                controller.observeLobby(handler);
+                controller.observeLobby(this.username, handler);
                 controller.addPlayer(this.username);
             }
             catch (Exception e){
