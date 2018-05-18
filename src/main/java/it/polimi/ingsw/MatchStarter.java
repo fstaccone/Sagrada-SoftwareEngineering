@@ -12,7 +12,8 @@ public class MatchStarter extends TimerTask{
 
     @Override
     public void run() {
-        if(lobby.getWaitingPlayers().size() >= 2)
+        if(lobby.getWaitingPlayers().size() >= 2) {
             lobby.startMatch();
+        }
     }
 }

@@ -79,7 +79,7 @@ public class LoginHandler implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.rmiCheckmark.setSelected(true);
-        this.guiCheckmark.setSelected(true);
+        this.cliCheckmark.setSelected(true);
     }
 
     @FXML
@@ -125,14 +125,14 @@ public class LoginHandler implements Initializable{
         Scene waiting = new Scene(fx.load());
         //CONTROLLER
         handler = fx.getController();
-
+        handler.setLoginHandler(this);
         connectionSetup();
+
 
         window.setScene(waiting);
         window.setTitle("Waiting room");
         window.setResizable(false);
         window.show();
-
         window.setOnCloseRequest(event -> {
             try {
                 event.consume();
@@ -271,8 +271,6 @@ public class LoginHandler implements Initializable{
             try {
                 controller.observeLobby(handler);
                 controller.addPlayer(this.username);
-
-                new Thread(new RmiCli(username,controller)).start();
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -312,6 +310,13 @@ public class LoginHandler implements Initializable{
             }
 
         }
+    }
+
+    public void onMatchStarted() throws RemoteException {
+       if (isCli){
+           new RmiCli(username,controller).launch();
+       }
+       else new RmiGui(username,controller).launch();
     }
 }
 

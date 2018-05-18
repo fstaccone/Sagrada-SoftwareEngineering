@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserver{
+public class RmiCli extends UnicastRemoteObject implements MatchObserver{
 
     private String username;
     private RemoteController controller;
@@ -41,26 +41,22 @@ public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserve
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
                         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
-                        "\n\nWelcome to the game, " + username.toUpperCase() + "! A new match is starting soon :)\n\n");
-        try {
-            // waiting time choose in server side + 10s
-            Thread.sleep(40000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+                        "\nWelcome to this fantastic game," + username.toUpperCase()+" :)\n");
+
         try {
             controller.observeMatch(username,this);
-                new Thread( new InputListener(this)).start();
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+
+        new Thread( new InputListener(this)).start();
 
     }
 
     @Override
     public void onPlayers(List<String> playersNames)  {
-
-        System.out.println("\n\nGame starts now! You are playing SAGRADA against:");
+        System.out.println("\nYour match starts now! You are playing SAGRADA against:");
         for(String name:playersNames){
             if (!name.equals(username)){
                 System.out.println("-" + name.toUpperCase());
@@ -68,8 +64,4 @@ public class RmiCli extends UnicastRemoteObject implements Runnable,MatchObserve
         }
     }
 
-    @Override
-    public void run() {
-        launch();
-    }
 }

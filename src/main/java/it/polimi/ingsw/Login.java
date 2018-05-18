@@ -34,9 +34,6 @@ public class Login extends Application {
                 event.consume();
                 onClosing();
                 System.exit(1);
-
-
-
         });
     }
     private void onClosing() {

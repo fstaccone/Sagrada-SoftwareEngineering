@@ -152,11 +152,12 @@ public class Lobby {
         synchronized (waitingPlayers) {
 
             waitingPlayers.add(name);
-            System.out.println("Lobby: lobby rmi observers size: "+remoteObservers.size()+"\n");
-            System.out.println("Lobby: waitingplayers size: "+waitingPlayers.size()+"\n");
-            System.out.println("Lobby: lobby socket observers size: "+socketObservers.size()+"\n");
+            System.out.println("Lobby: waitingplayers size: "+waitingPlayers.size()+"");
+            System.out.println("Lobby: lobby rmi observers size: "+remoteObservers.size()+"");
+            System.out.println("Lobby: lobby socket observers size: "+socketObservers.size()+"");
 
-            //notifico ai remoteObservers i waitingplayers ogni volta che uno waiting player è aggiunto
+            // ANY TIME A WAITING PLAYER IS ADDED, THE NOTIFICATION IS SENT TO THE WAITINGSCREENHANDLER BOTH FOR RMI AND SOCKETS
+            //RMI
             for (LobbyObserver observer : remoteObservers) {
                 try {
                     observer.onWaitingPlayers(waitingPlayers); // todo: eliminare observers quando viene eliminato il giocatore
@@ -164,11 +165,8 @@ public class Lobby {
                     e.printStackTrace();
                 }
             }
-            //notifico ai socketObservers i waitingplayers ogni volta che uno waiting player è aggiunto
-            //NON SO COME NOTIFICARE GLI OBSERVER ATTRAVERSO LE RESPONSES, ma dubbio: sono effettivamente delle responses?
-           /* for (LobbyObserver observer:socketObservers){
-                new WaitingPlayersResponse(waitingPlayers);
-            }*/
+
+            //SOCKET
             WaitingPlayersResponse response= new WaitingPlayersResponse(waitingPlayers);
             for (ObjectOutputStream out: SocketsOut){
                 try {
@@ -179,14 +177,14 @@ public class Lobby {
                 }
             }
 
-            //debug
-            if (waitingPlayers.size()==1) System.out.println("There is 1 player waiting for a match.");
-            else System.out.println("There are " + waitingPlayers.size() + " players waiting for a match.");
+            //DEBUG SERVER SIDE
+            if (waitingPlayers.size()==1) System.out.println("Lobby: There is 1 player waiting for a match."+"\n");
+            else System.out.println("Lobby: There are " + waitingPlayers.size() + " players waiting for a match."+"\n");
 
 
-            // if there are two players waiting for the match beginning, the timer is set
+            // IF THERE ARE 2 PLAYERS WAITING FOR THE MATCH BEGINNING, THE TIMER IS SET
             if (waitingPlayers.size() == 2) {
-                System.out.println("Timer started: 30 seconds from now!");
+                System.out.println("Lobby :Timer started: 30 seconds from now!");
                 this.timer = new Timer();
                 task = new MatchStarter(this);
                 timer.schedule(task, waitingTime);
@@ -200,13 +198,31 @@ public class Lobby {
     }
 
     public void startMatch() {
+
         synchronized (waitingPlayers) {
             // links between client and match are registered into the map
             for (String name : waitingPlayers) {
                 mapClientsToRoom.put(name, matchCounter);
             }
+
             createMultiplayerMatch(waitingPlayers);
+            //NOTIFIES TO ALL THE LOBBY OBSERVERS THE CREATION OF THE MATCH, SO FROM THEN THE CLIENTS CAN START THE GUI/CLI AND OBSERVE THE MATCH
+
+            //RMI
+            for (LobbyObserver observer : remoteObservers) {
+                try {
+                    observer.onMatchStarted();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //SOCKET
+
+
+
             matchCounter++;
+            remoteObservers.clear();
             waitingPlayers.clear();
         }
     }
