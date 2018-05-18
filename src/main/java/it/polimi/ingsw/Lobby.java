@@ -107,6 +107,16 @@ public class Lobby {
                     remoteObservers.remove(name);
                     removeUsername(name);
 
+                    // TODO: l'ho messo qui temporaneamente per testare la seconda text area
+                    // to update waiting players on the exiting players
+                    for (LobbyObserver observer : remoteObservers.values()) {
+                        try {
+                            observer.onWaitingPlayers(waitingPlayers);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     // to keep all players updated on the player's exit
                     for (LobbyObserver observer : remoteObservers.values()) {
                         try {
@@ -118,8 +128,9 @@ public class Lobby {
                 } else {
                     waitingPlayers.remove(name);
                     remoteObservers.remove(name);
+                    removeUsername(name);
 
-                    // to update waiting players on the names of players still in game
+                    // to update waiting players on the exiting players
                     for (LobbyObserver observer : remoteObservers.values()) {
                         try {
                             observer.onWaitingPlayers(waitingPlayers);
@@ -127,13 +138,14 @@ public class Lobby {
                             e.printStackTrace();
                         }
                     }
-                }
-                // to update waiting players on the exiting players
-                for (LobbyObserver observer : remoteObservers.values()) {
-                    try {
-                        observer.onPlayerExit(name);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+
+                    // to update waiting players on the names of players still in game
+                    for (LobbyObserver observer : remoteObservers.values()) {
+                        try {
+                            observer.onPlayerExit(name);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             } catch (Exception e) {

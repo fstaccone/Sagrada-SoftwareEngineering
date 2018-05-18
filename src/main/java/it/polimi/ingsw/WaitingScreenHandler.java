@@ -32,12 +32,12 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     @Override
     public void onPlayerExit(String name) throws RemoteException {
-        log.setText("Player " + name + " has left the room!");
+        log.setText("Player " + name.toUpperCase() + " has left the room!");
     }
 
     @Override
     public void onLastPlayer(String name) throws RemoteException {
-        log.setText(name + ", you are the only one, timer has been canceled!");
+        log.setText(name.toUpperCase() + " has left the room, you are the only one remaining. Timer has been canceled!");
     }
 
     @Override

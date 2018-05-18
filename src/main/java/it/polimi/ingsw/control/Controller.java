@@ -62,7 +62,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public void removePlayer(String name) throws RemoteException {
+    public void removePlayer(String name) {
         lobby.removeFromWaitingPlayers(name);
     }
 
