@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.view.RMIView;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -137,7 +138,6 @@ public class LoginHandler implements Initializable{
             try {
                 event.consume();
                 onClosing();
-                System.exit(1);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -314,6 +314,7 @@ public class LoginHandler implements Initializable{
 
     public void onMatchStarted() throws RemoteException {
        if (isCli){
+           Platform.runLater(() -> window.close());
            new RmiCli(username,controller).launch();
        }
        else new RmiGui(username,controller).launch();
