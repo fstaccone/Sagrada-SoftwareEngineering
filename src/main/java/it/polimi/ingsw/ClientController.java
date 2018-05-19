@@ -9,15 +9,16 @@ import java.util.List;
 
 public class ClientController implements ResponseHandler {
 
-    private List<String> waitingPlayers;
+
     private boolean nameAlreadyTaken=false;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    private LoginHandler loginHandler;
 
-
-    public ClientController(ObjectInputStream in, ObjectOutputStream out) {
+    public ClientController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler) {
         this.in = in;
         this.out = out;
+        this.loginHandler=loginHandler;
     }
 
     public void request(Request request) {
@@ -45,9 +46,6 @@ public class ClientController implements ResponseHandler {
         return nameAlreadyTaken;
     }
 
-    public List<String> getWaitingPlayers() {
-        return waitingPlayers;
-    }
 
     @Override
     public void handle(NameAlreadyTakenResponse response) {
@@ -55,8 +53,13 @@ public class ClientController implements ResponseHandler {
     }
     @Override
     public void handle(WaitingPlayersResponse response){
-        this.waitingPlayers=response.waitingPlayers;
-        System.out.println("lista di waiting players: "+waitingPlayers);
+        loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+        if (response.name!=null){
+            if(response.unique==false)
+                loginHandler.getWaitingScreenHandler().onPlayerExit(response.name);
+            else
+                loginHandler.getWaitingScreenHandler().onLastPlayer(response.name);
+        }
     }
 
     public ObjectInputStream getIn() {

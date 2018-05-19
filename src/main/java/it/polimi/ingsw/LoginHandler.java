@@ -155,7 +155,10 @@ public class LoginHandler implements Initializable{
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
+            if(isRmi)
             controller.removePlayer(this.username);
+            else
+                clientController.request(new RemoveFromWaitingPlayersRequest(this.username));
             System.exit(1);
         }
     }
@@ -242,7 +245,7 @@ public class LoginHandler implements Initializable{
         try{ socket= new Socket(serverAddress, socketPort);
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
-            clientController = new ClientController(in,out);
+            clientController = new ClientController(in,out,this);
         }
         catch(SocketException e){
             System.out.println("Unable to create socket connection");
@@ -298,7 +301,6 @@ public class LoginHandler implements Initializable{
         else {
             client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
-                //clientController.request(new ObserveLobbyRequest(this));
                 new Thread(new SocketListener(clientController)).start();
                 clientController.request(new AddPlayerRequest(this.username));
                 new Thread(new SocketCli(username,clientController)).start();
@@ -318,6 +320,10 @@ public class LoginHandler implements Initializable{
            new RmiCli(username,controller).launch();
        }
        else new RmiGui(username,controller).launch();
+    }
+
+    public WaitingScreenHandler getWaitingScreenHandler(){
+        return this.handler;
     }
 }
 

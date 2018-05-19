@@ -19,8 +19,9 @@ public class SocketHandler implements Runnable{
         this.socket = socket;
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
+
         this.controller=controller;
-        controller.addSocketOut(out);
+        controller.addSocketHandler(this);
 
     }
 
@@ -47,6 +48,14 @@ public class SocketHandler implements Runnable{
         } catch (IOException e) {
            System.out.println("non scrive la risposta");
         }
+    }
+
+    public ObjectInputStream getIn() {
+        return in;
+    }
+
+    public ObjectOutputStream getOut() {
+        return out;
     }
 
 }

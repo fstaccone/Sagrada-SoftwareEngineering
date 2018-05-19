@@ -26,8 +26,9 @@ public class Lobby {
 
     // to store observers
     private Map<String, LobbyObserver> remoteObservers;
-    private List<LobbyObserver> socketObservers;
-    private List<ObjectOutputStream> SocketsOut;// uno dei due va eliminato
+    private Map<String,ObjectOutputStream> socketObservers;
+
+
 
     // to simulate the timer before creating a match
     private Timer timer;
@@ -46,11 +47,10 @@ public class Lobby {
         this.singleplayerMatches = new HashMap<>();
 
         this.remoteObservers = new HashMap<>();
-        this.socketObservers = new LinkedList<>();
-        this.SocketsOut = new ArrayList<>(); // uno dei due va eliminato
 
         this.waitingTime = waitingTime;
         this.turnTime = turnTime;
+        this.socketObservers=new HashMap<>();
     }
 
     public List<String> getTakenUsernames() {
@@ -99,13 +99,14 @@ public class Lobby {
 
 
     public void removeFromWaitingPlayers(String name) {
+        boolean unique=false;
         synchronized (waitingPlayers) {
             try {
                 if (waitingPlayers.size() == 2) {
                     timer.cancel();
                     waitingPlayers.remove(name);
-                    remoteObservers.remove(name);
                     removeUsername(name);
+                    unique=true;
 
                     // TODO: l'ho messo qui temporaneamente per testare la seconda text area
                     // to update waiting players on the exiting players
@@ -139,7 +140,7 @@ public class Lobby {
                         }
                     }
 
-                    // to update waiting players on the names of players still in game
+                    // to update waiting players on the names of players not anymore in the room
                     for (LobbyObserver observer : remoteObservers.values()) {
                         try {
                             observer.onPlayerExit(name);
@@ -152,6 +153,16 @@ public class Lobby {
                 e.printStackTrace();
                 System.out.println("From lobby: Something wants to delete a name that doesn't exist!");
             }
+
+            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers,name,unique);
+            socketObservers.keySet().forEach(playerName -> {
+                try {
+                    socketObservers.get(playerName).writeObject(response);
+                    socketObservers.get(playerName).reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
@@ -220,15 +231,15 @@ public class Lobby {
             }
 
             //SOCKET
-            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers);
-            for (ObjectOutputStream out : SocketsOut) {
+            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers,null,false);
+            socketObservers.keySet().forEach(playerName -> {
                 try {
-                    out.writeObject(response);
-                    out.reset();
+                    socketObservers.get(playerName).writeObject(response);
+                    socketObservers.get(playerName).reset();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+            });
 
             //DEBUG SERVER SIDE
             if (waitingPlayers.size() == 1) System.out.println("Lobby: There is 1 player waiting for a match." + "\n");
@@ -284,9 +295,6 @@ public class Lobby {
         remoteObservers.put(name, lobbyObserver);
     }
 
-    public void observeLobbySocket(LobbyObserver lobbyObserver) {
-        socketObservers.add(lobbyObserver);
-    }
 
     public void observeMatchRemote(String username, MatchObserver observer) {
         for (MatchMultiplayer match : multiplayerMatches.values()) {
@@ -306,9 +314,12 @@ public class Lobby {
         }
     }
 
+    public Map<String, ObjectOutputStream> getSocketObservers() {
+        return socketObservers;
+    }
 
-    public void addSocketOut(ObjectOutputStream out) {
-        this.SocketsOut.add(out);
+    public Map<String, LobbyObserver> getRemoteObservers() {
+        return remoteObservers;
     }
 
     public void removeObserver(String name) {

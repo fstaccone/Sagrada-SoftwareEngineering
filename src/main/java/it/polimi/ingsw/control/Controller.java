@@ -6,21 +6,27 @@ import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller extends UnicastRemoteObject implements RemoteController, RequestHandler {
 
     private Lobby lobby;
+    private List<SocketHandler> socketHandlers;
+
 
     public Controller(Lobby lobby) throws RemoteException {
         super();
         this.lobby = lobby;
+        this.socketHandlers=new ArrayList<>();
         // ...
     }
 
     @Override
-    public String login(String username, ViewInterface view) throws RemoteException {
+    public String login(String username, ViewInterface view){
         return null;
     }
 
@@ -63,12 +69,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public void removePlayer(String name) {
+        lobby.getRemoteObservers().remove(name);
         lobby.removeFromWaitingPlayers(name);
     }
 
     @Override
     public Response handle(CheckUsernameRequest request) {
-
         return new NameAlreadyTakenResponse(!checkName(request.username));
     }
 
@@ -80,19 +86,21 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(AddPlayerRequest request) {
+        lobby.getSocketObservers().put(request.username,socketHandlers.remove(0).getOut());
         addPlayer(request.username);
-        return null;
-    }
-
-    @Override
-    public Response handle(ObserveLobbyRequest request) {
-        lobby.observeLobbySocket(request.lobbyObserver);
         return null;
     }
 
     @Override
     public Response handle(ObserveMatchRequest request) {
         lobby.observeMatchSocket(request.username, request.matchObserver);
+        return null;
+    }
+
+    @Override
+    public Response handle(RemoveFromWaitingPlayersRequest request) {
+        lobby.getSocketObservers().remove(request.name);
+        lobby.removeFromWaitingPlayers(request.name);
         return null;
     }
 
@@ -105,9 +113,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeMatchRemote(username, observer);
     }
 
-    public void addSocketOut(ObjectOutputStream out) {
-        lobby.addSocketOut(out);
+    public void addSocketHandler(SocketHandler socketHandler) {
+        this.socketHandlers.add(socketHandler);
     }
+
     // private transient final Room room;
     // private final Map<Player, ViewInterface> views = new HashMap<>();
 
