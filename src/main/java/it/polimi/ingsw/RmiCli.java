@@ -64,4 +64,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
         }
     }
 
+    @Override
+    public void onYourTurn(String name){
+        System.out.println(name.toUpperCase() + " is your turn!");
+        myTurn = true;
+    }
 }

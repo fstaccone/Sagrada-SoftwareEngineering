@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.gameobjects.Bag;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
 
+import java.rmi.RemoteException;
 import java.util.*;
 
 // commentato perchè non ho il jar
@@ -43,15 +44,13 @@ public abstract class Match {
     }
 
     // Game's initialisation
-    public abstract void gameInit();
+    public abstract void gameInit() throws InterruptedException, RemoteException;
 
     // Assegna le carte obiettivo privato
     public abstract void drawPrivateObjectiveCards();
 
     // Propone le carte schema
     public abstract void proposeWindowPatternCards();
-
-    public abstract void nextRound();
 
     public abstract void calculateFinalScore();
 

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.ConnectionStatus;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 
 public class PlayerMultiplayer extends Player {
@@ -62,28 +61,6 @@ public class PlayerMultiplayer extends Player {
         //chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
-    // todo: controllo
-    @Override
-    public void playTurn() {
-        if(status == ConnectionStatus.READY) {
-
-            // attesa di azioni da parte del client
-        }
-        turnsLeft--;
-        // solo per ora, il giocatore potrà decidere quando passare e in quel caso verrà chiamata la cancel
-        match.getTimer().cancel();
-    }
-
-    @Override
-    public void goTrough() {
-        // passa il turno
-
-    }
-
-    // it'll be called by the timer if it would go out of time
-    public void expiredTimer(){
-        // passa ma senza richiamare la cancel sul timer
-    }
 
     // todo: aggiornare metodo chooseDice di Reserve
     public void chooseDice(){

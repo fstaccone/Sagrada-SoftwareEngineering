@@ -4,6 +4,7 @@ import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 
+import javax.sound.midi.SysexMessage;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -13,30 +14,27 @@ public class MatchMultiplayer extends Match implements Runnable {
     private Map<PlayerMultiplayer, MatchObserver> socketObservers;
 
     private int matchId;
-    private int turnTime;
-    private Timer timer;
+    private TurnManager turnManager;
 
     private List<PlayerMultiplayer> players;
 
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime) {
         super();
         this.matchId = matchId;
+
+        turnManager = new TurnManager(this, turnTime);
+
         System.out.println("New multiplayer matchId: " + matchId);
         this.remoteObservers = new HashMap<>();
         this.socketObservers = new HashMap<>();
 
         System.out.println("New multiplayer matchId: " + matchId);
 
-        this.turnTime = turnTime;
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
         this.players = new ArrayList<>();
         clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
-    }
-
-    public Timer getTimer() {
-        return timer;
     }
 
     public int getMatchId() {
@@ -47,18 +45,21 @@ public class MatchMultiplayer extends Match implements Runnable {
         return remoteObservers;
     }
 
-    public List<PlayerMultiplayer> getPlayers() { return players; }
+    public List<PlayerMultiplayer> getPlayers() {
+        return players;
+    }
+
 
     // todo: controllare, come gestiamo i player CONNECTED?
     // it returns the number of READY players
-    public int checkConnection(){
+    public int checkConnection() {
         return (int) players.stream().map(p -> p.getStatus().equals(ConnectionStatus.READY)).count();
     }
 
 
     // game's initialisation
     @Override
-    public void gameInit() {
+    public void gameInit() throws InterruptedException, RemoteException {
         // todo: revision of the creation of this arraylist
         List<String> playersNames = new ArrayList<>();
         players.forEach(p -> playersNames.add(p.getName()));
@@ -85,9 +86,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         this.drawPrivateObjectiveCards();
         //this.proposeWindowPatternCards();
 
-        timer = new Timer();
-
-        this.turnManager();
+        this.turnManager.run();
     }
 
     // Assegna il colore ai giocatori in modo casuale
@@ -112,62 +111,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    // to manage the match's flow
-    private void turnManager() {
-        TurnTimer task;
-
-        System.out.println("Round " + (roundCounter + 1));
-        System.out.println("First player: " + players.get(0).getName());
-
-        for (PlayerMultiplayer player : players) {
-            player.setTurnsLeft(2);
-        }
-
-
-        // first turn
-        for (PlayerMultiplayer player : players) {
-            System.out.println("From match : Turn 1 - round " + (roundCounter + 1) + " player: " + player.getName());
-
-            timer = new Timer();
-            task = new TurnTimer(player);
-            timer.schedule(task, turnTime);
-
-            player.playTurn();
-        }
-
-        // second turn
-        for (int i = players.size() - 1; i >= 0; i--) {
-            if (players.get(i).getTurnsLeft() > 0) {
-                System.out.println("From match : Turn 2 - round " + (roundCounter + 1) + " player: " + players.get(i).getName());
-
-                timer = new Timer();
-                task = new TurnTimer(players.get(i));
-                timer.schedule(task, turnTime);
-
-                players.get(i).playTurn();
-            } else {
-                System.out.println("Player " + players.get(i).getName() + " has no turns left");
-            }
-        }
-
-        // rearrange players to keep the right order in next round
-        // following the idea that the first player in this round will be the last in the next round
-        players.add(players.get(0));
-        players.remove(0);
-
-        this.nextRound();
-    }
-
-    public void nextRound() {
-        this.pushLeftDicesToRoundTrack();
-        this.incrementRoundCounter();
-
-        if (this.roundCounter >= 10) {
-            //this.calculateFinalScore();
-        } else {
-            this.turnManager();
-        }
-    }
 
     @Override
     public void calculateFinalScore() {
@@ -215,7 +158,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void terminateMatch() {
-        for(PlayerMultiplayer p : players){
+        for (PlayerMultiplayer p : players) {
             // chiudi le connessioni
             //...
 
@@ -229,13 +172,20 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void run() {
-        gameInit();
+        try {
+            gameInit();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            System.out.println("Exception in MatchMultiplayer, run()");
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void observeMatchRemote(MatchObserver observer, String username) {
 
-        for(PlayerMultiplayer p : players){
-            if(p.getName().equals(username)){
+        for (PlayerMultiplayer p : players) {
+            if (p.getName().equals(username)) {
                 this.remoteObservers.put(p, observer);
                 break;
             }
@@ -243,15 +193,15 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
-        if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
+        if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
             run();
         }
     }
 
     public void observeMatchSocket(MatchObserver observer, String username) {
 
-        for(PlayerMultiplayer p : players){
-            if(p.getName().equals(username)){
+        for (PlayerMultiplayer p : players) {
+            if (p.getName().equals(username)) {
                 this.socketObservers.put(p, observer);
                 break;
             }
@@ -259,7 +209,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         System.out.println("Gli observers socket del match" + this.matchId + " al momento sono: " + socketObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
-        if (this.players.size() == this.remoteObservers.size()+this.socketObservers.size()) {
+        if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
             run();
         }
     }

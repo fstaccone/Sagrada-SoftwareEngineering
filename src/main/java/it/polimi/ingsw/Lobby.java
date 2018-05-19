@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
+import it.polimi.ingsw.model.gamelogic.MatchStarter;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class Lobby {
     }
 
     // to remove usernames at the end of a match or when a player leave a match before its creation
-    public synchronized void removeUsername(String name) {
+    private synchronized void removeUsername(String name) {
         this.takenUsernames.remove(name);
     }
 

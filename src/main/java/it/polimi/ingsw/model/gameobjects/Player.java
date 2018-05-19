@@ -54,12 +54,4 @@ public abstract class Player implements Serializable{
     }
     */
 
-    // Passa il turno (può farlo anche senza aver fatto altre azioni, ma deve comunque farlo? )
-    public void goTrough(){
-    }
-
-    // play a single turn
-    public void playTurn(){
-
-    }
 }

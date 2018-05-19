@@ -1,4 +1,6 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model.gamelogic;
+
+import it.polimi.ingsw.Lobby;
 
 import java.util.TimerTask;
 
