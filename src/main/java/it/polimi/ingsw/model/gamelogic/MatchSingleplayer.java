@@ -41,11 +41,6 @@ public class MatchSingleplayer extends Match implements Runnable{
     }
 
     @Override
-    public void nextRound() {
-
-    }
-
-    @Override
     public void calculateFinalScore() {
 
     }

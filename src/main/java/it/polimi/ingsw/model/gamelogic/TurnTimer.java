@@ -7,24 +7,27 @@ import java.util.TimerTask;
 
 public class TurnTimer extends TimerTask {
 
-    private TurnManager turnManager;
+    private MatchMultiplayer match;
     private PlayerMultiplayer player;
 
-    public TurnTimer(TurnManager turnManager, PlayerMultiplayer player) {
-        this.turnManager = turnManager;
+    public TurnTimer(MatchMultiplayer match, PlayerMultiplayer player) {
+        this.match = match;
         this.player = player;
     }
 
     @Override
     public void run() {
+
         // debug
         System.out.println("Player " + player.getName() + " is not READY");
 
         player.setStatus(ConnectionStatus.CONNECTED);
 
-        turnManager.setExpiredTrue();
+        match.getTurnManager().setExpiredTrue();
 
         // wakes up turn manager. It has been waiting for user action
-        turnManager.notify();
+        synchronized (match.getLock()) {
+            match.getLock().notify();
+        }
     }
 }

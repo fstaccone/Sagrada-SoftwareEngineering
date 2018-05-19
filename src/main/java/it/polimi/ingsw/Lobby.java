@@ -62,6 +62,8 @@ public class Lobby {
         return multiplayerMatches;
     }
 
+    public Map<String, MatchSingleplayer> getSingleplayerMatches() { return singleplayerMatches; }
+
     // to add a new username to the list
     public synchronized void addUsername(String name) {
         this.takenUsernames.add(name);

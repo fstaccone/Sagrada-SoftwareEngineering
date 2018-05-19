@@ -7,8 +7,7 @@ import it.polimi.ingsw.model.gameobjects.DecksContainer;
 import java.rmi.RemoteException;
 import java.util.*;
 
-// commentato perchè non ho il jar
-//import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mock;
 
 
 public abstract class Match {
@@ -18,6 +17,11 @@ public abstract class Match {
     protected Board board;
     private static final int numberOfRounds = 10;
     protected int roundCounter;
+
+    private boolean diceAction;
+    private boolean toolAction;
+    private boolean endsTurn;
+    private boolean secondDiceAction;
 
     public Match() {
         this.bag = new Bag(18);
@@ -35,7 +39,19 @@ public abstract class Match {
     }
     public static int getNumberOfRounds() { return numberOfRounds; }
     public int getCurrentRound() { return roundCounter; }
+    public boolean isDiceAction() { return diceAction; }
+    public boolean isToolAction() { return toolAction; }
+    public boolean isEndsTurn() { return endsTurn; }
+    public boolean isSecondDiceAction() { return secondDiceAction; }
+
     // end of getters
+
+    // to limit player action
+    public void setDiceAction(boolean diceAction) { this.diceAction = diceAction; }
+    public void setToolAction(boolean toolAction) { this.toolAction = toolAction; }
+    public void setEndsTurn(boolean endsTurn) { this.endsTurn = endsTurn; }
+    public void setSecondDiceAction(boolean secondDiceAction) { this.secondDiceAction = secondDiceAction; }
+
 
     public void incrementRoundCounter() { this.roundCounter++; }
 

@@ -1,12 +1,13 @@
 package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.ConnectionStatus;
+import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 
 import java.rmi.RemoteException;
 import java.util.Timer;
 
-public class TurnManager implements Runnable{
+public class TurnManager implements Runnable {
 
     private Timer turnTimer;
     private int turnTime;
@@ -23,7 +24,7 @@ public class TurnManager implements Runnable{
     public void run() {
         try {
             turnManager();
-        } catch (InterruptedException e ) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -33,6 +34,7 @@ public class TurnManager implements Runnable{
 
 
     private void turnManager() throws InterruptedException, RemoteException {
+
         TurnTimer task;
 
         System.out.println("Round " + (match.getCurrentRound() + 1));
@@ -51,14 +53,32 @@ public class TurnManager implements Runnable{
             if (player.getStatus() == ConnectionStatus.READY) {
 
                 // solo RMI per ora
-                match.getRemoteObservers().get(player).onYourTurn(player.getName());
+                match.getRemoteObservers().get(player).onYourTurn(player.getName(), true);
+
+
+                match.setDiceAction(false);
+                match.setToolAction(false);
+                match.setEndsTurn(false);
+                match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
 
                 turnTimer = new Timer();
-                task = new TurnTimer(this, player);
+                task = new TurnTimer(match, player);
                 turnTimer.schedule(task, turnTime);
 
+                /**
+                 * diceAction e toolAction vengono settati inizialmente a false, se l'azione corrispondente viene
+                 * completata con successo viene settato a true il rispettivo flag. Quando saranno entrambi veri
+                 * la condizione del ciclo sarà falsa
+                 * I metodi utilizzati ed i flag appartengono a match, in modo che possano essere settati a true senza risvegliare
+                 * TurnManager, sarà risvegliato solo dopo che una azione è stata completata con successo
+                 */
                 // wait for user action or for timer
-                this.wait();
+                while (checkCondition()) {
+                    synchronized (match.getLock()) {
+                        match.getLock().wait();
+                    }
+                    System.out.println("TurnManager correttamente risvegliato");
+                }
             }
 
             if (!expired) {
@@ -69,16 +89,20 @@ public class TurnManager implements Runnable{
         }
 
         // second turn todo: controllare dopo aver verificato che funzioni
-        for (int i = match.getPlayers().size() - 1; i >= 0; i--) {
+        for (
+                int i = match.getPlayers().size() - 1;
+                i >= 0; i--)
+
+        {
 
             if (match.getPlayers().get(i).getTurnsLeft() > 0 && match.getPlayers().get(i).getStatus() == ConnectionStatus.READY) {
                 System.out.println("From match : Turn 2 - round " + (match.getCurrentRound() + 1) + " player: " + match.getPlayers().get(i).getName());
 
                 // solo RMI per ora
-                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(match.getPlayers().get(i).getName());
+                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(match.getPlayers().get(i).getName(), true);
 
                 turnTimer = new Timer();
-                task = new TurnTimer(this, match.getPlayers().get(i));
+                task = new TurnTimer(match, match.getPlayers().get(i));
                 turnTimer.schedule(task, turnTime);
 
                 // wait for user action or for timer
@@ -97,17 +121,21 @@ public class TurnManager implements Runnable{
         // following the idea that the first player in this round will be the last in the next round
         match.getPlayers().add(match.getPlayers().get(0));
         match.getPlayers().remove(0);
-
         this.nextRound();
+
     }
 
+    // todo: da spiegare (se funziona)
+    private boolean checkCondition() {
+        return !((match.isToolAction() && match.isDiceAction() && match.isSecondDiceAction()) || match.isEndsTurn());
+    }
 
     private void nextRound() throws InterruptedException, RemoteException {
         match.pushLeftDicesToRoundTrack();
         match.incrementRoundCounter();
 
         if (match.getCurrentRound() >= 10) {
-            //match.calculateFinalScore();
+            //match.calculateFinalScore(); // può stare anche in match
         } else {
             this.turnManager();
         }

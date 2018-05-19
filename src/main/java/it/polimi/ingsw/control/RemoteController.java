@@ -18,4 +18,6 @@ public interface RemoteController extends Remote{
     void observeLobby(String name, LobbyObserver lobbyObserver) throws RemoteException;
     void observeMatch(String username, MatchObserver observer) throws RemoteException;
     void removePlayer(String name) throws RemoteException;
+
+    void goThrough(String name, boolean isSingle) throws RemoteException;
 }

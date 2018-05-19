@@ -59,4 +59,9 @@ public class SocketCli implements Serializable,Runnable,MatchObserver {
     public void onPlayers(List<String> playersNames) throws RemoteException {
 
     }
+
+    @Override
+    public void onYourTurn(String name, boolean isMyTurn) throws RemoteException {
+
+    }
 }

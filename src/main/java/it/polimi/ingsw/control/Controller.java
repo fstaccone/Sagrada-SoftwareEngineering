@@ -117,6 +117,19 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         this.socketHandlers.add(socketHandler);
     }
 
+    @Override
+    public void goThrough(String name, boolean isSingle) throws RemoteException {
+        if(isSingle){
+            lobby.getSingleplayerMatches().get(name).setEndsTurn(true);
+        }else {
+            lobby.getMultiplayerMatches().get(name).setEndsTurn(true);
+            System.out.println("Da controller: metodo passa funziona!");
+            synchronized (lobby.getMultiplayerMatches().get(name).getLock()) {
+                lobby.getMultiplayerMatches().get(name).getLock().notify();
+            }
+        }
+    }
+
     // private transient final Room room;
     // private final Map<Player, ViewInterface> views = new HashMap<>();
 

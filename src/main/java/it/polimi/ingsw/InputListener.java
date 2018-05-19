@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class InputListener implements Runnable {
@@ -70,6 +71,12 @@ public class InputListener implements Runnable {
                     case "Quit":{
                         System.out.println("Esci");
                         //quit connection and close
+                        }break;
+                    case "passa":
+                        try {
+                            cli.goThrough();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
                         }break;
                     default:
                         System.out.println("Wrong choise. Insert a new valid option !");

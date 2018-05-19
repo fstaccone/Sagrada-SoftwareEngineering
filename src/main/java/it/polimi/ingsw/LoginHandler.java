@@ -260,7 +260,7 @@ public class LoginHandler implements Initializable{
             try {
                 controller.createMatch(this.username);
                 if(isCli) {
-                    new RmiCli(username,controller).launch();//per il momento null
+                    new RmiCli(username,controller, false).launch(); // false per il momento, per simulare match multiplayer
                 } else
                 {}
             }
@@ -317,7 +317,7 @@ public class LoginHandler implements Initializable{
     public void onMatchStarted() throws RemoteException {
        if (isCli){
            Platform.runLater(() -> window.close());
-           new RmiCli(username,controller).launch();
+           new RmiCli(username,controller, false).launch();
        }
        else new RmiGui(username,controller).launch();
     }

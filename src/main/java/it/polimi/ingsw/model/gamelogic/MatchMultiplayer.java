@@ -16,12 +16,24 @@ public class MatchMultiplayer extends Match implements Runnable {
     private int matchId;
     private TurnManager turnManager;
 
+    /**
+     *
+     */
+    private Object lock;
+
+    public Object getLock() { return lock; }
+
+    /**
+     *
+     */
+
     private List<PlayerMultiplayer> players;
 
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime) {
         super();
         this.matchId = matchId;
 
+        this.lock = new Object();
         turnManager = new TurnManager(this, turnTime);
 
         System.out.println("New multiplayer matchId: " + matchId);
@@ -36,6 +48,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         this.players = new ArrayList<>();
         clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
     }
+
+    public TurnManager getTurnManager() { return turnManager; }
 
     public int getMatchId() {
         return matchId;
@@ -60,6 +74,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     // game's initialisation
     @Override
     public void gameInit() throws InterruptedException, RemoteException {
+
         // todo: revision of the creation of this arraylist
         List<String> playersNames = new ArrayList<>();
         players.forEach(p -> playersNames.add(p.getName()));

@@ -10,13 +10,15 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
 
     private String username;
     private RemoteController controller;
-    boolean myTurn;
+    private boolean myTurn;
+    private boolean single; // per distinguere singleplayer da muiltiplayer
 
-    public RmiCli(String username, RemoteController controller) throws RemoteException {
+    public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
         super();
         this.username = username;
         this.controller = controller;
         this.myTurn = false;
+        this.single = single;
     }
 
     public boolean isMyTurn() { return myTurn; }
@@ -65,8 +67,17 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
     }
 
     @Override
-    public void onYourTurn(String name){
-        System.out.println(name.toUpperCase() + " is your turn!");
-        myTurn = true;
+    public void onYourTurn(String name, boolean isMyTurn){
+        myTurn = isMyTurn;
+
+        if(isMyTurn) {
+            System.out.println(this.username.toUpperCase() + " is your turn!");
+        }
     }
+
+    // per definire i metodi di gioco non è meglio creare un'altra interfaccia?
+    public void goThrough() throws RemoteException {
+        controller.goThrough(username, single); // todo: passare il booleano corretto
+    }
+
 }
