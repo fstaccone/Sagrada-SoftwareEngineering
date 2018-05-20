@@ -20,6 +20,8 @@ public class Reserve {
         }
     }
 
+    public List<Dice> getDices() { return dices; }
+
     public boolean isEmpty(){
         return dices.isEmpty();
     }
@@ -36,28 +38,47 @@ public class Reserve {
         else System.out.println("The reserve is empty.");
     }
 
-    public Dice chooseDice() {
-        if(!(dices.isEmpty())){
-            System.out.println("Please choose a dice from the reserve by writing the corresponding id: ");
-            showReserve();
-            Scanner scan = new Scanner(System.in);
-            int i = scan.nextInt();
-            if(i<0 || i>dices.size()-1){
-                while(i<0 || i>dices.size()-1) {
-                    System.out.println("Please insert a correct value.");
-                    i = scan.nextInt();
-                }
-            }
-            Dice choice = dices.get(i);
-            dices.remove(i);
-            System.out.println("Chosen dice: " + choice.toString());
-            return choice;
+    @Override
+    public String toString() {
+
+        StringBuilder s;
+        s = new StringBuilder();
+        s.append("This is the state of the RESERVE:\n");
+        for(int i = 0; i < dices.size(); i++){
+            s.append(i);
+            s.append(") ");
+            s.append(dices.get(i).toString());
+            s.append("\n");
         }
-        else {
+
+        return s.toString();
+    }
+
+    public Dice chooseDice(int index) {
+        if(!(dices.isEmpty())){
+           // System.out.println("Please choose a dice from the reserve by writing the corresponding id: ");
+           // showReserve();
+           // Scanner scan = new Scanner(System.in);
+           // int i = scan.nextInt();
+           // if(i<0 || i>dices.size()-1){
+           //     while(i<0 || i>dices.size()-1) {
+           //         System.out.println("Please insert a correct value.");
+           //         i = scan.nextInt();
+           //     }
+           // }
+            Dice chosen;
+            chosen = dices.get(index);
+            dices.remove(index);
+
+            //System.out.println("Chosen dice: " + choice.toString());
+            return chosen;
+        }else {
             System.out.println("The reserve is empty."); //andrebbe fatto lanciando ExceptionEmptyReserve
             return null;
         }
     }
+
+
     public List<Dice> endRound(){
         System.out.println("From Reserve : End of the round");
         ArrayList<Dice> dicesLeft = new ArrayList<>();

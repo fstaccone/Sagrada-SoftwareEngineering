@@ -12,6 +12,6 @@ public class ChooseAnotherDiceEffect implements Effect {
     @Override
     public void applyEffect(Player player, Match match) {
         Reserve reserve = match.getBoard().getReserve();
-        player.setPickedDice(reserve.chooseDice());
+      //  player.setPickedDice(reserve.chooseDice());
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.Lobby;
+import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.view.ViewInterface;
 
@@ -118,9 +119,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public void goThrough(String name, boolean isSingle) throws RemoteException {
+    public void goThrough(String name, boolean isSingle){
         if(isSingle){
             lobby.getSingleplayerMatches().get(name).setEndsTurn(true);
+            // todo: gestire la chiamata all'interno del match singleplayer
         }else {
             lobby.getMultiplayerMatches().get(name).setEndsTurn(true);
             System.out.println("Da controller: metodo passa funziona!");
@@ -129,6 +131,36 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
             }
         }
     }
+
+    @Override
+    public boolean placeDice(int index, int x, int y, String name, boolean isSingle) {
+        if (isSingle) {
+            lobby.getMultiplayerMatches().get(name).setDiceAction(true);
+            // todo: gestire la chiamata all'interno del match singleplayer con TurnManager
+        }else{
+            if (lobby.getMultiplayerMatches().get(name).isDiceAction()) {
+
+                for (PlayerMultiplayer p : lobby.getMultiplayerMatches().get(name).getPlayers()) {
+                    if (p.getName().equals(name)) {
+                        p.getSchemeCard().putDice(p.chooseDice(index), x, y);
+
+                        lobby.getMultiplayerMatches().get(name).setDiceAction(true);
+
+                        synchronized (lobby.getMultiplayerMatches().get(name).getLock()) {
+                            lobby.getMultiplayerMatches().get(name).getLock().notify();
+                        }
+
+                        return true;
+                    }
+                }
+            }else{
+                return false;
+            }
+        }
+        return false; // non si dovrebbe mai arrivare qui
+    }
+
+
 
     // private transient final Room room;
     // private final Map<Player, ViewInterface> views = new HashMap<>();

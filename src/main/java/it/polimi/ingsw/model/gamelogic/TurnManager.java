@@ -36,6 +36,7 @@ public class TurnManager implements Runnable {
     private void turnManager() throws InterruptedException, RemoteException {
 
         TurnTimer task;
+        int number = (2 * match.getPlayers().size()) + 1; // used to know the number of dices to be picked
 
         System.out.println("Round " + (match.getCurrentRound() + 1));
         System.out.println("First player: " + match.getPlayers().get(0).getName());
@@ -43,6 +44,8 @@ public class TurnManager implements Runnable {
         for (PlayerMultiplayer player : match.getPlayers()) {
             player.setTurnsLeft(2);
         }
+
+        match.getBoard().getReserve().throwDices(match.getBag().pickDices(number));
 
         // first turn
         for (PlayerMultiplayer player : match.getPlayers()) {
@@ -54,6 +57,7 @@ public class TurnManager implements Runnable {
 
                 // solo RMI per ora
                 match.getRemoteObservers().get(player).onYourTurn( true);
+                match.getRemoteObservers().get(player).onReserve( match.getBoard().getReserve().getDices().toString());
 
 
                 match.setDiceAction(false);
@@ -99,6 +103,7 @@ public class TurnManager implements Runnable {
 
                 // solo RMI per ora
                 match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( true);
+                match.getRemoteObservers().get(match.getPlayers().get(i)).onReserve( match.getBoard().getReserve().getDices().toString());
 
                 match.setDiceAction(false);
                 match.setToolAction(false);

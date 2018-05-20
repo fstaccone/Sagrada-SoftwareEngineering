@@ -3,6 +3,7 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.rmi.Remote;
@@ -18,6 +19,6 @@ public interface RemoteController extends Remote{
     void observeLobby(String name, LobbyObserver lobbyObserver) throws RemoteException;
     void observeMatch(String username, MatchObserver observer) throws RemoteException;
     void removePlayer(String name) throws RemoteException;
-
+    boolean placeDice(int dice, int x, int y, String name, boolean isSingle) throws RemoteException;
     void goThrough(String name, boolean isSingle) throws RemoteException;
 }

@@ -27,12 +27,10 @@ public class Bag {
         List<Dice> result = new ArrayList<>();
         int item;
         for (int i = 0; i < num; i++) {
-            System.out.println("Bag size: "+dices.size());
             item = new Random().nextInt(dices.size()-1);
             for (int j=0; j<=item; j++) {
                 if (j == item) {
                     result.add( dices.get(j));
-                    System.out.println("Pescato dado: "+dices.get(j).toString());
                     dices.remove(j);
                 }
             }

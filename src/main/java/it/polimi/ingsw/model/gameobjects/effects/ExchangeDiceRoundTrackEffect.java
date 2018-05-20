@@ -11,9 +11,9 @@ public class ExchangeDiceRoundTrackEffect implements Effect{
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {
+    public void applyEffect(Player player, Match match) {/*
         if(player.getPickedDice() == null)
-            player.setPickedDice(match.getBoard().getReserve().chooseDice());
+            player.setPickedDice(match.getBoard().getReserve().chooseDice());*/
         Dice dice = player.getPickedDice();
         RoundTrack track = match.getBoard().getRoundTrack();
         dice = track.switchDice(dice);

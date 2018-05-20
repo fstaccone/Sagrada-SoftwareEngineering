@@ -93,13 +93,13 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
 
     @Override
     public void onReserve(String string) {
-        String dicesString=string.substring(1,string.length()-1);
+        String dicesString = string.substring(1,string.length()-1);
         printer.println("Here follows the current RESERVE state:");
         printer.flush();
         dicesList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
-        int i=0;
+        int i = 0;
         for(String dice: dicesList){
             printer.println(i++ +") " + dice);
             printer.flush();
@@ -149,7 +149,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
 
                             case "cd":{
                                 diceChosen=Integer.parseInt(parts[1]);
-                                printer.println("You have chosen the dice: "+dicesList.toArray()[diceChosen].toString());
+                                printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString());
                                 printer.flush();
 
                             }break;
@@ -159,7 +159,11 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
                                 coordinateY= Integer.parseInt(parts[2]);
                                 printer.println("You have chosen to place the dice in the ["+coordinateX+"]["+coordinateY+"] square of your Scheme Card");
                                 printer.flush();
-                                //controller.placeDice(diceChosen,coordinateX,coordinateY,username);
+                                if(controller.placeDice(diceChosen,coordinateX,coordinateY,username, single)) {
+                                    printer.println("Well done! The chosen dice has been placed correctly.");
+                                } else {
+                                    printer.println("You tried to place a dice when you shouldn't!");
+                                }
                             }break;
 
                             case "pass":{

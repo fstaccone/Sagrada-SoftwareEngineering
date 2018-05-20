@@ -61,14 +61,8 @@ public class PlayerMultiplayer extends Player {
         //chosenToolCardToUse.useCard(this,this.room.getMatch());
     }
 
+    public Dice chooseDice(int index){
+        return match.getBoard().getReserve().chooseDice(index);
+    }
 
-    // todo: aggiornare metodo chooseDice di Reserve
-    public void chooseDice(){
-        setPickedDice(match.getBoard().getReserve().chooseDice());
-    }
-    /* todo: gestire la sequenza di passaggi di parametri
-    public void putDiceInWindow(){
-        getSchemeCard().putDice();
-    }
-    */
 }

@@ -12,9 +12,9 @@ public class IncrDecrDiceValueEffect implements Effect{
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {
+    public void applyEffect(Player player, Match match) {/*
         if(player.getPickedDice()==null)
-            player.setPickedDice(match.getBoard().getReserve().chooseDice());
+            player.setPickedDice(match.getBoard().getReserve().chooseDice());*/
         System.out.println("Picked dice: "+player.getPickedDice().toString()+"\n"+
         "Type '+' if you want to increment the dice value by 1 (not valid for value=6), " +
         "type '-' if you want to decrement the dice value by 1 (not valid for value=1)");
