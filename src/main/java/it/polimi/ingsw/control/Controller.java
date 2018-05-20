@@ -2,6 +2,7 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.Lobby;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.view.ViewInterface;
@@ -160,7 +161,64 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return false; // non si dovrebbe mai arrivare qui
     }
 
+    // non sono convinto sia corretto ma credo che non abbia senso fare altri giri per notificare i nomi dei giocatori
+    // (il nome serve per chiedere di visualizzare la carta schema degli avversari)
+    @Override
+    public void showPlayers(String name) throws RemoteException {
 
+        List<String> playersNames = new ArrayList<>();
+        MatchMultiplayer match;
+        match = lobby.getMultiplayerMatches().get(name);
+
+        match.getPlayers().forEach(p -> playersNames.add(p.getName()));
+        for(PlayerMultiplayer p : match.getPlayers()){
+            if(p.getName().equals(name)){
+                match.getRemoteObservers().get(p).onPlayers(playersNames);
+                break;
+            }
+        }
+
+    }
+
+    // ha senso chiedere di ristampare la propria carta schema? Se si allora occorre gestire il caso del single player (si potrebbe scrivere un altro metodo)
+    @Override
+    public void showWindow(String name) throws RemoteException {
+        getObserver(name).onShowWindow(getPlayer(name).getSchemeCard().toString()); // dimostra l'utilità dei metodi sottostanti
+    }
+
+
+    /**
+     * Ho creato questi metodi perchè la ricerca dell'obesrver e del player mi sembrano un costrutto ricorrente
+     */
+    private MatchObserver getObserver(String name){
+        MatchMultiplayer match;
+        match = lobby.getMultiplayerMatches().get(name);
+
+        for(PlayerMultiplayer p : match.getPlayers()){
+            if(p.getName().equals(name)) {
+                return match.getRemoteObservers().get(p);
+            }
+        }
+        return null;
+    }
+
+    private PlayerMultiplayer getPlayer(String name){
+        MatchMultiplayer match;
+        match = lobby.getMultiplayerMatches().get(name);
+
+        for(PlayerMultiplayer p : match.getPlayers()){
+            if(p.getName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void chooseWindow(String name, int index) {
+
+        getPlayer(name).setSchemeCard();
+    }
 
     // private transient final Room room;
     // private final Map<Player, ViewInterface> views = new HashMap<>();

@@ -1,13 +1,6 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
-
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-//import static org.mockito.Mockito.mock;
 
 public class WindowPatternCard extends Card{
 
@@ -227,9 +220,11 @@ public class WindowPatternCard extends Card{
         String newline = "\n";
 
         result.append(newline);
-        result.append("Name: " + this.name);
+        result.append("Name: ");
+        result.append(this.name);
         result.append(newline);
-        result.append("Difficulty: " + this.difficulty);
+        result.append("Difficulty: ");
+        result.append(this.difficulty);
         result.append(newline);
         result.append("--------------------------");
         result.append(newline);

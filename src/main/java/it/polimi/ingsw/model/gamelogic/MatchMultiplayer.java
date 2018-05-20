@@ -18,6 +18,8 @@ public class MatchMultiplayer extends Match implements Runnable {
     private int matchId;
     private TurnManager turnManager;
 
+    List<WindowPatternCard> windowsToBeProposed;
+
     /**
      *
      */
@@ -32,8 +34,6 @@ public class MatchMultiplayer extends Match implements Runnable {
     private List<PlayerMultiplayer> players;
 
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime) {
-
-
 
         super();
         this.matchId = matchId;
@@ -53,6 +53,21 @@ public class MatchMultiplayer extends Match implements Runnable {
         this.players = new ArrayList<>();
         clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
     }
+
+    /**
+     * è il posto giusto?
+     *
+     */
+    public List<WindowPatternCard> getWindowsToBeProposed() { return windowsToBeProposed; }
+
+    public void initializeWindowsToBeProposed(List<WindowPatternCard> windowsToBeProposed, int n) {
+        this.windowsToBeProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(4*n , 4*(n+1)); // todo: sarebbe più sensato eliminare le carte
+    }
+
+    /**
+     *
+     *
+     */
 
     public TurnManager getTurnManager() { return turnManager; }
 

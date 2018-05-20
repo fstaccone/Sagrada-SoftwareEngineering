@@ -8,6 +8,7 @@ import it.polimi.ingsw.view.ViewInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface RemoteController extends Remote{
 
@@ -21,4 +22,7 @@ public interface RemoteController extends Remote{
     void removePlayer(String name) throws RemoteException;
     boolean placeDice(int dice, int x, int y, String name, boolean isSingle) throws RemoteException;
     void goThrough(String name, boolean isSingle) throws RemoteException;
+    void showPlayers(String name) throws  RemoteException;
+    void showWindow(String name) throws RemoteException;
+    void chooseWindow(String name, int index) throws RemoteException;
 }

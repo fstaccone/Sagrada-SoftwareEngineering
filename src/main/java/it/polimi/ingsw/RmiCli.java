@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class RmiCli extends UnicastRemoteObject implements MatchObserver{
+public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     private String username;
     private RemoteController controller;
@@ -24,7 +24,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
 
     private boolean single; //NON SONO CONVINTO SIA LA SOLUZIONE MIGLIORE
 
-    private static final String WELCOME="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
+    private static final String WELCOME = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/*@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/,@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..@@@@@..@@@@@@@@@@@@@@@\n" +
@@ -42,11 +42,14 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
-            "\nWelcome to this fantastic game,";
+            "\nWelcome to this fantastic game, ";
 
-    private static final String HELP=   ("\n 'h'                                         to show game commands" +
+    private static final String HELP = ("\n 'h'                                         to show game commands" +
             "\n 'r'                                         to show game rules" +
             "\n 'q'                                         to quit the game" +
+            "\n 'sp'                                        to show all opponents' names" +
+            "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
+            "\n 'cw' + 'number'                             to choose tour window pattern card (available only if it's your turn and once only)" +
             "\n 'cd' + 'number'                             to choose the dice from the Reserve (available only if it's your turn)" +
             "\n 'pd' +'coordinate x' + 'coordinate y'       to place the chosen dice in your Scheme Card (available only if it's your turn)" +
             "\n 'pass'                                      to pass the turn to the next player (available only if it's your turn)");
@@ -55,20 +58,21 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
         super();
         this.username = username;
         this.controller = controller;
-        this.printer=new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
+        this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
         this.myTurn = false;
         new KeyboardHandler().start();
-        this.single=single;
+        this.single = single;
     }
 
-    public boolean isMyTurn() { return myTurn; }
+    public boolean isMyTurn() {
+        return myTurn;
+    }
 
     public void launch() {
-        printer.println(
-                WELCOME+ username.toUpperCase()+" :)\n");
+        printer.println(WELCOME + username.toUpperCase() + "!\n");
         printer.flush();
         try {
-            controller.observeMatch(username,this);
+            controller.observeMatch(username, this);
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -78,37 +82,50 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
     }
 
     @Override
-    public void onPlayers(List<String> playersNames)  {
+    public void onPlayers(List<String> playersNames) {
         printer.println("Your match starts now! You are playing SAGRADA against:");
         printer.flush();
-        for(String name:playersNames){
-            if (!name.equals(username)){
+        for (String name : playersNames) {
+            if (!name.equals(username)) {
                 printer.println("-" + name.toUpperCase());
                 printer.flush();
             }
         }
-        printer.println("Wait for your turn...");
+        //printer.println("Wait for your turn..."); Commentato per poter riutilizzare il metodo in caso di richiesta di visione della griglia di un certo giocatore
+        //printer.flush();                          si potrebbe voler vedere la lista di nomi dei giocatori
+        printer.println();
+        printer.flush();
+    }
+
+    @Override
+    public void onWindowChoise(String[] windows) {
+
+    }
+
+    @Override
+    public void onShowWindow(String window) throws RemoteException {
+        printer.println(window);
         printer.flush();
     }
 
     @Override
     public void onReserve(String string) {
-        String dicesString = string.substring(1,string.length()-1);
+        String dicesString = string.substring(1, string.length() - 1);
         printer.println("Here follows the current RESERVE state:");
         printer.flush();
         dicesList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
         int i = 0;
-        for(String dice: dicesList){
-            printer.println(i++ +") " + dice);
+        for (String dice : dicesList) {
+            printer.println(i++ + ") " + dice);
             printer.flush();
         }
     }
 
     @Override
     public void onYourTurn(boolean yourTurn) {
-        this.myTurn=yourTurn;
+        this.myTurn = yourTurn;
         if (isMyTurn())
             printer.println("\nNow it's your turn! Please insert a command: (h for help)");
         else
@@ -126,11 +143,11 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
                 try {
                     String command = keyboard.readLine();
                     String[] parts = command.split(" ");
-                    if(isMyTurn()) {
+                    if (isMyTurn()) {
                         switch (parts[0]) {
 
                             case "h": {
-                                printer.println( "Insert a new valid option between: (+ means SPACE)" +HELP);
+                                printer.println("Insert a new valid option between: (+ means SPACE)" + HELP);
                                 printer.flush();
                             }
                             break;
@@ -141,45 +158,56 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
                             }
                             break;
 
-                            case "q":{
+                            case "q": {
                                 printer.println("Esci");
                                 printer.flush();
                             }
                             break;
 
-                            case "cd":{
-                                diceChosen=Integer.parseInt(parts[1]);
+                            case "cd": {
+                                diceChosen = Integer.parseInt(parts[1]);
                                 printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString());
                                 printer.flush();
 
-                            }break;
+                            }
+                            break;
 
-                            case "pd":{
-                                coordinateX= Integer.parseInt(parts[1]);
-                                coordinateY= Integer.parseInt(parts[2]);
-                                printer.println("You have chosen to place the dice in the ["+coordinateX+"]["+coordinateY+"] square of your Scheme Card");
+                            case "cw": {
+                                controller.chooseWindow(username, Integer.parseInt(parts[1]));
+                                printer.println("Good choise, this is your window pattern card:\n");
                                 printer.flush();
-                                if(controller.placeDice(diceChosen,coordinateX,coordinateY,username, single)) {
+                                controller.showWindow(username);
+                            } break;
+
+                            case "pd": {
+                                coordinateX = Integer.parseInt(parts[1]);
+                                coordinateY = Integer.parseInt(parts[2]);
+                                printer.println("You have chosen to place the dice in the [" + coordinateX + "][" + coordinateY + "] square of your Scheme Card");
+                                printer.flush();
+                                if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
                                     printer.println("Well done! The chosen dice has been placed correctly.");
+                                    printer.flush();
                                 } else {
                                     printer.println("You tried to place a dice when you shouldn't!");
+                                    printer.flush();
                                 }
-                            }break;
+                            }
+                            break;
 
-                            case "pass":{
+                            case "pass": {
                                 controller.goThrough(username, single);
-                            }break;
+                            }
+                            break;
 
                             default: {
                                 printer.println("Wrong choise. Insert a new valid option between: (+ means SPACE)" + HELP);
                                 printer.flush();
                             }
                         }
-                    }
-                    else {
+                    } else {
                         switch (parts[0]) {
                             case "h": {
-                                printer.println("Insert a new valid option between: (+ means SPACE)" +HELP);
+                                printer.println("Insert a new valid option between: (+ means SPACE)" + HELP);
                                 printer.flush();
                             }
                             break;
@@ -187,6 +215,17 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
                             case "r": {
                                 printer.println("Regole");
                                 printer.flush();
+                            }
+                            break;
+
+                            case "sp": {
+                                controller.showPlayers(username);
+                            }
+                            break;
+
+                            case "sw": {
+                                printer.println("Here is the window pattern card of the player " + parts[1]);
+                                controller.showWindow(parts[1]);
                             }
                             break;
 

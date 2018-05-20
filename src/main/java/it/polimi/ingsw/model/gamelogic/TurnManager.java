@@ -47,6 +47,17 @@ public class TurnManager implements Runnable {
 
         match.getBoard().getReserve().throwDices(match.getBag().pickDices(number));
 
+        /**
+         * Per la scelta della carta schema uso un booleano (come per il gioco normale)
+         * e lo faccio solo per il primo turno del primo round
+         *
+         * Ha senso farlo fuori dal for, in ogni caso questo metodo va splittato
+         *
+         * lo faccio io (PAOLO), lo ho in mente
+         *
+         */
+
+        
         // first turn
         for (PlayerMultiplayer player : match.getPlayers()) {
 
@@ -54,6 +65,7 @@ public class TurnManager implements Runnable {
             System.out.println("From match : Turn 1 - round " + (match.getCurrentRound() + 1) + " player: " + player.getName());
 
             if (player.getStatus() == ConnectionStatus.READY) {
+
 
                 // solo RMI per ora
                 match.getRemoteObservers().get(player).onYourTurn( true);
