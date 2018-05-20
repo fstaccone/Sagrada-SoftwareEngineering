@@ -61,7 +61,13 @@ public class SocketCli implements Serializable,Runnable,MatchObserver {
     }
 
     @Override
-    public void onYourTurn(String name, boolean isMyTurn) throws RemoteException {
+    public void onYourTurn(boolean isMyTurn) throws RemoteException {
 
     }
+
+    @Override
+    public void onReserve(String string) throws RemoteException {
+
+    }
+
 }

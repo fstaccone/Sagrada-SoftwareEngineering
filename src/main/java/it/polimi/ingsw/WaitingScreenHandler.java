@@ -9,25 +9,18 @@ import java.util.List;
 public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyObserver {
 
 
-    private LoginHandler loginHandler=null;
-
-
-    @FXML
-    private TextArea text = new TextArea();
+    private LoginHandler loginHandler;
 
     @FXML
-    private TextArea log = new TextArea();
+    private TextArea text;
 
-    public void setString(String string){
-        text.setText(string);
-    }
-
-    public void setLoginHandler(LoginHandler loginHandler){
-        this.loginHandler=loginHandler;
-    }
+    @FXML
+    private TextArea log;
 
     public WaitingScreenHandler() throws RemoteException {
         super();
+        log=new TextArea();
+        text=new TextArea();
     }
 
     @Override
@@ -42,13 +35,22 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     @Override
     public void onWaitingPlayers(List<String> waitingPlayers) {
-        text.setText("Ordered list of waiting players (including you):\n" + waitingPlayers.toString());
-        log.setText("");
+        String wPlayers=waitingPlayers.toString().toUpperCase().replaceAll("\\[","");
+        wPlayers=wPlayers.replaceAll("\\]","");
+        text.setText("Ordered list of waiting players (including you):\n" + wPlayers);
     }
 
     @Override
     public void onMatchStarted() throws RemoteException {
         loginHandler.onMatchStarted();
+    }
+
+    public void setString(String string){
+        text.setText(string);
+    }
+
+    public void setLoginHandler(LoginHandler loginHandler){
+        this.loginHandler=loginHandler;
     }
 
 }

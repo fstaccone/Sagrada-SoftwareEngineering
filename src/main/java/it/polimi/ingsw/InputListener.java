@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+/*package it.polimi.ingsw;
 
 import java.rmi.RemoteException;
 import java.util.Scanner;
@@ -86,3 +86,4 @@ public class InputListener implements Runnable {
         }
     }
 }
+*/

@@ -12,6 +12,6 @@
    <children>
       <Label layoutX="163.0" layoutY="78.0" prefHeight="45.0" prefWidth="450.0" text="Welcome to the Waiting Room of Sagrada!" />
       <TextArea id="text" fx:id="text" editable="false" layoutX="155.0" layoutY="153.0" prefHeight="45.0" prefWidth="391.0" />
-      <TextArea id="text" fx:id="log" editable="false" layoutX="91.0" layoutY="249.0" prefHeight="45.0" prefWidth="519.0" />
+      <TextArea id="log" fx:id="log" editable="false" layoutX="84.0" layoutY="248.0" prefHeight="45.0" prefWidth="534.0" text="In case of exit of any player, you will receive notifies here: ..." />
    </children>
 </AnchorPane>

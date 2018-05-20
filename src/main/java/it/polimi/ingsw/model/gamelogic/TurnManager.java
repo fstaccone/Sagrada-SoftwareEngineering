@@ -53,7 +53,7 @@ public class TurnManager implements Runnable {
             if (player.getStatus() == ConnectionStatus.READY) {
 
                 // solo RMI per ora
-                match.getRemoteObservers().get(player).onYourTurn(player.getName(), true);
+                match.getRemoteObservers().get(player).onYourTurn( true);
 
 
                 match.setDiceAction(false);
@@ -86,6 +86,7 @@ public class TurnManager implements Runnable {
             }
 
             player.setTurnsLeft(player.getTurnsLeft() - 1);
+            match.getRemoteObservers().get(player).onYourTurn( false);// INSERITA DA ME(F.S.), da verificare con PAOLO
         }
 
         // second turn todo: controllare dopo aver verificato che funzioni
@@ -99,7 +100,7 @@ public class TurnManager implements Runnable {
                 System.out.println("From match : Turn 2 - round " + (match.getCurrentRound() + 1) + " player: " + match.getPlayers().get(i).getName());
 
                 // solo RMI per ora
-                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(match.getPlayers().get(i).getName(), true);
+                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( true);
 
                 turnTimer = new Timer();
                 task = new TurnTimer(match, match.getPlayers().get(i));

@@ -2,49 +2,71 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
 
+import java.io.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class RmiCli extends UnicastRemoteObject implements MatchObserver{
 
     private String username;
     private RemoteController controller;
     private boolean myTurn;
-    private boolean single; // per distinguere singleplayer da muiltiplayer
+    private final PrintWriter printer;
+
+    List<String> dicesList;
+
+    int diceChosen;
+    int coordinateX;
+    int coordinateY;
+
+    private boolean single; //NON SONO CONVINTO SIA LA SOLUZIONE MIGLIORE
+
+    private static final String WELCOME="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/*@@@@@@@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/,@@@@@@@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..@@@@@..@@@@@@@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@@&..@@@@@..&@@.@@@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@@(..@@@@@..(@@.@@@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%.*@,..&@ @&..,@*.%@@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,. @...%&.@%...@ .,@@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ..@.. ....  ..@.. @@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@... .#@% . %@&.....@@@@@@@@@@\n" +
+            "@@/ ____|@@/\\@@@/ ____|  __ \\@@@@@/\\@@@|  __ \\@@@/\\@@@@@@@@@@@@@@@ .. .(*.....*@. ...@@@@@@@@@@\n" +
+            "@| (___@@@/  \\@| |@@__| |__) |@@@/  \\@@| |@@| |@/  \\@@@@@@@@@@@@@@. , . ../@ .... , .@@@@@@@@@@\n" +
+            "@@\\___ \\@/ /\\ \\| |@|_ |  _  /@@@/ /\\ \\@| |@@| |/ /\\ \\@@@@@@@@@@@@@, ,....@ .#....., ,@@@@@@@@@@\n" +
+            "@@____) / ____ \\ |__| | |@\\ \\@@/ ____ \\| |__| / ____ \\@@@@@@@@@@@(. *...( ...% ...* .(@@@@@@@@@\n" +
+            "@|_____/_/@@@@\\_\\_____|_|@@\\_\\/_/@@@@\\_\\_____/_/@@@@\\_\\@@@@@@@@@@..@.@  &.... #..@.@..@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
+            "\nWelcome to this fantastic game,";
+
+    private static final String HELP=   ("\n 'h'                                         to show game commands" +
+            "\n 'r'                                         to show game rules" +
+            "\n 'q'                                         to quit the game" +
+            "\n 'cd' + 'number'                             to choose the dice from the Reserve (available only if it's your turn)" +
+            "\n 'pd' +'coordinate x' + 'coordinate y'       to place the chosen dice in your Scheme Card (available only if it's your turn)" +
+            "\n 'pass'                                      to pass the turn to the next player (available only if it's your turn)");
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
         super();
         this.username = username;
         this.controller = controller;
+        this.printer=new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
         this.myTurn = false;
-        this.single = single;
+        new KeyboardHandler().start();
+        this.single=single;
     }
 
     public boolean isMyTurn() { return myTurn; }
 
     public void launch() {
-        System.out.println(
-                "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/*@@@@@@@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/,@@@@@@@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..@@@@@..@@@@@@@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@@&..@@@@@..&@@.@@@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@@(..@@@@@..(@@.@@@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%.*@,..&@ @&..,@*.%@@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,. @...%&.@%...@ .,@@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ..@.. ....  ..@.. @@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@... .#@% . %@&.....@@@@@@@@@@\n" +
-                        "@@/ ____|@@/\\@@@/ ____|  __ \\@@@@@/\\@@@|  __ \\@@@/\\@@@@@@@@@@@@@@@ .. .(*.....*@. ...@@@@@@@@@@\n" +
-                        "@| (___@@@/  \\@| |@@__| |__) |@@@/  \\@@| |@@| |@/  \\@@@@@@@@@@@@@@. , . ../@ .... , .@@@@@@@@@@\n" +
-                        "@@\\___ \\@/ /\\ \\| |@|_ |  _  /@@@/ /\\ \\@| |@@| |/ /\\ \\@@@@@@@@@@@@@, ,....@ .#....., ,@@@@@@@@@@\n" +
-                        "@@____) / ____ \\ |__| | |@\\ \\@@/ ____ \\| |__| / ____ \\@@@@@@@@@@@(. *...( ...% ...* .(@@@@@@@@@\n" +
-                        "@|_____/_/@@@@\\_\\_____|_|@@\\_\\/_/@@@@\\_\\_____/_/@@@@\\_\\@@@@@@@@@@..@.@  &.... #..@.@..@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
-                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
-                        "\nWelcome to this fantastic game," + username.toUpperCase()+" :)\n");
-
+        printer.println(
+                WELCOME+ username.toUpperCase()+" :)\n");
+        printer.flush();
         try {
             controller.observeMatch(username,this);
 
@@ -52,32 +74,134 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
             e.printStackTrace();
         }
 
-        new Thread( new InputListener(this)).start();
 
     }
 
     @Override
     public void onPlayers(List<String> playersNames)  {
-        System.out.println("\nYour match starts now! You are playing SAGRADA against:");
+        printer.println("Your match starts now! You are playing SAGRADA against:");
+        printer.flush();
         for(String name:playersNames){
             if (!name.equals(username)){
-                System.out.println("-" + name.toUpperCase());
+                printer.println("-" + name.toUpperCase());
+                printer.flush();
             }
         }
     }
 
     @Override
-    public void onYourTurn(String name, boolean isMyTurn){
-        myTurn = isMyTurn;
-
-        if(isMyTurn) {
-            System.out.println(this.username.toUpperCase() + " is your turn!");
+    public void onReserve(String string) {
+        String dicesString=string.substring(1,string.length()-1);
+        printer.println("Here follows the current RESERVE state:");
+        printer.flush();
+        dicesList = Pattern.compile(", ")
+                .splitAsStream(dicesString)
+                .collect(Collectors.toList());
+        int i=0;
+        for(String dice: dicesList){
+            printer.println(i++ +") " + dice);
+            printer.flush();
         }
     }
 
-    // per definire i metodi di gioco non è meglio creare un'altra interfaccia?
-    public void goThrough() throws RemoteException {
-        controller.goThrough(username, single); // todo: passare il booleano corretto
+    @Override
+    public void onYourTurn(boolean yourTurn) {
+        this.myTurn=yourTurn;
+        if (isMyTurn())
+            printer.println("\nNow it's your turn! Please insert a command: (h for help)");
+        else
+            printer.println("\nIt's no more your turn! (h for help)");
+        printer.flush();
     }
 
+    private class KeyboardHandler extends Thread {
+
+        @Override
+        public void run() {
+            BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+            while (true) {
+
+                try {
+                    String command = keyboard.readLine();
+                    String[] parts = command.split(" ");
+                    if(isMyTurn()) {
+                        switch (parts[0]) {
+
+                            case "h": {
+                                printer.println( "Insert a new valid option between: (+ means SPACE)" +HELP);
+                                printer.flush();
+                            }
+                            break;
+
+                            case "r": {
+                                printer.println("Regole");
+                                printer.flush();
+                            }
+                            break;
+
+                            case "q":{
+                                printer.println("Esci");
+                                printer.flush();
+                            }
+                            break;
+
+                            case "cd":{
+                                diceChosen=Integer.parseInt(parts[1]);
+                                printer.println("You have chosen the dice: "+dicesList.toArray()[diceChosen].toString());
+                                printer.flush();
+
+                            }break;
+
+                            case "pd":{
+                                coordinateX= Integer.parseInt(parts[1]);
+                                coordinateY= Integer.parseInt(parts[2]);
+                                printer.println("You have chosen to place the dice in the ["+coordinateX+"]["+coordinateY+"] square of your Scheme Card");
+                                printer.flush();
+                                //controller.placeDice(diceChosen,coordinateX,coordinateY,username);
+                            }break;
+
+                            case "pass":{
+                                controller.goThrough(username, single);
+                            }break;
+
+                            default: {
+                                printer.println("Wrong choise. Insert a new valid option between: (+ means SPACE)" + HELP);
+                                printer.flush();
+                            }
+                        }
+                    }
+                    else {
+                        switch (parts[0]) {
+                            case "h": {
+                                printer.println("Insert a new valid option between: (+ means SPACE)" +HELP);
+                                printer.flush();
+                            }
+                            break;
+
+                            case "r": {
+                                printer.println("Regole");
+                                printer.flush();
+                            }
+                            break;
+
+                            case "q": {
+                                printer.println("Esci");
+                                printer.flush();
+                            }
+                            break;
+
+                            default: {
+                                printer.println("Wrong choise. Insert a new valid option between:" + HELP);
+                                printer.flush();
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }
+    }
 }
