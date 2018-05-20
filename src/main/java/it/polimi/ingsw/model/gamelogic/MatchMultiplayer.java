@@ -13,6 +13,8 @@ public class MatchMultiplayer extends Match implements Runnable {
     private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
     private Map<PlayerMultiplayer, MatchObserver> socketObservers;
 
+    private Thread localThread;
+
     private int matchId;
     private TurnManager turnManager;
 
@@ -30,6 +32,9 @@ public class MatchMultiplayer extends Match implements Runnable {
     private List<PlayerMultiplayer> players;
 
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime) {
+
+
+
         super();
         this.matchId = matchId;
 
@@ -209,7 +214,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
         if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
-            run();
+            localThread.start();
         }
     }
 
@@ -225,7 +230,11 @@ public class MatchMultiplayer extends Match implements Runnable {
         System.out.println("Gli observers socket del match" + this.matchId + " al momento sono: " + socketObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
         if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
-            run();
+            localThread.start();
         }
+    }
+
+    public void start(){
+        localThread=new Thread(this);
     }
 }

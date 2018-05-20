@@ -87,6 +87,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver{
                 printer.flush();
             }
         }
+        printer.println("Wait for your turn...");
+        printer.flush();
     }
 
     @Override

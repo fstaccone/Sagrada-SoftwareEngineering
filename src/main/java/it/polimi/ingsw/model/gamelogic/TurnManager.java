@@ -79,6 +79,8 @@ public class TurnManager implements Runnable {
                     }
                     System.out.println("TurnManager correttamente risvegliato");
                 }
+
+                match.getRemoteObservers().get(player).onYourTurn( false);// INSERITA DA ME(F.S.), da verificare con PAOLO
             }
 
             if (!expired) {
@@ -86,15 +88,11 @@ public class TurnManager implements Runnable {
             }
 
             player.setTurnsLeft(player.getTurnsLeft() - 1);
-            match.getRemoteObservers().get(player).onYourTurn( false);// INSERITA DA ME(F.S.), da verificare con PAOLO
+
         }
 
         // second turn todo: controllare dopo aver verificato che funzioni
-        for (
-                int i = match.getPlayers().size() - 1;
-                i >= 0; i--)
-
-        {
+        for (int i = match.getPlayers().size() - 1; i >= 0; i--) {
 
             if (match.getPlayers().get(i).getTurnsLeft() > 0 && match.getPlayers().get(i).getStatus() == ConnectionStatus.READY) {
                 System.out.println("From match : Turn 2 - round " + (match.getCurrentRound() + 1) + " player: " + match.getPlayers().get(i).getName());
@@ -102,15 +100,29 @@ public class TurnManager implements Runnable {
                 // solo RMI per ora
                 match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( true);
 
+                match.setDiceAction(false);
+                match.setToolAction(false);
+                match.setEndsTurn(false);
+                match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
+
                 turnTimer = new Timer();
                 task = new TurnTimer(match, match.getPlayers().get(i));
                 turnTimer.schedule(task, turnTime);
 
                 // wait for user action or for timer
-                this.wait();
+                while (checkCondition()) {
+                    synchronized (match.getLock()) {
+                        match.getLock().wait();
+                    }
+                    System.out.println("TurnManager correttamente risvegliato");
+                }
 
-            } else {
-                System.out.println("Player " + match.getPlayers().get(i).getName() + " has no turns left");
+                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( false);
+
+            }
+
+            if (!expired) {
+                turnTimer.cancel();
             }
 
             // todo: non ha molto senso, potrebbe averne se controllassimo in fase di testing che dopo questo aggiornamento siano davvero 0

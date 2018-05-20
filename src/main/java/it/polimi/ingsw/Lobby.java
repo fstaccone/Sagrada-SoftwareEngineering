@@ -87,6 +87,7 @@ public class Lobby {
     private synchronized void createMultiplayerMatch(List<String> clients) {
 
         MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime);
+        match.start();// IT DOES NOT CALL THE RUN() METHOD EXPECTED..SEE MATCHMULTIPLAYER CLASS FOR FURTHER EXPLANATIONS
         for (String s : clients) {
             multiplayerMatches.put(s, match);
         }
