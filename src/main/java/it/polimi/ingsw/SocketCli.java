@@ -111,17 +111,26 @@ public class SocketCli implements Serializable, MatchObserver {
             printer.println(i++ + ") " + dice);
             printer.flush();
         }
-        printer.println( "\n");
+        printer.println();
         printer.flush();
     }
 
     @Override
-    public void onWindowChoise(List<String> windows) throws RemoteException {
-
+    public void onWindowChoise(List<String> windows)  {
+        int i = 0;
+        printer.println("Choose your window among the following by typing [cw] + [number]!\n");
+        printer.flush();
+        for(String s : windows){
+            s=s.replaceAll("null"," ");
+            printer.println(i++ + ") " + s + "\n");
+            printer.flush();
+        }
     }
 
     @Override
     public void onShowWindow(String window) {
+        printer.println("Your window pattern card:");
+        printer.flush();
         printer.println(window);
         printer.flush();
     }
@@ -163,6 +172,11 @@ public class SocketCli implements Serializable, MatchObserver {
                                 printer.flush();
                             }
                             break;
+
+                            case "cw": {
+                                controller.request(new ChooseWindowRequest(username, Integer.parseInt(parts[1]), false));
+                                //controller.chooseWindow(username, Integer.parseInt(parts[1]), false);
+                            } break;
 
                             case "pd":{
                                 coordinateX= Integer.parseInt(parts[1]);

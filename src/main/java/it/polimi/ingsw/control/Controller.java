@@ -115,6 +115,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+    @Override
+    public Response handle(ChooseWindowRequest request) {
+        chooseWindow(request.username,request.value,request.single);
+        return null;
+    }
+
 
     public void observeLobby(String name, LobbyObserver lobbyObserver) {
         lobby.observeLobbyRemote(name, lobbyObserver);
@@ -157,7 +163,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
 
     @Override
-    public void chooseWindow(String name, int index, boolean isSingle) throws RemoteException {
+    public void chooseWindow(String name, int index, boolean isSingle) {
         if(isSingle){
             lobby.getSingleplayerMatches().get(name).setWindowPatternCard(name, index);
         }else{

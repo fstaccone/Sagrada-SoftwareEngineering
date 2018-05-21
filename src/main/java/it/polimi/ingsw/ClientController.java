@@ -1,11 +1,8 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.control.Controller;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
 
 public class ClientController implements ResponseHandler {
 
@@ -90,6 +87,20 @@ public class ClientController implements ResponseHandler {
     public void handle(ReserveResponse response) {
         if (socketCli!=null){
             socketCli.onReserve(response.reserve);
+        }
+    }
+
+    @Override
+    public void handle(ShowWindowResponse response) {
+        if (socketCli!=null){
+            socketCli.onShowWindow(response.string);
+        }
+    }
+
+    @Override
+    public void handle(ProposeWindowResponse response) {
+        if (socketCli!=null){
+            socketCli.onWindowChoise(response.list);
         }
     }
 

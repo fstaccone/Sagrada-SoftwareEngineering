@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.gamelogic;
 import it.polimi.ingsw.ActualPlayersResponse;
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.ShowWindowResponse;
 import it.polimi.ingsw.model.gameobjects.*;
 
 import java.io.IOException;
@@ -265,11 +266,25 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public void setWindowPatternCard(String name, int index) throws RemoteException {
+    public void setWindowPatternCard(String name, int index) {
         getPlayer(name).setSchemeCard(windowsProposed.get(index)); // todo: handle exceptions
         setWindowChosen(true);
 
-        remoteObservers.get(getPlayer(name)).onShowWindow(getPlayer(name).getSchemeCard().toString());
+        if (remoteObservers.get(getPlayer(name))!=null) {
+            try {
+                remoteObservers.get(getPlayer(name)).onShowWindow(getPlayer(name).getSchemeCard().toString());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (socketObservers.get(getPlayer(name))!=null){
+            try {
+                socketObservers.get(getPlayer(name)).writeObject(new ShowWindowResponse(getPlayer(name).getSchemeCard().toString()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         synchronized (getLock()) { // è più giusto mettere lock protected?
             getLock().notify();

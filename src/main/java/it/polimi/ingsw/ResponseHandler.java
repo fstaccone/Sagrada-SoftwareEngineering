@@ -7,4 +7,6 @@ public interface ResponseHandler {
     void handle(ActualPlayersResponse response);
     void handle(YourTurnResponse response);
     void handle(ReserveResponse response);
+    void handle(ProposeWindowResponse response);
+    void handle(ShowWindowResponse response);
 }

@@ -117,7 +117,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             printer.println(i++ + ") " + dice);
             printer.flush();
         }
-        printer.println( "\n");
+        printer.println();
         printer.flush();
     }
 
@@ -127,6 +127,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.println("Choose your window among the following by typing [cw] + [number]!\n");
         printer.flush();
         for(String s : windows){
+            s=s.replaceAll("null"," ");
             printer.println(i++ + ") " + s + "\n");
             printer.flush();
         }

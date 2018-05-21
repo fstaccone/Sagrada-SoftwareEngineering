@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.ProposeWindowResponse;
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.ReserveResponse;
 import it.polimi.ingsw.YourTurnResponse;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Timer;
 import java.util.stream.Collectors;
 
@@ -40,16 +42,34 @@ public class TurnManager implements Runnable {
 
     private void drawWindowPatternCards() throws InterruptedException, RemoteException {
 
-        for(int i = 0; i < match.getPlayers().size(); i++) {
+        for (int i = 0; i < match.getPlayers().size(); i++) {
             match.initializeWindowsToBeProposed(i);
             match.setWindowChosen(false);
 
             if (match.getPlayers().get(i).getStatus() == ConnectionStatus.READY) {
-                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(true);
-                match.getRemoteObservers().get(match.getPlayers().get(i)).onWindowChoise(match.getWindowsProposed()
+
+                List<String> list = match.getWindowsProposed()
                         .stream()
                         .map(WindowPatternCard::toString)
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
+
+                //RMI
+                if (rmiObserversCheck(i)) {
+                    match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(true);
+                    match.getRemoteObservers().get(match.getPlayers().get(i)).onWindowChoise(list);
+                }
+
+                //SOCKET
+                if (socketObserversCheck(i)) {
+                    try {
+                        match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new YourTurnResponse(true));
+                        match.getSocketObservers().get(match.getPlayers().get(i)).reset();
+                        match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new ProposeWindowResponse(list));
+                        match.getSocketObservers().get(match.getPlayers().get(i)).reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
 
                 turnTimer = new Timer();
@@ -66,15 +86,21 @@ public class TurnManager implements Runnable {
                     turnTimer.cancel();
                 }
 
-                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(false);
+                //RMI
+                if (rmiObserversCheck(i))
+                    match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(false);
 
+                //SOCKET
+                if(socketObserversCheck(i)) {
+                    try {
+                        match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new YourTurnResponse(false));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
-
-
     }
-
-
 
     private void turnManager() throws InterruptedException, RemoteException {
 
@@ -177,23 +203,20 @@ public class TurnManager implements Runnable {
                 System.out.println("From match : Turn 2 - round " + (match.getCurrentRound() + 1) + " player: " + match.getPlayers().get(i).getName());
 
                 //RMI
-                if(match.getRemoteObservers().size()!=0)
-                    if (match.getRemoteObservers().get(match.getPlayers().get(i))!=null) {
-                        match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(true);
-                        match.getRemoteObservers().get(match.getPlayers().get(i)).onReserve(match.getBoard().getReserve().getDices().toString());
-                    }
+                if (rmiObserversCheck(i)) {
+                    match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(true);
+                    match.getRemoteObservers().get(match.getPlayers().get(i)).onReserve(match.getBoard().getReserve().getDices().toString());
+                }
 
                 //SOCKET
-                if(match.getSocketObservers().size()!=0) {
-                    if(match.getSocketObservers().get(match.getPlayers().get(i))!=null) {
-                        try {
-                            match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new YourTurnResponse(true));
-                            match.getSocketObservers().get(match.getPlayers().get(i)).reset();
-                            match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new ReserveResponse(match.getBoard().getReserve().getDices().toString()));
-                            match.getSocketObservers().get(match.getPlayers().get(i)).reset();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                if (socketObserversCheck(i)) {
+                    try {
+                        match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new YourTurnResponse(true));
+                        match.getSocketObservers().get(match.getPlayers().get(i)).reset();
+                        match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new ReserveResponse(match.getBoard().getReserve().getDices().toString()));
+                        match.getSocketObservers().get(match.getPlayers().get(i)).reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -216,21 +239,19 @@ public class TurnManager implements Runnable {
                 }
 
                 //RMI
-                if(match.getRemoteObservers().size()!=0)
-                    if(match.getRemoteObservers().get(match.getPlayers().get(i))!=null)
-                        match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( false);
+                if (rmiObserversCheck(i))
+                    match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( false);
 
                 //SOCKET
-                if(match.getSocketObservers().size()!=0) {
-                    if (match.getSocketObservers().get(match.getPlayers().get(i)) != null) {
-                        try {
-                            match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new YourTurnResponse(false));
-                            match.getSocketObservers().get(match.getPlayers().get(i)).reset();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                if (socketObserversCheck(i)){
+                    try {
+                        match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new YourTurnResponse(false));
+                        match.getSocketObservers().get(match.getPlayers().get(i)).reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+
             }
 
             if (!expired) {
@@ -248,6 +269,24 @@ public class TurnManager implements Runnable {
         match.getPlayers().remove(0);
         nextRound();
 
+    }
+
+    private boolean rmiObserversCheck(int i){
+        if (match.getRemoteObservers().size() != 0) {
+            if (match.getRemoteObservers().get(match.getPlayers().get(i)) != null) {
+                return true;
+            }
+            else return false;
+        } else return false;
+    }
+
+    private boolean socketObserversCheck(int i){
+        if (match.getSocketObservers().size() != 0) {
+            if (match.getSocketObservers().get(match.getPlayers().get(i)) != null) {
+                return true;
+            }
+            else return false;
+        } else return false;
     }
 
     // todo: da spiegare (se funziona)
