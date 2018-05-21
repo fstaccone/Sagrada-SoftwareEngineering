@@ -70,4 +70,13 @@ public class SocketCli implements Serializable,Runnable,MatchObserver {
 
     }
 
+    @Override
+    public void onWindowChoise(String[] windows) throws RemoteException {
+
+    }
+
+    @Override
+    public void onShowWindow(String window) throws RemoteException {
+
+    }
 }

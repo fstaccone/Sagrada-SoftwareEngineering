@@ -36,7 +36,6 @@ public class TurnManager implements Runnable {
     private void turnManager() throws InterruptedException, RemoteException {
 
         TurnTimer task;
-        int number = (2 * match.getPlayers().size()) + 1; // used to know the number of dices to be picked
 
         System.out.println("Round " + (match.getCurrentRound() + 1));
         System.out.println("First player: " + match.getPlayers().get(0).getName());
@@ -45,7 +44,7 @@ public class TurnManager implements Runnable {
             player.setTurnsLeft(2);
         }
 
-        match.getBoard().getReserve().throwDices(match.getBag().pickDices(number));
+        match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
 
         /**
          * Per la scelta della carta schema uso un booleano (come per il gioco normale)

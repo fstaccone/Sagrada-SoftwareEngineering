@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.gameobjects.*;
 import javax.sound.midi.SysexMessage;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MatchMultiplayer extends Match implements Runnable {
 
@@ -250,6 +251,27 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public void start(){
-        localThread=new Thread(this);
+        localThread = new Thread(this);
+    }
+
+    public void showWindow(String name, String owner) throws RemoteException {
+        //RMI
+        remoteObservers.get(name).onShowWindow(getPlayer(owner).getSchemeCard().toString());// dimostra l'utilità del metodo sottostante
+
+    }
+
+    public void showPlayers(String name) throws RemoteException {
+        // RMI
+        remoteObservers.get(name).onPlayers(players.stream().map(Player::getName).collect(Collectors.toList()));
+    }
+
+    private PlayerMultiplayer getPlayer(String name){
+
+        for(PlayerMultiplayer p : players){
+            if(p.getName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
     }
 }

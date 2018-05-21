@@ -176,7 +176,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 controller.chooseWindow(username, Integer.parseInt(parts[1]));
                                 printer.println("Good choise, this is your window pattern card:\n");
                                 printer.flush();
-                                controller.showWindow(username);
+                                controller.showWindow(username, username);
                             } break;
 
                             case "pd": {
@@ -225,7 +225,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "sw": {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
-                                controller.showWindow(parts[1]);
+                                controller.showWindow(username, parts[1]);
                             }
                             break;
 

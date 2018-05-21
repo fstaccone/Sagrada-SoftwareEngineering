@@ -71,18 +71,5 @@ public abstract class Match {
     public abstract void calculateFinalScore();
 
     public abstract void terminateMatch();
-
-/* //to check if board attributes get the right values
-    public static void main (String[] args) {
-        Player player1 = mock(Player.class);
-        Player player2 = mock(Player.class);
-        Set players = new HashSet();
-        players.add(player1);
-        players.add(player2);
-        Match match = new Match(players);
-        System.out.println(match.board.getPickedToolCards().toString());
-        System.out.println(match.board.getPickedPublicObjectiveCards().toString());
-
-    }*/
 }
 

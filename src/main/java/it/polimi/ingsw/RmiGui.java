@@ -38,4 +38,13 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     }
 
+    @Override
+    public void onWindowChoise(String[] windows) throws RemoteException {
+
+    }
+
+    @Override
+    public void onShowWindow(String window) throws RemoteException {
+
+    }
 }

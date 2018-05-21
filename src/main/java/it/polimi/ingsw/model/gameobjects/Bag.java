@@ -26,7 +26,7 @@ public class Bag {
     public List<Dice> pickDices(int num) {
         List<Dice> result = new ArrayList<>();
         int item;
-        for (int i = 0; i < num; i++) {
+        for (int i = 0; i < (2*num) + 1; i++) {
             item = new Random().nextInt(dices.size()-1);
             for (int j=0; j<=item; j++) {
                 if (j == item) {
