@@ -84,10 +84,9 @@ public class Lobby {
         System.out.println("By lobby: Player: " + name);
     }
 
-    private synchronized void createMultiplayerMatch(List<String> clients) {
+    private synchronized void createMultiplayerMatch(List<String> clients,  Map<String,ObjectOutputStream> socketsOut) {
 
-        MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime);
-        match.start();// IT DOES NOT CALL THE RUN() METHOD EXPECTED..SEE MATCHMULTIPLAYER CLASS FOR FURTHER EXPLANATIONS
+        MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime, socketsOut);
         for (String s : clients) {
             multiplayerMatches.put(s, match);
         }
@@ -270,8 +269,20 @@ public class Lobby {
 
         synchronized (waitingPlayers) {
 
-            createMultiplayerMatch(waitingPlayers);
-            //NOTIFIES TO ALL THE LOBBY OBSERVERS THE CREATION OF THE MATCH, SO FROM THEN THE CLIENTS CAN START THE GUI/CLI AND OBSERVE THE MATCH
+            //NOTIFIES TO ALL THE LOBBY "OBSERVERS" THE CREATION OF THE MATCH, SO FROM THEN THE CLIENTS CAN START THE GUI/CLI AND "OBSERVE" THE MATCH
+
+            //SOCKETS
+            MatchStartedResponse response = new MatchStartedResponse();
+            for (ObjectOutputStream out: socketObservers.values()) {
+                try {
+                    out.writeObject(response);
+                    out.reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            createMultiplayerMatch(waitingPlayers, new HashMap<>(socketObservers));
 
             //RMI
             for (LobbyObserver observer : remoteObservers.values()) {
@@ -282,10 +293,8 @@ public class Lobby {
                 }
             }
 
-            //SOCKET
-
-
             matchCounter++;
+            socketObservers.clear();
             remoteObservers.clear();
             waitingPlayers.clear();
         }
@@ -304,15 +313,6 @@ public class Lobby {
         for (MatchMultiplayer match : multiplayerMatches.values()) {
             if (match == multiplayerMatches.get(username)) {
                 match.observeMatchRemote(observer, username);
-                break;
-            }
-        }
-    }
-
-    public void observeMatchSocket(String username, MatchObserver observer) {
-        for (MatchMultiplayer match : multiplayerMatches.values()) {
-            if (match == multiplayerMatches.get(username)) {
-                match.observeMatchSocket(observer, username);
                 break;
             }
         }

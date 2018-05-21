@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.ActualPlayersResponse;
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 
 import javax.sound.midi.SysexMessage;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,7 +15,7 @@ import java.util.stream.Collectors;
 public class MatchMultiplayer extends Match implements Runnable {
 
     private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
-    private Map<PlayerMultiplayer, MatchObserver> socketObservers;
+    private Map<PlayerMultiplayer, ObjectOutputStream> socketObservers;
 
     private Thread localThread;
 
@@ -34,7 +37,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     private List<PlayerMultiplayer> players;
 
-    public MatchMultiplayer(int matchId, List<String> clients, int turnTime) {
+    public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String,ObjectOutputStream> socketsOut) {
 
         super();
         this.matchId = matchId;
@@ -46,13 +49,26 @@ public class MatchMultiplayer extends Match implements Runnable {
         this.remoteObservers = new HashMap<>();
         this.socketObservers = new HashMap<>();
 
-        System.out.println("New multiplayer matchId: " + matchId);
-
         this.decksContainer = new DecksContainer(clients.size());
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
         this.players = new ArrayList<>();
-        clients.forEach(p -> this.players.add(new PlayerMultiplayer(p, this)));
+
+        for(String client:clients){
+            PlayerMultiplayer player= new PlayerMultiplayer(client, this);
+            this.players.add(player);
+            if (socketsOut.size() != 0) {
+                for(String name:socketsOut.keySet()){
+                    if (name==client){
+                        this.socketObservers.put(player, socketsOut.get(name));
+                    }
+                }
+            }
+        }
+        if (this.players.size() == this.socketObservers.size()) {
+            localThread=new Thread(this);
+            localThread.start();
+        }
     }
 
     /**
@@ -80,6 +96,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         return remoteObservers;
     }
 
+    public Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers(){
+        return socketObservers;
+    }
+
     public List<PlayerMultiplayer> getPlayers() {
         return players;
     }
@@ -94,7 +114,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     // game's initialisation
     @Override
-    public void gameInit() throws InterruptedException, RemoteException {
+    public void gameInit(){
 
         // todo: revision of the creation of this arraylist
         List<String> playersNames = new ArrayList<>();
@@ -109,9 +129,17 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         }
 
-        /*
-            DA FARE LA STESSA COSA DI QUI SOPRA MA CON I SOCKET
-        */
+        //notification to sockets
+        ActualPlayersResponse response=new ActualPlayersResponse(playersNames);
+        for (PlayerMultiplayer p : socketObservers.keySet()) {
+            try{
+                socketObservers.get(p).writeObject(response);
+                socketObservers.get(p).reset();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         // actions to be performed once only
         this.roundCounter = 0;
         this.assignColors();
@@ -208,14 +236,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void run() {
-        try {
-            gameInit();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("Exception in MatchMultiplayer, run()");
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        gameInit();
     }
 
     public void observeMatchRemote(MatchObserver observer, String username) {
@@ -230,28 +251,9 @@ public class MatchMultiplayer extends Match implements Runnable {
         System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
         if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
+            localThread=new Thread(this);
             localThread.start();
         }
-    }
-
-    public void observeMatchSocket(MatchObserver observer, String username) {
-
-        for (PlayerMultiplayer p : players) {
-            if (p.getName().equals(username)) {
-                this.socketObservers.put(p, observer);
-                break;
-            }
-        }
-
-        System.out.println("Gli observers socket del match" + this.matchId + " al momento sono: " + socketObservers.size());
-        System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
-        if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
-            localThread.start();
-        }
-    }
-
-    public void start(){
-        localThread = new Thread(this);
     }
 
     public void showWindow(String name, String owner) throws RemoteException {

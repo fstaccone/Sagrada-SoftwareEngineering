@@ -14,6 +14,7 @@ public class ClientController implements ResponseHandler {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private LoginHandler loginHandler;
+    private SocketCli socketCli;
 
     public ClientController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler) {
         this.in = in;
@@ -46,11 +47,15 @@ public class ClientController implements ResponseHandler {
         return nameAlreadyTaken;
     }
 
+    public void setSocketCli(SocketCli socketCli) {
+        this.socketCli = socketCli;
+    }
 
     @Override
     public void handle(NameAlreadyTakenResponse response) {
         this.nameAlreadyTaken=response.nameAlreadyTaken;
     }
+
     @Override
     public void handle(WaitingPlayersResponse response){
         loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
@@ -59,6 +64,32 @@ public class ClientController implements ResponseHandler {
                 loginHandler.getWaitingScreenHandler().onPlayerExit(response.name);
             else
                 loginHandler.getWaitingScreenHandler().onLastPlayer(response.name);
+        }
+    }
+
+    @Override
+    public void handle(MatchStartedResponse response) {
+        loginHandler.onMatchStartedSocket();
+    }
+
+    @Override
+    public void handle(ActualPlayersResponse response) {
+        if (socketCli!=null){
+            socketCli.onPlayers(response.playersNames);
+        }
+    }
+
+    @Override
+    public void handle(YourTurnResponse response) {
+        if (socketCli!=null){
+            socketCli.onYourTurn(response.myTurn);
+        }
+    }
+
+    @Override
+    public void handle(ReserveResponse response) {
+        if (socketCli!=null){
+            socketCli.onReserve(response.reserve);
         }
     }
 

@@ -2,8 +2,11 @@ package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.ReserveResponse;
+import it.polimi.ingsw.YourTurnResponse;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Timer;
 
@@ -66,10 +69,26 @@ public class TurnManager implements Runnable {
             if (player.getStatus() == ConnectionStatus.READY) {
 
 
-                // solo RMI per ora
-                match.getRemoteObservers().get(player).onYourTurn( true);
-                match.getRemoteObservers().get(player).onReserve( match.getBoard().getReserve().getDices().toString());
+                //RMI
+                if(match.getRemoteObservers().size()!=0)
+                    if(match.getRemoteObservers().get(player) !=null) {
+                        match.getRemoteObservers().get(player).onYourTurn(true);
+                        match.getRemoteObservers().get(player).onReserve( match.getBoard().getReserve().getDices().toString());
+                    }
 
+                //SOCKET
+                if(match.getSocketObservers().size()!=0) {
+                    if(match.getSocketObservers().get(player) !=null) {
+                        try {
+                            match.getSocketObservers().get(player).writeObject(new YourTurnResponse(true));
+                            match.getSocketObservers().get(player).reset();
+                            match.getSocketObservers().get(player).writeObject(new ReserveResponse(match.getBoard().getReserve().getDices().toString()));
+                            match.getSocketObservers().get(player).reset();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
                 match.setDiceAction(false);
                 match.setToolAction(false);
@@ -95,7 +114,22 @@ public class TurnManager implements Runnable {
                     System.out.println("TurnManager correttamente risvegliato");
                 }
 
-                match.getRemoteObservers().get(player).onYourTurn( false);// INSERITA DA ME(F.S.), da verificare con PAOLO
+                //RMI
+                if(match.getRemoteObservers().size()!=0)
+                    if (match.getRemoteObservers().get(player)!=null)
+                        match.getRemoteObservers().get(player).onYourTurn( false);
+
+                //SOCKET
+                if(match.getSocketObservers().size()!=0) {
+                    if (match.getSocketObservers().get(player)!=null) {
+                        try {
+                            match.getSocketObservers().get(player).writeObject(new YourTurnResponse(false));
+                            match.getSocketObservers().get(player).reset();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
 
             if (!expired) {
@@ -112,9 +146,26 @@ public class TurnManager implements Runnable {
             if (match.getPlayers().get(i).getTurnsLeft() > 0 && match.getPlayers().get(i).getStatus() == ConnectionStatus.READY) {
                 System.out.println("From match : Turn 2 - round " + (match.getCurrentRound() + 1) + " player: " + match.getPlayers().get(i).getName());
 
-                // solo RMI per ora
-                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( true);
-                match.getRemoteObservers().get(match.getPlayers().get(i)).onReserve( match.getBoard().getReserve().getDices().toString());
+                //RMI
+                if(match.getRemoteObservers().size()!=0)
+                    if (match.getRemoteObservers().get(match.getPlayers().get(i))!=null) {
+                        match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(true);
+                        match.getRemoteObservers().get(match.getPlayers().get(i)).onReserve(match.getBoard().getReserve().getDices().toString());
+                    }
+
+                //SOCKET
+                if(match.getSocketObservers().size()!=0) {
+                    if(match.getSocketObservers().get(match.getPlayers().get(i))!=null) {
+                        try {
+                            match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new YourTurnResponse(true));
+                            match.getSocketObservers().get(match.getPlayers().get(i)).reset();
+                            match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new ReserveResponse(match.getBoard().getReserve().getDices().toString()));
+                            match.getSocketObservers().get(match.getPlayers().get(i)).reset();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
                 match.setDiceAction(false);
                 match.setToolAction(false);
@@ -133,8 +184,22 @@ public class TurnManager implements Runnable {
                     System.out.println("TurnManager correttamente risvegliato");
                 }
 
-                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( false);
+                //RMI
+                if(match.getRemoteObservers().size()!=0)
+                    if(match.getRemoteObservers().get(match.getPlayers().get(i))!=null)
+                        match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn( false);
 
+                //SOCKET
+                if(match.getSocketObservers().size()!=0) {
+                    if (match.getSocketObservers().get(match.getPlayers().get(i)) != null) {
+                        try {
+                            match.getSocketObservers().get(match.getPlayers().get(i)).writeObject(new YourTurnResponse(false));
+                            match.getSocketObservers().get(match.getPlayers().get(i)).reset();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
 
             if (!expired) {

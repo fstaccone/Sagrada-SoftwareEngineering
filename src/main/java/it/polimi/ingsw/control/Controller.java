@@ -17,7 +17,7 @@ import java.util.List;
 public class Controller extends UnicastRemoteObject implements RemoteController, RequestHandler {
 
     private Lobby lobby;
-    private List<SocketHandler> socketHandlers;
+    private List<SocketHandler> socketHandlers; //Intermediate variable, useful between View and Model
 
 
     public Controller(Lobby lobby) throws RemoteException {
@@ -76,6 +76,19 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
+    public void goThrough(String name, boolean isSingle){
+        if(isSingle){
+            lobby.getSingleplayerMatches().get(name).setEndsTurn(true);
+        }else {
+            lobby.getMultiplayerMatches().get(name).setEndsTurn(true);
+            System.out.println("Da controller: metodo passa funziona!");
+            synchronized (lobby.getMultiplayerMatches().get(name).getLock()) {
+                lobby.getMultiplayerMatches().get(name).getLock().notify();
+            }
+        }
+    }
+
+    @Override
     public Response handle(CheckUsernameRequest request) {
         return new NameAlreadyTakenResponse(!checkName(request.username));
     }
@@ -94,15 +107,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public Response handle(ObserveMatchRequest request) {
-        lobby.observeMatchSocket(request.username, request.matchObserver);
+    public Response handle(RemoveFromWaitingPlayersRequest request) {
+        lobby.getSocketObservers().remove(request.name);
+        lobby.removeFromWaitingPlayers(request.name);
         return null;
     }
 
     @Override
-    public Response handle(RemoveFromWaitingPlayersRequest request) {
-        lobby.getSocketObservers().remove(request.name);
-        lobby.removeFromWaitingPlayers(request.name);
+    public Response handle(GoThroughRequest request) {
+        goThrough(request.username,request.singlePlayer);
         return null;
     }
 
@@ -119,19 +132,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         this.socketHandlers.add(socketHandler);
     }
 
-    @Override
-    public void goThrough(String name, boolean isSingle){
-        if(isSingle){
-            lobby.getSingleplayerMatches().get(name).setEndsTurn(true);
-            // todo: gestire la chiamata all'interno del match singleplayer
-        }else {
-            lobby.getMultiplayerMatches().get(name).setEndsTurn(true);
-            System.out.println("Da controller: metodo passa funziona!");
-            synchronized (lobby.getMultiplayerMatches().get(name).getLock()) {
-                lobby.getMultiplayerMatches().get(name).getLock().notify();
-            }
-        }
-    }
 
     @Override
     public boolean placeDice(int index, int x, int y, String name, boolean isSingle) {
@@ -181,24 +181,4 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
         // getPlayer(name).setSchemeCard();
     }
-
-    // private transient final Room room;
-    // private final Map<Player, ViewInterface> views = new HashMap<>();
-
-    //public Controller() throws RemoteException{
-    //    super();
-    //  room= Room.get();
-    //}
-
-    //@Override
-    //public synchronized String login(String playername, ViewInterface view) throws RemoteException {
-    //Player player=room.login(playername);
-
-    //views.put(player, view);
-    //view.ack("Logged in as @" + player.getName());
-    //return player.getName();//ritorna playername alla view
-    //}
-
-
-    //dopo il login il controller ha il riferimento a ciascun player quindi può chiamarne i metodi
 }

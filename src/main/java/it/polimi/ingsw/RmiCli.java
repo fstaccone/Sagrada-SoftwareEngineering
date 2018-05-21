@@ -16,11 +16,11 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     private boolean myTurn;
     private final PrintWriter printer;
 
-    List<String> dicesList;
+    private List<String> dicesList;
 
-    int diceChosen;
-    int coordinateX;
-    int coordinateY;
+    private int diceChosen;
+    private int coordinateX;
+    private int coordinateY;
 
     private boolean single; //NON SONO CONVINTO SIA LA SOLUZIONE MIGLIORE
 
@@ -49,9 +49,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             "\n 'q'                                         to quit the game" +
             "\n 'sp'                                        to show all opponents' names" +
             "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
-            "\n 'cw' + 'number'                             to choose tour window pattern card (available only if it's your turn and once only)" +
+            "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
             "\n 'cd' + 'number'                             to choose the dice from the Reserve (available only if it's your turn)" +
-            "\n 'pd' +'coordinate x' + 'coordinate y'       to place the chosen dice in your Scheme Card (available only if it's your turn)" +
+            "\n 'pd' + 'coordinate x' + 'coordinate y'       to place the chosen dice in your Scheme Card (available only if it's your turn)" +
             "\n 'pass'                                      to pass the turn to the next player (available only if it's your turn)");
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
@@ -62,10 +62,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         this.myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
-    }
-
-    public boolean isMyTurn() {
-        return myTurn;
     }
 
     public void launch() {
@@ -97,21 +93,21 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.flush();
     }
 
-    @Override
-    public void onWindowChoise(String[] windows) {
-
-    }
 
     @Override
-    public void onShowWindow(String window) throws RemoteException {
-        printer.println(window);
+    public void onYourTurn(boolean yourTurn) {
+        this.myTurn = yourTurn;
+        if (myTurn)
+            printer.println("\nNow it's your turn! Please insert a command:                                  ~ ['h' for help]\n");
+        else
+            printer.println("\nIt's no more your turn! (h for help)");
         printer.flush();
     }
 
     @Override
     public void onReserve(String string) {
         String dicesString = string.substring(1, string.length() - 1);
-        printer.println("Here follows the current RESERVE state:");
+        printer.println("\nHere follows the current RESERVE state:            ~ ['cd number' to choose the dice you want]\n");
         printer.flush();
         dicesList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
@@ -121,15 +117,18 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             printer.println(i++ + ") " + dice);
             printer.flush();
         }
+        printer.println( "\n");
+        printer.flush();
     }
 
     @Override
-    public void onYourTurn(boolean yourTurn) {
-        this.myTurn = yourTurn;
-        if (isMyTurn())
-            printer.println("\nNow it's your turn! Please insert a command: (h for help)");
-        else
-            printer.println("\nIt's no more your turn! (h for help)");
+    public void onWindowChoise(String[] windows) {
+
+    }
+
+    @Override
+    public void onShowWindow(String window) {
+        printer.println(window);
         printer.flush();
     }
 
@@ -143,11 +142,11 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                 try {
                     String command = keyboard.readLine();
                     String[] parts = command.split(" ");
-                    if (isMyTurn()) {
+                    if (myTurn) {
                         switch (parts[0]) {
 
                             case "h": {
-                                printer.println("Insert a new valid option between: (+ means SPACE)" + HELP);
+                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
                                 printer.flush();
                             }
                             break;
@@ -168,7 +167,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 diceChosen = Integer.parseInt(parts[1]);
                                 printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString());
                                 printer.flush();
-
                             }
                             break;
 
@@ -200,14 +198,14 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             default: {
-                                printer.println("Wrong choise. Insert a new valid option between: (+ means SPACE)" + HELP);
+                                printer.println("Wrong choise. Insert a new valid option between: ('+' means SPACE)" + HELP);
                                 printer.flush();
                             }
                         }
                     } else {
                         switch (parts[0]) {
                             case "h": {
-                                printer.println("Insert a new valid option between: (+ means SPACE)" + HELP);
+                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
                                 printer.flush();
                             }
                             break;

@@ -112,13 +112,10 @@ public class LoginHandler implements Initializable{
         guiCheckmark.setSelected(false);
     }
 
-
-
     @FXML
     private void playClicked() throws Exception {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         readInput();
-
 
         window = (Stage) playButton.getScene().getWindow();
         FXMLLoader fx = new FXMLLoader();
@@ -303,8 +300,6 @@ public class LoginHandler implements Initializable{
             try {
                 new Thread(new SocketListener(clientController)).start();
                 clientController.request(new AddPlayerRequest(this.username));
-                new Thread(new SocketCli(username,clientController)).start();
-
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -320,6 +315,16 @@ public class LoginHandler implements Initializable{
            new RmiCli(username,controller, false).launch();
        }
        else new RmiGui(username,controller).launch();
+    }
+
+    public void onMatchStartedSocket() {
+        if (isCli){
+            Platform.runLater(() -> window.close());
+            new SocketCli(username,clientController).launch();
+        }
+        else {
+            //new SocketGui(username,controller).launch();
+        }
     }
 
     public WaitingScreenHandler getWaitingScreenHandler(){
