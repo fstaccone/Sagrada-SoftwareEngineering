@@ -122,12 +122,20 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onWindowChoise(String[] windows) {
-
+    public void onWindowChoise(List<String> windows) {
+        int i = 0;
+        printer.println("Choose your window among the following by typing [cw] + [number]!\n");
+        printer.flush();
+        for(String s : windows){
+            printer.println(i++ + ") " + s + "\n");
+            printer.flush();
+        }
     }
 
     @Override
     public void onShowWindow(String window) {
+        printer.println("Your window pattern card:");
+        printer.flush();
         printer.println(window);
         printer.flush();
     }
@@ -171,10 +179,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "cw": {
-                                controller.chooseWindow(username, Integer.parseInt(parts[1]));
-                                printer.println("Good choise, this is your window pattern card:\n");
-                                printer.flush();
-                                controller.showWindow(username, username);
+                                controller.chooseWindow(username, Integer.parseInt(parts[1]), false);
                             } break;
 
                             case "pd": {

@@ -116,7 +116,7 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onWindowChoise(String[] windows) {
+    public void onWindowChoise(List<String> windows) throws RemoteException {
 
     }
 

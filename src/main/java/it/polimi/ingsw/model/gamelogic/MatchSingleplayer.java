@@ -57,4 +57,14 @@ public class MatchSingleplayer extends Match implements Runnable{
     public void run() {
 
     }
+
+    @Override
+    public void setWindowPatternCard(String name, int index) {
+
+    }
+
+    @Override
+    public boolean placeDice(String name, int index, int x, int y) {
+        return false;
+    }
 }

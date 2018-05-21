@@ -5,7 +5,6 @@ import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 
-import javax.sound.midi.SysexMessage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
@@ -22,18 +21,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     private int matchId;
     private TurnManager turnManager;
 
-    List<WindowPatternCard> windowsToBeProposed;
-
-    /**
-     *
-     */
-    private Object lock;
-
-    public Object getLock() { return lock; }
-
-    /**
-     *
-     */
+    List<WindowPatternCard> windowsProposed;
 
     private List<PlayerMultiplayer> players;
 
@@ -42,7 +30,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         super();
         this.matchId = matchId;
 
-        this.lock = new Object();
         turnManager = new TurnManager(this, turnTime);
 
         System.out.println("New multiplayer matchId: " + matchId);
@@ -75,10 +62,10 @@ public class MatchMultiplayer extends Match implements Runnable {
      * è il posto giusto?
      *
      */
-    public List<WindowPatternCard> getWindowsToBeProposed() { return windowsToBeProposed; }
+    public List<WindowPatternCard> getWindowsProposed() { return windowsProposed; }
 
-    public void initializeWindowsToBeProposed(List<WindowPatternCard> windowsToBeProposed, int n) {
-        this.windowsToBeProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(4*n , 4*(n+1)); // todo: sarebbe più sensato eliminare le carte
+    public void initializeWindowsToBeProposed( int n) {
+        this.windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(4*n , 4*(n+1)); // todo: sarebbe più sensato eliminare le carte
     }
 
     /**
@@ -275,5 +262,33 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         }
         return null;
+    }
+
+    @Override
+    public void setWindowPatternCard(String name, int index) throws RemoteException {
+        getPlayer(name).setSchemeCard(windowsProposed.get(index)); // todo: handle exceptions
+        setWindowChosen(true);
+
+        remoteObservers.get(getPlayer(name)).onShowWindow(getPlayer(name).getSchemeCard().toString());
+
+        synchronized (getLock()) { // è più giusto mettere lock protected?
+            getLock().notify();
+        }
+    }
+
+    @Override
+    public boolean placeDice(String name, int index, int x, int y) {
+        if (!isDiceAction()) {
+            getPlayer(name).getSchemeCard().putDice(getPlayer(name).chooseDice(index), x, y);
+            setDiceAction(true);
+
+            synchronized (getLock()) {
+                getLock().notify();
+            }
+            System.out.println("tttttttttttttttttttttttttttttt");
+            return true;
+        }
+        System.out.println("fffffffffffffffffffffffffffffffffffffffffffff");
+        return false;
     }
 }

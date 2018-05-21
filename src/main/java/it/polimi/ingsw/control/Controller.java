@@ -78,13 +78,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void goThrough(String name, boolean isSingle){
         if(isSingle){
-            lobby.getSingleplayerMatches().get(name).setEndsTurn(true);
+            lobby.getSingleplayerMatches().get(name).goThrough(name);
         }else {
-            lobby.getMultiplayerMatches().get(name).setEndsTurn(true);
-            System.out.println("Da controller: metodo passa funziona!");
-            synchronized (lobby.getMultiplayerMatches().get(name).getLock()) {
-                lobby.getMultiplayerMatches().get(name).getLock().notify();
-            }
+            lobby.getMultiplayerMatches().get(name).goThrough(name);
         }
     }
 
@@ -137,28 +133,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     public boolean placeDice(int index, int x, int y, String name, boolean isSingle) {
         if (isSingle) {
             lobby.getMultiplayerMatches().get(name).setDiceAction(true);
-            // todo: gestire la chiamata all'interno del match singleplayer con TurnManager
-        }else{
-            if (lobby.getMultiplayerMatches().get(name).isDiceAction()) {
-
-                for (PlayerMultiplayer p : lobby.getMultiplayerMatches().get(name).getPlayers()) {
-                    if (p.getName().equals(name)) {
-                        p.getSchemeCard().putDice(p.chooseDice(index), x, y);
-
-                        lobby.getMultiplayerMatches().get(name).setDiceAction(true);
-
-                        synchronized (lobby.getMultiplayerMatches().get(name).getLock()) {
-                            lobby.getMultiplayerMatches().get(name).getLock().notify();
-                        }
-
-                        return true;
-                    }
-                }
-            }else{
-                return false;
-            }
+            // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
+        }else {
+            System.out.println("PppppppppppPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
+            return lobby.getMultiplayerMatches().get(name).placeDice(name, index, x, y);
         }
-        return false; // non si dovrebbe mai arrivare qui
+        return false;
     }
 
     // non sono convinto sia corretto ma credo che non abbia senso fare altri giri per notificare i nomi dei giocatori
@@ -177,8 +157,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
 
     @Override
-    public void chooseWindow(String name, int index) {
-
-        // getPlayer(name).setSchemeCard();
+    public void chooseWindow(String name, int index, boolean isSingle) throws RemoteException {
+        if(isSingle){
+            lobby.getSingleplayerMatches().get(name).setWindowPatternCard(name, index);
+        }else{
+            lobby.getMultiplayerMatches().get(name).setWindowPatternCard(name, index);
+        }
     }
 }

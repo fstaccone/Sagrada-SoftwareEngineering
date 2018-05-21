@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.gameobjects.DecksContainer;
 import java.rmi.RemoteException;
 import java.util.*;
 
+import static org.mockito.ArgumentMatchers.longThat;
 import static org.mockito.Mockito.mock;
 
 
@@ -22,12 +23,18 @@ public abstract class Match {
     private boolean toolAction;
     private boolean endsTurn;
     private boolean secondDiceAction;
+    private boolean windowChosen;
+
+    private final Object lock;
+
 
     public Match() {
+        this.lock = new Object();
         this.bag = new Bag(18);
     }
 
     // getters
+    public Object getLock() { return lock; }
     public DecksContainer getDecksContainer() {
         return decksContainer;
     }
@@ -43,7 +50,7 @@ public abstract class Match {
     public boolean isToolAction() { return toolAction; }
     public boolean isEndsTurn() { return endsTurn; }
     public boolean isSecondDiceAction() { return secondDiceAction; }
-
+    public boolean isWindowChosen() { return windowChosen; }
     // end of getters
 
     // to limit player action
@@ -51,7 +58,7 @@ public abstract class Match {
     public void setToolAction(boolean toolAction) { this.toolAction = toolAction; }
     public void setEndsTurn(boolean endsTurn) { this.endsTurn = endsTurn; }
     public void setSecondDiceAction(boolean secondDiceAction) { this.secondDiceAction = secondDiceAction; }
-
+    public void setWindowChosen(boolean windowChosen) { this.windowChosen = windowChosen; }
 
     public void incrementRoundCounter() { this.roundCounter++; }
 
@@ -71,5 +78,16 @@ public abstract class Match {
     public abstract void calculateFinalScore();
 
     public abstract void terminateMatch();
+
+    public abstract void setWindowPatternCard(String name, int index) throws RemoteException;
+
+    public abstract boolean placeDice(String name, int index, int x, int y);
+
+    public void goThrough(String name){
+        setEndsTurn(true);
+        synchronized (lock) {
+            lock.notify();
+        }
+    }
 }
 

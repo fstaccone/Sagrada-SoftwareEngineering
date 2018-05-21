@@ -1,18 +1,20 @@
 package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.ConnectionStatus;
-import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.ReserveResponse;
 import it.polimi.ingsw.YourTurnResponse;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Timer;
+import java.util.stream.Collectors;
 
 public class TurnManager implements Runnable {
 
     private Timer turnTimer;
+    TurnTimer task;
     private int turnTime;
     private MatchMultiplayer match;
 
@@ -26,6 +28,7 @@ public class TurnManager implements Runnable {
     @Override
     public void run() {
         try {
+            drawWindowPatternCards();
             turnManager();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -34,6 +37,43 @@ public class TurnManager implements Runnable {
             System.out.println("Remote exception from TurnManager");
         }
     }
+
+    private void drawWindowPatternCards() throws InterruptedException, RemoteException {
+
+        for(int i = 0; i < match.getPlayers().size(); i++) {
+            match.initializeWindowsToBeProposed(i);
+            match.setWindowChosen(false);
+
+            if (match.getPlayers().get(i).getStatus() == ConnectionStatus.READY) {
+                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(true);
+                match.getRemoteObservers().get(match.getPlayers().get(i)).onWindowChoise(match.getWindowsProposed()
+                        .stream()
+                        .map(WindowPatternCard::toString)
+                        .collect(Collectors.toList()));
+
+
+                turnTimer = new Timer();
+                task = new TurnTimer(match, match.getPlayers().get(i));
+                turnTimer.schedule(task, turnTime);
+
+                while (!match.isWindowChosen()) {
+                    synchronized (match.getLock()) {
+                        match.getLock().wait();
+                    }
+                }
+
+                if (!expired) {
+                    turnTimer.cancel();
+                }
+
+                match.getRemoteObservers().get(match.getPlayers().get(i)).onYourTurn(false);
+
+            }
+        }
+
+
+    }
+
 
 
     private void turnManager() throws InterruptedException, RemoteException {
@@ -48,20 +88,15 @@ public class TurnManager implements Runnable {
         }
 
         match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
-
-        /**
-         * Per la scelta della carta schema uso un booleano (come per il gioco normale)
-         * e lo faccio solo per il primo turno del primo round
-         *
-         * Ha senso farlo fuori dal for, in ogni caso questo metodo va splittato
-         *
-         * lo faccio io (PAOLO), lo ho in mente
-         *
-         */
-
         
         // first turn
         for (PlayerMultiplayer player : match.getPlayers()) {
+
+            // initialisation of flags to control the turn's flow
+            match.setDiceAction(false);
+            match.setToolAction(false);
+            match.setEndsTurn(false);
+            match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
 
             // debug
             System.out.println("From match : Turn 1 - round " + (match.getCurrentRound() + 1) + " player: " + player.getName());
@@ -89,11 +124,6 @@ public class TurnManager implements Runnable {
                         }
                     }
                 }
-
-                match.setDiceAction(false);
-                match.setToolAction(false);
-                match.setEndsTurn(false);
-                match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
 
                 turnTimer = new Timer();
                 task = new TurnTimer(match, player);
@@ -181,6 +211,7 @@ public class TurnManager implements Runnable {
                     synchronized (match.getLock()) {
                         match.getLock().wait();
                     }
+                    // debug
                     System.out.println("TurnManager correttamente risvegliato");
                 }
 
@@ -215,7 +246,7 @@ public class TurnManager implements Runnable {
         // following the idea that the first player in this round will be the last in the next round
         match.getPlayers().add(match.getPlayers().get(0));
         match.getPlayers().remove(0);
-        this.nextRound();
+        nextRound();
 
     }
 
