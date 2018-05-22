@@ -135,6 +135,11 @@ public class SocketCli implements Serializable, MatchObserver {
         printer.flush();
     }
 
+    @Override
+    public void onShowToolCards(List<String> cards) throws RemoteException {
+
+    }
+
     private class KeyboardHandler extends Thread {
 
         @Override

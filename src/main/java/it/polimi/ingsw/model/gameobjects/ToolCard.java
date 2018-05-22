@@ -57,7 +57,7 @@ public class ToolCard extends Card{
         effect.applyEffect( caller,  match);
     }
 
-    public String getCardname() {
+    public String getName() {
         return name;
     }
 

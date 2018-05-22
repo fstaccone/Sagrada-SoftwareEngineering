@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     private String username;
-    private RemoteController controller;
+    private transient RemoteController controller;
     private boolean myTurn;
-    private final PrintWriter printer;
+    private final transient PrintWriter printer;
 
     private List<String> dicesList;
 
@@ -48,6 +48,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             "\n 'r'                                         to show game rules" +
             "\n 'q'                                         to quit the game" +
             "\n 'sp'                                        to show all opponents' names" +
+            "\n 'st'                                        to show tool cards" +
             "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
             "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
             "\n 'cd' + 'number'                             to choose the dice from the Reserve (available only if it's your turn)" +
@@ -107,7 +108,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onReserve(String string) {
         String dicesString = string.substring(1, string.length() - 1);
-        printer.println("\nHere follows the current RESERVE state:            ~ ['cd number' to choose the dice you want]\n");
+        printer.println("\nHere follows the current RESERVE state:          ~ ['cd number' to choose the dice you want]\n");
         printer.flush();
         dicesList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
@@ -124,7 +125,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onWindowChoise(List<String> windows) {
         int i = 0;
-        printer.println("Choose your window among the following by typing [cw] + [number]!\n");
+        printer.println("Choose your window among the following             ~ [cw] + [number]!\n");
         printer.flush();
         for(String s : windows){
             s=s.replaceAll("null"," ");
@@ -139,6 +140,19 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.flush();
         printer.println(window);
         printer.flush();
+    }
+
+    @Override
+    public void onShowToolCards(List<String> cards) throws RemoteException {
+        int i = 0;
+
+        printer.println("Tool cards:");
+        printer.flush();
+
+        for(String s : cards){
+            printer.println(i++ + ") " + s);
+            printer.flush();
+        }
     }
 
     private class KeyboardHandler extends Thread {
@@ -206,6 +220,11 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "pass": {
                                 controller.goThrough(username, single);
+                            }
+                            break;
+
+                            case "st": {
+                                controller.showToolcards(username, single);
                             }
                             break;
 

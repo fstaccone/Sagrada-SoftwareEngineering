@@ -36,15 +36,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     // da gestire il caso di riconnessione
     @Override
     public boolean checkName(String name) {
-
-        for (String n : lobby.getTakenUsernames()) {
-            if (name.equals(n)) {
-                System.out.println("checkName found a double name");
-                return false;
-            }
-        }
-        return true;
+        return !lobby.checkName(name);
     }
+
 
 
     @Override
@@ -56,17 +50,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void addPlayer(String name) {
         this.lobby.addUsername(name);
-
-        // check if there is a still alive match in which the player must be put
-        if (lobby.getMultiplayerMatches().get(name) != null) {
-            for (PlayerMultiplayer p : lobby.getMultiplayerMatches().get(name).getPlayers()) {
-                if (p.getName().equals(name)) {
-                    p.setStatus(ConnectionStatus.READY);
-                }
-            }
-        } else {
-            this.lobby.addToWaitingPlayers(name);
-        }
+        this.lobby.addPlayer(name);
     }
 
     @Override
@@ -138,24 +122,19 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean placeDice(int index, int x, int y, String name, boolean isSingle) {
         if (isSingle) {
-            lobby.getMultiplayerMatches().get(name).setDiceAction(true);
+            lobby.getSingleplayerMatches().get(name).setDiceAction(true);
             // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
         }else {
-            System.out.println("PppppppppppPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
             return lobby.getMultiplayerMatches().get(name).placeDice(name, index, x, y);
         }
         return false;
     }
 
-    // non sono convinto sia corretto ma credo che non abbia senso fare altri giri per notificare i nomi dei giocatori
-    // (il nome serve per chiedere di visualizzare la carta schema degli avversari)
     @Override
     public void showPlayers(String name) throws RemoteException {
         lobby.getMultiplayerMatches().get(name).showPlayers(name);
     }
 
-    // ha senso chiedere di ristampare la propria carta schema?
-    // Se si allora occorre gestire il caso del single player (si potrebbe scrivere un altro metodo)
     @Override
     public void showWindow(String name, String owner) throws RemoteException {
         lobby.getMultiplayerMatches().get(name).showWindow(name, owner);
@@ -168,6 +147,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
             lobby.getSingleplayerMatches().get(name).setWindowPatternCard(name, index);
         }else{
             lobby.getMultiplayerMatches().get(name).setWindowPatternCard(name, index);
+        }
+    }
+
+    @Override
+    public void showToolcards(String name, boolean isSingle) throws RemoteException {
+        if(isSingle){
+            lobby.getSingleplayerMatches().get(name).showToolCards();
+        }else{
+            lobby.getMultiplayerMatches().get(name).showToolCards(name);
         }
     }
 }

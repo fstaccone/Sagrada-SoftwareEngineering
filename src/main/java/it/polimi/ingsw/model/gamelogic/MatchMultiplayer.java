@@ -22,7 +22,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     private int matchId;
     private TurnManager turnManager;
 
-    List<WindowPatternCard> windowsProposed;
+    private List<WindowPatternCard> windowsProposed;
 
     private List<PlayerMultiplayer> players;
 
@@ -293,20 +293,19 @@ public class MatchMultiplayer extends Match implements Runnable {
     @Override
     public boolean placeDice(String name, int index, int x, int y) {
         if (!isDiceAction()) {
-            System.out.println("296 mmp "+getPlayer(name).getName());
-            System.out.println(board.getReserve().getDices().get(index));
-            getPlayer(name).getSchemeCard().putFirstDice(board.getReserve().getDices().remove(index), x, y);
-            System.out.println(getPlayer(name).getSchemeCard().toString());
-
+            getPlayer(name).getSchemeCard().putDice(board.getReserve().getDices().remove(index), x, y);
             setDiceAction(true);
 
             synchronized (getLock()) {
                 getLock().notify();
             }
-            System.out.println("tttttttttttttttttttttttttttttt");
             return true;
         }
-        System.out.println("fffffffffffffffffffffffffffffffffffffffffffff");
         return false;
+    }
+
+    public void showToolCards(String name) throws RemoteException {
+        remoteObservers.get(getPlayer(name)).onShowToolCards(decksContainer.getToolCardDeck()
+                .getPickedCards().stream().map(ToolCard::getName).collect(Collectors.toList()));
     }
 }

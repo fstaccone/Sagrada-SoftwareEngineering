@@ -67,4 +67,7 @@ public class MatchSingleplayer extends Match implements Runnable{
     public boolean placeDice(String name, int index, int x, int y) {
         return false;
     }
+
+    public void showToolCards(){
+    }
 }
