@@ -163,7 +163,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                 try {
                     String command = keyboard.readLine();
-                    String[] parts = command.split(" ");
+                    String[] parts = command.split(" +");
                     if (myTurn) {
                         switch (parts[0]) {
 
@@ -186,28 +186,42 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "cd": {
-                                diceChosen = Integer.parseInt(parts[1]);
-                                printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString()+"\n");
-                                printer.flush();
+                                if (Integer.parseInt(parts[1])<dicesList.size()){
+                                    diceChosen = Integer.parseInt(parts[1]);
+                                    printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString() + "\n");
+                                    printer.flush();
+                                }
+                                else
+                                    printer.println("The dice you are trying to use does not exist, please retry ");
+                                    printer.flush();
                             }
                             break;
 
                             case "cw": {
-                                controller.chooseWindow(username, Integer.parseInt(parts[1]), false);
+                                if (Integer.parseInt(parts[1])<4)
+                                    controller.chooseWindow(username, Integer.parseInt(parts[1]), false);
+                                //DA SETTARE BOOLEANO COSì DA NON CONSENTIRGLI DI FARE LA cd o pt PRIMA DI AVER SCELTO LA SCHEME CARD
+                                else
+                                    printer.println("The scheme you are trying to choose does not exist, please retry ");
+                                    printer.flush();
                             } break;
 
                             case "pd": {
-                                coordinateX = Integer.parseInt(parts[1]);
-                                coordinateY = Integer.parseInt(parts[2]);
-                                printer.println("You have chosen to place the dice in the [" + coordinateX + "][" + coordinateY + "] square of your Scheme Card");
-                                printer.flush();
-                                if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
-                                    printer.println("Well done! The chosen dice has been placed correctly.\n");
+                                if (Integer.parseInt(parts[1])<4 && Integer.parseInt(parts[2])<5) {
+                                    coordinateX = Integer.parseInt(parts[1]);
+                                    coordinateY = Integer.parseInt(parts[2]);
+                                    printer.println("You have chosen to place the dice in the [" + coordinateX + "][" + coordinateY + "] square of your Scheme Card");
                                     printer.flush();
-                                } else {
-                                    printer.println("You tried to place a dice when you shouldn't!");
-                                    printer.flush();
+                                    if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
+                                        printer.println("Well done! The chosen dice has been placed correctly.\n");
+                                        printer.flush();
+                                    } else {
+                                        printer.println("You tried to place a dice when you shouldn't!");
+                                        printer.flush();
+                                    }
                                 }
+                                else printer.println("The coordinates of your scheme card are out of bounds, please retry ");
+                                printer.flush();
                             }break;
 
                             case "reserve":{
