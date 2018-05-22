@@ -105,6 +105,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+    @Override
+    public Response handle(PlaceDiceRequest request) {
+
+        return new DicePlacedResponse(placeDice(request.diceChosen,request.coordinateX,request.coordinateY,request.username,request.single));
+    }
+
 
     public void observeLobby(String name, LobbyObserver lobbyObserver) {
         lobby.observeLobbyRemote(name, lobbyObserver);
@@ -120,7 +126,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
 
     @Override
-    public boolean placeDice(int index, int x, int y, String name, boolean isSingle) throws RemoteException {
+    public boolean placeDice(int index, int x, int y, String name, boolean isSingle)  {
         if (isSingle) {
             lobby.getSingleplayerMatches().get(name).setDiceAction(true);
             // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer

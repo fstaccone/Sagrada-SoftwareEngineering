@@ -167,6 +167,7 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     private class KeyboardHandler extends Thread {
+        String parts[];
 
         @Override
         public void run() {
@@ -175,9 +176,36 @@ public class SocketCli implements Serializable, MatchObserver {
 
                 try {
                     String command = keyboard.readLine();
-                    String[] parts = command.split(" +");
+                    parts = command.split(" +");
                     if(myTurn) {
                         switch (parts[0]) {
+
+                            case "cd":{
+                                if (Integer.parseInt(parts[1])<dicesList.size()){
+                                    diceChosen = Integer.parseInt(parts[1]);
+                                    printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString() + "\n");
+                                    printer.flush();
+                                }
+                                else {
+                                    printer.println("The dice you are trying to use does not exist, please retry ");
+                                    printer.flush();
+                                }
+                            }
+                            break;
+
+                            case "cw": {
+
+                                if (Integer.parseInt(parts[1])<4){
+                                    printer.println("You have chosen:");
+                                    printer.flush();
+                                    controller.request(new ChooseWindowRequest(username, Integer.parseInt(parts[1]), false));
+                                }
+                                //DA SETTARE BOOLEANO COSì DA NON CONSENTIRGLI DI FARE LA cd o pt PRIMA DI AVER SCELTO LA SCHEME CARD
+                                else {
+                                    printer.println("The scheme you are trying to choose does not exist, please retry ");
+                                    printer.flush();
+                                }
+                            } break;
 
                             case "h": {
                                 printer.println( "Insert a new valid option between: ('+' means SPACE)" +HELP);
@@ -185,41 +213,43 @@ public class SocketCli implements Serializable, MatchObserver {
                             }
                             break;
 
+                            case "pass":{
+                                controller.request(new GoThroughRequest(username, single));
+                            }break;
+
+                            case "pd": {
+                                if (Integer.parseInt(parts[1]) < 4 && Integer.parseInt(parts[2]) < 5) {
+                                    coordinateX = Integer.parseInt(parts[1]);
+                                    coordinateY = Integer.parseInt(parts[2]);
+                                    printer.println("You have chosen to place the dice in the [" + coordinateX + "][" + coordinateY + "] square of your Scheme Card");
+                                    printer.flush();
+                                    controller.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
+                                    controller.nextResponse().handleResponse(controller);
+                                    if (controller.isDicePlaced()) {
+                                        printer.println("Well done! The chosen dice has been placed correctly.\n");
+                                        printer.flush();
+                                    } else {
+                                        printer.println("You tried to place a dice when you shouldn't!");
+                                        printer.flush();
+                                    }
+                                } else {
+                                    printer.println("The coordinates of your scheme card are out of bounds, please retry ");
+                                    printer.flush();
+                                }
+                            }
+                            break;
+
+                            case "q": {
+                                //controller.quitGame(username, single);
+                                controller.request(new GoThroughRequest(username, single));
+                                System.exit(0);
+                            }break;
+
                             case "r": {
                                 printer.println("Regole");
                                 printer.flush();
                             }
                             break;
-
-                            case "q":{
-                                printer.println("Esci");
-                                printer.flush();
-                            }
-                            break;
-
-                            case "cd":{
-                                diceChosen=Integer.parseInt(parts[1]);
-                                printer.println("You have chosen the dice: "+dicesList.toArray()[diceChosen].toString());
-                                printer.flush();
-                            }
-                            break;
-
-                            case "cw": {
-                                controller.request(new ChooseWindowRequest(username, Integer.parseInt(parts[1]), false));
-                            } break;
-
-                            case "pd":{
-                                coordinateX= Integer.parseInt(parts[1]);
-                                coordinateY= Integer.parseInt(parts[2]);
-                                printer.println("You have chosen to place the dice in the ["+coordinateX+"]["+coordinateY+"] square of your Scheme Card");
-                                printer.flush();
-                                //controller.placeDice(diceChosen,coordinateX,coordinateY,username);
-                            }break;
-
-                            case "pass":{
-                                controller.request(new GoThroughRequest(username, single));
-
-                            }break;
 
                             case "reserve":{
                                 printer.println("\nHere follows the current RESERVE state:            ~ ['cd number' to choose the dice you want]\n");
@@ -231,6 +261,40 @@ public class SocketCli implements Serializable, MatchObserver {
                                 }
                                 printer.println();
                                 printer.flush();
+                            }break;
+
+                            case "sw": {
+                                printer.println("Here is the window pattern card of the player " + parts[1]);
+                                printer.flush();
+                                //controller.showWindow(username, parts[1]);
+                            }break;
+
+                            case "tool":{
+                                printer.println("\nHere follows the ToolCard description:          ~ ['usetool number' to use it]\n");
+                                printer.flush();
+                                boolean found = false;
+                                for(ToolCommand toolCommand:toolCommands){
+                                    if (toolCommand.getI()==Integer.parseInt(parts[1])) {
+                                        found=true;
+                                        printer.println(toolCommand.parametersNeeded);
+                                        printer.flush();
+
+                                    }
+                                }
+                                if (!found){
+                                    printer.println("toolcard not in the ToolCard List");
+                                    printer.flush();
+                                }
+                            } break;
+
+                            case "toolcards": {
+                                printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
+                                printer.flush();
+                                onShowToolCards(toolCardsList);
+                            }break;
+
+                            case "usetool":{
+                                useRightCommand(Integer.parseInt(parts[1]));
                             }break;
 
                             default: {
@@ -247,15 +311,27 @@ public class SocketCli implements Serializable, MatchObserver {
                             }
                             break;
 
+                            case "q": {
+                                //controller.quitGame(username, single);
+                                System.exit(0);
+                            }
+                            break;
+
                             case "r": {
                                 printer.println("Regole");
                                 printer.flush();
                             }
                             break;
 
-                            case "q": {
-                                printer.println("Esci");
+                            case "sp": {
+                                //controller.showPlayers(username);
+                            }
+                            break;
+
+                            case "sw": {
+                                printer.println("Here is the window pattern card of the player " + parts[1]);
                                 printer.flush();
+                                //controller.showWindow(username, parts[1]);
                             }
                             break;
 
@@ -270,6 +346,70 @@ public class SocketCli implements Serializable, MatchObserver {
                 }
 
 
+            }
+        }
+
+        private void useRightCommand(int i) {
+
+            boolean found=false;
+            for (ToolCommand toolCommand : toolCommands) {
+                if (toolCommand.getI() == i) {
+                    found=true;
+                    switch (i) {
+                        case 1: {
+                            toolCommand.Command1(Integer.parseInt(parts[2]), "incr"); //parametri a caso
+                        }
+                        break;
+                        case 2: {
+                            toolCommand.Command2(2, 3, 3, 4); //parametri a caso
+                        }
+                        break;
+                        case 3: {
+                            toolCommand.Command3();
+                        }
+                        break;
+                        case 4: {
+                            toolCommand.Command4();
+                        }
+                        break;
+                        case 5: {
+                            toolCommand.Command5();
+                        }
+                        break;
+                        case 6: {
+                            toolCommand.Command6();
+                        }
+                        break;
+                        case 7: {
+                            toolCommand.Command7();
+                        }
+                        break;
+                        case 8: {
+                            toolCommand.Command8();
+                        }
+                        break;
+                        case 9: {
+                            toolCommand.Command9();
+                        }
+                        break;
+                        case 10: {
+                            toolCommand.Command10();
+                        }
+                        break;
+                        case 11: {
+                            toolCommand.Command11();
+                        }
+                        break;
+                        case 12: {
+                            toolCommand.Command12();
+                        }
+                        break;
+                    }
+                }
+            }
+            if (found==false){
+                printer.println("toolcard not in the ToolCard List");
+                printer.flush();
             }
         }
     }

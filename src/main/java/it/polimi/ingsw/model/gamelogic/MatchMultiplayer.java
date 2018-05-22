@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.ActualPlayersResponse;
-import it.polimi.ingsw.ConnectionStatus;
-import it.polimi.ingsw.MatchObserver;
-import it.polimi.ingsw.ShowWindowResponse;
+import it.polimi.ingsw.*;
 import it.polimi.ingsw.model.gameobjects.*;
 
 import java.io.IOException;
@@ -26,7 +23,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     private List<PlayerMultiplayer> players;
 
-    public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String,ObjectOutputStream> socketsOut) {
+    public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut) {
 
         super();
         this.matchId = matchId;
@@ -42,31 +39,32 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         this.players = new ArrayList<>();
 
-        for(String client:clients){
-            PlayerMultiplayer player= new PlayerMultiplayer(client, this);
+        for (String client : clients) {
+            PlayerMultiplayer player = new PlayerMultiplayer(client, this);
             this.players.add(player);
             if (socketsOut.size() != 0) {
-                for(String name:socketsOut.keySet()){
-                    if (name==client){
+                for (String name : socketsOut.keySet()) {
+                    if (name == client) {
                         this.socketObservers.put(player, socketsOut.get(name));
                     }
                 }
             }
         }
         if (this.players.size() == this.socketObservers.size()) {
-            localThread=new Thread(this);
+            localThread = new Thread(this);
             localThread.start();
         }
     }
 
     /**
      * è il posto giusto?
-     *
      */
-    public List<WindowPatternCard> getWindowsProposed() { return windowsProposed; }
+    public List<WindowPatternCard> getWindowsProposed() {
+        return windowsProposed;
+    }
 
-    public void initializeWindowsToBeProposed( int n) {
-        this.windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(4*n , 4*(n+1)); // todo: sarebbe più sensato eliminare le carte
+    public void initializeWindowsToBeProposed(int n) {
+        this.windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(4 * n, 4 * (n + 1)); // todo: sarebbe più sensato eliminare le carte
     }
 
     /**
@@ -74,7 +72,9 @@ public class MatchMultiplayer extends Match implements Runnable {
      *
      */
 
-    public TurnManager getTurnManager() { return turnManager; }
+    public TurnManager getTurnManager() {
+        return turnManager;
+    }
 
     public int getMatchId() {
         return matchId;
@@ -84,7 +84,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         return remoteObservers;
     }
 
-    public Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers(){
+    public Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers() {
         return socketObservers;
     }
 
@@ -102,7 +102,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     // game's initialisation
     @Override
-    public void gameInit(){
+    public void gameInit() {
 
         // todo: revision of the creation of this arraylist
         List<String> playersNames = new ArrayList<>();
@@ -118,9 +118,9 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
 
         //notification to sockets
-        ActualPlayersResponse response=new ActualPlayersResponse(playersNames);
+        ActualPlayersResponse response = new ActualPlayersResponse(playersNames);
         for (PlayerMultiplayer p : socketObservers.keySet()) {
-            try{
+            try {
                 socketObservers.get(p).writeObject(response);
                 socketObservers.get(p).reset();
             } catch (IOException e) {
@@ -234,7 +234,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
         if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
-            localThread=new Thread(this);
+            localThread = new Thread(this);
             localThread.start();
         }
     }
@@ -249,10 +249,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         remoteObservers.get(name).onPlayers(players.stream().map(Player::getName).collect(Collectors.toList()));
     }
 
-    private PlayerMultiplayer getPlayer(String name){
+    private PlayerMultiplayer getPlayer(String name) {
 
-        for(PlayerMultiplayer p : players){
-            if(p.getName().equals(name)) {
+        for (PlayerMultiplayer p : players) {
+            if (p.getName().equals(name)) {
                 return p;
             }
         }
@@ -264,7 +264,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         getPlayer(name).setSchemeCard(windowsProposed.get(index)); // todo: handle exceptions
         setWindowChosen(true);
 
-        if (remoteObservers.get(getPlayer(name))!=null) {
+        if (remoteObservers.get(getPlayer(name)) != null) {
             try {
                 remoteObservers.get(getPlayer(name)).onShowWindow(getPlayer(name).getSchemeCard().toString());
             } catch (RemoteException e) {
@@ -272,7 +272,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         }
 
-        if (socketObservers.get(getPlayer(name))!=null){
+        if (socketObservers.get(getPlayer(name)) != null) {
             try {
                 socketObservers.get(getPlayer(name)).writeObject(new ShowWindowResponse(getPlayer(name).getSchemeCard().toString()));
             } catch (IOException e) {
@@ -286,15 +286,29 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean placeDice(String name, int index, int x, int y) throws RemoteException {
+    public boolean placeDice(String name, int index, int x, int y) {
         if (!isDiceAction()) {
             boolean result;
             result = getPlayer(name).getSchemeCard().putDice(board.getReserve().getDices().get(index), x, y);
             setDiceAction(result);
 
-            if(result){
+            if (result) {
                 board.getReserve().getDices().remove(index);
-                remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
+                if (remoteObservers.get(getPlayer(name)) != null) {
+                    try {
+                        remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (socketObservers.get(getPlayer(name)) != null) {
+                    try {
+                        socketObservers.get(getPlayer(name)).writeObject(new UpdateReserveResponse(board.getReserve().getDices().toString()));
+                        socketObservers.get(getPlayer(name)).reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             synchronized (getLock()) {

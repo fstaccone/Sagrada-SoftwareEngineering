@@ -8,6 +8,7 @@ public class ClientController implements ResponseHandler {
 
 
     private boolean nameAlreadyTaken=false;
+    private boolean dicePlaced=false;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private LoginHandler loginHandler;
@@ -42,6 +43,10 @@ public class ClientController implements ResponseHandler {
 
     public boolean isNameAlreadyTaken() {
         return nameAlreadyTaken;
+    }
+
+    public boolean isDicePlaced(){
+        return dicePlaced;
     }
 
     public void setSocketCli(SocketCli socketCli) {
@@ -108,6 +113,20 @@ public class ClientController implements ResponseHandler {
     public void handle(OtherTurnResponse response) {
         if (socketCli!=null){
             socketCli.onOtherTurn(response.name);
+        }
+    }
+
+    @Override
+    public void handle(UpdateReserveResponse response) {
+        if (socketCli!=null){
+            socketCli.onReserve(response.string);
+        }
+    }
+
+    @Override
+    public void handle(DicePlacedResponse response) {
+        if (socketCli!=null){
+           dicePlaced=response.done;
         }
     }
 

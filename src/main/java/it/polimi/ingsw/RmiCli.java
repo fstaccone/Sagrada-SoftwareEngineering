@@ -178,6 +178,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     private class KeyboardHandler extends Thread {
         String parts[];
+
         @Override
         public void run() {
             BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
@@ -188,18 +189,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                     parts = command.split(" +");
                     if (myTurn) {
                         switch (parts[0]) {
-
-                            case "h": {
-                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
-                                printer.flush();
-                            }
-                            break;
-
-                            case "r": {
-                                printer.println("Regole");
-                                printer.flush();
-                            }
-                            break;
 
                             case "cd": {
                                 if (Integer.parseInt(parts[1])<dicesList.size()){
@@ -228,6 +217,17 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             } break;
 
+                            case "h": {
+                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
+                                printer.flush();
+                            }
+                            break;
+
+                            case "pass": {
+                                controller.goThrough(username, single);
+                            }
+                            break;
+
                             case "pd": {
                                 if (Integer.parseInt(parts[1])<4 && Integer.parseInt(parts[2])<5) {
                                     coordinateX = Integer.parseInt(parts[1]);
@@ -248,6 +248,18 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 }
                             }break;
 
+                            case "q": {
+                                controller.quitGame(username, single);
+                                controller.goThrough(username, single);
+                                System.exit(0);
+                            }break;
+
+                            case "r": {
+                                printer.println("Regole");
+                                printer.flush();
+                            }
+                            break;
+
                             case "reserve":{
                                 printer.println("\nHere follows the current RESERVE state:           ~ ['cd number' to choose the dice you want]\n");
                                 printer.flush();
@@ -264,17 +276,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
                                 printer.flush();
                                 controller.showWindow(username, parts[1]);
-                            }break;
-
-                            case "pass": {
-                                controller.goThrough(username, single);
-                            }
-                            break;
-
-                            case "q": {
-                                controller.quitGame(username, single);
-                                controller.goThrough(username, single);
-                                System.exit(0);
                             }break;
 
                             case "tool":{
@@ -295,14 +296,14 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 }
                             } break;
 
-                            case "usetool":{
-                                useRightCommand(Integer.parseInt(parts[1]));
-                            }break;
-
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
                                 printer.flush();
                                 onShowToolCards(toolCardsList);
+                            }break;
+
+                            case "usetool":{
+                                useRightCommand(Integer.parseInt(parts[1]));
                             }break;
 
                             default: {
@@ -312,9 +313,16 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         }
                     } else {
                         switch (parts[0]) {
+
                             case "h": {
                                 printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
                                 printer.flush();
+                            }
+                            break;
+
+                            case "q": {
+                                controller.quitGame(username, single);
+                                System.exit(0);
                             }
                             break;
 
@@ -333,12 +341,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
                                 printer.flush();
                                 controller.showWindow(username, parts[1]);
-                            }
-                            break;
-
-                            case "q": {
-                                controller.quitGame(username, single);
-                                System.exit(0);
                             }
                             break;
 

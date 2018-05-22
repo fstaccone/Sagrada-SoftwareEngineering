@@ -7,4 +7,5 @@ public interface RequestHandler {
     Response handle (RemoveFromWaitingPlayersRequest request);
     Response handle(GoThroughRequest request);
     Response handle(ChooseWindowRequest request);
+    Response handle(PlaceDiceRequest request);
 }
