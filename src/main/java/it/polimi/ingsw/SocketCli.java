@@ -161,6 +161,11 @@ public class SocketCli implements Serializable, MatchObserver {
         }
     }
 
+    @Override
+    public void onPlayerExit(String name) throws RemoteException {
+
+    }
+
     private class KeyboardHandler extends Thread {
 
         @Override

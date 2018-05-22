@@ -142,7 +142,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.println("Now it's "+name +"'s turn");
         printer.flush();
     }
-    
+
     @Override
     public void onShowToolCards(List<String> cards) {
 
@@ -165,11 +165,16 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.println(toolCardsList.toString());
         printer.flush();
         for(String card: toolCardsList){
-            int i=Integer.parseInt(card.replaceAll("tool","").substring(0,1));
+            int i = Integer.parseInt(card.replaceAll("tool","").substring(0,1));
             this.toolCommands.add(new ToolCommand(i,this.printer));
         }
     }
 
+    @Override
+    public void onPlayerExit(String name) throws RemoteException {
+        printer.println("Player " + name + " has left the game!");
+        printer.flush();
+    }
 
     private class KeyboardHandler extends Thread {
         String parts[];
@@ -275,7 +280,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             case "tool":{
                                 printer.println("\nHere follows the ToolCard description:          ~ ['usetool number' to use it]\n");
                                 printer.flush();
-                                boolean found=false;
+                                boolean found = false;
                                 for(ToolCommand toolCommand:toolCommands){
                                     if (toolCommand.getI()==Integer.parseInt(parts[1])) {
                                         found=true;
@@ -284,14 +289,14 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                                     }
                                 }
-                                if (found==false){
+                                if (!found){
                                         printer.println("toolcard not in the ToolCard List");
                                         printer.flush();
                                 }
                             } break;
 
                             case "usetool":{
-                                UseRightCommand(Integer.parseInt(parts[1]));
+                                useRightCommand(Integer.parseInt(parts[1]));
                             }break;
 
                             case "toolcards": {
@@ -350,7 +355,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
             }
         }
-        private void UseRightCommand(int i) {
+        private void useRightCommand(int i) {
 
             boolean found=false;
             for (ToolCommand toolCommand : toolCommands) {

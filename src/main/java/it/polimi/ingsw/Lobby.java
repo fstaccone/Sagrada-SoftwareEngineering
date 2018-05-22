@@ -186,9 +186,20 @@ public class Lobby {
             PlayerMultiplayer p;
             p = getPlayer(name);
 
+
             p.setStatus(ConnectionStatus.DISCONNECTED);
             removeUsername(p.getName());
             multiplayerMatches.get(name).getRemoteObservers().remove(p);
+            multiplayerMatches.get(name).getSocketObservers().remove(p);
+
+            for(MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()){
+                mo.onPlayerExit(name);
+            }
+
+            if(p.isMyTurn()){
+                p.setMyTurn(false);
+                multiplayerMatches.get(name).goThrough(name);
+            }
 
             // to check if the game must be closed
             if (multiplayerMatches.get(name).checkConnection() < 2) {
@@ -203,6 +214,7 @@ public class Lobby {
                 }
                 multiplayerMatches.get(name).terminateMatch();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("From Lobby: problem in disconnecting player " + name + "!");

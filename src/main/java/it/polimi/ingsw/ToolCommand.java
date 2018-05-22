@@ -8,7 +8,7 @@ public class ToolCommand {
     String parametersNeeded;
 
     public ToolCommand(int i, PrintWriter printer) { //DA SOSTITUIRE PRINTER CON CONTROLLER
-        this.i=i;
+        this.i = i;
         this.printer=printer;
         switch (this.i){
             case 1:{
