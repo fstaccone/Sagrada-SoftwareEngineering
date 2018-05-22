@@ -141,6 +141,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.flush();
     }
 
+    @Override
+    public void onOtherTurn(String name)  {
+        printer.println("Now it's "+name +"'s turn");
+        printer.flush();
+    }
+
     private class KeyboardHandler extends Thread {
 
         @Override
