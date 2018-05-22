@@ -6,9 +6,10 @@ import it.polimi.ingsw.model.gameobjects.effects.*;
 
 public class ToolCard extends Card{
 
+    private String toolID;
     private Effect effect;
 
-    public ToolCard(String name) {
+    public ToolCard(String name, String toolID) {
        super(name);
         switch (this.name) {
             case "Pinza Sgrossatrice":
@@ -50,6 +51,7 @@ public class ToolCard extends Card{
             default: this.name = "Invalid card from ToolCard";
                 break;
         }
+        this.toolID=toolID;
     }
 
     public void useCard(Player caller, Match match){//CONSIDERIAMO PER ESEMPIO LA TOOLCARD4
@@ -63,8 +65,9 @@ public class ToolCard extends Card{
 
     @Override
     public String toString() {
-        return "{" +
-                "cardname='" + name + '\'' +
-                '}';
+        return /*"{" +
+                "cardname='" + toolID + '\'' +
+                '}';*/
+                toolID +" : "+ this.name;
     }
 }

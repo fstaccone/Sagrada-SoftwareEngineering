@@ -5,6 +5,7 @@ import it.polimi.ingsw.control.RemoteController;
 import java.io.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -17,6 +18,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     private final transient PrintWriter printer;
 
     private List<String> dicesList;
+    private List<String> toolCardsList;
+    private List<ToolCommand> toolCommands;
 
     private int diceChosen;
     private int coordinateX;
@@ -64,6 +67,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         this.myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
+        this.toolCommands=new ArrayList<>();
     }
 
     public void launch() {
@@ -102,7 +106,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             onReserve(string);
         this.myTurn = yourTurn;
         if (myTurn)
-            printer.println("\nNow it's your turn! Please insert a command:                                  ~ ['h' for help]\n");
+            printer.println("\nNow it's your turn! Please insert a command:                                   ~ ['h' for help]\n");
         else
             printer.println("\nIt's no more your turn! (h for help)");
         printer.flush();
@@ -119,7 +123,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onWindowChoise(List<String> windows) {
         int i = 0;
-        printer.println("Choose your window among the following             ~ [cw] + [number]!\n");
+        printer.println("Choose your window among the following                                        ~ [cw] + [number]\n");
         printer.flush();
         for(String s : windows){
             printer.println(i++ + ") " + s + "\n");
@@ -129,8 +133,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onShowWindow(String window) {
-        printer.println("Window pattern card:");
-        printer.flush();
         printer.println(window);
         printer.flush();
     }
@@ -142,20 +144,35 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
     
     @Override
-    public void onShowToolCards(List<String> cards) throws RemoteException {
-        int i = 0;
+    public void onShowToolCards(List<String> cards) {
 
         printer.println("Tool cards:");
         printer.flush();
 
         for(String s : cards){
-            printer.println(i++ + ") " + s);
+            printer.println("- " + s);
             printer.flush();
         }
     }
 
-    private class KeyboardHandler extends Thread {
+    @Override
+    public void onToolCards(String string) {
+        String dicesString = string.substring(1, string.length() - 1);
+        toolCardsList = Pattern.compile(", ")
+                .splitAsStream(dicesString)
+                .collect(Collectors.toList());
+        printer.println("ToolCards available for this match:");
+        printer.println(toolCardsList.toString());
+        printer.flush();
+        for(String card: toolCardsList){
+            int i=Integer.parseInt(card.replaceAll("tool","").substring(0,1));
+            this.toolCommands.add(new ToolCommand(i,this.printer));
+        }
+    }
 
+
+    private class KeyboardHandler extends Thread {
+        String parts[];
         @Override
         public void run() {
             BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
@@ -163,7 +180,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                 try {
                     String command = keyboard.readLine();
-                    String[] parts = command.split(" +");
+                    parts = command.split(" +");
                     if (myTurn) {
                         switch (parts[0]) {
 
@@ -185,19 +202,24 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                     printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString() + "\n");
                                     printer.flush();
                                 }
-                                else
+                                else {
                                     printer.println("The dice you are trying to use does not exist, please retry ");
                                     printer.flush();
+                                }
                             }
                             break;
 
                             case "cw": {
-                                if (Integer.parseInt(parts[1])<4)
+                                if (Integer.parseInt(parts[1])<4){
+                                    printer.println("You have chosen:");
+                                    printer.flush();
                                     controller.chooseWindow(username, Integer.parseInt(parts[1]), single);
+                                }
                                 //DA SETTARE BOOLEANO COSì DA NON CONSENTIRGLI DI FARE LA cd o pt PRIMA DI AVER SCELTO LA SCHEME CARD
-                                else
+                                else {
                                     printer.println("The scheme you are trying to choose does not exist, please retry ");
                                     printer.flush();
+                                }
 
                             } break;
 
@@ -215,12 +237,14 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                         printer.flush();
                                     }
                                 }
-                                else printer.println("The coordinates of your scheme card are out of bounds, please retry ");
-                                printer.flush();
+                                else {
+                                    printer.println("The coordinates of your scheme card are out of bounds, please retry ");
+                                    printer.flush();
+                                }
                             }break;
 
                             case "reserve":{
-                                printer.println("\nHere follows the current RESERVE state:          ~ ['cd number' to choose the dice you want]\n");
+                                printer.println("\nHere follows the current RESERVE state:           ~ ['cd number' to choose the dice you want]\n");
                                 printer.flush();
                                 int i = 0;
                                 for (String dice : dicesList) {
@@ -246,8 +270,35 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 controller.quitGame(username, single);
                                 controller.goThrough(username, single);
                                 System.exit(0);
-                            }
-                            break;
+                            }break;
+
+                            case "tool":{
+                                printer.println("\nHere follows the ToolCard description:          ~ ['usetool number' to use it]\n");
+                                printer.flush();
+                                boolean found=false;
+                                for(ToolCommand toolCommand:toolCommands){
+                                    if (toolCommand.getI()==Integer.parseInt(parts[1])) {
+                                        found=true;
+                                        printer.println(toolCommand.parametersNeeded);
+                                        printer.flush();
+
+                                    }
+                                }
+                                if (found==false){
+                                        printer.println("toolcard not in the ToolCard List");
+                                        printer.flush();
+                                }
+                            } break;
+
+                            case "usetool":{
+                                UseRightCommand(Integer.parseInt(parts[1]));
+                            }break;
+
+                            case "toolcards": {
+                                printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
+                                printer.flush();
+                                onShowToolCards(toolCardsList);
+                            }break;
 
                             default: {
                                 printer.println("Wrong choise. Insert a new valid option between: ('+' means SPACE)" + HELP);
@@ -297,6 +348,69 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                 }
 
 
+            }
+        }
+        private void UseRightCommand(int i) {
+
+            boolean found=false;
+            for (ToolCommand toolCommand : toolCommands) {
+                if (toolCommand.getI() == i) {
+                    found=true;
+                    switch (i) {
+                        case 1: {
+                            toolCommand.Command1(Integer.parseInt(parts[2]), "incr"); //parametri a caso
+                        }
+                        break;
+                        case 2: {
+                            toolCommand.Command2(2, 3, 3, 4); //parametri a caso
+                        }
+                        break;
+                        case 3: {
+                            toolCommand.Command3();
+                        }
+                        break;
+                        case 4: {
+                            toolCommand.Command4();
+                        }
+                        break;
+                        case 5: {
+                            toolCommand.Command5();
+                        }
+                        break;
+                        case 6: {
+                            toolCommand.Command6();
+                        }
+                        break;
+                        case 7: {
+                            toolCommand.Command7();
+                        }
+                        break;
+                        case 8: {
+                            toolCommand.Command8();
+                        }
+                        break;
+                        case 9: {
+                            toolCommand.Command9();
+                        }
+                        break;
+                        case 10: {
+                            toolCommand.Command10();
+                        }
+                        break;
+                        case 11: {
+                            toolCommand.Command11();
+                        }
+                        break;
+                        case 12: {
+                            toolCommand.Command12();
+                        }
+                        break;
+                    }
+                }
+            }
+            if (found==false){
+                printer.println("toolcard not in the ToolCard List");
+                printer.flush();
             }
         }
     }

@@ -49,7 +49,7 @@ public class ChooseAnotherDiceTest {
         player = new PlayerMultiplayer("player", match);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
-        toolCard = new ToolCard("Tenaglia a Rotelle");
+        //toolCard = new ToolCard("Tenaglia a Rotelle");
         ByteArrayInputStream in = new ByteArrayInputStream("1".getBytes());
         System.setIn(in);
     }

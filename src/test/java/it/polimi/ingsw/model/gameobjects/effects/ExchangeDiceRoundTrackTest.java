@@ -34,7 +34,7 @@ public class ExchangeDiceRoundTrackTest {
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
-        toolCard = new ToolCard("Taglierina Circolare");
+        //toolCard = new ToolCard("Taglierina Circolare");
         RoundTrack roundTrack = new RoundTrack();
         roundTrack.showRoundTrack();
         List<Dice> list0 = new LinkedList<>();

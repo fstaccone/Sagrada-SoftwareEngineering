@@ -49,7 +49,7 @@ public class MoveDiceNotAdjacentToAnotherTest {
         player.getSchemeCard().putDice(dr,2,0);
         player.getSchemeCard().putDice(db,3,0);
 
-        toolCard = new ToolCard("Riga in Sughero");
+        //toolCard = new ToolCard("Riga in Sughero");
         ByteArrayInputStream in = new ByteArrayInputStream("2 4".getBytes());
         System.setIn(in);
     }

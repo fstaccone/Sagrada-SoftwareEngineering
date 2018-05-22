@@ -52,7 +52,7 @@ public class SubstituteDiceFromBagTest {
         player.getSchemeCard().putDice(dr,2,0);
         player.setPickedDice(db);
 
-        toolCard = new ToolCard("Diluente per Pasta Salda");
+        //toolCard = new ToolCard("Diluente per Pasta Salda");
         ByteArrayInputStream in = new ByteArrayInputStream("5 3 1".getBytes());
         System.setIn(in);
     }

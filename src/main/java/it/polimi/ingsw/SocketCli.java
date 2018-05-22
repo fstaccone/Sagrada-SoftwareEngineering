@@ -136,6 +136,11 @@ public class SocketCli implements Serializable, MatchObserver {
     public void onShowToolCards(List<String> cards) {
     }
 
+    @Override
+    public void onToolCards(String string) throws RemoteException {
+
+    }
+
     private class KeyboardHandler extends Thread {
 
         @Override

@@ -28,7 +28,7 @@ public class ReRollDiceTest {
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
-        toolCard = new ToolCard("Pennello per Pasta Salda");
+        //toolCard = new ToolCard("Pennello per Pasta Salda");
     }
     @Test
     public void checkDice(){

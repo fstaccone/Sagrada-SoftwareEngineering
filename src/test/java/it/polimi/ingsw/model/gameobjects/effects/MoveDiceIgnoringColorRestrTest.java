@@ -48,7 +48,7 @@ public class MoveDiceIgnoringColorRestrTest {
         player.getSchemeCard().putDice(dr,2,0);
         player.getSchemeCard().putDice(db,3,0);
 
-        toolCard = new ToolCard("Pennello per Eglomise");
+        //toolCard = new ToolCard("Pennello per Eglomise");
         ByteArrayInputStream in = new ByteArrayInputStream("1 0 0 1".getBytes());
         System.setIn(in);
     }

@@ -12,7 +12,8 @@ public abstract class Deck<T extends Card>{
         this.deck = new ArrayList<>();
         this.pickedCards = new ArrayList<>();
     }
-     public List<T> getPickedCards(){
+
+    public List<T> getPickedCards(){
         return this.pickedCards;
     }
 

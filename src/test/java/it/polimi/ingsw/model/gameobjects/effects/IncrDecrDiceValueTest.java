@@ -30,7 +30,7 @@ public class IncrDecrDiceValueTest {
         Dice dice = new Dice(Colors.BLUE);
         dice.setValue(6);
         player.setPickedDice(dice);
-        toolCard = new ToolCard("Pinza Sgrossatrice");
+        //toolCard = new ToolCard("Pinza Sgrossatrice");
         ByteArrayInputStream in = new ByteArrayInputStream("+\n-".getBytes());
         System.setIn(in);
     }

@@ -28,7 +28,7 @@ public class UpsideDownDiceTest {
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
-        toolCard = new ToolCard("Tampone Diamantato");
+        //toolCard = new ToolCard("Tampone Diamantato");
     }
     @Test
     public void checkDice(){

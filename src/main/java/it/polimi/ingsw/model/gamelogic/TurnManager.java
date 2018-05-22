@@ -54,6 +54,7 @@ public class TurnManager implements Runnable {
 
                 //notification
                 if (match.getRemoteObservers().size() != 0) {
+                    rmiObserverNotify(player).onToolCards(match.getDecksContainer().getToolCardDeck().getPickedCards().toString());
                     rmiObserverNotify(player).onYourTurn(true,null);
                     rmiObserverNotify(player).onWindowChoise(list);
                     for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
@@ -82,7 +83,7 @@ public class TurnManager implements Runnable {
 
                 //notification
                 if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(true,null);//gli si passa null se non ha senso parlare di riserva prima che il giocatore scelga la schemecard
+                    rmiObserverNotify(player).onYourTurn(false,null);
                 }
                 if (match.getSocketObservers().size() != 0) {
                     socketObserverNotify(player, new YourTurnResponse(false,null));
@@ -146,7 +147,7 @@ public class TurnManager implements Runnable {
 
                 //notification
                 if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(true,match.getBoard().getReserve().getDices().toString());
+                    rmiObserverNotify(player).onYourTurn(false,match.getBoard().getReserve().getDices().toString());
                 }
                 if (match.getSocketObservers().size() != 0) {
                     socketObserverNotify(player, new YourTurnResponse(false,match.getBoard().getReserve().getDices().toString()));
@@ -198,7 +199,7 @@ public class TurnManager implements Runnable {
 
                 //notification
                 if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(true,match.getBoard().getReserve().getDices().toString());
+                    rmiObserverNotify(player).onYourTurn(false,match.getBoard().getReserve().getDices().toString());
                 }
                 if (match.getSocketObservers().size() != 0) {
                     socketObserverNotify(player, new YourTurnResponse(false,match.getBoard().getReserve().getDices().toString()));

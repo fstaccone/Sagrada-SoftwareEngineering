@@ -33,7 +33,7 @@ public class MoveTwoDicesColorRoundTrackTest {
         player = new PlayerMultiplayer("player", match);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
-        toolCard = new ToolCard("Taglierina Manuale");
+        //toolCard = new ToolCard("Taglierina Manuale");
         RoundTrack roundTrack = new RoundTrack();
         roundTrack.showRoundTrack();
         List<Dice> list0 = new LinkedList<>();
@@ -74,7 +74,7 @@ public class MoveTwoDicesColorRoundTrackTest {
         player.getSchemeCard().putDice(dr,3,1);
         player.getSchemeCard().putDice(dy,1,1);
 
-        toolCard = new ToolCard("Taglierina Manuale");
+        //toolCard = new ToolCard("Taglierina Manuale");
         //input funziona per scegliere colore, poi si blocca quando bisogna dire quanti dadi si vogliono spostare.
         //Secondo me problema è che si apre lo stream per prendere i primi due interi nella riga 16 del relativo effetto
         //poi quando al rigo 21 si prende altro input lo stream è vuoto e test non va avanti.

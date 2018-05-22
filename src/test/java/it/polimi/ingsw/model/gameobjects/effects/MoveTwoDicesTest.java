@@ -45,7 +45,7 @@ public class MoveTwoDicesTest {
         player.getSchemeCard().putDice(dr, 2, 0);
         player.getSchemeCard().putDice(db, 3, 0);
 
-        toolCard = new ToolCard("Lathekin");
+        //toolCard = new ToolCard("Lathekin");
         ByteArrayInputStream in = new ByteArrayInputStream("0 1 1 0 3 1 1 1".getBytes());
         System.setIn(in);
     }

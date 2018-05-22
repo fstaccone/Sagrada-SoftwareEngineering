@@ -48,7 +48,7 @@ public class ReRollAllReserveDicesTest {
         player = new PlayerMultiplayer("player", match);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
-        toolCard = new ToolCard("Martelletto");
+        //toolCard = new ToolCard("Martelletto");
     }
     @Test
     public void checkReserve(){
