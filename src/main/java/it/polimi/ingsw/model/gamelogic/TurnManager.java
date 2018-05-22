@@ -188,10 +188,10 @@ public class TurnManager implements Runnable {
         waitForUserActions();
 
         //notification
-        if (match.getRemoteObservers().size() != 0) {
+        if (match.getRemoteObservers().size() != 0 && player.getStatus().equals(ConnectionStatus.READY)) {
             rmiObserverNotify(player).onYourTurn(false, match.getBoard().getReserve().getDices().toString());
         }
-        if (match.getSocketObservers().size() != 0) {
+        if (match.getSocketObservers().size() != 0 && player.getStatus().equals(ConnectionStatus.READY)) {
             socketObserverNotify(player, new YourTurnResponse(false, match.getBoard().getReserve().getDices().toString()));
         }
 
