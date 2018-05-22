@@ -88,8 +88,11 @@ public class SocketCli implements Serializable, MatchObserver {
         printer.flush();
     }
 
+
     @Override
-    public void onYourTurn(boolean isMyTurn){
+    public void onYourTurn(boolean isMyTurn, String string){
+        if (string!=null)
+            onReserve(string);
         this.myTurn=isMyTurn;
         if (myTurn)
             printer.println("\nNow it's your turn! Please insert a command:                                  ~ ['h' for help]\n");
@@ -101,18 +104,9 @@ public class SocketCli implements Serializable, MatchObserver {
     @Override
     public void onReserve(String string) {
         String dicesString = string.substring(1, string.length() - 1);
-        printer.println("\nHere follows the current RESERVE state:            ~ ['cd number' to choose the dice you want]\n");
-        printer.flush();
         dicesList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
-        int i = 0;
-        for (String dice : dicesList) {
-            printer.println(i++ + ") " + dice);
-            printer.flush();
-        }
-        printer.println();
-        printer.flush();
     }
 
     @Override
@@ -136,8 +130,10 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onShowToolCards(List<String> cards) throws RemoteException {
-
+    public void onOtherTurn(String name)  {
+    }
+    @Override
+    public void onShowToolCards(List<String> cards) {
     }
 
     private class KeyboardHandler extends Thread {
@@ -194,6 +190,18 @@ public class SocketCli implements Serializable, MatchObserver {
                             case "pass":{
                                 controller.request(new GoThroughRequest(username, single));
 
+                            }break;
+
+                            case "reserve":{
+                                printer.println("\nHere follows the current RESERVE state:            ~ ['cd number' to choose the dice you want]\n");
+                                printer.flush();
+                                int i = 0;
+                                for (String dice : dicesList) {
+                                    printer.println(i++ + ") " + dice);
+                                    printer.flush();
+                                }
+                                printer.println();
+                                printer.flush();
                             }break;
 
                             default: {
