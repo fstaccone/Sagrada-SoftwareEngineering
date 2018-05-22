@@ -57,7 +57,7 @@ public class Reserve {
     public Dice chooseDice(int index) {
         if(!(dices.isEmpty())){
            // System.out.println("Please choose a dice from the reserve by writing the corresponding id: ");
-           // showReserve();
+           // updateReserve();
            // Scanner scan = new Scanner(System.in);
            // int i = scan.nextInt();
            // if(i<0 || i>dices.size()-1){
@@ -108,7 +108,7 @@ public class Reserve {
         List<Dice> pescata = bag.pickDices(3);
         Reserve riserva = new Reserve();
         riserva.throwDices(pescata);
-        riserva.showReserve();
+        riserva.updateReserve();
         Dice dado = riserva.chooseDice();
         Square place = new Square(Colors.BLUE);
         place.putDice(dado);
@@ -118,7 +118,7 @@ public class Reserve {
         track.showRoundTrack();
         pescata = bag.pickDices(2);
         riserva.throwDices(pescata);
-        riserva.showReserve();
+        riserva.updateReserve();
         leftDices = riserva.endRound();
         track.putDices(leftDices);
         track.showRoundTrack();

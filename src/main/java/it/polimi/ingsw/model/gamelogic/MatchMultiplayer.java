@@ -286,20 +286,26 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
 
         synchronized (getLock()) { // è più giusto mettere lock protected?
-            getLock().notify();
+            getLock().notifyAll();
         }
     }
 
     @Override
-    public boolean placeDice(String name, int index, int x, int y) {
+    public boolean placeDice(String name, int index, int x, int y) throws RemoteException {
         if (!isDiceAction()) {
-            getPlayer(name).getSchemeCard().putDice(board.getReserve().getDices().remove(index), x, y);
-            setDiceAction(true);
+            boolean result;
+            result = getPlayer(name).getSchemeCard().putDice(board.getReserve().getDices().get(index), x, y);
+            setDiceAction(result);
+
+            if(result){
+                board.getReserve().getDices().remove(index);
+                remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
+            }
 
             synchronized (getLock()) {
-                getLock().notify();
+                getLock().notifyAll();// notifyAll per evitare il warning
             }
-            return true;
+            return result;
         }
         return false;
     }
@@ -308,4 +314,5 @@ public class MatchMultiplayer extends Match implements Runnable {
         remoteObservers.get(getPlayer(name)).onShowToolCards(decksContainer.getToolCardDeck()
                 .getPickedCards().stream().map(ToolCard::getName).collect(Collectors.toList()));
     }
+
 }

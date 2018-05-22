@@ -43,15 +43,16 @@ public class Square {
     }
 
 
-    public void putDice(Dice dice){
+    public boolean putDice(Dice dice){
         if(!occupiedSquare() && satisfiedConstraints(dice)) {
-            System.out.println("prima put in square " + dice.toString());
             this.dice = dice;
-            System.out.println("Dopo put in square " + this.dice.toString());
+            return true;
         }
         else {
+            // todo: definire le eccezioni (magari con una enum)
             //Maybe 3 different Exception: OccupiedSquareException, ColorConstraintException and ValueConstraintException
             System.out.println("Error: the selected square is already occupied or constraints ignored");
+            return false;
         }
     }
 

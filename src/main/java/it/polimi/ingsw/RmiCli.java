@@ -179,12 +179,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
-                            case "q": {
-                                printer.println("Esci");
-                                printer.flush();
-                            }
-                            break;
-
                             case "cd": {
                                 if (Integer.parseInt(parts[1])<dicesList.size()){
                                     diceChosen = Integer.parseInt(parts[1]);
@@ -199,11 +193,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "cw": {
                                 if (Integer.parseInt(parts[1])<4)
-                                    controller.chooseWindow(username, Integer.parseInt(parts[1]), false);
+                                    controller.chooseWindow(username, Integer.parseInt(parts[1]), single);
                                 //DA SETTARE BOOLEANO COSì DA NON CONSENTIRGLI DI FARE LA cd o pt PRIMA DI AVER SCELTO LA SCHEME CARD
                                 else
                                     printer.println("The scheme you are trying to choose does not exist, please retry ");
                                     printer.flush();
+
                             } break;
 
                             case "pd": {
@@ -247,8 +242,10 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
-                            case "st": {
-                                controller.showToolcards(username, single);
+                            case "q": {
+                                controller.quitGame(username, single);
+                                controller.goThrough(username, single);
+                                System.exit(0);
                             }
                             break;
 
@@ -284,8 +281,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "q": {
-                                printer.println("Esci");
-                                printer.flush();
+                                controller.quitGame(username, single);
+                                System.exit(0);
                             }
                             break;
 
