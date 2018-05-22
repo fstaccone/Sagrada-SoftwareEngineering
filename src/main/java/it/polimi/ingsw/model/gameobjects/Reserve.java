@@ -66,12 +66,12 @@ public class Reserve {
            //         i = scan.nextInt();
            //     }
            // }
-            Dice chosen;
-            chosen = dices.get(index);
-            dices.remove(index);
+           // Dice chosen;
+           // chosen = dices.get(index);
+           // dices.remove(index);
 
             //System.out.println("Chosen dice: " + choice.toString());
-            return chosen;
+            return dices.remove(index);
         }else {
             System.out.println("The reserve is empty."); //andrebbe fatto lanciando ExceptionEmptyReserve
             return null;

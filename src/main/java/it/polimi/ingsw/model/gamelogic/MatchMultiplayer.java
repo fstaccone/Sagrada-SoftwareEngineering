@@ -246,8 +246,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     public void showWindow(String name, String owner) throws RemoteException {
         //RMI
-        remoteObservers.get(name).onShowWindow(getPlayer(owner).getSchemeCard().toString());// dimostra l'utilità del metodo sottostante
-
+        remoteObservers.get(getPlayer(name)).onShowWindow(getPlayer(owner).getSchemeCard().toString());// dimostra l'utilità del metodo sottostante
     }
 
     public void showPlayers(String name) throws RemoteException {
@@ -294,7 +293,11 @@ public class MatchMultiplayer extends Match implements Runnable {
     @Override
     public boolean placeDice(String name, int index, int x, int y) {
         if (!isDiceAction()) {
-            getPlayer(name).getSchemeCard().putDice(getPlayer(name).chooseDice(index), x, y);
+            System.out.println("296 mmp "+getPlayer(name).getName());
+            System.out.println(board.getReserve().getDices().get(index));
+            getPlayer(name).getSchemeCard().putFirstDice(board.getReserve().getDices().remove(index), x, y);
+            System.out.println(getPlayer(name).getSchemeCard().toString());
+
             setDiceAction(true);
 
             synchronized (getLock()) {

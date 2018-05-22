@@ -135,7 +135,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onShowWindow(String window) {
-        printer.println("Your window pattern card:");
+        printer.println("Window pattern card:");
         printer.flush();
         printer.println(window);
         printer.flush();
@@ -198,6 +198,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
+                            case "sw": {
+                                printer.println("Here is the window pattern card of the player " + parts[1]);
+                                printer.flush();
+                                controller.showWindow(username, parts[1]);
+                            }break;
+
                             case "pass": {
                                 controller.goThrough(username, single);
                             }
@@ -229,6 +235,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "sw": {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
+                                printer.flush();
                                 controller.showWindow(username, parts[1]);
                             }
                             break;
