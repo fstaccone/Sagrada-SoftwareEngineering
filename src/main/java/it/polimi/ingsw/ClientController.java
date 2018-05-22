@@ -79,7 +79,7 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(YourTurnResponse response) {
         if (socketCli!=null){
-            socketCli.onYourTurn(response.myTurn);
+            socketCli.onYourTurn(response.myTurn, response.string);
         }
     }
 

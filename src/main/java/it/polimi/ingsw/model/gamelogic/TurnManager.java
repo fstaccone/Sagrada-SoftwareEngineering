@@ -53,13 +53,18 @@ public class TurnManager implements Runnable {
                         .collect(Collectors.toList());
 
                 //notification
-                rmiObserverNotify(player).onYourTurn(true);
-                for(PlayerMultiplayer playerNotInTurn: match.getPlayers())
-                    if (playerNotInTurn!=player)
-                        rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
-                rmiObserverNotify(player).onWindowChoise(list);
-                socketObserverNotify(player, new YourTurnResponse(true));
-                socketObserverNotify(player, new ProposeWindowResponse(list));
+                if (match.getRemoteObservers().size() != 0) {
+                    rmiObserverNotify(player).onYourTurn(true,null);
+                    rmiObserverNotify(player).onWindowChoise(list);
+                    for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
+                        if (playerNotInTurn != player)
+                            rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
+                }
+                if (match.getSocketObservers().size() != 0) {
+                    socketObserverNotify(player, new YourTurnResponse(true,null));
+                    socketObserverNotify(player, new ProposeWindowResponse(list));
+                }
+
 
                 turnTimer = new Timer();
                 task = new TurnTimer(match, player);
@@ -76,8 +81,12 @@ public class TurnManager implements Runnable {
                 }
 
                 //notification
-                rmiObserverNotify(player).onYourTurn(false);
-                socketObserverNotify(player,new YourTurnResponse(false));
+                if (match.getRemoteObservers().size() != 0) {
+                    rmiObserverNotify(player).onYourTurn(true,null);//gli si passa null se non ha senso parlare di riserva prima che il giocatore scelga la schemecard
+                }
+                if (match.getSocketObservers().size() != 0) {
+                    socketObserverNotify(player, new YourTurnResponse(false,null));
+                }
             }
         }
     }
@@ -85,9 +94,6 @@ public class TurnManager implements Runnable {
     private void turnManager() throws InterruptedException, RemoteException {
 
         TurnTimer task;
-
-        System.out.println("Round " + (match.getCurrentRound() + 1));
-        System.out.println("First player: " + match.getPlayers().get(0).getName());
 
         for (PlayerMultiplayer player : match.getPlayers()) {
             player.setTurnsLeft(2);
@@ -105,18 +111,19 @@ public class TurnManager implements Runnable {
             match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
             PlayerMultiplayer player= match.getPlayers().get(i);
 
-            // debug
-            System.out.println("From match : Turn 1 - round " + (match.getCurrentRound() + 1) + " player: " + player.getName());
 
             if (player.getStatus() == ConnectionStatus.READY) {
 
-
                 //notification
-                rmiObserverNotify(player).onYourTurn(true);
-                for(PlayerMultiplayer playerNotInTurn: match.getPlayers())
-                    if (playerNotInTurn!=player)
-                        rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
-                socketObserverNotify(player,new YourTurnResponse(true));
+                if (match.getRemoteObservers().size() != 0) {
+                    rmiObserverNotify(player).onYourTurn(true,match.getBoard().getReserve().getDices().toString());
+                    for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
+                        if (playerNotInTurn != player)
+                            rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
+                }
+                if (match.getSocketObservers().size() != 0) {
+                    socketObserverNotify(player, new YourTurnResponse(true,match.getBoard().getReserve().getDices().toString()));
+                }
 
                 turnTimer = new Timer();
                 task = new TurnTimer(match, player);
@@ -138,8 +145,12 @@ public class TurnManager implements Runnable {
                 }
 
                 //notification
-                rmiObserverNotify(player).onYourTurn(false);
-                socketObserverNotify(player,new YourTurnResponse(false));
+                if (match.getRemoteObservers().size() != 0) {
+                    rmiObserverNotify(player).onYourTurn(true,match.getBoard().getReserve().getDices().toString());
+                }
+                if (match.getSocketObservers().size() != 0) {
+                    socketObserverNotify(player, new YourTurnResponse(false,match.getBoard().getReserve().getDices().toString()));
+                }
             }
 
             if (!expired) {
@@ -157,11 +168,15 @@ public class TurnManager implements Runnable {
                 System.out.println("From match : Turn 2 - round " + (match.getCurrentRound() + 1) + " player: " + player.getName());
 
                 //notification
-                rmiObserverNotify(player).onYourTurn(true);
-                for(PlayerMultiplayer playerNotInTurn: match.getPlayers())
-                    if (playerNotInTurn!=player)
-                        rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
-                socketObserverNotify(player,new YourTurnResponse(true));
+                if (match.getRemoteObservers().size() != 0) {
+                    rmiObserverNotify(player).onYourTurn(true,match.getBoard().getReserve().getDices().toString());
+                    for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
+                        if (playerNotInTurn != player)
+                            rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
+                }
+                if (match.getSocketObservers().size() != 0) {
+                    socketObserverNotify(player, new YourTurnResponse(true,match.getBoard().getReserve().getDices().toString()));
+                }
 
                 match.setDiceAction(false);
                 match.setToolAction(false);
@@ -182,8 +197,12 @@ public class TurnManager implements Runnable {
                 }
 
                 //notification
-                rmiObserverNotify(player).onYourTurn( false);
-                socketObserverNotify(player, new YourTurnResponse(false));
+                if (match.getRemoteObservers().size() != 0) {
+                    rmiObserverNotify(player).onYourTurn(true,match.getBoard().getReserve().getDices().toString());
+                }
+                if (match.getSocketObservers().size() != 0) {
+                    socketObserverNotify(player, new YourTurnResponse(false,match.getBoard().getReserve().getDices().toString()));
+                }
 
             }
             if (!expired) {
@@ -201,24 +220,19 @@ public class TurnManager implements Runnable {
     }
 
     private MatchObserver rmiObserverNotify(PlayerMultiplayer player){
-        if (match.getRemoteObservers().size() != 0) {
             if (match.getRemoteObservers().get(player) != null) {
                 return match.getRemoteObservers().get(player);
             }
             else return null;
-        }
-        else return null;
     }
 
     private void socketObserverNotify(PlayerMultiplayer player, Response response){
-        if (match.getSocketObservers().size() != 0) {
-            if (match.getSocketObservers().get(player) != null) {
-                try {
-                    match.getSocketObservers().get(player).writeObject(response);
-                    match.getSocketObservers().get(player).reset();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if (match.getSocketObservers().get(player) != null) {
+            try {
+                match.getSocketObservers().get(player).writeObject(response);
+                match.getSocketObservers().get(player).reset();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

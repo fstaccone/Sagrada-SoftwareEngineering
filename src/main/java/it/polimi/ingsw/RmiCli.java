@@ -52,8 +52,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
             "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
             "\n 'cd' + 'number'                             to choose the dice from the Reserve (available only if it's your turn)" +
-            "\n 'pd' + 'coordinate x' + 'coordinate y'       to place the chosen dice in your Scheme Card (available only if it's your turn)" +
-            "\n 'pass'                                      to pass the turn to the next player (available only if it's your turn)");
+            "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card (available only if it's your turn)" +
+            "\n 'pass'                                      to pass the turn to the next player (available only if it's your turn)" +
+            "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)\n");
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
         super();
@@ -96,7 +97,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
 
     @Override
-    public void onYourTurn(boolean yourTurn) {
+    public void onYourTurn(boolean yourTurn, String string) {
+        if (string!=null)
+            onReserve(string);
         this.myTurn = yourTurn;
         if (myTurn)
             printer.println("\nNow it's your turn! Please insert a command:                                  ~ ['h' for help]\n");
@@ -108,18 +111,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onReserve(String string) {
         String dicesString = string.substring(1, string.length() - 1);
-        printer.println("\nHere follows the current RESERVE state:          ~ ['cd number' to choose the dice you want]\n");
-        printer.flush();
         dicesList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
-        int i = 0;
-        for (String dice : dicesList) {
-            printer.println(i++ + ") " + dice);
-            printer.flush();
-        }
-        printer.println();
-        printer.flush();
     }
 
     @Override
@@ -128,7 +122,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.println("Choose your window among the following             ~ [cw] + [number]!\n");
         printer.flush();
         for(String s : windows){
-            s=s.replaceAll("null"," ");
             printer.println(i++ + ") " + s + "\n");
             printer.flush();
         }
@@ -194,7 +187,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "cd": {
                                 diceChosen = Integer.parseInt(parts[1]);
-                                printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString());
+                                printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString()+"\n");
                                 printer.flush();
                             }
                             break;
@@ -209,14 +202,25 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 printer.println("You have chosen to place the dice in the [" + coordinateX + "][" + coordinateY + "] square of your Scheme Card");
                                 printer.flush();
                                 if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
-                                    printer.println("Well done! The chosen dice has been placed correctly.");
+                                    printer.println("Well done! The chosen dice has been placed correctly.\n");
                                     printer.flush();
                                 } else {
                                     printer.println("You tried to place a dice when you shouldn't!");
                                     printer.flush();
                                 }
-                            }
-                            break;
+                            }break;
+
+                            case "reserve":{
+                                printer.println("\nHere follows the current RESERVE state:          ~ ['cd number' to choose the dice you want]\n");
+                                printer.flush();
+                                int i = 0;
+                                for (String dice : dicesList) {
+                                    printer.println(i++ + ") " + dice);
+                                    printer.flush();
+                                }
+                                printer.println();
+                                printer.flush();
+                            }break;
 
                             case "sw": {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);

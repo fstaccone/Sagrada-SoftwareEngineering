@@ -25,9 +25,10 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onYourTurn(boolean isMyTurn) throws RemoteException {
+    public void onYourTurn(boolean isMyTurn, String string) throws RemoteException {
 
     }
+
 
     @Override
     public void onReserve(String string) throws RemoteException {
