@@ -62,8 +62,13 @@ public class TurnManager implements Runnable {
                             rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
                 }
                 if (match.getSocketObservers().size() != 0) {
+                    socketObserverNotify(player, new ToolCardsResponse(match.getDecksContainer().getToolCardDeck().getPickedCards().toString()));
                     socketObserverNotify(player, new YourTurnResponse(true,null));
                     socketObserverNotify(player, new ProposeWindowResponse(list));
+                    Response response= new OtherTurnResponse(player.getName());
+                    for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
+                        if (playerNotInTurn != player)
+                            socketObserverNotify(playerNotInTurn, response);
                 }
 
 
@@ -124,6 +129,10 @@ public class TurnManager implements Runnable {
                 }
                 if (match.getSocketObservers().size() != 0) {
                     socketObserverNotify(player, new YourTurnResponse(true,match.getBoard().getReserve().getDices().toString()));
+                    Response response= new OtherTurnResponse(player.getName());
+                    for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
+                        if (playerNotInTurn != player)
+                            socketObserverNotify(playerNotInTurn, response);
                 }
 
                 turnTimer = new Timer();
@@ -147,10 +156,10 @@ public class TurnManager implements Runnable {
 
                 //notification
                 if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(false,match.getBoard().getReserve().getDices().toString());
+                    rmiObserverNotify(player).onYourTurn(false,null);
                 }
                 if (match.getSocketObservers().size() != 0) {
-                    socketObserverNotify(player, new YourTurnResponse(false,match.getBoard().getReserve().getDices().toString()));
+                    socketObserverNotify(player, new YourTurnResponse(false,null));
                 }
             }
 
@@ -177,6 +186,10 @@ public class TurnManager implements Runnable {
                 }
                 if (match.getSocketObservers().size() != 0) {
                     socketObserverNotify(player, new YourTurnResponse(true,match.getBoard().getReserve().getDices().toString()));
+                    Response response= new OtherTurnResponse(player.getName());
+                    for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
+                        if (playerNotInTurn != player)
+                            socketObserverNotify(playerNotInTurn, response);
                 }
 
                 match.setDiceAction(false);
@@ -199,10 +212,10 @@ public class TurnManager implements Runnable {
 
                 //notification
                 if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(false,match.getBoard().getReserve().getDices().toString());
+                    rmiObserverNotify(player).onYourTurn(false,null);
                 }
                 if (match.getSocketObservers().size() != 0) {
-                    socketObserverNotify(player, new YourTurnResponse(false,match.getBoard().getReserve().getDices().toString()));
+                    socketObserverNotify(player, new YourTurnResponse(false,null));
                 }
 
             }

@@ -98,6 +98,20 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
+    public void handle(ToolCardsResponse response) {
+        if (socketCli!=null){
+            socketCli.onToolCards(response.string);
+        }
+    }
+
+    @Override
+    public void handle(OtherTurnResponse response) {
+        if (socketCli!=null){
+            socketCli.onOtherTurn(response.name);
+        }
+    }
+
+    @Override
     public void handle(ProposeWindowResponse response) {
         if (socketCli!=null){
             socketCli.onWindowChoise(response.list);

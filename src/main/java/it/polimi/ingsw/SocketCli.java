@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import java.io.*;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -14,6 +15,8 @@ public class SocketCli implements Serializable, MatchObserver {
     private final PrintWriter printer;
 
     private List<String> dicesList;
+    private List<String> toolCardsList;
+    private List<ToolCommand> toolCommands;
 
     private int diceChosen;
     private int coordinateX;
@@ -59,14 +62,13 @@ public class SocketCli implements Serializable, MatchObserver {
         new KeyboardHandler().start();
         controller.setSocketCli(this);
         this.single=false; //PARALLELIZZARE CON RmiCli
+        this.toolCommands=new ArrayList<>();
     }
 
     public void launch() {
         printer.println(
                 WELCOME+ username.toUpperCase()+" :)\n");
         printer.flush();
-
-        //controller.request(new ObserveMatchRequest(username,this));
     }
 
 
@@ -112,7 +114,7 @@ public class SocketCli implements Serializable, MatchObserver {
     @Override
     public void onWindowChoise(List<String> windows)  {
         int i = 0;
-        printer.println("Choose your window among the following by typing [cw] + [number]!\n");
+        printer.println("Choose your window among the following                                              ~ [cw] + [number]\n");
         printer.flush();
         for(String s : windows){
             s=s.replaceAll("null"," ");
@@ -123,22 +125,40 @@ public class SocketCli implements Serializable, MatchObserver {
 
     @Override
     public void onShowWindow(String window) {
-        printer.println("Your window pattern card:");
-        printer.flush();
         printer.println(window);
         printer.flush();
     }
 
-    @Override
     public void onOtherTurn(String name)  {
+        printer.println("Now it's "+name +"'s turn");
+        printer.flush();
     }
+
     @Override
     public void onShowToolCards(List<String> cards) {
+
+        printer.println("Tool cards:");
+        printer.flush();
+
+        for(String s : cards){
+            printer.println("- " + s);
+            printer.flush();
+        }
     }
 
     @Override
-    public void onToolCards(String string) throws RemoteException {
-
+    public void onToolCards(String string) {
+        String dicesString = string.substring(1, string.length() - 1);
+        toolCardsList = Pattern.compile(", ")
+                .splitAsStream(dicesString)
+                .collect(Collectors.toList());
+        printer.println("ToolCards available for this match:");
+        printer.println(toolCardsList.toString());
+        printer.flush();
+        for(String card: toolCardsList){
+            int i=Integer.parseInt(card.replaceAll("tool","").substring(0,1));
+            this.toolCommands.add(new ToolCommand(i,this.printer));
+        }
     }
 
     private class KeyboardHandler extends Thread {
@@ -150,7 +170,7 @@ public class SocketCli implements Serializable, MatchObserver {
 
                 try {
                     String command = keyboard.readLine();
-                    String[] parts = command.split(" ");
+                    String[] parts = command.split(" +");
                     if(myTurn) {
                         switch (parts[0]) {
 
@@ -181,7 +201,6 @@ public class SocketCli implements Serializable, MatchObserver {
 
                             case "cw": {
                                 controller.request(new ChooseWindowRequest(username, Integer.parseInt(parts[1]), false));
-                                //controller.chooseWindow(username, Integer.parseInt(parts[1]), false);
                             } break;
 
                             case "pd":{

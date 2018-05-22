@@ -9,4 +9,6 @@ public interface ResponseHandler {
     void handle(ReserveResponse response);
     void handle(ProposeWindowResponse response);
     void handle(ShowWindowResponse response);
+    void handle(ToolCardsResponse response);
+    void handle(OtherTurnResponse response);
 }
