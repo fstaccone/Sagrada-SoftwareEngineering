@@ -37,10 +37,6 @@ public class MatchSingleplayer extends Match implements Runnable{
 
     }
 
-    @Override
-    public void proposeWindowPatternCards() {
-
-    }
 
     @Override
     public void calculateFinalScore() {

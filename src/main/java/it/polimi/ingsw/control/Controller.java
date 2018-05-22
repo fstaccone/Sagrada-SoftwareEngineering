@@ -151,15 +151,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public void showToolcards(String name, boolean isSingle) throws RemoteException {
-        if(isSingle){
-            lobby.getSingleplayerMatches().get(name).showToolCards();
-        }else{
-            lobby.getMultiplayerMatches().get(name).showToolCards(name);
-        }
-    }
-
-    @Override
     public void quitGame(String name, boolean isSingle) throws RemoteException {
         if(isSingle){
             lobby.getSingleplayerMatches().get(name).terminateMatch();

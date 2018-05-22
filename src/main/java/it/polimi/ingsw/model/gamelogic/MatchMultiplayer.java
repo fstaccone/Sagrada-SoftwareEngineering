@@ -204,11 +204,6 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public void proposeWindowPatternCards() {
-        // todo: implement
-    }
-
-    @Override
     public void terminateMatch() {
         for (PlayerMultiplayer p : players) {
             // chiudi le connessioni
@@ -303,16 +298,10 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
 
             synchronized (getLock()) {
-                getLock().notifyAll();// notifyAll per evitare il warning
+                getLock().notifyAll();
             }
             return result;
         }
         return false;
     }
-
-    public void showToolCards(String name) throws RemoteException {
-        remoteObservers.get(getPlayer(name)).onShowToolCards(decksContainer.getToolCardDeck()
-                .getPickedCards().stream().map(ToolCard::getName).collect(Collectors.toList()));
-    }
-
 }

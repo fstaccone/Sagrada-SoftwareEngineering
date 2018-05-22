@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.*;
-import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 public class TurnManager implements Runnable {
 
     private Timer turnTimer;
-    TurnTimer task;
+    private TurnTimer task;
     private int turnTime;
     private MatchMultiplayer match;
 
@@ -41,7 +40,9 @@ public class TurnManager implements Runnable {
     private void drawWindowPatternCards() throws InterruptedException, RemoteException {
 
         for (int i = 0; i < match.getPlayers().size(); i++) {
-            PlayerMultiplayer player=match.getPlayers().get(i);
+            PlayerMultiplayer player;
+            player = match.getPlayers().get(i);
+
             match.initializeWindowsToBeProposed(i);
             match.setWindowChosen(false);
 
@@ -55,21 +56,19 @@ public class TurnManager implements Runnable {
                 //notification
                 if (match.getRemoteObservers().size() != 0) {
                     rmiObserverNotify(player).onToolCards(match.getDecksContainer().getToolCardDeck().getPickedCards().toString());
-                    rmiObserverNotify(player).onYourTurn(true,null);
+                    rmiObserverNotify(player).onYourTurn(true, null);
                     rmiObserverNotify(player).onWindowChoise(list);
                     for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
                         if (playerNotInTurn != player)
                             rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
                 }
                 if (match.getSocketObservers().size() != 0) {
-                    socketObserverNotify(player, new YourTurnResponse(true,null));
+                    socketObserverNotify(player, new YourTurnResponse(true, null));
                     socketObserverNotify(player, new ProposeWindowResponse(list));
                 }
 
 
-                turnTimer = new Timer();
-                task = new TurnTimer(match, player);
-                turnTimer.schedule(task, turnTime);
+                setTimer(player);
 
                 while (!match.isWindowChosen()) {
                     synchronized (match.getLock()) {
@@ -83,151 +82,142 @@ public class TurnManager implements Runnable {
 
                 //notification
                 if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(false,null);
+                    rmiObserverNotify(player).onYourTurn(false, null);
                 }
                 if (match.getSocketObservers().size() != 0) {
-                    socketObserverNotify(player, new YourTurnResponse(false,null));
+                    socketObserverNotify(player, new YourTurnResponse(false, null));
                 }
             }
         }
     }
 
-    private void turnManager() throws InterruptedException, RemoteException {
-
-        TurnTimer task;
-
+    private void initializeRound() {
         for (PlayerMultiplayer player : match.getPlayers()) {
             player.setTurnsLeft(2);
         }
-
         match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
-        
-        // first turn
-        for (int i=0; i<match.getPlayers().size(); i++) {
+    }
 
-            // initialisation of flags to control the turn's flow
-            match.setDiceAction(false);
-            match.setToolAction(false);
-            match.setEndsTurn(false);
-            match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
-            PlayerMultiplayer player= match.getPlayers().get(i);
+    // initialisation of flags to control the turn's flow
+    private void initializeTurn(PlayerMultiplayer player) {
+        match.setDiceAction(false);
+        match.setToolAction(false);
+        match.setEndsTurn(false);
+        match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
+        player.setMyTurn(true);
+    }
 
+    private void setTimer(PlayerMultiplayer player) {
+        turnTimer = new Timer();
+        task = new TurnTimer(match, player);
+        turnTimer.schedule(task, turnTime);
+    }
 
-            if (player.getStatus() == ConnectionStatus.READY) {
-
-                //notification
-                if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(true,match.getBoard().getReserve().getDices().toString());
-                    for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
-                        if (playerNotInTurn != player)
-                            rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
-                }
-                if (match.getSocketObservers().size() != 0) {
-                    socketObserverNotify(player, new YourTurnResponse(true,match.getBoard().getReserve().getDices().toString()));
-                }
-
-                turnTimer = new Timer();
-                task = new TurnTimer(match, player);
-                turnTimer.schedule(task, turnTime);
-
-                /**
-                 * diceAction e toolAction vengono settati inizialmente a false, se l'azione corrispondente viene
-                 * completata con successo viene settato a true il rispettivo flag. Quando saranno entrambi veri
-                 * la condizione del ciclo sarà falsa
-                 * I metodi utilizzati ed i flag appartengono a match, in modo che possano essere settati a true senza risvegliare
-                 * TurnManager, sarà risvegliato solo dopo che una azione è stata completata con successo
-                 */
-                // wait for user action or for timer
-                while (checkCondition()) {
-                    synchronized (match.getLock()) {
-                        match.getLock().wait();
-                    }
-                    System.out.println("TurnManager correttamente risvegliato");
-                }
-
-                //notification
-                if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(false,match.getBoard().getReserve().getDices().toString());
-                }
-                if (match.getSocketObservers().size() != 0) {
-                    socketObserverNotify(player, new YourTurnResponse(false,match.getBoard().getReserve().getDices().toString()));
-                }
+    /**
+     * diceAction e toolAction vengono settati inizialmente a false, se l'azione corrispondente viene
+     * completata con successo viene settato a true il rispettivo flag. Quando saranno entrambi veri
+     * la condizione del ciclo sarà falsa
+     * I metodi utilizzati ed i flag appartengono a match, in modo che possano essere settati a true senza risvegliare
+     * TurnManager, sarà risvegliato solo dopo che una azione è stata completata con successo
+     */
+    private void waitForUserActions() throws InterruptedException {
+        while (checkCondition()) {
+            synchronized (match.getLock()) {
+                match.getLock().wait();
             }
-
-            if (!expired) {
-                turnTimer.cancel();
-            }
-            player.setTurnsLeft(player.getTurnsLeft() - 1);
         }
+    }
 
-        // second turn todo: controllare dopo aver verificato che funzioni
-        for (int i = match.getPlayers().size() - 1; i >= 0; i--) {
+    private void terminateTurn(PlayerMultiplayer player) {
+        player.setTurnsLeft(player.getTurnsLeft() - 1);
+        player.setMyTurn(false);
+    }
 
-            PlayerMultiplayer player= match.getPlayers().get(i);
-
-            if (player.getTurnsLeft() > 0 && player.getStatus() == ConnectionStatus.READY) {
-                System.out.println("From match : Turn 2 - round " + (match.getCurrentRound() + 1) + " player: " + player.getName());
-
-                //notification
-                if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(true,match.getBoard().getReserve().getDices().toString());
-                    for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
-                        if (playerNotInTurn != player)
-                            rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
-                }
-                if (match.getSocketObservers().size() != 0) {
-                    socketObserverNotify(player, new YourTurnResponse(true,match.getBoard().getReserve().getDices().toString()));
-                }
-
-                match.setDiceAction(false);
-                match.setToolAction(false);
-                match.setEndsTurn(false);
-                match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
-
-                turnTimer = new Timer();
-                task = new TurnTimer(match, player);
-                turnTimer.schedule(task, turnTime);
-
-                // wait for user action or for timer
-                while (checkCondition()) {
-                    synchronized (match.getLock()) {
-                        match.getLock().wait();
-                    }
-                    // debug
-                    System.out.println("TurnManager correttamente risvegliato");
-                }
-
-                //notification
-                if (match.getRemoteObservers().size() != 0) {
-                    rmiObserverNotify(player).onYourTurn(false,match.getBoard().getReserve().getDices().toString());
-                }
-                if (match.getSocketObservers().size() != 0) {
-                    socketObserverNotify(player, new YourTurnResponse(false,match.getBoard().getReserve().getDices().toString()));
-                }
-
-            }
-            if (!expired) {
-                turnTimer.cancel();
-            }
-            // todo: non ha molto senso, potrebbe averne se controllassimo in fase di testing che dopo questo aggiornamento siano davvero 0
-            player.setTurnsLeft(player.getTurnsLeft() - 1);
-        }
-
-        // rearrange match.getPlayers() to keep the right order in next round
-        // following the idea that the first player in this round will be the last in the next round
+    /**
+     * Rearrange match.getPlayers() to keep the right order in next round
+     * following the idea that the first player in this round will be the last in the next round
+     */
+    private void terminateRound() throws RemoteException, InterruptedException {
         match.getPlayers().add(match.getPlayers().get(0));
         match.getPlayers().remove(0);
         nextRound();
     }
 
-    private MatchObserver rmiObserverNotify(PlayerMultiplayer player){
-            if (match.getRemoteObservers().get(player) != null) {
-                return match.getRemoteObservers().get(player);
+    private void playFirstTurn() throws RemoteException, InterruptedException {
+        for (int i = 0; i < match.getPlayers().size(); i++) {
+
+            PlayerMultiplayer player = match.getPlayers().get(i);
+            initializeTurn(player);
+
+            if (player.getStatus() == ConnectionStatus.READY) {
+                playTurnCore(player);
             }
-            else return null;
+            terminateTurn(player);
+        }
     }
 
-    private void socketObserverNotify(PlayerMultiplayer player, Response response){
+    private void playSecondTurn() throws RemoteException, InterruptedException {
+
+        for (int i = match.getPlayers().size() - 1; i >= 0; i--) {
+
+            PlayerMultiplayer player = match.getPlayers().get(i);
+            initializeTurn(player);
+
+            if (player.getTurnsLeft() > 0 && player.getStatus() == ConnectionStatus.READY) {
+                playTurnCore(player);
+            }
+            terminateTurn(player);
+        }
+    }
+
+    private void playTurnCore(PlayerMultiplayer player) throws RemoteException, InterruptedException {
+        //notification
+        if (match.getRemoteObservers().size() != 0) {
+            rmiObserverNotify(player).onYourTurn(true, match.getBoard().getReserve().getDices().toString());
+            for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
+                if (!playerNotInTurn.equals(player) && playerNotInTurn.getStatus().equals(ConnectionStatus.READY)) {
+                    rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
+                }
+        }
+        if (match.getSocketObservers().size() != 0) {
+            socketObserverNotify(player, new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString()));
+        }
+
+        setTimer(player);
+
+        waitForUserActions();
+
+        //notification
+        if (match.getRemoteObservers().size() != 0) {
+            rmiObserverNotify(player).onYourTurn(false, match.getBoard().getReserve().getDices().toString());
+        }
+        if (match.getSocketObservers().size() != 0) {
+            socketObserverNotify(player, new YourTurnResponse(false, match.getBoard().getReserve().getDices().toString()));
+        }
+
+        if (!expired) {
+            turnTimer.cancel();
+        }
+    }
+
+    private void turnManager() throws InterruptedException, RemoteException {
+
+        initializeRound();
+
+        playFirstTurn();
+
+        playSecondTurn();
+
+        terminateRound();
+    }
+
+    private MatchObserver rmiObserverNotify(PlayerMultiplayer player) {
+        if (match.getRemoteObservers().get(player) != null) {
+            return match.getRemoteObservers().get(player);
+        } else return null;
+    }
+
+    private void socketObserverNotify(PlayerMultiplayer player, Response response) {
         if (match.getSocketObservers().get(player) != null) {
             try {
                 match.getSocketObservers().get(player).writeObject(response);
@@ -238,7 +228,6 @@ public class TurnManager implements Runnable {
         }
     }
 
-    // todo: da spiegare (se funziona)
     private boolean checkCondition() {
         return !((match.isToolAction() && match.isDiceAction() && match.isSecondDiceAction()) || match.isEndsTurn());
     }

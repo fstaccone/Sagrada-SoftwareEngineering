@@ -72,9 +72,6 @@ public abstract class Match {
     // Assegna le carte obiettivo privato
     public abstract void drawPrivateObjectiveCards();
 
-    // Propone le carte schema
-    public abstract void proposeWindowPatternCards();
-
     public abstract void calculateFinalScore();
 
     public abstract void terminateMatch();
