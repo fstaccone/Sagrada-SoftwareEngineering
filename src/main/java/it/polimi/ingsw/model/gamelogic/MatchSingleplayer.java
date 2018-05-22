@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.gamelogic;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
 import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
 
+import java.rmi.RemoteException;
+
 public class MatchSingleplayer extends Match implements Runnable{
 
     private int matchId;

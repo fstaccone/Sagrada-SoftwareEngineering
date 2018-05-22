@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Controller extends UnicastRemoteObject implements RemoteController, RequestHandler {
 
-    private Lobby lobby;
+    private transient Lobby lobby;
     private List<SocketHandler> socketHandlers; //Intermediate variable, useful between View and Model
 
 
@@ -120,7 +120,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
 
     @Override
-    public boolean placeDice(int index, int x, int y, String name, boolean isSingle) {
+    public boolean placeDice(int index, int x, int y, String name, boolean isSingle) throws RemoteException {
         if (isSingle) {
             lobby.getSingleplayerMatches().get(name).setDiceAction(true);
             // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
@@ -156,6 +156,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
             lobby.getSingleplayerMatches().get(name).showToolCards();
         }else{
             lobby.getMultiplayerMatches().get(name).showToolCards(name);
+        }
+    }
+
+    @Override
+    public void quitGame(String name, boolean isSingle) throws RemoteException {
+        if(isSingle){
+            lobby.getSingleplayerMatches().get(name).terminateMatch();
+        }else{
+            lobby.disconnect(name);
         }
     }
 }

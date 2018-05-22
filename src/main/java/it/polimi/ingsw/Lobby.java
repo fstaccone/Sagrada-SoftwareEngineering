@@ -171,30 +171,37 @@ public class Lobby {
         remoteObservers.remove(name);
     }
 
+    private PlayerMultiplayer getPlayer(String name){
+
+        for(PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()){
+            if(p.getName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
     public void disconnect(String name) {
         try {
-            for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
-                if (p.getName().equals(name)) {
-                    p.setStatus(ConnectionStatus.DISCONNECTED);
-                    removeUsername(p.getName());
-                    multiplayerMatches.get(name).getRemoteObservers().remove(p);
+            PlayerMultiplayer p;
+            p = getPlayer(name);
 
-                    // to check if the game must be closed
-                    if (multiplayerMatches.get(name).checkConnection() < 2) {
+            p.setStatus(ConnectionStatus.DISCONNECTED);
+            removeUsername(p.getName());
+            multiplayerMatches.get(name).getRemoteObservers().remove(p);
 
-                        // to check if the match must be closed and eventually
-                        // delete observers and usernames of other players
-                        for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
-                            if (!player.getName().equals(p.getName())) {
-                                removeUsername(player.getName());
-                                multiplayerMatches.get(name).getRemoteObservers().remove(player);
-                            }
-                        }
-                        multiplayerMatches.get(name).terminateMatch();
+            // to check if the game must be closed
+            if (multiplayerMatches.get(name).checkConnection() < 2) {
+
+                // to check if the match must be closed and eventually
+                // delete observers and usernames of other players
+                for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
+                    if (!player.getName().equals(p.getName())) {
+                        removeUsername(player.getName());
+                        multiplayerMatches.get(name).getRemoteObservers().remove(player);
                     }
-
-                    break;
                 }
+                multiplayerMatches.get(name).terminateMatch();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -340,4 +347,5 @@ public class Lobby {
     public boolean checkName(String name){
         return takenUsernames.contains(name);
     }
+
 }

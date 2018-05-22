@@ -81,7 +81,7 @@ public abstract class Match {
 
     public abstract void setWindowPatternCard(String name, int index) throws RemoteException;
 
-    public abstract boolean placeDice(String name, int index, int x, int y);
+    public abstract boolean placeDice(String name, int index, int x, int y) throws RemoteException;
 
     public void goThrough(String name){
         setEndsTurn(true);

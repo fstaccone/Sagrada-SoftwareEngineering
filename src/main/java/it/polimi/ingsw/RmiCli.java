@@ -180,12 +180,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
-                            case "q": {
-                                printer.println("Esci");
-                                printer.flush();
-                            }
-                            break;
-
                             case "cd": {
                                 diceChosen = Integer.parseInt(parts[1]);
                                 printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString());
@@ -194,7 +188,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "cw": {
-                                controller.chooseWindow(username, Integer.parseInt(parts[1]), false);
+                                controller.chooseWindow(username, Integer.parseInt(parts[1]), single);
                             } break;
 
                             case "pd": {
@@ -223,8 +217,10 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
-                            case "st": {
-                                controller.showToolcards(username, single);
+                            case "q": {
+                                controller.quitGame(username, single);
+                                controller.goThrough(username, single);
+                                System.exit(0);
                             }
                             break;
 
@@ -260,8 +256,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "q": {
-                                printer.println("Esci");
-                                printer.flush();
+                                controller.quitGame(username, single);
+                                System.exit(0);
                             }
                             break;
 

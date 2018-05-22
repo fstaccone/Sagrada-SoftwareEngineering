@@ -169,17 +169,17 @@ public class WindowPatternCard extends Card{
     }
 
     //putDice calls checkPos, then putDice calls Square methods to check empty place and satisfied constrictions
-    public void putDice(Dice d, int row, int column) {
+    public boolean putDice(Dice d, int row, int column) {
         if(isEmpty()){
-            putFirstDice(d, row, column);
-            setEmpty(false);
+            boolean result = putFirstDice(d, row, column);
+            setEmpty(!result);
+            return result;
         }else{
             if (checkPos(d, row, column)) {
-                window[row][column].putDice(d);
-            }else {
-                System.out.println("A dice can't be placed!");
+                return window[row][column].putDice(d);
             }
         }
+        return false;
     }
 
     public void putDiceIgnoringValueConstraint(Dice d, int row, int column){
@@ -210,10 +210,12 @@ public class WindowPatternCard extends Card{
             return ris;
         }
 
-    public void putFirstDice(Dice d, int row, int column){
-        if(row==0 || column==0 || column == window[row].length - 1 || row == window.length - 1)
-            window[row][column].putDice(d);
-        else System.out.println("The first dice must be in one of the borders.");
+    public boolean putFirstDice(Dice d, int row, int column){
+        if(row==0 || column==0 || column == window[row].length - 1 || row == window.length - 1) {
+            return window[row][column].putDice(d);
+
+        }
+        return false;
     }
 
     public void putDiceWithoutCheckPos(Dice d, int row, int column){
