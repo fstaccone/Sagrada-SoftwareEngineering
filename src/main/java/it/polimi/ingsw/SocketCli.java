@@ -136,8 +136,10 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onOtherTurn(String name) throws RemoteException {
-
+    public void onOtherTurn(String name)  {
+    }
+    @Override
+    public void onShowToolCards(List<String> cards) {
     }
 
     private class KeyboardHandler extends Thread {

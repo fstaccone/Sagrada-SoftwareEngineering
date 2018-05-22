@@ -96,10 +96,7 @@ public class Lobby {
 
         clients.forEach(c -> System.out.print(c + "\t"));
         System.out.println("\n");
-        // da rivedere la chiamata
-        //multiplayerMatches.get(multiplayerMatches.size()-1).waitForViews();
     }
-
 
     public void removeFromWaitingPlayers(String name) {
         boolean unique=false;
@@ -169,8 +166,11 @@ public class Lobby {
         }
     }
 
+    // da usare in caso di disconnessione. A fine partita?
+    public void removeObserver(String name) {
+        remoteObservers.remove(name);
+    }
 
-    // todo: eliminare match observer
     public void disconnect(String name) {
         try {
             for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
@@ -182,9 +182,8 @@ public class Lobby {
                     // to check if the game must be closed
                     if (multiplayerMatches.get(name).checkConnection() < 2) {
 
-                        // todo: cancelliamo qui oppure passiamo lobby al match?
-
-                        // to check if the match must be closed and eventually delete observers and usernames
+                        // to check if the match must be closed and eventually
+                        // delete observers and usernames of other players
                         for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
                             if (!player.getName().equals(p.getName())) {
                                 removeUsername(player.getName());
@@ -203,7 +202,6 @@ public class Lobby {
         }
     }
 
-    // todo: eliminare match observer
     public void removeFromMatchSingleplayer(String name) {
         try {
             singleplayerMatches.get(name).terminateMatch();
@@ -326,8 +324,20 @@ public class Lobby {
         return remoteObservers;
     }
 
-    public void removeObserver(String name) {
-        boolean isRemote = false;
-        // todo: da completare
+    // check if there is a still alive match in which the player must be put
+    public void addPlayer(String name) {
+        if (multiplayerMatches.get(name) != null) {
+            for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
+                if (p.getName().equals(name)) {
+                    p.setStatus(ConnectionStatus.READY);
+                }
+            }
+        } else {
+            addToWaitingPlayers(name);
+        }
+    }
+
+    public boolean checkName(String name){
+        return takenUsernames.contains(name);
     }
 }

@@ -45,7 +45,10 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onOtherTurn(String name) throws RemoteException {
-
+    }
+    
+    @Override
+    public void onShowToolCards(List<String> cards) throws RemoteException {
     }
 
     @Override

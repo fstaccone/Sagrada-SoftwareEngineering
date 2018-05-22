@@ -25,4 +25,5 @@ public interface RemoteController extends Remote{
     void showPlayers(String name) throws  RemoteException;
     void showWindow(String name, String owner) throws RemoteException;
     void chooseWindow(String name, int index, boolean isSingle) throws RemoteException;
+    void showToolcards(String name, boolean isSingle) throws RemoteException;
 }

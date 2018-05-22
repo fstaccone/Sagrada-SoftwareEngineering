@@ -8,12 +8,14 @@ public class WindowPatternCard extends Card{
     private Square[][] window;
     private int rows;
     private int columns;
+    private boolean empty;
     //constructor gives window a name and creates a double array of squares without constraints (for now)
     //it should be modified to allow constraints in specific squares
     public WindowPatternCard(String name, int rows, int columns) {
         super(name);
-        this.rows=rows;
-        this.columns=columns;
+        this.empty = true;
+        this.rows = rows;
+        this.columns = columns;
         window = new Square[rows][columns];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++)
@@ -28,18 +30,18 @@ public class WindowPatternCard extends Card{
     public int getDifficulty() {
         return difficulty;
     }
-
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
-
+    private boolean isEmpty() { return empty; }
     public String getName() {
         return name;
     }
-
     public Square[][] getWindow() {
         return window;
     }
+
+    private void setEmpty(boolean empty) { this.empty = empty; }
 
     //method created by copying part of checkPos but it's useful to have both
     public boolean existsAdjacentDice(int row, int column){
@@ -168,8 +170,16 @@ public class WindowPatternCard extends Card{
 
     //putDice calls checkPos, then putDice calls Square methods to check empty place and satisfied constrictions
     public void putDice(Dice d, int row, int column) {
-        if (checkPos(d, row, column))
-            window[row][column].putDice(d);
+        if(isEmpty()){
+            putFirstDice(d, row, column);
+            setEmpty(false);
+        }else{
+            if (checkPos(d, row, column)) {
+                window[row][column].putDice(d);
+            }else {
+                System.out.println("A dice can't be placed!");
+            }
+        }
     }
 
     public void putDiceIgnoringValueConstraint(Dice d, int row, int column){
