@@ -1,18 +1,32 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.socket.requests.UseToolCard1Request;
+
 import java.io.PrintWriter;
+import java.rmi.RemoteException;
 
 public class ToolCommand {
     int i;
     PrintWriter printer;
     String parametersNeeded;
+    RemoteController controller;
+    String name;
+    boolean single;
+    ClientController clientController;
 
-    public ToolCommand(int i, PrintWriter printer) { //DA SOSTITUIRE PRINTER CON CONTROLLER
+    public ToolCommand(int i, PrintWriter printer, RemoteController controller, ClientController clientController, String name, boolean isSingle) { //DA SOSTITUIRE PRINTER CON CONTROLLER
         this.i = i;
+        this.controller=controller;
+        this.clientController=clientController;
         this.printer=printer;
-        switch (this.i){
+        this.name=name;
+        this.single=isSingle;
+        switch (i){
             case 1:{
-               this.parametersNeeded="Descrizione azione e parametri da passare 1";
+               this.parametersNeeded="Pinza Sgrossatrice: \n- It allows you to Increment('+1') or Decrement('-1') the value of a the dice you choose from the Reserve;\n- You cannot Increment a 6 or Decrement a 1;\n- To use the toolcard you want, insert the following command :\n\n                                      ' usetool [number of the toolcard] [number of the dice in the reserve] [+]or[-]'\n";
             }break;
 
             case 2:{
@@ -71,52 +85,76 @@ public class ToolCommand {
         return i;
     }
 
-    public void Command1(int diceFromReserve, String incrOrDecr){
-        printer.println("Comando 1, togliere il passaggio di printer da costrutture e inserire controller "+ diceFromReserve );
-        printer.flush();
+    public boolean command1(int diceFromReserve, String incrOrDecr){
+
+        //RMI
+        if(controller!=null) {
+            try {
+                return controller.useToolCard1(diceFromReserve, incrOrDecr, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard1Request(diceFromReserve, incrOrDecr, name, single));
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (clientController.isEffectApplied()) {
+                clientController.setEffectApplied(false);//to reset the value
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+
     }
 
-    public void Command2(int startX, int startY, int finalX, int finalY){
+    public void command2(int startX, int startY, int finalX, int finalY){
         printer.println("Comando 2, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command3(){
+    public void command3(){
         printer.println("Comando 3, togliere il passaggio di printer da costrutture e inserire controller");
         printer.flush();
     }
-    public void Command4(){
+    public void command4(){
         printer.println("Comando 4, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command5(){
+    public void command5(){
         printer.println("Comando 5, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command6(){
+    public void command6(){
         printer.println("Comando 6, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command7(){
+    public void command7(){
         printer.println("Comando 7, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command8(){
+    public void command8(){
         printer.println("Comando 8, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command9(){
+    public void command9(){
         printer.println("Comando 9, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command10(){
+    public void command10(){
         printer.println("Comando 10, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command11(){
+    public void command11(){
         printer.println("Comando 11, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void Command12(){
+    public void command12(){
         printer.println("Comando 12, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }

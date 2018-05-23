@@ -11,4 +11,6 @@ public interface RequestHandler {
     Response handle(GoThroughRequest request);
     Response handle(ChooseWindowRequest request);
     Response handle(PlaceDiceRequest request);
+    Response handle(ShowWindowRequest request);
+    Response handle(UseToolCard1Request request);
 }

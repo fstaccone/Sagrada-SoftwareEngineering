@@ -13,7 +13,7 @@ public class SubstituteDiceFromBagEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {
+    public boolean applyEffect(Player player, Match match) {
         if(player.getPickedDice()==null)
           //  player.setPickedDice(match.getBoard().getReserve().chooseDice());
         match.getBag().putDiceInBag(player.getPickedDice());
@@ -45,5 +45,6 @@ public class SubstituteDiceFromBagEffect implements Effect {
             else System.out.println("Please choose a different position.");
         }
         player.setSchemeCard(schema);
+        return false;
     }
 }

@@ -151,6 +151,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
         for(String s : cards){
             printer.println("- " + s);
+            printer.println("\n");
             printer.flush();
         }
     }
@@ -165,13 +166,14 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.println(toolCardsList.toString());
         printer.flush();
         for(String card: toolCardsList){
-            int i = Integer.parseInt(card.replaceAll("tool","").substring(0,1));
-            this.toolCommands.add(new ToolCommand(i,this.printer));
+            String[] strings= card.split(" ");
+            int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
+            this.toolCommands.add(new ToolCommand(i,this.printer,this.controller,null,this.username, this.single));
         }
     }
 
     @Override
-    public void onPlayerExit(String name) throws RemoteException {
+    public void onPlayerExit(String name) {
         printer.println("Player " + name + " has left the game!");
         printer.flush();
     }
@@ -279,7 +281,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }break;
 
                             case "tool":{
-                                printer.println("\nHere follows the ToolCard description:          ~ ['usetool number' to use it]\n");
+                                printer.println("\nHere follows the ToolCard description:\n");
                                 printer.flush();
                                 boolean found = false;
                                 for(ToolCommand toolCommand:toolCommands){
@@ -365,51 +367,70 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                     found=true;
                     switch (i) {
                         case 1: {
-                            toolCommand.Command1(Integer.parseInt(parts[2]), "incr"); //parametri a caso
+
+                               if( toolCommand.command1(Integer.parseInt(parts[2]), parts[3])){
+                                   printer.println("\nWell done! The chosen dice has been modified correctly.\n");
+                                   printer.flush();
+                               }
+                               else {
+                                   printer.println("Invalid request.\n");
+                                   printer.flush();
+                               }
                         }
                         break;
                         case 2: {
-                            toolCommand.Command2(2, 3, 3, 4); //parametri a caso
+                            toolCommand.command2(2, 3, 3, 4); //parametri a caso
+
                         }
                         break;
                         case 3: {
-                            toolCommand.Command3();
+                            toolCommand.command3();
+
                         }
                         break;
                         case 4: {
-                            toolCommand.Command4();
+                            toolCommand.command4();
+
                         }
                         break;
                         case 5: {
-                            toolCommand.Command5();
+                            toolCommand.command5();
+
                         }
                         break;
                         case 6: {
-                            toolCommand.Command6();
+                            toolCommand.command6();
+
                         }
                         break;
                         case 7: {
-                            toolCommand.Command7();
+                            toolCommand.command7();
+
                         }
                         break;
                         case 8: {
-                            toolCommand.Command8();
+                            toolCommand.command8();
+
                         }
                         break;
                         case 9: {
-                            toolCommand.Command9();
+                            toolCommand.command9();
+
                         }
                         break;
                         case 10: {
-                            toolCommand.Command10();
+                            toolCommand.command10();
+
                         }
                         break;
                         case 11: {
-                            toolCommand.Command11();
+                            toolCommand.command11();
+
                         }
                         break;
                         case 12: {
-                            toolCommand.Command12();
+                            toolCommand.command12();
+
                         }
                         break;
                     }

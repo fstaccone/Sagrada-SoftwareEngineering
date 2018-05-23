@@ -11,7 +11,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {
+    public boolean applyEffect(Player player, Match match) {
         Scanner scan = new Scanner(System.in);
         Colors color = null;
         while(color == null)
@@ -60,5 +60,6 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
         }
         player.setSchemeCard(schema);
         System.out.println(schema.toString());
+        return false;
     }
 }

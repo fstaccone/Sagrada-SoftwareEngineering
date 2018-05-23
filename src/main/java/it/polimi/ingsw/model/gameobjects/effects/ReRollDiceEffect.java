@@ -15,7 +15,7 @@ public class ReRollDiceEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {/*
+    public boolean applyEffect(Player player, Match match) {/*
         if(player.getPickedDice()==null)
             player.setPickedDice(match.getBoard().getReserve().chooseDice());
         diceToBeRerolled = player.getPickedDice();*/
@@ -23,5 +23,6 @@ public class ReRollDiceEffect implements Effect {
         int val = rand.nextInt(6)+1;
         diceToBeRerolled.setValue(val);
         player.setPickedDice(diceToBeRerolled);
+        return false;
     }
 }

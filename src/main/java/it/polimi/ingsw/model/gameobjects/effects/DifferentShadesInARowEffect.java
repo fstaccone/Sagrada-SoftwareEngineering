@@ -12,7 +12,7 @@ public class DifferentShadesInARowEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {
+    public boolean applyEffect(Player player, Match match) {
         int temp = player.getPoints();
         ArrayList<Integer> valuesPerRow = new ArrayList<>();
         Square[][] schema = player.getSchemeCard().getWindow();
@@ -36,5 +36,6 @@ public class DifferentShadesInARowEffect implements Effect {
                 temp = temp + pointsToBeAssigned;
         }
         player.setPoints(temp);
+        return false;
     }
 }

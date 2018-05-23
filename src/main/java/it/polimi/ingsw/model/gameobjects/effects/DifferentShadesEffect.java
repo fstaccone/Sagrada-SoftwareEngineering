@@ -10,7 +10,7 @@ public class DifferentShadesEffect implements Effect{
     }
 
     @Override
-    public void applyEffect(Player caller, Match match) {
+    public boolean applyEffect(Player caller, Match match) {
         Square[][] schema = caller.getSchemeCard().getWindow();
         int temp = caller.getPoints();
         int onesCounter = 0;
@@ -56,5 +56,6 @@ public class DifferentShadesEffect implements Effect{
         }
         temp = temp + min*pointsToBeAssigned;
         caller.setPoints(temp);
+        return false;
     }
 }

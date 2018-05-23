@@ -11,6 +11,24 @@ public abstract class Player implements Serializable{
     private int points;
     protected Colors color;
 
+    private int dice;
+    private String choise;
+
+    public void setDice(int diceChosen) {
+        dice = diceChosen;
+    }
+
+    public void setChoise(String choise) {
+        this.choise = choise;
+    }
+
+    public int getDice() {
+        return dice;
+    }
+
+    public String getChoise() {
+        return choise;
+    }
 
     // todo: check inheritance
     public Player(String name){

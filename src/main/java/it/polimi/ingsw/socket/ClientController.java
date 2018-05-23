@@ -15,6 +15,7 @@ public class ClientController implements ResponseHandler {
 
     private boolean nameAlreadyTaken=false;
     private boolean dicePlaced=false;
+    private boolean effectApplied=false;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private LoginHandler loginHandler;
@@ -51,12 +52,23 @@ public class ClientController implements ResponseHandler {
         return nameAlreadyTaken;
     }
 
+    public void setSocketCli(SocketCli socketCli) {
+        this.socketCli = socketCli;
+    }
+
+    public void setDicePlaced(boolean dicePlaced) {
+        this.dicePlaced = dicePlaced;
+    }
+
     public boolean isDicePlaced(){
         return dicePlaced;
     }
 
-    public void setSocketCli(SocketCli socketCli) {
-        this.socketCli = socketCli;
+    public void setEffectApplied(boolean effectApplied) {
+        this.effectApplied = effectApplied;
+    }
+    public boolean isEffectApplied() {
+        return effectApplied;
     }
 
     @Override
@@ -133,7 +145,13 @@ public class ClientController implements ResponseHandler {
     public void handle(DicePlacedResponse response) {
         if (socketCli!=null){
             dicePlaced=response.done;
+        }
+    }
 
+    @Override
+    public void handle(ToolCardEffectAppliedResponse response) {
+        if (socketCli!=null){
+            effectApplied=response.effectApplied;
         }
     }
 

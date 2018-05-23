@@ -10,7 +10,7 @@ public class MediumShadesEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {
+    public boolean applyEffect(Player player, Match match) {
         Square[][] schema = player.getSchemeCard().getWindow();
         int temp = player.getPoints();
         int threesCounter = 0;
@@ -30,5 +30,6 @@ public class MediumShadesEffect implements Effect {
             temp = temp + threesCounter*pointsToBeAssigned;
         else temp = temp + foursCounter*pointsToBeAssigned;
         player.setPoints(temp);
+        return false;
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
 
+import javax.tools.Tool;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,14 @@ public class Board {
         this.roundTrack = new RoundTrack();
     }
 
+    public boolean findAndUseToolCard(int i, Player player, Match match){
+        for (ToolCard card:pickedToolCards){
+            if (Integer.parseInt(card.getToolID().replaceAll("tool",""))==i){
+                return card.useCard(player,match);
+            }
+        }
+        return false;
+    }
     public Reserve getReserve() {
         return reserve;
     }

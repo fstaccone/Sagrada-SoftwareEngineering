@@ -13,7 +13,7 @@ public class MoveDiceNotAdjacentToAnotherEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {/*
+    public boolean applyEffect(Player player, Match match) {/*
         if(player.getPickedDice()==null)
             player.setPickedDice(match.getBoard().getReserve().chooseDice());*/
         Dice dice = player.getPickedDice();
@@ -32,5 +32,6 @@ public class MoveDiceNotAdjacentToAnotherEffect implements Effect {
             }
             else System.out.println("Please choose a different position.");
         }
+        return false;
     }
 }

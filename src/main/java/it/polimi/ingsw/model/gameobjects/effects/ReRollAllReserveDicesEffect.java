@@ -13,10 +13,11 @@ public class ReRollAllReserveDicesEffect implements Effect{
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {
+    public boolean applyEffect(Player player, Match match) {
         List<Dice> dicesToThrow;
         Reserve reserve = match.getBoard().getReserve();
         dicesToThrow = reserve.removeAllDices();
         reserve.throwDices(dicesToThrow);
+        return false;
     }
 }

@@ -10,7 +10,7 @@ public class UpsideDownDiceEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {/*
+    public boolean applyEffect(Player player, Match match) {/*
         if(player.getPickedDice()==null)
             player.setPickedDice(match.getBoard().getReserve().chooseDice());*/
         int val = player.getPickedDice().getValue();
@@ -51,6 +51,7 @@ public class UpsideDownDiceEffect implements Effect {
                 player.getPickedDice().setValue(0);
                 break;
         }
-
+        return false;
     }
+
 }

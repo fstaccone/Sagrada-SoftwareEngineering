@@ -13,7 +13,7 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player caller, Match match) {
+    public boolean applyEffect(Player caller, Match match) {
         Dice dice = null;
         int token = 0;
         Scanner scan = new Scanner(System.in);
@@ -42,6 +42,7 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                 result = 1;
             else System.out.println("Please choose a different position.");
         }
+        return false;
     }
 
 

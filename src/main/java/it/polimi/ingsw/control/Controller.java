@@ -2,12 +2,16 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.Lobby;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
+import it.polimi.ingsw.model.gameobjects.ToolCard;
 import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.*;
 import it.polimi.ingsw.socket.responses.DicePlacedResponse;
 import it.polimi.ingsw.socket.responses.NameAlreadyTakenResponse;
 import it.polimi.ingsw.socket.responses.Response;
+import it.polimi.ingsw.socket.responses.ToolCardEffectAppliedResponse;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -69,6 +73,57 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
+    public boolean placeDice(int index, int x, int y, String name, boolean isSingle)  {
+        if (isSingle) {
+            lobby.getSingleplayerMatches().get(name).setDiceAction(true);
+            // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
+        }else {
+            return lobby.getMultiplayerMatches().get(name).placeDice(name, index, x, y);
+        }
+        return false;
+    }
+
+    @Override
+    public void showPlayers(String name){
+        lobby.getMultiplayerMatches().get(name).showPlayers(name);
+    }
+
+    @Override
+    public void showWindow(String name, String owner){
+        lobby.getMultiplayerMatches().get(name).showWindow(name, owner);
+    }
+
+
+    @Override
+    public void chooseWindow(String name, int index, boolean isSingle) {
+        if(isSingle){
+            lobby.getSingleplayerMatches().get(name).setWindowPatternCard(name, index);
+        }else{
+            lobby.getMultiplayerMatches().get(name).setWindowPatternCard(name, index);
+        }
+    }
+
+    @Override
+    public void quitGame(String name, boolean isSingle) {
+        if(isSingle){
+            lobby.getSingleplayerMatches().get(name).terminateMatch();
+        }else{
+            lobby.disconnect(name);
+        }
+    }
+
+    @Override
+    public boolean useToolCard1(int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
+        if(isSingle){
+            //DA FARE
+        }else{
+            return lobby.getMultiplayerMatches().get(name).useToolCard1(diceChosen, IncrOrDecr, name, isSingle);
+        }
+        return false;
+    }
+
+
+    @Override
     public Response handle(CheckUsernameRequest request) {
         return new NameAlreadyTakenResponse(!checkName(request.username));
     }
@@ -111,6 +166,18 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return new DicePlacedResponse(placed);
     }
 
+    @Override
+    public Response handle(ShowWindowRequest request) {
+         showWindow(request.myName,request.ownerName);
+         return null;
+    }
+
+    @Override
+    public Response handle(UseToolCard1Request request) {
+        boolean effectApplied=useToolCard1(request.diceChosen,request.IncrOrDecr,request.username,request.isSingle);
+        return new ToolCardEffectAppliedResponse(effectApplied);
+    }
+
 
     public void observeLobby(String name, LobbyObserver lobbyObserver) {
         lobby.observeLobbyRemote(name, lobbyObserver);
@@ -124,44 +191,4 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         this.socketHandlers.add(socketHandler);
     }
 
-
-    @Override
-    public boolean placeDice(int index, int x, int y, String name, boolean isSingle)  {
-        if (isSingle) {
-            lobby.getSingleplayerMatches().get(name).setDiceAction(true);
-            // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
-        }else {
-            return lobby.getMultiplayerMatches().get(name).placeDice(name, index, x, y);
-        }
-        return false;
-    }
-
-    @Override
-    public void showPlayers(String name) throws RemoteException {
-        lobby.getMultiplayerMatches().get(name).showPlayers(name);
-    }
-
-    @Override
-    public void showWindow(String name, String owner) throws RemoteException {
-        lobby.getMultiplayerMatches().get(name).showWindow(name, owner);
-    }
-
-
-    @Override
-    public void chooseWindow(String name, int index, boolean isSingle) {
-        if(isSingle){
-            lobby.getSingleplayerMatches().get(name).setWindowPatternCard(name, index);
-        }else{
-            lobby.getMultiplayerMatches().get(name).setWindowPatternCard(name, index);
-        }
-    }
-
-    @Override
-    public void quitGame(String name, boolean isSingle) throws RemoteException {
-        if(isSingle){
-            lobby.getSingleplayerMatches().get(name).terminateMatch();
-        }else{
-            lobby.disconnect(name);
-        }
-    }
 }

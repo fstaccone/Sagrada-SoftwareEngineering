@@ -10,7 +10,7 @@ public class LightShadesEffect implements Effect {
     }
 
     @Override
-    public void applyEffect(Player player, Match match) {
+    public boolean applyEffect(Player player, Match match) {
         Square[][] schema = player.getSchemeCard().getWindow();
         int temp = player.getPoints();
         int onesCounter = 0;
@@ -33,5 +33,6 @@ public class LightShadesEffect implements Effect {
             temp = temp + onesCounter*pointsToBeAssigned;
         else temp = temp + twosCounter*pointsToBeAssigned;
         player.setPoints(temp);
+        return false;
     }
 }

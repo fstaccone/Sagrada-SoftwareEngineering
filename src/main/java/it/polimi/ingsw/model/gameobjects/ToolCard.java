@@ -54,13 +54,16 @@ public class ToolCard extends Card{
         this.toolID=toolID;
     }
 
-    public void useCard(Player caller, Match match){//CONSIDERIAMO PER ESEMPIO LA TOOLCARD4
+    public boolean useCard(Player caller, Match match){//CONSIDERIAMO PER ESEMPIO LA TOOLCARD4
 
-        effect.applyEffect( caller,  match);
+        return effect.applyEffect( caller,  match);
     }
 
     public String getName() {
         return name;
+    }
+    public String getToolID(){
+        return toolID;
     }
 
     @Override

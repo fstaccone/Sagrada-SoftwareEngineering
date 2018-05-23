@@ -4,6 +4,7 @@ import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
 import it.polimi.ingsw.socket.requests.GoThroughRequest;
 import it.polimi.ingsw.socket.requests.PlaceDiceRequest;
+import it.polimi.ingsw.socket.requests.ShowWindowRequest;
 
 import java.io.*;
 import java.rmi.RemoteException;
@@ -161,8 +162,9 @@ public class SocketCli implements Serializable, MatchObserver {
         printer.println(toolCardsList.toString());
         printer.flush();
         for(String card: toolCardsList){
-            int i=Integer.parseInt(card.replaceAll("tool","").substring(0,1));
-            this.toolCommands.add(new ToolCommand(i,this.printer));
+            String[] strings= card.split(" ");
+            int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
+            this.toolCommands.add(new ToolCommand(i,this.printer,null, controller,username,false));
         }
     }
 
@@ -229,13 +231,14 @@ public class SocketCli implements Serializable, MatchObserver {
                                     printer.println("You have chosen to place the dice in the [" + coordinateX + "][" + coordinateY + "] square of your Scheme Card");
                                     printer.flush();
                                     controller.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
-                                    //controller.nextResponse().handleResponse(controller); has the answer stolen from socketlistener, so we wait for the normal notify instead of asking for it
+                                    //controller.nextResponse().handleResponse(controller); this call has the answer stolen from socketlistener, so we wait for the normal notify instead of asking for it
                                     try {
                                         Thread.sleep(100);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
                                     if (controller.isDicePlaced()) {
+                                        controller.setDicePlaced(false);//to reset the value
                                         printer.println("Well done! The chosen dice has been placed correctly.\n");
                                         printer.flush();
                                     } else {
@@ -277,6 +280,7 @@ public class SocketCli implements Serializable, MatchObserver {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
                                 printer.flush();
                                 //controller.showWindow(username, parts[1]);
+                                controller.request(new ShowWindowRequest(username,parts[1]));
                             }break;
 
                             case "tool":{
@@ -367,51 +371,59 @@ public class SocketCli implements Serializable, MatchObserver {
                     found=true;
                     switch (i) {
                         case 1: {
-                            toolCommand.Command1(Integer.parseInt(parts[2]), "incr"); //parametri a caso
+
+                            if( toolCommand.command1(Integer.parseInt(parts[2]), parts[3])){
+                                printer.println("\nWell done! The chosen dice has been modified correctly.\n");
+                                printer.flush();
+                            }
+                            else {
+                                printer.println("Invalid request.\n");
+                                printer.flush();
+                            }
                         }
                         break;
                         case 2: {
-                            toolCommand.Command2(2, 3, 3, 4); //parametri a caso
+                            toolCommand.command2(2, 3, 3, 4); //parametri a caso
                         }
                         break;
                         case 3: {
-                            toolCommand.Command3();
+                            toolCommand.command3();
                         }
                         break;
                         case 4: {
-                            toolCommand.Command4();
+                            toolCommand.command4();
                         }
                         break;
                         case 5: {
-                            toolCommand.Command5();
+                            toolCommand.command5();
                         }
                         break;
                         case 6: {
-                            toolCommand.Command6();
+                            toolCommand.command6();
                         }
                         break;
                         case 7: {
-                            toolCommand.Command7();
+                            toolCommand.command7();
                         }
                         break;
                         case 8: {
-                            toolCommand.Command8();
+                            toolCommand.command8();
                         }
                         break;
                         case 9: {
-                            toolCommand.Command9();
+                            toolCommand.command9();
                         }
                         break;
                         case 10: {
-                            toolCommand.Command10();
+                            toolCommand.command10();
                         }
                         break;
                         case 11: {
-                            toolCommand.Command11();
+                            toolCommand.command11();
                         }
                         break;
                         case 12: {
-                            toolCommand.Command12();
+                            toolCommand.command12();
                         }
                         break;
                     }

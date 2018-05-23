@@ -6,5 +6,5 @@ import it.polimi.ingsw.model.gameobjects.Player;
 import java.io.Serializable;
 
 public interface Effect extends Serializable{
-    public void applyEffect(Player caller, Match match);
+    public boolean applyEffect(Player caller, Match match);
 }

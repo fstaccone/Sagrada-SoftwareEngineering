@@ -271,7 +271,7 @@ public class Lobby {
 
             // IF THERE ARE 2 PLAYERS WAITING FOR THE MATCH BEGINNING, THE TIMER IS SET
             if (waitingPlayers.size() == 2) {
-                System.out.println("Lobby :Timer started: 30 seconds from now!");
+                System.out.println("Lobby :Timer started: "+ waitingTime/1000+" seconds from now!");
                 this.timer = new Timer();
                 task = new MatchStarter(this);
                 timer.schedule(task, waitingTime);
