@@ -1,5 +1,10 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
+import it.polimi.ingsw.socket.requests.GoThroughRequest;
+import it.polimi.ingsw.socket.requests.PlaceDiceRequest;
+
 import java.io.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -224,7 +229,12 @@ public class SocketCli implements Serializable, MatchObserver {
                                     printer.println("You have chosen to place the dice in the [" + coordinateX + "][" + coordinateY + "] square of your Scheme Card");
                                     printer.flush();
                                     controller.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
-                                    controller.nextResponse().handleResponse(controller);
+                                    //controller.nextResponse().handleResponse(controller); has the answer stolen from socketlistener, so we wait for the normal notify instead of asking for it
+                                    try {
+                                        Thread.sleep(100);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                     if (controller.isDicePlaced()) {
                                         printer.println("Well done! The chosen dice has been placed correctly.\n");
                                         printer.flush();

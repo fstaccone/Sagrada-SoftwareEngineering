@@ -1,4 +1,10 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.socket;
+
+import it.polimi.ingsw.LoginHandler;
+import it.polimi.ingsw.socket.responses.Response;
+import it.polimi.ingsw.socket.requests.Request;
+import it.polimi.ingsw.socket.responses.*;
+import it.polimi.ingsw.SocketCli;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -126,7 +132,8 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(DicePlacedResponse response) {
         if (socketCli!=null){
-           dicePlaced=response.done;
+            dicePlaced=response.done;
+
         }
     }
 

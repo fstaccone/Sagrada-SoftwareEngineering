@@ -2,6 +2,9 @@ package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.model.gameobjects.*;
+import it.polimi.ingsw.socket.responses.ActualPlayersResponse;
+import it.polimi.ingsw.socket.responses.ShowWindowResponse;
+import it.polimi.ingsw.socket.responses.UpdateReserveResponse;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

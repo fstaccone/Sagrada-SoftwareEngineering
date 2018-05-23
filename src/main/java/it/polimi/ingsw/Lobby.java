@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 import it.polimi.ingsw.model.gamelogic.MatchStarter;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
+import it.polimi.ingsw.socket.responses.MatchStartedResponse;
+import it.polimi.ingsw.socket.responses.WaitingPlayersResponse;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

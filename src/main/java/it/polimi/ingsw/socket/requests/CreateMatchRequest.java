@@ -1,4 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.socket.requests;
+
+import it.polimi.ingsw.socket.RequestHandler;
+import it.polimi.ingsw.socket.responses.Response;
 
 public class CreateMatchRequest implements Request {
     public final String username;

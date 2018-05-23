@@ -1,8 +1,13 @@
 package it.polimi.ingsw;
 
 
+import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.view.RMIView;
+import it.polimi.ingsw.socket.SocketListener;
+import it.polimi.ingsw.socket.requests.AddPlayerRequest;
+import it.polimi.ingsw.socket.requests.CheckUsernameRequest;
+import it.polimi.ingsw.socket.requests.CreateMatchRequest;
+import it.polimi.ingsw.socket.requests.RemoveFromWaitingPlayersRequest;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,7 +55,7 @@ public class LoginHandler implements Initializable{
     private transient Registry registry;
     private transient RemoteController controller;
 
-    private transient Client client;
+    //private transient Client client;
 
     @FXML
     private transient TextField usernameInput;
@@ -253,7 +258,7 @@ public class LoginHandler implements Initializable{
     private void createClientRmi() throws RemoteException {
         // to create the link between this Client and the Player in the model
         if (isSingleplayer){
-            client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
+            //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
                 controller.createMatch(this.username);
                 if(isCli) {
@@ -267,7 +272,7 @@ public class LoginHandler implements Initializable{
             }
         }
         else {
-            client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
+            //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
                 controller.observeLobby(this.username, handler);
                 controller.addPlayer(this.username);
@@ -286,7 +291,7 @@ public class LoginHandler implements Initializable{
 
         // to create the link between this Client and the Player in the model
         if (isSingleplayer){
-            client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
+            //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
                 clientController.request(new CreateMatchRequest(this.username));
             }
@@ -296,7 +301,7 @@ public class LoginHandler implements Initializable{
             }
         }
         else {
-            client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
+            //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
                 new Thread(new SocketListener(clientController)).start();
                 clientController.request(new AddPlayerRequest(this.username));

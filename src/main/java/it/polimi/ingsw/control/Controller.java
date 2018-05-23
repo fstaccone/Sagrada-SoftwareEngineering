@@ -2,13 +2,13 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.Lobby;
-import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
-import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.view.ViewInterface;
+import it.polimi.ingsw.socket.RequestHandler;
+import it.polimi.ingsw.socket.SocketHandler;
+import it.polimi.ingsw.socket.requests.*;
+import it.polimi.ingsw.socket.responses.DicePlacedResponse;
+import it.polimi.ingsw.socket.responses.NameAlreadyTakenResponse;
+import it.polimi.ingsw.socket.responses.Response;
 
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -26,11 +26,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         this.socketHandlers=new ArrayList<>();
         // ...
     }
-
+/*
     @Override
     public String login(String username, ViewInterface view){
         return null;
-    }
+    }*/
 
 
     // da gestire il caso di riconnessione
@@ -107,8 +107,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(PlaceDiceRequest request) {
-
-        return new DicePlacedResponse(placeDice(request.diceChosen,request.coordinateX,request.coordinateY,request.username,request.single));
+        boolean placed= placeDice(request.diceChosen,request.coordinateX,request.coordinateY,request.username,request.single);
+        return new DicePlacedResponse(placed);
     }
 
 

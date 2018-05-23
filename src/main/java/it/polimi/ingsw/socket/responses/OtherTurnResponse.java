@@ -1,4 +1,6 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.socket.responses;
+
+import it.polimi.ingsw.socket.ResponseHandler;
 
 public class OtherTurnResponse implements Response {
 

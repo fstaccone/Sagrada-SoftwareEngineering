@@ -1,6 +1,8 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.socket;
 
+import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.socket.requests.Request;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

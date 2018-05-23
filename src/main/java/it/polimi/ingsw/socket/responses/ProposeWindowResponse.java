@@ -1,10 +1,12 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.socket.responses;
+
+import it.polimi.ingsw.socket.ResponseHandler;
 
 import java.util.List;
 
 public class ProposeWindowResponse implements Response {
 
-    List<String> list;
+    public List<String> list;
     public ProposeWindowResponse(List<String> list) {
         this.list = list;
     }

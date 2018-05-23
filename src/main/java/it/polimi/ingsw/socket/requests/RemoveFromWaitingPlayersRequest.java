@@ -1,6 +1,9 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.socket.requests;
 
-public class RemoveFromWaitingPlayersRequest implements Request{
+import it.polimi.ingsw.socket.RequestHandler;
+import it.polimi.ingsw.socket.responses.Response;
+
+public class RemoveFromWaitingPlayersRequest implements Request {
     public final String name;
 
     public RemoveFromWaitingPlayersRequest(String name) {

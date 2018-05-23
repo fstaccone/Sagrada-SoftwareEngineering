@@ -1,13 +1,9 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.view.ClientControllerRMI;
-import it.polimi.ingsw.view.ClientControllerInterface;
-import it.polimi.ingsw.view.ViewInterface;
-
-import java.rmi.RemoteException;
-
+/*
 
 public class Client{
     private String name;
@@ -57,3 +53,4 @@ public class Client{
 
 
 }
+*/

@@ -1,4 +1,6 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.socket;
+
+import it.polimi.ingsw.socket.responses.*;
 
 public interface ResponseHandler {
     void handle(NameAlreadyTakenResponse response);

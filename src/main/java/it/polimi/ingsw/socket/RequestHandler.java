@@ -1,4 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.socket;
+
+import it.polimi.ingsw.socket.responses.Response;
+import it.polimi.ingsw.socket.requests.*;
 
 public interface RequestHandler {
     Response handle(CheckUsernameRequest request);
