@@ -375,4 +375,31 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
         return reserveToBeUpdated;
     }
+
+    public boolean useToolCard2(int startX, int startY, int finalX, int finalY, String name, boolean isSingle){
+        getPlayer(name).setStartX(startX);
+        getPlayer(name).setStartY(startY);
+        getPlayer(name).setFinalX(finalX);
+        getPlayer(name).setFinalY(finalY);
+        boolean schemeCardToBeUpdated= getBoard().findAndUseToolCard(2, getPlayer(name),this);
+        if (schemeCardToBeUpdated){
+           /* if (remoteObservers.get(getPlayer(name)) != null) {
+                try {
+                    remoteObservers.get(getPlayer(name)). eccetera eccetera
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (socketObservers.get(getPlayer(name)) != null) {
+                try {
+                    socketObservers.get(getPlayer(name)).writeObject(new eccetera eccetera);
+                    socketObservers.get(getPlayer(name)).reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }*/
+
+        }
+        return schemeCardToBeUpdated;
+    }
 }

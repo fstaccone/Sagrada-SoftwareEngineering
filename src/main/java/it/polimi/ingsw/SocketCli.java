@@ -279,7 +279,6 @@ public class SocketCli implements Serializable, MatchObserver {
                             case "sw": {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
                                 printer.flush();
-                                //controller.showWindow(username, parts[1]);
                                 controller.request(new ShowWindowRequest(username,parts[1]));
                             }break;
 
@@ -345,7 +344,7 @@ public class SocketCli implements Serializable, MatchObserver {
                             case "sw": {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
                                 printer.flush();
-                                //controller.showWindow(username, parts[1]);
+                                controller.request(new ShowWindowRequest(username,parts[1]));
                             }
                             break;
 

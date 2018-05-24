@@ -114,10 +114,22 @@ public class ToolCommand {
 
     }
 
-    public void command2(int startX, int startY, int finalX, int finalY){
-        printer.println("Comando 2, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command2(int startX, int startY, int finalX, int finalY){
+        //RMI
+        if(controller!=null) {
+            try {
+                return controller.useToolCard2(startX, startY, finalX, finalY, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            return false;
+            }
+        return false;
     }
+
     public void command3(){
         printer.println("Comando 3, togliere il passaggio di printer da costrutture e inserire controller");
         printer.flush();

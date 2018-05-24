@@ -14,6 +14,43 @@ public abstract class Player implements Serializable{
     private int dice;
     private String choise;
 
+    private int startX;
+    private int startY;
+    private int finalX;
+    private int finalY;
+
+    public int getStartX() {
+        return startX;
+    }
+
+    public int getStartY() {
+        return startY;
+    }
+
+    public int getFinalX() {
+        return finalX;
+    }
+
+    public int getFinalY() {
+        return finalY;
+    }
+
+    public void setStartX(int startX) {
+        this.startX = startX;
+    }
+
+    public void setStartY(int startY) {
+        this.startY = startY;
+    }
+
+    public void setFinalX(int finalX) {
+        this.finalX = finalX;
+    }
+
+    public void setFinalY(int finalY) {
+        this.finalY = finalY;
+    }
+
     public void setDice(int diceChosen) {
         dice = diceChosen;
     }

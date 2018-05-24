@@ -24,4 +24,5 @@ public interface RemoteController extends Remote{
     void chooseWindow(String name, int index, boolean isSingle) throws RemoteException;
     void quitGame(String name, boolean isSingle) throws RemoteException;
     boolean useToolCard1(int diceChosen, String IncrOrDecr, String username, boolean isSingle) throws RemoteException;
+    boolean useToolCard2(int startX, int startY, int finalX, int finalY,String username, boolean isSingle) throws RemoteException;
 }

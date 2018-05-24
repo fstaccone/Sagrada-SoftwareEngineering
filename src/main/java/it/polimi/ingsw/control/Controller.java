@@ -122,6 +122,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return false;
     }
 
+    @Override
+    public boolean useToolCard2(int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
+        if(isSingle){
+            //DA FARE
+        }else{
+            return lobby.getMultiplayerMatches().get(name).useToolCard2(startX, startY, finalX, finalY, name, isSingle);
+        }
+        return false;
+    }
+
 
     @Override
     public Response handle(CheckUsernameRequest request) {
