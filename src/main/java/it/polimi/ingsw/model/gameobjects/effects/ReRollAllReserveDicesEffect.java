@@ -14,10 +14,8 @@ public class ReRollAllReserveDicesEffect implements Effect{
 
     @Override
     public boolean applyEffect(Player player, Match match) {
-        List<Dice> dicesToThrow;
         Reserve reserve = match.getBoard().getReserve();
-        dicesToThrow = reserve.removeAllDices();
-        reserve.throwDices(dicesToThrow);
+        reserve.throwDices(reserve.removeAllDices());
         return false;
     }
 }

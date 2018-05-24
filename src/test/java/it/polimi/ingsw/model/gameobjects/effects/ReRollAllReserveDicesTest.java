@@ -52,9 +52,9 @@ public class ReRollAllReserveDicesTest {
     }
     @Test
     public void checkReserve(){
-        match.getBoard().getReserve().showReserve();
+        //match.getBoard().getReserve().showReserve();
         toolCard.useCard(player, match);
-        match.getBoard().getReserve().showReserve();
+        //match.getBoard().getReserve().showReserve();
         Assert.assertNotNull( match.getBoard().getReserve());
     }
 }

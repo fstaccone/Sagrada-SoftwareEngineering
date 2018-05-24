@@ -216,7 +216,7 @@ public class LoginHandler implements Initializable {
         else {
             clientController.request(new CheckUsernameRequest(username));
             clientController.nextResponse().handleResponse(clientController);
-            status = (clientController.isNameAlreadyTaken());
+            status = clientController.isNameAlreadyTaken();
         }
 
         if (status.equals(ConnectionStatus.CONNECTED)) {

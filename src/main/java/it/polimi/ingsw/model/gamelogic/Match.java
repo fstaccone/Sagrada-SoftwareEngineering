@@ -5,9 +5,7 @@ import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
 
 import java.rmi.RemoteException;
-import java.util.*;
 
-import static org.mockito.ArgumentMatchers.longThat;
 import static org.mockito.Mockito.mock;
 
 
@@ -63,7 +61,7 @@ public abstract class Match {
     public void incrementRoundCounter() { this.roundCounter++; }
 
     public void pushLeftDicesToRoundTrack(){
-        this.getBoard().getRoundTrack().putDices(this.getBoard().getReserve().endRound(), this.roundCounter);
+        this.getBoard().getRoundTrack().putDices(this.getBoard().getReserve().removeAllDices(), this.roundCounter);
     }
 
     // Game's initialisation

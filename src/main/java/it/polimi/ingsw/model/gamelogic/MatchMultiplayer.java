@@ -48,19 +48,19 @@ public class MatchMultiplayer extends Match implements Runnable {
             this.players.add(player);
             if (socketsOut.size() != 0) {
                 for (String name : socketsOut.keySet()) {
-                    if (name == client) {
+                    if (name.equals(client)) {
                         this.socketObservers.put(player, socketsOut.get(name));
                     }
                 }
             }
         }
-        if(!started) {
-            if (this.players.size() == this.socketObservers.size()) {
-                localThread = new Thread(this);
-                localThread.start();
-                started = true;
-            }
+
+        if (this.players.size() == this.socketObservers.size()) {
+            localThread = new Thread(this);
+            localThread.start();
+            started = true;
         }
+
     }
 
     /**
@@ -143,7 +143,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         Collections.shuffle(this.players);
 
         this.drawPrivateObjectiveCards();
-        //this.proposeWindowPatternCards();
 
         this.turnManager.run();
     }
@@ -205,15 +204,14 @@ public class MatchMultiplayer extends Match implements Runnable {
     @Override
     public void drawPrivateObjectiveCards() {
         for (PlayerMultiplayer p : players) {
-            p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().get(0));
-            this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().remove(this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().get(0));
+            p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().remove(0));
         }
     }
 
     @Override
     public void terminateMatch() {
         for (PlayerMultiplayer p : players) {
-            // chiudi le connessioni
+            // chiude le connessioni
             //...
 
             // rimuove i nomi da takenUsernames
@@ -231,31 +229,30 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     public void observeMatchRemote(MatchObserver observer, String username) {
 
-        for (PlayerMultiplayer p : players) {
-            if (p.getName().equals(username)) {
-                this.remoteObservers.put(p, observer);
-                break;
-            }
-        }
+        remoteObservers.put(getPlayer(username), observer);
 
         System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
         System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
-        if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
-            localThread = new Thread(this);
-            localThread.start();
+
+        if (!started) {
+            if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
+                localThread = new Thread(this);
+                localThread.start();
+                started = true;
+            }
         }
     }
 
     public void showWindow(String name, String owner) {
         //RMI
-        if (remoteObservers.get(getPlayer(name))!=null) {
+        if (remoteObservers.get(getPlayer(name)) != null) {
             try {
                 remoteObservers.get(getPlayer(name)).onShowWindow(getPlayer(owner).getSchemeCard().toString());// dimostra l'utilità del metodo sottostante
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
-        if (socketObservers.get(getPlayer(name))!=null) {
+        if (socketObservers.get(getPlayer(name)) != null) {
             try {
                 socketObservers.get(getPlayer(name)).writeObject(new ShowWindowResponse(getPlayer(owner).getSchemeCard().toString()));
                 socketObservers.get(getPlayer(name)).reset();
@@ -265,16 +262,16 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public void showPlayers(String name)  {
+    public void showPlayers(String name) {
         // RMI
-        if (remoteObservers.get(getPlayer(name))!=null) {
+        if (remoteObservers.get(getPlayer(name)) != null) {
             try {
                 remoteObservers.get(getPlayer(name)).onPlayers(players.stream().map(Player::getName).collect(Collectors.toList()));
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
-        if (socketObservers.get(getPlayer(name))!=null) {
+        if (socketObservers.get(getPlayer(name)) != null) {
             try {
                 socketObservers.get(getPlayer(name)).writeObject(new ActualPlayersResponse(players.stream().map(Player::getName).collect(Collectors.toList())));
                 socketObservers.get(getPlayer(name)).reset();
@@ -355,11 +352,11 @@ public class MatchMultiplayer extends Match implements Runnable {
         return false;
     }
 
-    public boolean useToolCard1(int diceChosen, String IncrOrDecr, String name, boolean isSingle){
+    public boolean useToolCard1(int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
         getPlayer(name).setDice(diceChosen);
         getPlayer(name).setChoise(IncrOrDecr);
-        boolean reserveToBeUpdated= getBoard().findAndUseToolCard(1, getPlayer(name),this);
-        if (reserveToBeUpdated){
+        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(1, getPlayer(name), this);
+        if (reserveToBeUpdated) {
             if (remoteObservers.get(getPlayer(name)) != null) {
                 try {
                     remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
@@ -380,13 +377,13 @@ public class MatchMultiplayer extends Match implements Runnable {
         return reserveToBeUpdated;
     }
 
-    public boolean useToolCard2or3(int n,int startX, int startY, int finalX, int finalY, String name, boolean isSingle){
+    public boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
         getPlayer(name).setStartX(startX);
         getPlayer(name).setStartY(startY);
         getPlayer(name).setFinalX(finalX);
         getPlayer(name).setFinalY(finalY);
-        boolean schemeCardToBeUpdated= getBoard().findAndUseToolCard(n, getPlayer(name),this);
-        if (schemeCardToBeUpdated){ //NON SERVE
+        boolean schemeCardToBeUpdated = getBoard().findAndUseToolCard(n, getPlayer(name), this);
+        if (schemeCardToBeUpdated) { //NON SERVE
            /* if (remoteObservers.get(getPlayer(name)) != null) {
                 try {
                     remoteObservers.get(getPlayer(name)). eccetera eccetera

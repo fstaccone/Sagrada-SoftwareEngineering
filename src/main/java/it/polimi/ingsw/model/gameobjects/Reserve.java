@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Reserve {
 
@@ -22,22 +24,6 @@ public class Reserve {
 
     public List<Dice> getDices() { return dices; }
 
-    public boolean isEmpty(){
-        return dices.isEmpty();
-    }
-
-    public void showReserve(){
-        if(!(dices.isEmpty())){
-            System.out.println("Dices in reserve:");
-            int i=0;
-            for(Dice nav : dices){
-                System.out.println(nav.toString()+" id="+i);
-                i++;
-            }
-        }
-        else System.out.println("The reserve is empty.");
-    }
-
     @Override
     public String toString() {
 
@@ -56,21 +42,6 @@ public class Reserve {
 
     public Dice chooseDice(int index) {
         if(!(dices.isEmpty())){
-           // System.out.println("Please choose a dice from the reserve by writing the corresponding id: ");
-           // updateReserve();
-           // Scanner scan = new Scanner(System.in);
-           // int i = scan.nextInt();
-           // if(i<0 || i>dices.size()-1){
-           //     while(i<0 || i>dices.size()-1) {
-           //         System.out.println("Please insert a correct value.");
-           //         i = scan.nextInt();
-           //     }
-           // }
-           // Dice chosen;
-           // chosen = dices.get(index);
-           // dices.remove(index);
-
-            //System.out.println("Chosen dice: " + choice.toString());
             return dices.remove(index);
         }else {
             System.out.println("The reserve is empty."); //andrebbe fatto lanciando ExceptionEmptyReserve
@@ -78,50 +49,15 @@ public class Reserve {
         }
     }
 
-
-    public List<Dice> endRound(){
-        System.out.println("From Reserve : End of the round");
-        ArrayList<Dice> dicesLeft = new ArrayList<>();
-        while(!dices.isEmpty()){
-            System.out.println("Dice removed from reserve: " + dices.get(0).toString());
-            dicesLeft.add(dices.get(0));
-            dices.remove(0);
-            //i dadi restanti nella riserva vanno rimossi e posti nella corrispondente casella del roundtrack
-            this.showReserve();
-        }
-        //aggiungere dicesLeft alla RoundTrack
-        return dicesLeft;
-        //dicesLeft è ArrayList di dadi che verrà usato come parametro per il metodo putDices di RoundTrack
-    }
-
+    /** It removes all dices in dices and returns them to be put into the roundtrack
+     */
     public List<Dice> removeAllDices(){
-        ArrayList<Dice> dicesRemoved = new ArrayList<>();
-        while(!dices.isEmpty()){
-            dicesRemoved.add(dices.get(0));
-            dices.remove(0);
-        }
-        return dicesRemoved;
+
+        ArrayList<Dice> dicesLeft;
+        dicesLeft = new ArrayList<>(dices);
+        dices.clear();
+
+        return dicesLeft;
     }
-/*
-    public static void main(String args[]){
-        Bag bag = new Bag(2);
-        List<Dice> pescata = bag.pickDices(3);
-        Reserve riserva = new Reserve();
-        riserva.throwDices(pescata);
-        riserva.updateReserve();
-        Dice dado = riserva.chooseDice();
-        Square place = new Square(Colors.BLUE);
-        place.putDice(dado);
-        List<Dice> leftDices = riserva.endRound();
-        RoundTrack track = new RoundTrack();
-        track.putDices(leftDices);
-        track.showRoundTrack();
-        pescata = bag.pickDices(2);
-        riserva.throwDices(pescata);
-        riserva.updateReserve();
-        leftDices = riserva.endRound();
-        track.putDices(leftDices);
-        track.showRoundTrack();
-    }
-*/
+
 }
