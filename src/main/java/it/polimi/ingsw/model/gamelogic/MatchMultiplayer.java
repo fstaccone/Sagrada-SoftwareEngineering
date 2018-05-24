@@ -376,13 +376,13 @@ public class MatchMultiplayer extends Match implements Runnable {
         return reserveToBeUpdated;
     }
 
-    public boolean useToolCard2(int startX, int startY, int finalX, int finalY, String name, boolean isSingle){
+    public boolean useToolCard2or3(int n,int startX, int startY, int finalX, int finalY, String name, boolean isSingle){
         getPlayer(name).setStartX(startX);
         getPlayer(name).setStartY(startY);
         getPlayer(name).setFinalX(finalX);
         getPlayer(name).setFinalY(finalY);
-        boolean schemeCardToBeUpdated= getBoard().findAndUseToolCard(2, getPlayer(name),this);
-        if (schemeCardToBeUpdated){
+        boolean schemeCardToBeUpdated= getBoard().findAndUseToolCard(n, getPlayer(name),this);
+        if (schemeCardToBeUpdated){ //NON SERVE
            /* if (remoteObservers.get(getPlayer(name)) != null) {
                 try {
                     remoteObservers.get(getPlayer(name)). eccetera eccetera
