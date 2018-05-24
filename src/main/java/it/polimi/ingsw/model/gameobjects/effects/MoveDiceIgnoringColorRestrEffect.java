@@ -16,22 +16,19 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
     public boolean applyEffect(Player caller, Match match) {
         WindowPatternCard schema = caller.getSchemeCard();
 
-            int row = caller.getStartX();
+        int row = caller.getStartX();
 
-            int column = caller.getStartY();
-            Dice dice = schema.removeDice(row, column);
-            if(dice!=null){
-               return false;
-            }
-
+        int column = caller.getStartY();
+        Dice dice = schema.removeDice(row, column);
+        if(dice!=null){
             int newRow = caller.getFinalX();
             int newColumn = caller.getFinalY();
             schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn); //DA RIVEDERE
-
             if(dice.equals(schema.getWindow()[newRow][newColumn].getDice())) // NULL POINTER EXCEPTION AL MOMENTO
                 return true;
             else
                 return false;
+        }else return false;
     }
 
 }

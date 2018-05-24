@@ -383,7 +383,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         }
                         break;
                         case 2: {
-                            if( toolCommand.command2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]))){
+                            if( toolCommand.command2or3(2,Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]))){
                                 printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                 printer.flush();
                             }
@@ -391,12 +391,18 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 printer.println("Invalid request.\n");
                                 printer.flush();
                             }
-                            toolCommand.command2(2, 3, 3, 4); //parametri a caso
 
                         }
                         break;
                         case 3: {
-                            toolCommand.command3();
+                            if( toolCommand.command2or3(3,Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]))){
+                                printer.println("\nWell done! The chosen dice has been modified correctly.\n");
+                                printer.flush();
+                            }
+                            else {
+                                printer.println("Invalid request.\n");
+                                printer.flush();
+                            }
 
                         }
                         break;
