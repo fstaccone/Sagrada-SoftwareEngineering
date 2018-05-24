@@ -13,6 +13,7 @@ public class UseToolCard2or3Request implements Request{
     public boolean isSingle;
 
     public UseToolCard2or3Request(int n,int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
+        this.n=n;
         this.startX = startX;
         this.startY = startY;
         this.finalX = finalX;
