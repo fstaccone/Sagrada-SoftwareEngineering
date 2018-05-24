@@ -19,9 +19,7 @@ public class TurnTimer extends TimerTask {
     public void run() {
 
         // debug
-        System.out.println("Player " + player.getName() + " is not READY");
-
-        player.setStatus(ConnectionStatus.CONNECTED);
+        System.out.println("Timer is expired during the turn of the player: " + player.getName());
 
         match.getTurnManager().setExpiredTrue();
 

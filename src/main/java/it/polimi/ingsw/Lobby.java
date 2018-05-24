@@ -19,7 +19,8 @@ public class Lobby {
     private int turnTime;
 
     // to ensure that a username is unique
-    private List<String> takenUsernames;
+    private Map<String, ConnectionStatus> takenUsernames;
+
     // waiting list before the  beginning of a new multiplayer match
     private final List<String> waitingPlayers;
 
@@ -29,8 +30,7 @@ public class Lobby {
 
     // to store observers
     private Map<String, LobbyObserver> remoteObservers;
-    private Map<String,ObjectOutputStream> socketObservers;
-
+    private Map<String, ObjectOutputStream> socketObservers;
 
 
     // to simulate the timer before creating a match
@@ -42,7 +42,7 @@ public class Lobby {
 
         this.matchCounter = 0;
 
-        this.takenUsernames = new ArrayList<>();
+        this.takenUsernames = new HashMap<>();
 
         this.waitingPlayers = new ArrayList<>();
 
@@ -53,22 +53,20 @@ public class Lobby {
 
         this.waitingTime = waitingTime;
         this.turnTime = turnTime;
-        this.socketObservers=new HashMap<>();
-    }
-
-    public List<String> getTakenUsernames() {
-        return new ArrayList<>(takenUsernames);
+        this.socketObservers = new HashMap<>();
     }
 
     public Map<String, MatchMultiplayer> getMultiplayerMatches() {
         return multiplayerMatches;
     }
 
-    public Map<String, MatchSingleplayer> getSingleplayerMatches() { return singleplayerMatches; }
+    public Map<String, MatchSingleplayer> getSingleplayerMatches() {
+        return singleplayerMatches;
+    }
 
     // to add a new username to the list
     public synchronized void addUsername(String name) {
-        this.takenUsernames.add(name);
+        this.takenUsernames.put(name, ConnectionStatus.CONNECTED);
     }
 
     // to remove usernames at the end of a match or when a player leave a match before its creation
@@ -86,7 +84,7 @@ public class Lobby {
         System.out.println("By lobby: Player: " + name);
     }
 
-    private synchronized void createMultiplayerMatch(List<String> clients,  Map<String,ObjectOutputStream> socketsOut) {
+    private synchronized void createMultiplayerMatch(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
 
         MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime, socketsOut);
         for (String s : clients) {
@@ -101,14 +99,14 @@ public class Lobby {
     }
 
     public void removeFromWaitingPlayers(String name) {
-        boolean unique=false;
+        boolean unique = false;
         synchronized (waitingPlayers) {
             try {
                 if (waitingPlayers.size() == 2) {
                     timer.cancel();
                     waitingPlayers.remove(name);
                     removeUsername(name);
-                    unique=true;
+                    unique = true;
 
                     // TODO: l'ho messo qui temporaneamente per testare la seconda text area
                     // to update waiting players on the exiting players
@@ -156,7 +154,7 @@ public class Lobby {
                 System.out.println("From lobby: Something wants to delete a name that doesn't exist!");
             }
 
-            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers,name,unique);
+            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers, name, unique);
             socketObservers.keySet().forEach(playerName -> {
                 try {
                     socketObservers.get(playerName).writeObject(response);
@@ -173,10 +171,10 @@ public class Lobby {
         remoteObservers.remove(name);
     }
 
-    private PlayerMultiplayer getPlayer(String name){
+    private PlayerMultiplayer getPlayer(String name) {
 
-        for(PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()){
-            if(p.getName().equals(name)) {
+        for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
+            if (p.getName().equals(name)) {
                 return p;
             }
         }
@@ -190,15 +188,15 @@ public class Lobby {
 
 
             p.setStatus(ConnectionStatus.DISCONNECTED);
-            removeUsername(p.getName());
+            takenUsernames.put(name, ConnectionStatus.DISCONNECTED);
             multiplayerMatches.get(name).getRemoteObservers().remove(p);
             multiplayerMatches.get(name).getSocketObservers().remove(p);
 
-            for(MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()){
+            for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {
                 mo.onPlayerExit(name);
             }
 
-            if(p.isMyTurn()){
+            if (p.isMyTurn()) {
                 p.setMyTurn(false);
                 multiplayerMatches.get(name).goThrough(name);
             }
@@ -220,6 +218,16 @@ public class Lobby {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("From Lobby: problem in disconnecting player " + name + "!");
+        }
+    }
+
+    // todo: the same with SOCKET
+    public boolean reconnect(String name){
+        if(takenUsernames.containsKey(name)){
+            takenUsernames.put(name, ConnectionStatus.CONNECTED);
+            return true;
+        }else{
+            return false;
         }
     }
 
@@ -253,7 +261,7 @@ public class Lobby {
             }
 
             //SOCKET
-            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers,null,false);
+            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers, null, false);
             socketObservers.keySet().forEach(playerName -> {
                 try {
                     socketObservers.get(playerName).writeObject(response);
@@ -271,7 +279,7 @@ public class Lobby {
 
             // IF THERE ARE 2 PLAYERS WAITING FOR THE MATCH BEGINNING, THE TIMER IS SET
             if (waitingPlayers.size() == 2) {
-                System.out.println("Lobby :Timer started: "+ waitingTime/1000+" seconds from now!");
+                System.out.println("Lobby :Timer started: " + waitingTime / 1000 + " seconds from now!");
                 this.timer = new Timer();
                 task = new MatchStarter(this);
                 timer.schedule(task, waitingTime);
@@ -292,7 +300,7 @@ public class Lobby {
 
             //SOCKETS
             MatchStartedResponse response = new MatchStartedResponse();
-            for (ObjectOutputStream out: socketObservers.values()) {
+            for (ObjectOutputStream out : socketObservers.values()) {
                 try {
                     out.writeObject(response);
                     out.reset();
@@ -329,12 +337,7 @@ public class Lobby {
 
 
     public void observeMatchRemote(String username, MatchObserver observer) {
-        for (MatchMultiplayer match : multiplayerMatches.values()) {
-            if (match == multiplayerMatches.get(username)) {
-                match.observeMatchRemote(observer, username);
-                break;
-            }
-        }
+        multiplayerMatches.get(username).observeMatchRemote(observer, username);
     }
 
     public Map<String, ObjectOutputStream> getSocketObservers() {
@@ -350,7 +353,7 @@ public class Lobby {
         if (multiplayerMatches.get(name) != null) {
             for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
                 if (p.getName().equals(name)) {
-                    p.setStatus(ConnectionStatus.READY);
+                    p.setStatus(ConnectionStatus.CONNECTED);
                 }
             }
         } else {
@@ -358,8 +361,12 @@ public class Lobby {
         }
     }
 
-    public boolean checkName(String name){
-        return takenUsernames.contains(name);
+    public ConnectionStatus checkName(String name) {
+        if (!takenUsernames.keySet().contains(name)) {
+            return ConnectionStatus.ABSENT;
+        }else{
+            return takenUsernames.get(name);
+        }
     }
 
 }

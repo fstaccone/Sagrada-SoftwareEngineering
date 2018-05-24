@@ -39,8 +39,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     // da gestire il caso di riconnessione
     @Override
-    public boolean checkName(String name) {
-        return !lobby.checkName(name);
+    public ConnectionStatus checkName(String name) {
+        return lobby.checkName(name);
     }
 
 
@@ -113,6 +113,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
+    public boolean reconnect(String name) throws RemoteException {
+        return lobby.reconnect(name);
+    }
+
+    @Override
     public boolean useToolCard1(int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
         if(isSingle){
             //DA FARE
@@ -135,7 +140,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(CheckUsernameRequest request) {
-        return new NameAlreadyTakenResponse(!checkName(request.username));
+        return new NameAlreadyTakenResponse(checkName(request.username));
     }
 
     @Override

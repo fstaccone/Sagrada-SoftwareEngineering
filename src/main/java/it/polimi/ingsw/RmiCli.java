@@ -79,8 +79,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
 
-
+    public void reconnect() throws RemoteException {
+        controller.reconnect(username);
+        launch();
+        // todo : definire cosa fare dopo aver ristabilito la connessione
     }
 
     @Override

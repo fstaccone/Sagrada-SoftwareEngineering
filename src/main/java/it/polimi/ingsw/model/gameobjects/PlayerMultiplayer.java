@@ -13,7 +13,7 @@ public class PlayerMultiplayer extends Player {
 
     public PlayerMultiplayer(String name, MatchMultiplayer match) {
         super(name);
-        status = ConnectionStatus.READY;
+        status = ConnectionStatus.CONNECTED;
         myTurn = false;
         this.match = match;
     }

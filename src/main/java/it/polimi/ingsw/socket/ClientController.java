@@ -1,5 +1,6 @@
 package it.polimi.ingsw.socket;
 
+import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.LoginHandler;
 import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.requests.Request;
@@ -13,9 +14,9 @@ import java.io.ObjectOutputStream;
 public class ClientController implements ResponseHandler {
 
 
-    private boolean nameAlreadyTaken=false;
-    private boolean dicePlaced=false;
-    private boolean effectApplied=false;
+    private ConnectionStatus nameSatus = ConnectionStatus.ABSENT;
+    private boolean dicePlaced = false;
+    private boolean effectApplied = false;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private LoginHandler loginHandler;
@@ -24,7 +25,7 @@ public class ClientController implements ResponseHandler {
     public ClientController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler) {
         this.in = in;
         this.out = out;
-        this.loginHandler=loginHandler;
+        this.loginHandler = loginHandler;
     }
 
     public void request(Request request) {
@@ -48,8 +49,8 @@ public class ClientController implements ResponseHandler {
         return null;
     }
 
-    public boolean isNameAlreadyTaken() {
-        return nameAlreadyTaken;
+    public ConnectionStatus isNameAlreadyTaken() {
+        return nameSatus;
     }
 
     public void setSocketCli(SocketCli socketCli) {
@@ -60,27 +61,28 @@ public class ClientController implements ResponseHandler {
         this.dicePlaced = dicePlaced;
     }
 
-    public boolean isDicePlaced(){
+    public boolean isDicePlaced() {
         return dicePlaced;
     }
 
     public void setEffectApplied(boolean effectApplied) {
         this.effectApplied = effectApplied;
     }
+
     public boolean isEffectApplied() {
         return effectApplied;
     }
 
     @Override
     public void handle(NameAlreadyTakenResponse response) {
-        this.nameAlreadyTaken=response.nameAlreadyTaken;
+        this.nameSatus = response.status;
     }
 
     @Override
-    public void handle(WaitingPlayersResponse response){
+    public void handle(WaitingPlayersResponse response) {
         loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-        if (response.name!=null){
-            if(response.unique==false)
+        if (response.name != null) {
+            if (!response.unique)
                 loginHandler.getWaitingScreenHandler().onPlayerExit(response.name);
             else
                 loginHandler.getWaitingScreenHandler().onLastPlayer(response.name);
@@ -94,70 +96,70 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(ActualPlayersResponse response) {
-        if (socketCli!=null){
+        if (socketCli != null) {
             socketCli.onPlayers(response.playersNames);
         }
     }
 
     @Override
     public void handle(YourTurnResponse response) {
-        if (socketCli!=null){
+        if (socketCli != null) {
             socketCli.onYourTurn(response.myTurn, response.string);
         }
     }
 
     @Override
     public void handle(ReserveResponse response) {
-        if (socketCli!=null){
+        if (socketCli != null) {
             socketCli.onReserve(response.reserve);
         }
     }
 
     @Override
     public void handle(ShowWindowResponse response) {
-        if (socketCli!=null){
+        if (socketCli != null) {
             socketCli.onShowWindow(response.string);
         }
     }
 
     @Override
     public void handle(ToolCardsResponse response) {
-        if (socketCli!=null){
+        if (socketCli != null) {
             socketCli.onToolCards(response.string);
         }
     }
 
     @Override
     public void handle(OtherTurnResponse response) {
-        if (socketCli!=null){
+        if (socketCli != null) {
             socketCli.onOtherTurn(response.name);
         }
     }
 
     @Override
     public void handle(UpdateReserveResponse response) {
-        if (socketCli!=null){
+        if (socketCli != null) {
             socketCli.onReserve(response.string);
         }
     }
 
     @Override
     public void handle(DicePlacedResponse response) {
-        if (socketCli!=null){
-            dicePlaced=response.done;
+        if (socketCli != null) {
+            dicePlaced = response.done;
         }
     }
 
     @Override
     public void handle(ToolCardEffectAppliedResponse response) {
-        if (socketCli!=null){
-            effectApplied=response.effectApplied;
+        if (socketCli != null) {
+            effectApplied = response.effectApplied;
         }
     }
 
     @Override
     public void handle(ProposeWindowResponse response) {
-        if (socketCli!=null){
+        if (socketCli != null) {
             socketCli.onWindowChoise(response.list);
         }
     }

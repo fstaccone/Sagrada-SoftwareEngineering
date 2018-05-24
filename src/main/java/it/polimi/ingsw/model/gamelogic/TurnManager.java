@@ -51,7 +51,7 @@ public class TurnManager implements Runnable {
             match.initializeWindowsToBeProposed(i);
             match.setWindowChosen(false);
 
-            if (player.getStatus() == ConnectionStatus.READY) {
+            if (player.getStatus() == ConnectionStatus.CONNECTED) {
 
                 List<String> list = match.getWindowsProposed()
                         .stream()
@@ -158,7 +158,7 @@ public class TurnManager implements Runnable {
             PlayerMultiplayer player = match.getPlayers().get(i);
             initializeTurn(player);
 
-            if (player.getStatus() == ConnectionStatus.READY) {
+            if (player.getStatus() == ConnectionStatus.CONNECTED) {
                 playTurnCore(player);
             }
             terminateTurn(player);
@@ -172,7 +172,7 @@ public class TurnManager implements Runnable {
             PlayerMultiplayer player = match.getPlayers().get(i);
             initializeTurn(player);
 
-            if (player.getTurnsLeft() > 0 && player.getStatus() == ConnectionStatus.READY) {
+            if (player.getTurnsLeft() > 0 && player.getStatus() == ConnectionStatus.CONNECTED) {
                 playTurnCore(player);
             }
             terminateTurn(player);

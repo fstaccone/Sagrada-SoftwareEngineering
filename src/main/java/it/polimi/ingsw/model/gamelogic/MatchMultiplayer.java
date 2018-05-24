@@ -99,7 +99,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     // todo: controllare, come gestiamo i player CONNECTED?
     // it returns the number of READY players
     public int checkConnection() {
-        return (int) players.stream().map(p -> p.getStatus().equals(ConnectionStatus.READY)).count();
+        return (int) players.stream().map(p -> p.getStatus().equals(ConnectionStatus.CONNECTED)).count();
     }
 
 
