@@ -51,12 +51,12 @@ public class ChooseCardHandler implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        choice = 0;
+        choice = 5;
     }
 
     @FXML
     public void onPlayClicked(MouseEvent mouseEvent) throws Exception {
-        if(choice==0){
+        if(choice==5){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have to choose a card", ButtonType.OK);
             alert.setTitle("CHOOSE A CARD");
             alert.setHeaderText(null);
@@ -69,16 +69,16 @@ public class ChooseCardHandler implements Initializable {
             window.close();
             //Getting the image URL of the chosen window pattern card
             switch (choice){
-                case 1:
+                case 0:
                     imgURL = url0;
                     break;
-                case 2:
+                case 1:
                     imgURL = url1;
                     break;
-                case 3:
+                case 2:
                     imgURL = url2;
                     break;
-                case 4:
+                case 3:
                     imgURL = url3;
                     break;
                 default: imgURL = null;
@@ -99,6 +99,11 @@ public class ChooseCardHandler implements Initializable {
     }
 
     @FXML
+    public void chosen0(MouseEvent mouseEvent) {
+        choice = 0;
+    }
+
+    @FXML
     public void chosen1(MouseEvent mouseEvent) {
         choice = 1;
     }
@@ -111,11 +116,6 @@ public class ChooseCardHandler implements Initializable {
     @FXML
     public void chosen3(MouseEvent mouseEvent) {
         choice = 3;
-    }
-
-    @FXML
-    public void chosen4(MouseEvent mouseEvent) {
-        choice = 4;
     }
 
     //Initializing
