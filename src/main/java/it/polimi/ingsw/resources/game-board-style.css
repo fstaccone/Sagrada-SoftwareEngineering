@@ -1,0 +1,107 @@
+#gameBoard{
+    -fx-background-color: steelblue;
+    -fx-background-size: cover;
+}
+
+.schemeCard{
+    -fx-background-image: url("window_pattern_card/prova-img.png");
+    -fx-background-size: cover;
+}
+
+.schemeCardChoice:hover{
+        -fx-scale-x: 1.10;
+        -fx-scale-y: 1.10;
+        -fx-scale-y: 1.10;
+}
+
+.button{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+.button:pressed {
+    -fx-background-color: pink;
+    -fx-background-size: cover;
+}
+
+#cartaUtensile1, #cartaUtensile2{
+    -fx-background-color: burlywood;
+    -fx-background-size: cover;
+}
+
+#reserve{
+    -fx-background-image: url("other/wood.png");
+    -fx-background-size: cover;
+}
+
+.card {
+    -fx-background-color: burlywood;
+    -fx-background-size: cover;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-color: firebrick;
+}
+
+.card:hover {
+    -fx-scale-x: 2.0;
+    -fx-scale-y: 2.0;
+    -fx-scale-z: 2.0;
+}
+
+.cartaUtensile{
+   -fx-background-image: url("toolcards/pinza_sgrossatrice.png");
+   -fx-background-size: cover;
+}
+
+.cartaUtensile:hover {
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 2.0;
+    -fx-scale-z: 2.0;
+}
+
+#cartaObPriv{
+    -fx-background-image: url("private_objective_cards/carte_obiettivo_14.png");
+    -fx-background-size: cover;
+}
+
+#cartaObPub1{
+    -fx-background-image: url("public_objective_cards/carte_obiettivo_08.png");
+    -fx-background-size: cover;
+}
+
+#cartaObPub2{
+    -fx-background-image: url("public_objective_cards/carte_obiettivo_03.png");
+    -fx-background-size: cover;
+}
+
+#cartaObPub3{
+    -fx-background-image: url("public_objective_cards/carte_obiettivo_02.png");
+    -fx-background-size: cover;
+}
+
+#choose-card-window{
+    -fx-background-image: url("other/wood.png");
+    -fx-background-size: cover;
+}
+
+.reserveDice{
+    -fx-background-image: url("dices/dice_4_yellow.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+}
+
+#play{
+    -fx-background-color: linear-gradient(firebrick, burlywood);
+    -fx-background-radius: 10;
+    -fx-background-size: cover;
+}
+
+#play:hover {
+    -fx-background-color: firebrick;
+}
+#play:pressed {
+    -fx-scale-y: 0.9;
+    -fx-scale-x: 0.9;
+}
