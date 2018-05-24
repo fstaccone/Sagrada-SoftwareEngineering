@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class RipplesOfLight extends WindowPatternCard {
 
     public RipplesOfLight() {
-        super("Ripple of Light",4,5);
+        super("Ripples of Light",4,5);
         this.setDifficulty(5);
         this.getWindow()[0][3].setColorConstraint(Colors.RED);
         this.getWindow()[0][4].setValueConstraint(5);

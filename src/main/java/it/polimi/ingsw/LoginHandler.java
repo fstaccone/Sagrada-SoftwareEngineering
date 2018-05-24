@@ -322,10 +322,10 @@ public class LoginHandler implements Initializable {
     }
 
     public void onMatchStarted() throws RemoteException {
-        Platform.runLater(() -> window.close());
         if (isCli) {
+            Platform.runLater(() -> window.close());
             new RmiCli(username, controller, false).launch();
-        } else new RmiGui(username, controller).launch();
+        } else new RmiGui(window, username, controller).launch();
     }
 
     public void onMatchStartedSocket() {

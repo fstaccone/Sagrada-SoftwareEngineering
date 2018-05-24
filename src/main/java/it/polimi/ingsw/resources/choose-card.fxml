@@ -26,10 +26,10 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button id="card1" fx:id="card1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen1" styleClass="schemeCardChoice" />
-            <Button fx:id="card2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen2" styleClass="schemeCardChoice" GridPane.columnIndex="1" />
-            <Button fx:id="card3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen3" styleClass="schemeCardChoice" GridPane.rowIndex="1" />
-            <Button fx:id="card4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen4" styleClass="schemeCardChoice" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button id="card1" fx:id="card0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen1" styleClass="schemeCardChoice" />
+            <Button fx:id="card1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen2" styleClass="schemeCardChoice" GridPane.columnIndex="1" />
+            <Button fx:id="card2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen3" styleClass="schemeCardChoice" GridPane.rowIndex="1" />
+            <Button fx:id="card3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen4" styleClass="schemeCardChoice" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <Button id="play" fx:id="play" layoutX="457.0" layoutY="482.0" mnemonicParsing="false" onMouseClicked="#onPlayClicked" prefHeight="37.0" prefWidth="108.0" text="PLAY" textFill="WHITE" />
