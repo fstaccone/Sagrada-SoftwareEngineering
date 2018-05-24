@@ -18,7 +18,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     private Map<PlayerMultiplayer, ObjectOutputStream> socketObservers;
 
     private Thread localThread;
-
+    private boolean started;
     private int matchId;
     private TurnManager turnManager;
 
@@ -41,6 +41,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
         this.players = new ArrayList<>();
+        started = false;
 
         for (String client : clients) {
             PlayerMultiplayer player = new PlayerMultiplayer(client, this);
@@ -53,9 +54,12 @@ public class MatchMultiplayer extends Match implements Runnable {
                 }
             }
         }
-        if (this.players.size() == this.socketObservers.size()) {
-            localThread = new Thread(this);
-            localThread.start();
+        if(!started) {
+            if (this.players.size() == this.socketObservers.size()) {
+                localThread = new Thread(this);
+                localThread.start();
+                started = true;
+            }
         }
     }
 

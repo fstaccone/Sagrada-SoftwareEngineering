@@ -182,6 +182,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.flush();
     }
 
+    @Override
+    public void onPlayerReconnection(String name) throws RemoteException {
+        printer.println("Player " + name + " is now in game!");
+        printer.flush();
+    }
+
     private class KeyboardHandler extends Thread {
         String parts[];
 
@@ -256,7 +262,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "q": {
                                 controller.quitGame(username, single);
-                                controller.goThrough(username, single);
                                 System.exit(0);
                             }break;
 
