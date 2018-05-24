@@ -57,7 +57,7 @@ public class ChooseAnotherDiceTest {
     public void checkReserve(){
         Assert.assertEquals(null, player.getPickedDice());
         toolCard.useCard(player, match);
-        match.getBoard().getReserve().showReserve();
+        //match.getBoard().getReserve().showReserve();
         Assert.assertNotNull( match.getBoard().getReserve());
         Assert.assertEquals(Colors.YELLOW, player.getPickedDice().getColor());
     }

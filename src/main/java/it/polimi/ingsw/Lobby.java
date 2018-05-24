@@ -222,10 +222,14 @@ public class Lobby {
     }
 
     // todo: the same with SOCKET
-    public boolean reconnect(String name){
+    public boolean reconnect(String name) throws RemoteException {
         if(takenUsernames.containsKey(name)){
             takenUsernames.put(name, ConnectionStatus.CONNECTED);
-            return true;
+            multiplayerMatches.get(name).getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
+            for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {
+                mo.onPlayerReconnection(name);
+            }
+                return true;
         }else{
             return false;
         }

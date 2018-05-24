@@ -56,6 +56,11 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
+    public void onPlayerReconnection(String name) throws RemoteException {
+
+    }
+
+    @Override
     public void onShowWindow(String window) throws RemoteException {
 
     }

@@ -130,6 +130,11 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
+    public void onPlayerReconnection(String name) throws RemoteException {
+
+    }
+
+    @Override
     public void onShowWindow(String window) {
         printer.println(window);
         printer.flush();

@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 public class ClientController implements ResponseHandler {
 
 
-    private ConnectionStatus nameSatus = ConnectionStatus.ABSENT;
+    private ConnectionStatus nameStatus = ConnectionStatus.ABSENT;
     private boolean dicePlaced = false;
     private boolean effectApplied = false;
     private ObjectInputStream in;
@@ -49,9 +49,7 @@ public class ClientController implements ResponseHandler {
         return null;
     }
 
-    public ConnectionStatus isNameAlreadyTaken() {
-        return nameSatus;
-    }
+    public ConnectionStatus isNameAlreadyTaken() { return nameStatus; }
 
     public void setSocketCli(SocketCli socketCli) {
         this.socketCli = socketCli;
@@ -75,7 +73,7 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(NameAlreadyTakenResponse response) {
-        this.nameSatus = response.status;
+        this.nameStatus = response.status;
     }
 
     @Override

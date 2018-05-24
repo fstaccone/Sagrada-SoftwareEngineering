@@ -44,6 +44,7 @@ public class LoginHandler implements Initializable {
     private transient boolean isGui = true;
     private transient boolean isCli = false;
     private transient boolean isSingleplayer = false;
+    private transient boolean reconnection = false;
     private transient int difficulty;
     private transient String serverAddress;
     private WaitingScreenHandler handler;
@@ -122,29 +123,34 @@ public class LoginHandler implements Initializable {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         readInput();
 
-        window = (Stage) playButton.getScene().getWindow();
-        FXMLLoader fx = new FXMLLoader();
-        fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
-        Scene waiting = new Scene(fx.load());
-        //CONTROLLER
-        handler = fx.getController();
-        handler.setLoginHandler(this);
-        connectionSetup();
+        //connectionSetup();
 
+       // if(!reconnection) {
+            window = (Stage) playButton.getScene().getWindow();
+            FXMLLoader fx = new FXMLLoader();
+            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
+            Scene waiting = new Scene(fx.load());
 
-        window.setScene(waiting);
-        window.setTitle("Waiting room");
-        window.setResizable(false);
-        window.show();
-        window.setOnCloseRequest(event -> {
-            try {
-                event.consume();
-                onClosing();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        });
+            //CONTROLLER
+            handler = fx.getController();
+            handler.setLoginHandler(this);
 
+            // todo: da eliminare se riusciamo a farlo prima della creazione della finestra waiting
+            connectionSetup();
+
+            window.setScene(waiting);
+            window.setTitle("Waiting room");
+            window.setResizable(false);
+            window.show();
+            window.setOnCloseRequest(event -> {
+                try {
+                    event.consume();
+                    onClosing();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            });
+      //  }
     }
 
 
@@ -197,7 +203,7 @@ public class LoginHandler implements Initializable {
     }
 
     private void connectionSetup() throws IOException {
-        ConnectionStatus status = ConnectionStatus.ABSENT;
+        ConnectionStatus status;
 
         // connection establishment with the selected method
         if (isRmi) setupRmiConnection();
@@ -210,7 +216,7 @@ public class LoginHandler implements Initializable {
         else {
             clientController.request(new CheckUsernameRequest(username));
             clientController.nextResponse().handleResponse(clientController);
-            status = (clientController.isNameAlreadyTaken());
+            status = clientController.isNameAlreadyTaken();
         }
 
         if (status.equals(ConnectionStatus.CONNECTED)) {
@@ -220,6 +226,7 @@ public class LoginHandler implements Initializable {
                 socket.close();
             }
         } else if (status.equals(ConnectionStatus.DISCONNECTED)) {
+            reconnection = true;
             if (isRmi) {
                 if (isCli) {
                     new RmiCli(username, controller, false).reconnect();
