@@ -10,6 +10,7 @@ public interface MatchObserver extends Serializable, Remote {
     void onYourTurn( boolean isMyTurn, String string) throws RemoteException;
     void onReserve(String string) throws RemoteException;
     void onWindowChoise(List<String> windows) throws RemoteException;
+    void onAfterWindowChoise() throws RemoteException;
     void onShowWindow(String window) throws RemoteException;
     void onOtherTurn(String name) throws RemoteException;
     void onShowToolCards(List<String> cards) throws RemoteException;

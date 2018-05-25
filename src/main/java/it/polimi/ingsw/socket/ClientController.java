@@ -121,6 +121,13 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
+    public void handle(AfterWindowChoiseResponse response) {
+        if (socketCli != null) {
+            socketCli.onAfterWindowChoise();
+        }
+    }
+
+    @Override
     public void handle(ToolCardsResponse response) {
         if (socketCli != null) {
             socketCli.onToolCards(response.string);

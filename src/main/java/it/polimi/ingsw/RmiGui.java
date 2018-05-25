@@ -71,4 +71,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     public void onWindowChoise(List<String> windows) throws RemoteException {
 
     }
+
+    @Override
+    public void onAfterWindowChoise() throws RemoteException {
+
+    }
 }

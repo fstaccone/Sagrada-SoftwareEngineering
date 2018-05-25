@@ -47,17 +47,23 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "\nWelcome to this fantastic game, ";
 
-    private static final String HELP = ("\n 'h'                                         to show game commands" +
+    private static final String HELP_IN_TURN = (
+            "\n 'st'                                        to show tool cards" +
+            "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
+            "\n 'cd' + 'number'                             to choose the dice from the Reserve " +
+            "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
+            "\n 'pass'                                      to pass the turn to the next player " +
+            "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)\n");
+
+    private static final String HELP_GENERAL = (
+            "\n 'h'                                         to show game commands" +
             "\n 'r'                                         to show game rules" +
             "\n 'q'                                         to quit the game" +
             "\n 'sp'                                        to show all opponents' names" +
-            "\n 'st'                                        to show tool cards" +
             "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
-            "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
-            "\n 'cd' + 'number'                             to choose the dice from the Reserve (available only if it's your turn)" +
-            "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card (available only if it's your turn)" +
-            "\n 'pass'                                      to pass the turn to the next player (available only if it's your turn)" +
-            "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)\n");
+            "\n 'tool' + 'name'                             to show the description of a toolcard " +
+            "\n 'toolcards'                                 to show the list of available toolcards ");
+
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
         super();
@@ -70,21 +76,15 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         this.toolCommands = new ArrayList<>();
     }
 
-    public void launch() {
+    public void launch() throws RemoteException {
         printer.println(WELCOME + username.toUpperCase() + "!\n");
         printer.flush();
-        try {
-            controller.observeMatch(username, this);
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        controller.observeMatch(username, this);
     }
 
-    public void reconnect() throws RemoteException {
+    public void reconnect() throws RemoteException, InterruptedException {
         controller.reconnect(username);
         launch();
-        // todo : definire cosa fare dopo aver ristabilito la connessione
     }
 
     @Override
@@ -97,8 +97,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                 printer.flush();
             }
         }
-        //printer.println("Wait for your turn..."); Commentato per poter riutilizzare il metodo in caso di richiesta di visione della griglia di un certo giocatore
-        //printer.flush();                          si potrebbe voler vedere la lista di nomi dei giocatori
         printer.println();
         printer.flush();
     }
@@ -110,7 +108,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             onReserve(string);
         this.myTurn = yourTurn;
         if (myTurn)
-            printer.println("\nNow it's your turn! Please insert a command:                                   ~ ['h' for help]\n");
+            printer.println("\nNow it's your turn! Please insert a command:                            ~ ['h' for help]\n");
         else
             printer.println("\nIt's no more your turn! (h for help)");
         printer.flush();
@@ -136,10 +134,18 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
+    public void onAfterWindowChoise() {
+        printer.println("You can now perform actions on your scheme card                               ~ [reserve] to check available dices\n");
+        printer.flush();
+    }
+
+    @Override
     public void onShowWindow(String window) {
         printer.println(window);
         printer.flush();
     }
+
+
 
     @Override
     public void onOtherTurn(String name) {
@@ -230,7 +236,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "h": {
-                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
+                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP_IN_TURN + HELP_GENERAL);
                                 printer.flush();
                             }
                             break;
@@ -267,7 +273,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "r": {
-                                printer.println("Regole");
+                                printer.println("Regole: da scrivere");
                                 printer.flush();
                             }
                             break;
@@ -292,6 +298,11 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
+                            case "sp": {
+                                controller.showPlayers(username);
+                            }
+                            break;
+
                             case "tool": {
                                 printer.println("\nHere follows the ToolCard description:\n");
                                 printer.flush();
@@ -301,7 +312,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                         found = true;
                                         printer.println(toolCommand.parametersNeeded);
                                         printer.flush();
-
                                     }
                                 }
                                 if (!found) {
@@ -324,7 +334,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             default: {
-                                printer.println("Wrong choise. Insert a new valid option between: ('+' means SPACE)" + HELP);
+                                printer.println("Wrong choise. Insert a new valid option between: ('+' means SPACE)" + HELP_IN_TURN + HELP_GENERAL);
                                 printer.flush();
                             }
                         }
@@ -332,7 +342,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         switch (parts[0]) {
 
                             case "h": {
-                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
+                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP_GENERAL);
                                 printer.flush();
                             }
                             break;
@@ -361,8 +371,15 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
+                            case "toolcards": {
+                                printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
+                                printer.flush();
+                                onShowToolCards(toolCardsList);
+                            }
+                            break;
+
                             default: {
-                                printer.println("Wrong choise. Insert a new valid option between:" + HELP);
+                                printer.println("Wrong choise. Insert a new valid option between:" + HELP_IN_TURN);
                                 printer.flush();
                             }
                         }
@@ -463,7 +480,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                     }
                 }
             }
-            if (found == false) {
+            if (!found) {
                 printer.println("toolcard not in the ToolCard List");
                 printer.flush();
             }

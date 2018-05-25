@@ -18,13 +18,19 @@ public class Lobby {
     private int waitingTime;
     private int turnTime;
 
-    // to ensure that a username is unique
+    /**
+     * Map that contains the link between a client and its state.
+     * It's used to keep trace of players in game to ensure the uniqueness of usernames.
+     * Furthermore it's used to check the presence of a player in a match in case of reconnection.
+     */
     private Map<String, ConnectionStatus> takenUsernames;
 
-    // waiting list before the  beginning of a new multiplayer match
+    /**
+     * A list that contains usernames of players waiting for the creation of a multiplayer match.
+     * It's cleared when the timer expires or (before timer expiring) if the size is equal to 4.
+     */
     private final List<String> waitingPlayers;
 
-    // to store relation between client and match
     private Map<String, MatchSingleplayer> singleplayerMatches;
     private Map<String, MatchMultiplayer> multiplayerMatches;
 
@@ -39,18 +45,12 @@ public class Lobby {
 
 
     public Lobby(int waitingTime, int turnTime) {
-
         this.matchCounter = 0;
-
         this.takenUsernames = new HashMap<>();
-
         this.waitingPlayers = new ArrayList<>();
-
         this.multiplayerMatches = new HashMap<>();
         this.singleplayerMatches = new HashMap<>();
-
         this.remoteObservers = new HashMap<>();
-
         this.waitingTime = waitingTime;
         this.turnTime = turnTime;
         this.socketObservers = new HashMap<>();
@@ -64,12 +64,16 @@ public class Lobby {
         return singleplayerMatches;
     }
 
-    // to add a new username to the list
+    /**
+     * It puts a username into the map with the default status CONNECTED.
+     *
+     * @param name is the usernam of a client.
+     */
     public synchronized void addUsername(String name) {
         this.takenUsernames.put(name, ConnectionStatus.CONNECTED);
     }
 
-    // to remove usernames at the end of a match or when a player leave a match before its creation
+    // to remove a username at the end of a match or when a player leaves a match before its creation
     private synchronized void removeUsername(String name) {
         this.takenUsernames.remove(name);
     }
@@ -198,7 +202,7 @@ public class Lobby {
 
             if (p.isMyTurn()) {
                 p.setMyTurn(false);
-                multiplayerMatches.get(name).goThrough(name);
+                multiplayerMatches.get(name).goThrough();
             }
 
             // to check if the game must be closed
@@ -222,16 +226,11 @@ public class Lobby {
     }
 
     // todo: the same with SOCKET
-    public boolean reconnect(String name) throws RemoteException {
-        if(takenUsernames.containsKey(name)){
-            takenUsernames.put(name, ConnectionStatus.CONNECTED);
-            multiplayerMatches.get(name).getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
-            for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {
-                mo.onPlayerReconnection(name);
-            }
-                return true;
-        }else{
-            return false;
+    public void reconnect(String name) throws RemoteException, InterruptedException {
+        takenUsernames.put(name, ConnectionStatus.CONNECTED);
+        multiplayerMatches.get(name).getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
+        for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {
+            mo.onPlayerReconnection(name);
         }
     }
 
@@ -368,7 +367,7 @@ public class Lobby {
     public ConnectionStatus checkName(String name) {
         if (!takenUsernames.keySet().contains(name)) {
             return ConnectionStatus.ABSENT;
-        }else{
+        } else {
             return takenUsernames.get(name);
         }
     }

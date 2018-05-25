@@ -27,8 +27,8 @@ public abstract class Match {
 
 
     public Match() {
-        this.lock = new Object();
-        this.bag = new Bag(18);
+        lock = new Object();
+        bag = new Bag(18);
     }
 
     // getters
@@ -78,7 +78,7 @@ public abstract class Match {
 
     public abstract boolean placeDice(String name, int index, int x, int y) throws RemoteException;
 
-    public void goThrough(String name){
+    public void goThrough(){
         setEndsTurn(true);
         synchronized (lock) {
             lock.notify();

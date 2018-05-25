@@ -2,12 +2,9 @@ package it.polimi.ingsw.socket.responses;
 
 import it.polimi.ingsw.socket.ResponseHandler;
 
-public class ShowWindowResponse implements Response {
+public class AfterWindowChoiseResponse implements Response {
 
-    public String string;
-
-    public ShowWindowResponse(String string) {
-        this.string = string;
+    public AfterWindowChoiseResponse() {
     }
 
     @Override

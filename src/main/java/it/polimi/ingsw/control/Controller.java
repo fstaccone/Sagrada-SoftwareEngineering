@@ -66,9 +66,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void goThrough(String name, boolean isSingle){
         if(isSingle){
-            lobby.getSingleplayerMatches().get(name).goThrough(name);
+            lobby.getSingleplayerMatches().get(name).goThrough();
         }else {
-            lobby.getMultiplayerMatches().get(name).goThrough(name);
+            lobby.getMultiplayerMatches().get(name).goThrough();
         }
     }
 
@@ -113,8 +113,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public boolean reconnect(String name) throws RemoteException {
-        return lobby.reconnect(name);
+    public void reconnect(String name) throws RemoteException, InterruptedException {
+        lobby.reconnect(name);
     }
 
     @Override
