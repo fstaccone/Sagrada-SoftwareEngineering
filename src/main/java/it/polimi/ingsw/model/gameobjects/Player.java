@@ -14,41 +14,76 @@ public abstract class Player implements Serializable{
     private int dice;
     private String choise;
 
-    private int startX;
-    private int startY;
-    private int finalX;
-    private int finalY;
+    private int startX1;
+    private int startY1;
+    private int finalX1;
+    private int finalY1;
+    private int startX2;
+    private int startY2;
+    private int finalX2;
+    private int finalY2;
 
-    public int getStartX() {
-        return startX;
+    public int getStartX1() {
+        return startX1;
     }
 
-    public int getStartY() {
-        return startY;
+    public int getStartY1() {
+        return startY1;
     }
 
-    public int getFinalX() {
-        return finalX;
+    public int getFinalX1() {
+        return finalX1;
     }
 
-    public int getFinalY() {
-        return finalY;
+    public int getFinalY1() {
+        return finalY1;
     }
 
-    public void setStartX(int startX) {
-        this.startX = startX;
+    public int getStartX2() {
+        return startX2;
     }
 
-    public void setStartY(int startY) {
-        this.startY = startY;
+    public int getStartY2() {
+        return startY2;
     }
 
-    public void setFinalX(int finalX) {
-        this.finalX = finalX;
+    public int getFinalX2() {
+        return finalX2;
     }
 
-    public void setFinalY(int finalY) {
-        this.finalY = finalY;
+    public int getFinalY2() {
+        return finalY2;
+    }
+
+    public void setStartX1(int startX1) {
+        this.startX1 = startX1;
+    }
+
+    public void setStartY1(int startY1) {
+        this.startY1 = startY1;
+    }
+
+    public void setFinalX1(int finalX1) {
+        this.finalX1 = finalX1;
+    }
+
+    public void setFinalY1(int finalY1) {
+        this.finalY1 = finalY1;
+    }
+    public void setStartX2(int startX2) {
+        this.startX2 = startX2;
+    }
+
+    public void setStartY2(int startY2) {
+        this.startY2 = startY2;
+    }
+
+    public void setFinalX2(int finalX2) {
+        this.finalX1 = finalX1;
+    }
+
+    public void setFinalY2(int finalY2) {
+        this.finalY1 = finalY1;
     }
 
     public void setDice(int diceChosen) {

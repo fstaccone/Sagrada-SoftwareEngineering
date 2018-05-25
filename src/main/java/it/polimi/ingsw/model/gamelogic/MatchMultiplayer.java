@@ -1,15 +1,27 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.*;
-import it.polimi.ingsw.model.gameobjects.*;
+import it.polimi.ingsw.ConnectionStatus;
+import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.model.gameobjects.Board;
+import it.polimi.ingsw.model.gameobjects.Colors;
+import it.polimi.ingsw.model.gameobjects.DecksContainer;
+import it.polimi.ingsw.model.gameobjects.Player;
+import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.ActualPlayersResponse;
+import it.polimi.ingsw.socket.responses.AfterWindowChoiseResponse;
 import it.polimi.ingsw.socket.responses.ShowWindowResponse;
 import it.polimi.ingsw.socket.responses.UpdateReserveResponse;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class MatchMultiplayer extends Match implements Runnable {
@@ -21,39 +33,24 @@ public class MatchMultiplayer extends Match implements Runnable {
     private boolean started;
     private int matchId;
     private TurnManager turnManager;
-
+    private List<PlayerMultiplayer> players;
     private List<WindowPatternCard> windowsProposed;
 
-    private List<PlayerMultiplayer> players;
 
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut) {
 
         super();
         this.matchId = matchId;
-
-        turnManager = new TurnManager(this, turnTime);
-
-        System.out.println("New multiplayer matchId: " + matchId);
-        this.remoteObservers = new HashMap<>();
-        this.socketObservers = new HashMap<>();
-
-        this.decksContainer = new DecksContainer(clients.size());
-        this.board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
-
-        this.players = new ArrayList<>();
         started = false;
 
-        for (String client : clients) {
-            PlayerMultiplayer player = new PlayerMultiplayer(client, this);
-            this.players.add(player);
-            if (socketsOut.size() != 0) {
-                for (String name : socketsOut.keySet()) {
-                    if (name.equals(client)) {
-                        this.socketObservers.put(player, socketsOut.get(name));
-                    }
-                }
-            }
-        }
+        players = new ArrayList<>();
+        remoteObservers = new HashMap<>();
+        socketObservers = new HashMap<>();
+        turnManager = new TurnManager(this, turnTime);
+        decksContainer = new DecksContainer(clients.size());
+        board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
+
+        initializePlayers(clients, socketsOut);
 
         if (this.players.size() == this.socketObservers.size()) {
             localThread = new Thread(this);
@@ -61,47 +58,40 @@ public class MatchMultiplayer extends Match implements Runnable {
             started = true;
         }
 
+        // debug
+        System.out.println("New multiplayer matchId: " + matchId);
     }
+
+    private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut){
+        clients.forEach(client -> {
+            PlayerMultiplayer player = new PlayerMultiplayer(client, this);
+            this.players.add(player);
+            if (socketsOut.size() != 0) { // ha senso questo controllo?
+                for (String name : socketsOut.keySet()) {
+                    if (name.equals(client)) {
+                        this.socketObservers.put(player, socketsOut.get(name));
+                    }
+                }
+            }
+        });
+    }
+
+    // getters
+    public List<WindowPatternCard> getWindowsProposed() { return windowsProposed; }
+    public TurnManager getTurnManager() { return turnManager; }
+    public Map<PlayerMultiplayer, MatchObserver> getRemoteObservers() { return remoteObservers; }
+    public Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers() { return socketObservers; }
+    public List<PlayerMultiplayer> getPlayers() { return players; }
+
+    public void windowsToBeProposed() {
+        windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(0, 4);
+    }
+
 
     /**
-     * è il posto giusto?
+     * It checks if a player is CONNECTED and
+     * @return the number of CONNECTED players
      */
-    public List<WindowPatternCard> getWindowsProposed() {
-        return windowsProposed;
-    }
-
-    public void initializeWindowsToBeProposed(int n) {
-        this.windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(4 * n, 4 * (n + 1)); // todo: sarebbe più sensato eliminare le carte
-    }
-
-    /**
-     *
-     *
-     */
-
-    public TurnManager getTurnManager() {
-        return turnManager;
-    }
-
-    public int getMatchId() {
-        return matchId;
-    }
-
-    public Map<PlayerMultiplayer, MatchObserver> getRemoteObservers() {
-        return remoteObservers;
-    }
-
-    public Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers() {
-        return socketObservers;
-    }
-
-    public List<PlayerMultiplayer> getPlayers() {
-        return players;
-    }
-
-
-    // todo: controllare, come gestiamo i player CONNECTED?
-    // it returns the number of READY players
     public int checkConnection() {
         return (int) players.stream().map(p -> p.getStatus().equals(ConnectionStatus.CONNECTED)).count();
     }
@@ -294,12 +284,15 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void setWindowPatternCard(String name, int index) {
-        getPlayer(name).setSchemeCard(windowsProposed.get(index)); // todo: handle exceptions
+        getPlayer(name).setSchemeCard(windowsProposed.get(index));
+        decksContainer.getWindowPatternCardDeck().getPickedCards().removeAll(windowsProposed);
+        getPlayer(name).setSchemeCardSet(true);
         setWindowChosen(true);
 
         if (remoteObservers.get(getPlayer(name)) != null) {
             try {
                 remoteObservers.get(getPlayer(name)).onShowWindow(getPlayer(name).getSchemeCard().toString());
+                remoteObservers.get(getPlayer(name)).onAfterWindowChoise();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -308,6 +301,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (socketObservers.get(getPlayer(name)) != null) {
             try {
                 socketObservers.get(getPlayer(name)).writeObject(new ShowWindowResponse(getPlayer(name).getSchemeCard().toString()));
+                socketObservers.get(getPlayer(name)).writeObject(new AfterWindowChoiseResponse());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -378,29 +372,23 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
-        getPlayer(name).setStartX(startX);
-        getPlayer(name).setStartY(startY);
-        getPlayer(name).setFinalX(finalX);
-        getPlayer(name).setFinalY(finalY);
-        boolean schemeCardToBeUpdated = getBoard().findAndUseToolCard(n, getPlayer(name), this);
-        if (schemeCardToBeUpdated) { //NON SERVE
-           /* if (remoteObservers.get(getPlayer(name)) != null) {
-                try {
-                    remoteObservers.get(getPlayer(name)). eccetera eccetera
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (socketObservers.get(getPlayer(name)) != null) {
-                try {
-                    socketObservers.get(getPlayer(name)).writeObject(new eccetera eccetera);
-                    socketObservers.get(getPlayer(name)).reset();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }*/
+        getPlayer(name).setStartX1(startX);
+        getPlayer(name).setStartY1(startY);
+        getPlayer(name).setFinalX1(finalX);
+        getPlayer(name).setFinalY1(finalY);
+        return getBoard().findAndUseToolCard(n, getPlayer(name), this);
 
-        }
-        return schemeCardToBeUpdated;
+    }
+
+    public boolean useToolCard4( int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
+        getPlayer(name).setStartX1(startX1);
+        getPlayer(name).setStartY1(startY1);
+        getPlayer(name).setFinalX1(finalX1);
+        getPlayer(name).setFinalY1(finalY1);
+        getPlayer(name).setStartX2(startX2);
+        getPlayer(name).setStartY2(startY2);
+        getPlayer(name).setFinalX2(finalX2);
+        getPlayer(name).setFinalY2(finalY2);
+        return getBoard().findAndUseToolCard(4, getPlayer(name), this);
     }
 }

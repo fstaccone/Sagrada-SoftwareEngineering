@@ -16,19 +16,38 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
     public boolean applyEffect(Player caller, Match match) {
         WindowPatternCard schema = caller.getSchemeCard();
 
-        int row = caller.getStartX();
+        int row = caller.getStartX1();
+        int column = caller.getStartY1();
+        Dice dice = schema.getDice(row, column);
 
-        int column = caller.getStartY();
-        Dice dice = schema.removeDice(row, column);
         if(dice!=null){
-            int newRow = caller.getFinalX();
-            int newColumn = caller.getFinalY();
+            int newRow = caller.getFinalX1();
+            int newColumn = caller.getFinalY1();
             schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn); //DA RIVEDERE
-            if(dice.equals(schema.getWindow()[newRow][newColumn].getDice())) // NULL POINTER EXCEPTION AL MOMENTO
+            if(dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {//SERVE VERAMENTE?
+                schema.removeDice(row, column);//LO PUò RIMETTERE NELLA STESSA POSIZIONE? SE Sì LA REMOVE NON VA FATTA QUI
+                caller.setStartX1(5);//UNREACHABLE VALUE, USED TO RESET
+                caller.setFinalX1(5);
+                caller.setStartY1(4);//UNREACHABLE VALUE, USED TO RESET
+                caller.setFinalY1(4);
                 return true;
-            else
+            }
+            else {
+                caller.setStartX1(5);//UNREACHABLE VALUE, USED TO RESET
+                caller.setFinalX1(5);
+                caller.setStartY1(4);//UNREACHABLE VALUE, USED TO RESET
+                caller.setFinalY1(4);
                 return false;
-        }else return false;
+            }
+        }else {
+            caller.setStartX1(5);//UNREACHABLE VALUE, USED TO RESET
+            caller.setFinalX1(5);
+            caller.setStartY1(4);//UNREACHABLE VALUE, USED TO RESET
+            caller.setFinalY1(4);
+            return false;
+        }
+
+
     }
 
 }

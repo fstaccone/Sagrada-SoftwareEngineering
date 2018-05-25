@@ -123,7 +123,7 @@ public class LoginHandler implements Initializable {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         readInput();
 
-        //connectionSetup();
+
 
        // if(!reconnection) {
             window = (Stage) playButton.getScene().getWindow();
@@ -135,7 +135,6 @@ public class LoginHandler implements Initializable {
             handler = fx.getController();
             handler.setLoginHandler(this);
 
-            // todo: da eliminare se riusciamo a farlo prima della creazione della finestra waiting
             connectionSetup();
 
             window.setScene(waiting);
@@ -202,7 +201,7 @@ public class LoginHandler implements Initializable {
         alert.showAndWait();
     }
 
-    private void connectionSetup() throws IOException {
+    private void connectionSetup() throws IOException, InterruptedException {
         ConnectionStatus status;
 
         // connection establishment with the selected method

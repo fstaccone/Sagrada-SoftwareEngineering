@@ -129,4 +129,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         System.out.println("On windowStage choise");
         chooseCardHandler.setWindows(windows);
     }
+
+    @Override
+    public void onAfterWindowChoise() throws RemoteException {
+
+    }
 }

@@ -130,7 +130,13 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onPlayerReconnection(String name) throws RemoteException {
+    public void onAfterWindowChoise() {
+        printer.println("You can now perform actions on your scheme card                               ~ [reserve] to check available dices\n");
+        printer.flush();
+    }
+
+    @Override
+    public void onPlayerReconnection(String name) {
 
     }
 
@@ -410,7 +416,7 @@ public class SocketCli implements Serializable, MatchObserver {
                         }
                         break;
                         case 4: {
-                            toolCommand.command4();
+                            toolCommand.command4(1,2,3,4,5,6,7,8);
                         }
                         break;
                         case 5: {
