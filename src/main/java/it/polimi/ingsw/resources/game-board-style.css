@@ -51,7 +51,7 @@
 }
 
 .cartaUtensile{
-   -fx-background-image: url("toolcards/pinza_sgrossatrice.png");
+   -fx-background-image: url("toolcards/tool1.png");
    -fx-background-size: cover;
 }
 
@@ -105,3 +105,18 @@
     -fx-scale-y: 0.9;
     -fx-scale-x: 0.9;
 }
+
+#passButton{
+    -fx-background-color: linear-gradient(lightgreen, lightseagreen);
+    -fx-background-radius: 10;
+    -fx-background-size: cover;
+}
+
+#passButton:hover {
+    -fx-background-color: lightseagreen;
+}
+#passButton:pressed {
+    -fx-scale-y: 0.9;
+    -fx-scale-x: 0.9;
+}
+

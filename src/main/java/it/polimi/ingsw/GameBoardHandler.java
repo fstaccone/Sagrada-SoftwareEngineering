@@ -7,10 +7,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -66,6 +68,8 @@ public class GameBoardHandler implements Initializable {
     Pane toolcard1;
     @FXML
     Pane toolcard2;
+    @FXML
+    Button passButton;
 
     private RemoteController controller;
     private String username;
@@ -97,5 +101,10 @@ public class GameBoardHandler implements Initializable {
 
     public void setToolCards(String toolCards){
         System.out.println(toolCards);
+    }
+
+    @FXML
+    public void onPassButtonClicked() throws RemoteException {
+        controller.goThrough(username, false);
     }
 }

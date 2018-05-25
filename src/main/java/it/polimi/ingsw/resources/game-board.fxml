@@ -251,6 +251,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
+      <Button id="passButton" fx:id="passButton" layoutX="1129.0" layoutY="70.0" mnemonicParsing="false" onAction="#onPassButtonClicked" prefHeight="40.0" prefWidth="92.0" text="PASS" textFill="WHITE" />
    </children>
     <stylesheets>
         <URL value="@game-board-style.css" />
