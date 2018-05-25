@@ -1,13 +1,14 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.RemoteController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -39,15 +40,22 @@ public class ChooseCardHandler implements Initializable {
     @FXML
     Button play;
 
+    @FXML
+    TextArea opponents;
+
+    @FXML
+    ImageView privateObjCard;
+
     private int choice;
 
     private String url0;
     private String url1;
     private String url2;
     private String url3;
-    private String imgURL;
     private Stage window;
-    final String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
+    private RemoteController controller;
+    private String username;
+    private String imgURL;
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
@@ -83,18 +91,7 @@ public class ChooseCardHandler implements Initializable {
                     break;
                 default: imgURL = null;
             }
-            //opening Game Board window
-            FXMLLoader fx = new FXMLLoader();
-            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board.fxml"));
-            Scene scene = new Scene(fx.load());
-            GameBoardHandler handler = fx.getController();
-            // initializing player's window pattern card
-            handler.setWindowPatternCardImg(imgURL);
-            window.setScene(scene);
-            //TODO: VA AGGIUNTO IL MESSAGGIO CON LA SCELTA DEL GIOCATORE DA RESTITUIRE AL SERVER
-            window.setTitle("Game");
-            window.setResizable(false);
-            window.show();
+            controller.chooseWindow(username, choice, false);
         }
     }
 
@@ -119,7 +116,9 @@ public class ChooseCardHandler implements Initializable {
     }
 
     //Initializing
-    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, List<String> windows){
+    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String username){
+        this.controller = controller;
+        this.username = username;
         window = windowFromRmiGui;
         Platform.runLater(()->{
             window.setScene(sceneFromRmiGui);
@@ -127,6 +126,13 @@ public class ChooseCardHandler implements Initializable {
             window.setResizable(false);
             window.show();
         });
+        //Va creata funzione setPrivateObjCard(), questa è per vedere se funziona
+        Image privateObjCardImg = new Image("File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/carte_obiettivo_14.png");
+        privateObjCard.setImage(privateObjCardImg);
+    }
+
+    //The window now shows the 4 window pattern cards the player have to choose between
+    public void setWindows(List<String> windows){
         int i = 0;
         ArrayList<String> imageURLs = new ArrayList<>();
         for(String s : windows){
@@ -141,6 +147,7 @@ public class ChooseCardHandler implements Initializable {
             System.out.println(i + s);
             i++;
             //Now I get a substring with the name of the window pattern card
+            String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
             s = genericURL + s.substring(6).toLowerCase().replaceAll(" ","_").replaceAll("'","") + (".png");
             //Questo stampa l'url da cui prenderemo l'immagine, per ora serve a controllare se qualche è scritto male
             System.out.println(s);
@@ -175,5 +182,20 @@ public class ChooseCardHandler implements Initializable {
         cardView3.setFitHeight(192);
         Platform.runLater(()->card3.setGraphic(cardView3));
     }
+
+    public String getImageUrl(){
+        return imgURL;
+    }
+
+    public void setOpponents(List<String> players){
+        String otherPlayers = new String();
+        for (String s : players){
+            if(!s.equals(username)){
+                otherPlayers = otherPlayers + " - " + s;
+            }
+        }
+        this.opponents.setText("Your match starts now! You are playing SAGRADA against:" + otherPlayers);
+    }
+
 }
 

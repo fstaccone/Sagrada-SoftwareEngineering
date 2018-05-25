@@ -17,7 +17,7 @@
 
 <AnchorPane id="gameBoard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GameBoardHandler">
    <children>
-      <Pane fx:id="playerWindowPatternCard" id="playerCard" layoutX="530.0" layoutY="575.0" prefHeight="300.0" prefWidth="340.0">
+      <Pane id="playerCard" fx:id="playerWindowPatternCard" layoutX="530.0" layoutY="575.0" prefHeight="300.0" prefWidth="340.0">
          <children>
             <GridPane hgap="10.0" layoutX="3.0" layoutY="5.0" prefHeight="261.0" prefWidth="334.0" vgap="14.0">
               <columnConstraints>
@@ -95,17 +95,17 @@
             </GridPane>
          </children>
       </Pane>
-      <Pane layoutX="185.0" layoutY="621.0" prefHeight="226.0" prefWidth="160.0" styleClass="cartaUtensile">
+      <Pane fx:id="toolcard1" layoutX="185.0" layoutY="621.0" prefHeight="226.0" prefWidth="160.0" styleClass="cartaUtensile">
          <children>
             <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="226.0" prefWidth="160.0" />
          </children>
       </Pane>
-      <Pane layoutX="354.0" layoutY="621.0" prefHeight="226.0" prefWidth="160.0" styleClass="cartaUtensile">
+      <Pane fx:id="toolcard2" layoutX="354.0" layoutY="621.0" prefHeight="226.0" prefWidth="160.0" styleClass="cartaUtensile">
          <children>
             <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="226.0" prefWidth="160.0" />
          </children>
       </Pane>
-      <Pane layoutX="14.0" layoutY="621.0" prefHeight="226.0" prefWidth="160.0" styleClass="cartaUtensile">
+      <Pane fx:id="toolcard0" layoutX="14.0" layoutY="621.0" prefHeight="226.0" prefWidth="160.0" styleClass="cartaUtensile">
          <children>
             <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="226.0" prefWidth="160.0" />
          </children>

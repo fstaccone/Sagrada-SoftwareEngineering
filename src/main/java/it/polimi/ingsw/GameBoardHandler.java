@@ -1,12 +1,17 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.RemoteController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameBoardHandler implements Initializable {
@@ -55,10 +60,32 @@ public class GameBoardHandler implements Initializable {
     Pane playerWindowPatternCard;
     @FXML
     Button cartaObPub1;
+    @FXML
+    Pane toolcard0;
+    @FXML
+    Pane toolcard1;
+    @FXML
+    Pane toolcard2;
+
+    private RemoteController controller;
+    private String username;
+    private Stage window;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+    }
+
+    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String username) {
+        this.controller = controller;
+        this.username = username;
+        window = windowFromRmiGui;
+        Platform.runLater(() -> {
+            window.setScene(sceneFromRmiGui);
+            window.setTitle("GameBoard");
+            window.setResizable(false);
+            window.show();
+        });
     }
 
     public void setWindowPatternCardImg(String imgURL){
@@ -66,5 +93,9 @@ public class GameBoardHandler implements Initializable {
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         playerWindowPatternCard.setBackground(new Background(myBI));
+    }
+
+    public void setToolCards(String toolCards){
+        System.out.println(toolCards);
     }
 }
