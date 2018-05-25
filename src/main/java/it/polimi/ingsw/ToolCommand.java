@@ -5,6 +5,7 @@ import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.UseToolCard1Request;
 import it.polimi.ingsw.socket.requests.UseToolCard2or3Request;
+import it.polimi.ingsw.socket.requests.UseToolCard4Request;
 
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
@@ -142,9 +143,30 @@ public class ToolCommand {
         return false;
     }
 
-    public void command4(){
-        printer.println("Comando 4, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command4(int startX1, int startY1, int finalX1, int finalY1,int startX2, int startY2, int finalX2, int finalY2){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard4(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard4Request(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single));
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (clientController.isEffectApplied()) {
+                clientController.setEffectApplied(false);//to reset the value
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
     public void command5(){
         printer.println("Comando 5, togliere il passaggio di printer da costrutture e inserire controller ");

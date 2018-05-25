@@ -372,29 +372,23 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
-        getPlayer(name).setStartX(startX);
-        getPlayer(name).setStartY(startY);
-        getPlayer(name).setFinalX(finalX);
-        getPlayer(name).setFinalY(finalY);
-        boolean schemeCardToBeUpdated = getBoard().findAndUseToolCard(n, getPlayer(name), this);
-        if (schemeCardToBeUpdated) { //NON SERVE
-           /* if (remoteObservers.get(getPlayer(name)) != null) {
-                try {
-                    remoteObservers.get(getPlayer(name)). eccetera eccetera
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (socketObservers.get(getPlayer(name)) != null) {
-                try {
-                    socketObservers.get(getPlayer(name)).writeObject(new eccetera eccetera);
-                    socketObservers.get(getPlayer(name)).reset();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }*/
+        getPlayer(name).setStartX1(startX);
+        getPlayer(name).setStartY1(startY);
+        getPlayer(name).setFinalX1(finalX);
+        getPlayer(name).setFinalY1(finalY);
+        return getBoard().findAndUseToolCard(n, getPlayer(name), this);
 
-        }
-        return schemeCardToBeUpdated;
+    }
+
+    public boolean useToolCard4( int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
+        getPlayer(name).setStartX1(startX1);
+        getPlayer(name).setStartY1(startY1);
+        getPlayer(name).setFinalX1(finalX1);
+        getPlayer(name).setFinalY1(finalY1);
+        getPlayer(name).setStartX2(startX2);
+        getPlayer(name).setStartY2(startY2);
+        getPlayer(name).setFinalX2(finalX2);
+        getPlayer(name).setFinalY2(finalY2);
+        return getBoard().findAndUseToolCard(4, getPlayer(name), this);
     }
 }

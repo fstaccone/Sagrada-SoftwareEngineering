@@ -225,6 +225,9 @@ public class WindowPatternCard extends Card{
     public Dice removeDice(int row, int column) {
         return window[row][column].removeDice();
     }
+    public Dice getDice(int row, int column) {
+        return window[row][column].getDice();
+    }
 
     @Override
     public String toString() {

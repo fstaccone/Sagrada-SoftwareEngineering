@@ -416,7 +416,7 @@ public class SocketCli implements Serializable, MatchObserver {
                         }
                         break;
                         case 4: {
-                            toolCommand.command4();
+                            toolCommand.command4(1,2,3,4,5,6,7,8);
                         }
                         break;
                         case 5: {
