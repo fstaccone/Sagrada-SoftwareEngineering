@@ -30,7 +30,7 @@ public class SocketCli implements Serializable, MatchObserver {
 
     private boolean single; //NON SONO CONVINTO SIA LA SOLUZIONE MIGLIORE
 
-    private static final String WELCOME="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
+    private static final String WELCOME = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/*@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/,@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..@@@@@..@@@@@@@@@@@@@@@\n" +
@@ -50,7 +50,7 @@ public class SocketCli implements Serializable, MatchObserver {
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "\nWelcome to this fantastic game,";
 
-    private static final String HELP=   ("\n 'h'                                         to show game commands" +
+    private static final String HELP = ("\n 'h'                                         to show game commands" +
             "\n 'r'                                         to show game rules" +
             "\n 'q'                                         to quit the game" +
             "\n 'sp'                                        to show all opponents' names" +
@@ -60,23 +60,22 @@ public class SocketCli implements Serializable, MatchObserver {
             "\n 'pd' + 'coordinate x' + 'coordinate y'       to place the chosen dice in your Scheme Card (available only if it's your turn)" +
             "\n 'pass'                                      to pass the turn to the next player (available only if it's your turn)");
 
-    public SocketCli(String username, ClientController controller){
-        this.username=username;
-        this.controller=controller;
-        this.printer=new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
-        this.myTurn=false;
+    public SocketCli(String username, ClientController controller) {
+        this.username = username;
+        this.controller = controller;
+        this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
+        this.myTurn = false;
         new KeyboardHandler().start();
         controller.setSocketCli(this);
-        this.single=false; //PARALLELIZZARE CON RmiCli
-        this.toolCommands=new ArrayList<>();
+        this.single = false; //PARALLELIZZARE CON RmiCli
+        this.toolCommands = new ArrayList<>();
     }
 
     public void launch() {
         printer.println(
-                WELCOME+ username.toUpperCase()+" :)\n");
+                WELCOME + username.toUpperCase() + " :)\n");
         printer.flush();
     }
-
 
 
     //DA CAPIRE COME CONVIENE FARE, UN'ALTRA INTERFACCIA MATCHOBSERVERSOCKET? discorso != da loginhandler, qui si doppia socket cli e rmi cli
@@ -84,8 +83,8 @@ public class SocketCli implements Serializable, MatchObserver {
     public void onPlayers(List<String> playersNames) {
         printer.println("Your match starts now! You are playing SAGRADA against:");
         printer.flush();
-        for(String name:playersNames){
-            if (!name.equals(username)){
+        for (String name : playersNames) {
+            if (!name.equals(username)) {
                 printer.println("-" + name.toUpperCase());
                 printer.flush();
             }
@@ -98,10 +97,10 @@ public class SocketCli implements Serializable, MatchObserver {
 
 
     @Override
-    public void onYourTurn(boolean isMyTurn, String string){
-        if (string!=null)
+    public void onYourTurn(boolean isMyTurn, String string) {
+        if (string != null)
             onReserve(string);
-        this.myTurn=isMyTurn;
+        this.myTurn = isMyTurn;
         if (myTurn)
             printer.println("\nNow it's your turn! Please insert a command:                                  ~ ['h' for help]\n");
         else
@@ -118,12 +117,12 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onWindowChoise(List<String> windows)  {
+    public void onWindowChoise(List<String> windows) {
         int i = 0;
         printer.println("Choose your window among the following                                              ~ [cw] + [number]\n");
         printer.flush();
-        for(String s : windows){
-            s=s.replaceAll("null"," ");
+        for (String s : windows) {
+            s = s.replaceAll("null", " ");
             printer.println(i++ + ") " + s + "\n");
             printer.flush();
         }
@@ -146,8 +145,8 @@ public class SocketCli implements Serializable, MatchObserver {
         printer.flush();
     }
 
-    public void onOtherTurn(String name)  {
-        printer.println("Now it's "+name +"'s turn");
+    public void onOtherTurn(String name) {
+        printer.println("Now it's " + name + "'s turn");
         printer.flush();
     }
 
@@ -157,7 +156,7 @@ public class SocketCli implements Serializable, MatchObserver {
         printer.println("Tool cards:");
         printer.flush();
 
-        for(String s : cards){
+        for (String s : cards) {
             printer.println("- " + s);
             printer.flush();
         }
@@ -172,10 +171,10 @@ public class SocketCli implements Serializable, MatchObserver {
         printer.println("ToolCards available for this match:");
         printer.println(toolCardsList.toString());
         printer.flush();
-        for(String card: toolCardsList){
-            String[] strings= card.split(" ");
+        for (String card : toolCardsList) {
+            String[] strings = card.split(" ");
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
-            this.toolCommands.add(new ToolCommand(i,this.printer,null, controller,username,false));
+            this.toolCommands.add(new ToolCommand(i, this.printer, null, controller, username, false));
         }
     }
 
@@ -195,16 +194,15 @@ public class SocketCli implements Serializable, MatchObserver {
                 try {
                     String command = keyboard.readLine();
                     parts = command.split(" +");
-                    if(myTurn) {
+                    if (myTurn) {
                         switch (parts[0]) {
 
-                            case "cd":{
-                                if (Integer.parseInt(parts[1])<dicesList.size()){
+                            case "cd": {
+                                if (Integer.parseInt(parts[1]) < dicesList.size()) {
                                     diceChosen = Integer.parseInt(parts[1]);
                                     printer.println("You have chosen the dice: " + dicesList.toArray()[diceChosen].toString() + "\n");
                                     printer.flush();
-                                }
-                                else {
+                                } else {
                                     printer.println("The dice you are trying to use does not exist, please retry ");
                                     printer.flush();
                                 }
@@ -213,7 +211,7 @@ public class SocketCli implements Serializable, MatchObserver {
 
                             case "cw": {
 
-                                if (Integer.parseInt(parts[1])<4){
+                                if (Integer.parseInt(parts[1]) < 4) {
                                     printer.println("You have chosen:");
                                     printer.flush();
                                     controller.request(new ChooseWindowRequest(username, Integer.parseInt(parts[1]), false));
@@ -223,17 +221,19 @@ public class SocketCli implements Serializable, MatchObserver {
                                     printer.println("The scheme you are trying to choose does not exist, please retry ");
                                     printer.flush();
                                 }
-                            } break;
+                            }
+                            break;
 
                             case "h": {
-                                printer.println( "Insert a new valid option between: ('+' means SPACE)" +HELP);
+                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
                                 printer.flush();
                             }
                             break;
 
-                            case "pass":{
+                            case "pass": {
                                 controller.request(new GoThroughRequest(username, single));
-                            }break;
+                            }
+                            break;
 
                             case "pd": {
                                 if (Integer.parseInt(parts[1]) < 4 && Integer.parseInt(parts[2]) < 5) {
@@ -264,10 +264,10 @@ public class SocketCli implements Serializable, MatchObserver {
                             break;
 
                             case "q": {
-                                //controller.quitGame(username, single);
                                 controller.request(new GoThroughRequest(username, single));
                                 System.exit(0);
-                            }break;
+                            }
+                            break;
 
                             case "r": {
                                 printer.println("Regole");
@@ -275,7 +275,7 @@ public class SocketCli implements Serializable, MatchObserver {
                             }
                             break;
 
-                            case "reserve":{
+                            case "reserve": {
                                 printer.println("\nHere follows the current RESERVE state:            ~ ['cd number' to choose the dice you want]\n");
                                 printer.flush();
                                 int i = 0;
@@ -285,52 +285,56 @@ public class SocketCli implements Serializable, MatchObserver {
                                 }
                                 printer.println();
                                 printer.flush();
-                            }break;
+                            }
+                            break;
 
                             case "sw": {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
                                 printer.flush();
-                                controller.request(new ShowWindowRequest(username,parts[1]));
-                            }break;
+                                controller.request(new ShowWindowRequest(username, parts[1]));
+                            }
+                            break;
 
-                            case "tool":{
+                            case "tool": {
                                 printer.println("\nHere follows the ToolCard description:          ~ ['usetool number' to use it]\n");
                                 printer.flush();
                                 boolean found = false;
-                                for(ToolCommand toolCommand:toolCommands){
-                                    if (toolCommand.getI()==Integer.parseInt(parts[1])) {
-                                        found=true;
+                                for (ToolCommand toolCommand : toolCommands) {
+                                    if (toolCommand.getI() == Integer.parseInt(parts[1])) {
+                                        found = true;
                                         printer.println(toolCommand.parametersNeeded);
                                         printer.flush();
 
                                     }
                                 }
-                                if (!found){
+                                if (!found) {
                                     printer.println("toolcard not in the ToolCard List");
                                     printer.flush();
                                 }
-                            } break;
+                            }
+                            break;
 
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
                                 printer.flush();
                                 onShowToolCards(toolCardsList);
-                            }break;
+                            }
+                            break;
 
-                            case "usetool":{
+                            case "usetool": {
                                 useRightCommand(Integer.parseInt(parts[1]));
-                            }break;
+                            }
+                            break;
 
                             default: {
                                 printer.println("Wrong choise. Insert a new valid option between: ('+' means SPACE)" + HELP);
                                 printer.flush();
                             }
                         }
-                    }
-                    else {
+                    } else {
                         switch (parts[0]) {
                             case "h": {
-                                printer.println("Insert a new valid option between: ('+' means SPACE)" +HELP);
+                                printer.println("Insert a new valid option between: ('+' means SPACE)" + HELP);
                                 printer.flush();
                             }
                             break;
@@ -355,7 +359,7 @@ public class SocketCli implements Serializable, MatchObserver {
                             case "sw": {
                                 printer.println("Here is the window pattern card of the player " + parts[1]);
                                 printer.flush();
-                                controller.request(new ShowWindowRequest(username,parts[1]));
+                                controller.request(new ShowWindowRequest(username, parts[1]));
                             }
                             break;
 
@@ -375,40 +379,37 @@ public class SocketCli implements Serializable, MatchObserver {
 
         private void useRightCommand(int i) {
 
-            boolean found=false;
+            boolean found = false;
             for (ToolCommand toolCommand : toolCommands) {
                 if (toolCommand.getI() == i) {
-                    found=true;
+                    found = true;
                     switch (i) {
                         case 1: {
 
-                            if( toolCommand.command1(Integer.parseInt(parts[2]), parts[3])){
+                            if (toolCommand.command1(Integer.parseInt(parts[2]), parts[3])) {
                                 printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                 printer.flush();
-                            }
-                            else {
+                            } else {
                                 printer.println("Invalid request.\n");
                                 printer.flush();
                             }
                         }
                         break;
                         case 2: {
-                            if( toolCommand.command2or3(2,Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]))){
+                            if (toolCommand.command2or3(2, Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]))) {
                                 printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                 printer.flush();
-                            }
-                            else {
+                            } else {
                                 printer.println("Invalid request.\n");
                                 printer.flush();
                             }
                         }
                         break;
                         case 3: {
-                            if( toolCommand.command2or3(3,Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]))){
+                            if (toolCommand.command2or3(3, Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]))) {
                                 printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                 printer.flush();
-                            }
-                            else {
+                            } else {
                                 printer.println("Invalid request.\n");
                                 printer.flush();
                             }
@@ -454,7 +455,7 @@ public class SocketCli implements Serializable, MatchObserver {
                     }
                 }
             }
-            if (found==false){
+            if (found == false) {
                 printer.println("toolcard not in the ToolCard List");
                 printer.flush();
             }

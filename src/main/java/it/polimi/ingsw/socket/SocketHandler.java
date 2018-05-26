@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class SocketHandler implements Runnable{
+public class SocketHandler implements Runnable {
     private Socket socket;
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
@@ -22,7 +22,7 @@ public class SocketHandler implements Runnable{
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
 
-        this.controller=controller;
+        this.controller = controller;
         controller.addSocketHandler(this);
 
     }
@@ -35,7 +35,7 @@ public class SocketHandler implements Runnable{
                 if (response != null) {
                     respond(response);
                 }
-            } while (socket!=null);
+            } while (socket != null);
         } catch (Exception e) {
             System.out.println("Connection down");
         }
@@ -48,7 +48,7 @@ public class SocketHandler implements Runnable{
         try {
             out.writeObject(response);
         } catch (IOException e) {
-           System.out.println("non scrive la risposta");
+            System.out.println("non scrive la risposta");
         }
     }
 
