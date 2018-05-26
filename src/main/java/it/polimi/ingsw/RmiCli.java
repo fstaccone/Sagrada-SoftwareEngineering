@@ -70,10 +70,10 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             "\n 'toolcards'                                 to show the list of available tool cards \n");
 
     private static final String SYNTAX_ERROR=(
-            "WARNING: Invalid syntax request.\n");
+            "\nWARNING: Invalid syntax request.\n");
 
     private static final String GAME_ERROR=(
-            "WARNING: Invalid game request. You did not respect the tool card's rules!\n");
+            "\nWARNING: Invalid game request. You did not respect the tool card's rules!\n"); //STAMPATO ANCHE SE PROVI A MODIFICARE DADO NELLA RISERVA OUT OF BOUND , si può migliorare
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
         super();
@@ -358,6 +358,11 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
+                            case "sp": {
+                                controller.showPlayers(username);
+                            }
+                            break;
+
                             case "sw": {
                                 if (parametersCardinalityCheck(2)) {
                                     if (turnNumber>1) {
@@ -375,11 +380,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                         printer.flush();
                                     }
                                 }
-                            }
-                            break;
-
-                            case "sp": {
-                                controller.showPlayers(username);
                             }
                             break;
 
@@ -610,8 +610,21 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         }
                         break;
                         case 6: {
-                            toolCommand.command6();
+                            if(parametersCardinalityCheck(3)) {
+                                toolNumber1 = tryParse(parts[2]);
 
+                                if(toolNumber1!=null) {
+                                    if (toolCommand.command6(toolNumber1)) {
+                                        printer.println("\nWell done! The chosen dice has been modified correctly.\n");
+                                        printer.flush();
+                                    } else {
+                                        gameErrorPrint();
+                                    }
+                                }else {
+                                    syntaxErrorPrint();
+                                }
+                            }
+                            toolNumber1=null;
                         }
                         break;
                         case 7: {

@@ -19,16 +19,21 @@ public class MoveDiceNotAdjacentToAnotherEffect implements Effect {
 
         int newRow = caller.getFinalX1();
         int newColumn = caller.getFinalY1();
-
-        Dice dice=match.getBoard().getReserve().getDices().get(caller.getDice());
-
-        if (!(schema.existsAdjacentDice(newRow, newColumn))) {
-            schema.putDiceWithoutCheckPos(dice, newRow, newColumn);
-            if (dice.equals(schema.getWindow()[newRow][newColumn].getDice()))
-                return true;
-            else return false;
-        } else
+        if (caller.getDice()< match.getBoard().getReserve().getDices().size()) {
+            Dice dice = match.getBoard().getReserve().getDices().get(caller.getDice());
+            if (dice != null) { //PROBABILMENTE INUTILE
+                if (!(schema.existsAdjacentDice(newRow, newColumn))) {
+                    schema.putDiceWithoutCheckPos(dice, newRow, newColumn);
+                    if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
+                        match.getBoard().getReserve().getDices().remove(caller.getDice());
+                        return true;
+                    } else return false;
+                } else
+                    return false;
+            } else
+                return false;
+        }
+        else
             return false;
-
     }
 }

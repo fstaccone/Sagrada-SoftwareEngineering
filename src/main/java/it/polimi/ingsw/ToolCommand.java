@@ -1,6 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.*;
@@ -94,17 +93,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard1Request(diceFromReserve, incrOrDecr, name, single));
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (clientController.isEffectApplied()) {
-                clientController.setEffectApplied(false);//to reset the value
-                return true;
-            } else {
-                return false;
-            }
+            waitForToolEffectAppliedResponse();
         }
         return false;
 
@@ -122,17 +111,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard2or3Request(n,startX, startY, finalX, finalY, name, single));
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (clientController.isEffectApplied()) {
-                clientController.setEffectApplied(false);//to reset the value
-                return true;
-            } else {
-                return false;
-            }
+            waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -148,17 +127,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard4Request(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single));
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (clientController.isEffectApplied()) {
-                clientController.setEffectApplied(false);//to reset the value
-                return true;
-            } else {
-                return false;
-            }
+            waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -166,9 +135,20 @@ public class ToolCommand {
         printer.println("Comando 5, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void command6(){
-        printer.println("Comando 6, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command6(int diceChosen){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard6(diceChosen, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard6Request(diceChosen, name, single));
+            waitForToolEffectAppliedResponse();
+        }
+        return false;
     }
     public boolean command7(){
         if(controller!=null) {
@@ -181,17 +161,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard7Request( name, single));
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (clientController.isEffectApplied()) {
-                clientController.setEffectApplied(false);//to reset the value
-                return true;
-            } else {
-                return false;
-            }
+            waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -210,17 +180,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard9Request( diceFromReserve,finalX,finalY,name, single));
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (clientController.isEffectApplied()) {
-                clientController.setEffectApplied(false);//to reset the value
-                return true;
-            } else {
-                return false;
-            }
+            waitForToolEffectAppliedResponse();
         }
         return false;
 
@@ -236,17 +196,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard10Request(diceFromReserve, name, single));
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (clientController.isEffectApplied()) {
-                clientController.setEffectApplied(false);//to reset the value
-                return true;
-            } else {
-                return false;
-            }
+            waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -257,5 +207,19 @@ public class ToolCommand {
     public void command12(){
         printer.println("Comando 12, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
+    }
+
+    private boolean waitForToolEffectAppliedResponse(){
+        try {
+            Thread.sleep(500); //DA VERIFICARE
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (clientController.isEffectApplied()) {
+            clientController.setEffectApplied(false);//to reset the value
+            return true;
+        } else {
+            return false;
+        }
     }
 }

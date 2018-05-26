@@ -8,21 +8,21 @@ import java.util.Random;
 
 public class ReRollDiceEffect implements Effect {
 
-    // To be revised later depending on player management
-    private Dice diceToBeRerolled;
 
     public ReRollDiceEffect() {
     }
 
     @Override
-    public boolean applyEffect(Player player, Match match) {/*
-        if(player.getPickedDice()==null)
-            player.setPickedDice(match.getBoard().getReserve().chooseDice());
-        diceToBeRerolled = player.getPickedDice();*/
+    public boolean applyEffect(Player player, Match match) {
         Random rand = new Random();
-        int val = rand.nextInt(6)+1;
-        diceToBeRerolled.setValue(val);
-        player.setPickedDice(diceToBeRerolled);
-        return false;
+        int newValue = rand.nextInt(6)+1;
+        if (player.getDice()< match.getBoard().getReserve().getDices().size()) {
+            Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
+            if (dice != null) {//PROBABILMENTE INUTILE
+                dice.setValue(newValue);
+                return true;
+            } else return false;
+        }
+        else return false;
     }
 }
