@@ -15,4 +15,6 @@ public interface RequestHandler {
     Response handle(UseToolCard1Request request);
     Response handle(UseToolCard2or3Request request);
     Response handle(UseToolCard4Request request);
+    Response handle(UseToolCard7Request request);
+    Response handle(UseToolCard10Request request);
 }

@@ -34,9 +34,9 @@ public class MoveTwoDicesEffect implements Effect{
                 if (dice2 != null) {
                     int newRow2 = caller.getFinalX2();
                     int newColumn2 = caller.getFinalY2();
-                    schema.putDice(dice1, newRow2, newColumn2); //DA RIVEDERE
-                    if (dice1.equals(schema.getWindow()[newRow2][newColumn2].getDice())) {
-                        schema.removeDice(row1, column1);//LO PUò RIMETTERE NELLA STESSA POSIZIONE? SE Sì LA REMOVE NON VA FATTA QUI
+                    schema.putDice(dice2, newRow2, newColumn2); //DA RIVEDERE
+                    if (dice2.equals(schema.getWindow()[newRow2][newColumn2].getDice())) {
+                        schema.removeDice(row2, column2);//LO PUò RIMETTERE NELLA STESSA POSIZIONE? SE Sì LA REMOVE NON VA FATTA QUI
                         return true;
                     } else
                         return false;

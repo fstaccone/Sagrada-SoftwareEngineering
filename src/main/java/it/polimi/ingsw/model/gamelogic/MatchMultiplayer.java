@@ -346,9 +346,9 @@ public class MatchMultiplayer extends Match implements Runnable {
         return false;
     }
 
-    public boolean useToolCard1(int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
+    public boolean useToolCard1(int diceChosen, String incrOrDecr, String name) {
         getPlayer(name).setDice(diceChosen);
-        getPlayer(name).setChoise(IncrOrDecr);
+        getPlayer(name).setChoise(incrOrDecr);
         boolean reserveToBeUpdated = getBoard().findAndUseToolCard(1, getPlayer(name), this);
         if (reserveToBeUpdated) {
             if (remoteObservers.get(getPlayer(name)) != null) {
@@ -371,7 +371,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         return reserveToBeUpdated;
     }
 
-    public boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
+    public boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String name) {
         getPlayer(name).setStartX1(startX);
         getPlayer(name).setStartY1(startY);
         getPlayer(name).setFinalX1(finalX);
@@ -380,7 +380,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     }
 
-    public boolean useToolCard4( int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
+    public boolean useToolCard4( int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
         getPlayer(name).setStartX1(startX1);
         getPlayer(name).setStartY1(startY1);
         getPlayer(name).setFinalX1(finalX1);
@@ -390,5 +390,52 @@ public class MatchMultiplayer extends Match implements Runnable {
         getPlayer(name).setFinalX2(finalX2);
         getPlayer(name).setFinalY2(finalY2);
         return getBoard().findAndUseToolCard(4, getPlayer(name), this);
+    }
+
+    public boolean useToolCard7( String name) {
+        boolean reserveToBeUpdated= getBoard().findAndUseToolCard(7, getPlayer(name), this);
+        if (reserveToBeUpdated) {
+            if (remoteObservers.get(getPlayer(name)) != null) {
+                try {
+                    remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (socketObservers.get(getPlayer(name)) != null) {
+                try {
+                    socketObservers.get(getPlayer(name)).writeObject(new UpdateReserveResponse(board.getReserve().getDices().toString()));
+                    socketObservers.get(getPlayer(name)).reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        return reserveToBeUpdated;
+    }
+
+    public boolean useToolCard10(int diceChosen, String name){
+        getPlayer(name).setDice(diceChosen);
+        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(10, getPlayer(name), this);
+        if (reserveToBeUpdated) {
+            if (remoteObservers.get(getPlayer(name)) != null) {
+                try {
+                    remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (socketObservers.get(getPlayer(name)) != null) {
+                try {
+                    socketObservers.get(getPlayer(name)).writeObject(new UpdateReserveResponse(board.getReserve().getDices().toString()));
+                    socketObservers.get(getPlayer(name)).reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        return reserveToBeUpdated;
     }
 }
