@@ -16,10 +16,8 @@ public class IncrDecrDiceValueEffect implements Effect{
     public boolean applyEffect(Player player, Match match) {
 
             String plusOrMinus= player.getChoise();
-            //player.setChoise(null);
             int value=match.getBoard().getReserve().getDices().get(player.getDice()).getValue();
-            //player.setDice(0);
-            System.out.println(value);
+
             switch (plusOrMinus) {
                 case "+":
                     if (value != 6) {

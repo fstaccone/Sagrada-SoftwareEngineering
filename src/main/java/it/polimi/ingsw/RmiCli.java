@@ -507,7 +507,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 toolNumber1 = tryParse(parts[2]);
                                 toolString1=parts[3];
                                 if(toolNumber1!=null && (toolString1.equals("+")||toolString1.equals("-"))) {
-                                    if (toolCommand.command1(Integer.parseInt(parts[2]), parts[3])) {
+                                    if (toolCommand.command1(toolNumber1, toolString1)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {
@@ -518,6 +518,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 }
                             }
                             toolNumber1=null;
+                            toolString1=null;
                         }
                         break;
 
@@ -632,16 +633,32 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         }
                         break;
                         case 9: {
-                            toolCommand.command9();
-
+                            if(parametersCardinalityCheck(5)) {
+                                toolNumber1 = tryParse(parts[2]);
+                                toolNumber2 = tryParse(parts[3]);
+                                toolNumber3 = tryParse(parts[4]);
+                                if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null) {
+                                    if (toolCommand.command9( toolNumber1,toolNumber2,toolNumber3)) {
+                                        printer.println("\nWell done! The chosen dice has been modified correctly.\n");
+                                        printer.flush();
+                                    } else {
+                                        gameErrorPrint();
+                                    }
+                                }else {
+                                    syntaxErrorPrint();
+                                }
+                            }
+                            toolNumber1=null;
+                            toolNumber2=null;
+                            toolNumber3=null;
                         }
                         break;
+
                         case 10: {
                             if(parametersCardinalityCheck(3)) {
                                 toolNumber1 = tryParse(parts[2]);
-                                toolString1=parts[3];
                                 if(toolNumber1!=null) {
-                                    if (toolCommand.command10(Integer.parseInt(parts[2]))) {
+                                    if (toolCommand.command10(toolNumber1)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {

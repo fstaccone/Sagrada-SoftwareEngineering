@@ -199,9 +199,31 @@ public class ToolCommand {
         printer.println("Comando 8, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void command9(){
-        printer.println("Comando 9, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command9(int diceFromReserve,int finalX, int finalY){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard9(diceFromReserve,finalX,finalY, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard9Request( diceFromReserve,finalX,finalY,name, single));
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (clientController.isEffectApplied()) {
+                clientController.setEffectApplied(false);//to reset the value
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+
     }
     public boolean command10(int diceFromReserve){
         if(controller!=null) {

@@ -415,6 +415,32 @@ public class MatchMultiplayer extends Match implements Runnable {
         return reserveToBeUpdated;
     }
 
+    public boolean useToolCard9(int diceChosen,int finalX1, int finalY1, String name){
+        getPlayer(name).setDice(diceChosen);
+        getPlayer(name).setFinalX1(finalX1);
+        getPlayer(name).setFinalY1(finalY1);
+        boolean reserveToBeUpdated= getBoard().findAndUseToolCard(9, getPlayer(name), this);
+        if (reserveToBeUpdated) {
+            if (remoteObservers.get(getPlayer(name)) != null) {
+                try {
+                    remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (socketObservers.get(getPlayer(name)) != null) {
+                try {
+                    socketObservers.get(getPlayer(name)).writeObject(new UpdateReserveResponse(board.getReserve().getDices().toString()));
+                    socketObservers.get(getPlayer(name)).reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        return reserveToBeUpdated;
+    }
+
     public boolean useToolCard10(int diceChosen, String name){
         getPlayer(name).setDice(diceChosen);
         boolean reserveToBeUpdated = getBoard().findAndUseToolCard(10, getPlayer(name), this);
