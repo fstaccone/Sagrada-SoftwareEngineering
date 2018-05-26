@@ -36,7 +36,7 @@
       <Button id="play" fx:id="play" layoutX="678.0" layoutY="549.0" mnemonicParsing="false" onMouseClicked="#onPlayClicked" prefHeight="37.0" prefWidth="108.0" text="PLAY" textFill="WHITE" />
       <TextArea fx:id="opponents" layoutX="125.0" layoutY="38.0" prefHeight="37.0" prefWidth="554.0" />
       <ImageView fx:id="privateObjCard" fitHeight="364.0" fitWidth="239.0" layoutX="14.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="56.0" layoutY="165.0" text="YOUR TOOLCARD" textFill="WHITE">
+      <Label layoutX="47.0" layoutY="122.0" prefHeight="74.0" prefWidth="157.0" text="YOUR Private objective card" textFill="WHITE" wrapText="true">
          <font>
             <Font name="Algerian" size="18.0" />
          </font>
