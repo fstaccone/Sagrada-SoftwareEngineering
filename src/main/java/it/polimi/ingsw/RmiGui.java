@@ -11,7 +11,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
@@ -21,7 +24,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     boolean myTurn;
     private ChooseCardHandler chooseCardHandler;
     private GameBoardHandler gameBoardHandler;
-    private String toolCards;
+    private List<String> toolCardsList = new ArrayList<>();
+    private List<String> dicesList;
 
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller) throws RemoteException {
@@ -56,12 +60,30 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onYourTurn(boolean isMyTurn, String string) throws RemoteException {
         System.out.println("On your turn");
+        if (string != null)
+            onReserve(string);
+        this.myTurn = isMyTurn;
+        if (myTurn)
+            //Solo per verifica
+            System.out.println("Now it's your turn!");
+        else
+            //Solo per verifica
+            System.out.println("It's no more your turn!");
     }
 
 
     @Override
     public void onReserve(String string) throws RemoteException {
+        dicesList = new ArrayList<>();
         System.out.println("On reserve");
+        String dicesString = string.substring(1, string.length() - 1);
+        List<String> temp = Pattern.compile(", ")
+                .splitAsStream(dicesString)
+                .collect(Collectors.toList());
+        for(String s : temp){
+            s = s.substring(1, s.length()-1).toLowerCase().replaceAll(" ", "_");
+            dicesList.add(s);
+        }
     }
 
     public void launch(){
@@ -99,7 +121,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         gameBoardHandler = fx.getController();
         gameBoardHandler.init(windowStage, scene, controller, username );
         gameBoardHandler.setWindowPatternCardImg(imgUrl);
-        gameBoardHandler.setToolCards(toolCards);
+        gameBoardHandler.setToolCards(toolCardsList);
+        gameBoardHandler.setReserve(dicesList);
 
     }
 
@@ -116,7 +139,14 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onToolCards(String string) throws RemoteException {
         System.out.println("On toolcards\n" + string);
-        toolCards = string;
+        String dicesString = string.substring(1, string.length() - 1);
+        List <String> temp = Pattern.compile(", ")
+                .splitAsStream(dicesString)
+                .collect(Collectors.toList());
+        for(String s : temp){
+            s = s.split(" :", 2)[0];
+            toolCardsList.add(s);
+        }
     }
 
     @Override
