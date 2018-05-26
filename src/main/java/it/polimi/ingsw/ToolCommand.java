@@ -3,9 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.socket.ClientController;
-import it.polimi.ingsw.socket.requests.UseToolCard1Request;
-import it.polimi.ingsw.socket.requests.UseToolCard2or3Request;
-import it.polimi.ingsw.socket.requests.UseToolCard4Request;
+import it.polimi.ingsw.socket.requests.*;
 
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
@@ -79,10 +77,6 @@ public class ToolCommand {
         }
     }
 
-    public String getParametersNeeded() {
-        return parametersNeeded;
-    }
-
     public int getI() {
         return i;
     }
@@ -101,7 +95,7 @@ public class ToolCommand {
         else {
             clientController.request(new UseToolCard1Request(diceFromReserve, incrOrDecr, name, single));
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -129,7 +123,7 @@ public class ToolCommand {
         else {
             clientController.request(new UseToolCard2or3Request(n,startX, startY, finalX, finalY, name, single));
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -155,7 +149,7 @@ public class ToolCommand {
         else {
             clientController.request(new UseToolCard4Request(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single));
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -176,9 +170,30 @@ public class ToolCommand {
         printer.println("Comando 6, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void command7(){
-        printer.println("Comando 7, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command7(){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard7( name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard7Request( name, single));
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (clientController.isEffectApplied()) {
+                clientController.setEffectApplied(false);//to reset the value
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
     public void command8(){
         printer.println("Comando 8, togliere il passaggio di printer da costrutture e inserire controller ");
@@ -188,9 +203,30 @@ public class ToolCommand {
         printer.println("Comando 9, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void command10(){
-        printer.println("Comando 10, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command10(int diceFromReserve){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard10(diceFromReserve, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard10Request(diceFromReserve, name, single));
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (clientController.isEffectApplied()) {
+                clientController.setEffectApplied(false);//to reset the value
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
     public void command11(){
         printer.println("Comando 11, togliere il passaggio di printer da costrutture e inserire controller ");

@@ -122,7 +122,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         if(isSingle){
             //DA FARE
         }else{
-            return lobby.getMultiplayerMatches().get(name).useToolCard1(diceChosen, IncrOrDecr, name, isSingle);
+            return lobby.getMultiplayerMatches().get(name).useToolCard1(diceChosen, IncrOrDecr, name);
         }
         return false;
     }
@@ -132,7 +132,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         if(isSingle){
             //DA FARE
         }else{
-            return lobby.getMultiplayerMatches().get(name).useToolCard2or3(n,startX, startY, finalX, finalY, name, isSingle);
+            return lobby.getMultiplayerMatches().get(name).useToolCard2or3(n,startX, startY, finalX, finalY, name);
         }
         return false;
     }
@@ -142,7 +142,27 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         if(isSingle){
             //DA FARE
         }else{
-            return lobby.getMultiplayerMatches().get(name).useToolCard4(startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name, isSingle);
+            return lobby.getMultiplayerMatches().get(name).useToolCard4(startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean useToolCard7(String name, boolean isSingle) {
+        if(isSingle){
+            //DA FARE
+        }else{
+            return lobby.getMultiplayerMatches().get(name).useToolCard7(name);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean useToolCard10(int diceChosen, String name, boolean isSingle) {
+        if(isSingle){
+            //DA FARE
+        }else{
+            return lobby.getMultiplayerMatches().get(name).useToolCard10(diceChosen,name);
         }
         return false;
     }
@@ -212,6 +232,18 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public Response handle(UseToolCard4Request request) {
         boolean effectApplied=useToolCard4(request.startX1,request.startY1,request.finalX1,request.finalY1,request.startX2,request.startY2,request.finalX2,request.finalY2,request.username,request.isSingle);
+        return new ToolCardEffectAppliedResponse(effectApplied);
+    }
+
+    @Override
+    public Response handle(UseToolCard7Request request) {
+        boolean effectApplied=useToolCard7(request.username,request.isSingle);
+        return new ToolCardEffectAppliedResponse(effectApplied);
+    }
+
+    @Override
+    public Response handle(UseToolCard10Request request) {
+        boolean effectApplied=useToolCard10(request.diceChosen,request.username,request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
