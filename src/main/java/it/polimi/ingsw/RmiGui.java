@@ -63,9 +63,12 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         if (string != null)
             onReserve(string);
         this.myTurn = isMyTurn;
-        if (myTurn)
+        if (myTurn) {
             //Solo per verifica
-            System.out.println("Now it's your turn!");
+            String s = "Now it's your turn!";
+            if (gameBoardHandler != null) gameBoardHandler.setTextArea(s);
+            else chooseCardHandler.setTextArea(s);
+        }
         else
             //Solo per verifica
             System.out.println("It's no more your turn!");
@@ -123,16 +126,19 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         }
         Scene scene = new Scene(root);
         gameBoardHandler = fx.getController();
-        gameBoardHandler.init(windowStage, scene, controller, username );
+        gameBoardHandler.init(windowStage, scene, controller, username, this );
         gameBoardHandler.setWindowPatternCardImg(imgUrl);
         gameBoardHandler.setToolCards(toolCardsList);
         gameBoardHandler.setReserve(dicesList);
-
+        gameBoardHandler.setTextArea("Now it's your turn!");
     }
 
     @Override
     public void onOtherTurn(String name) throws RemoteException {
         System.out.println("On other turn");
+        String s = "Now it's " + name + "'s turn";
+        if(gameBoardHandler!=null) gameBoardHandler.setTextArea(s);
+        else chooseCardHandler.setTextArea(s);
     }
     
     @Override
@@ -167,5 +173,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onAfterWindowChoise() throws RemoteException {
 
+    }
+
+    public Boolean isMyTurn(){
+        return myTurn;
     }
 }

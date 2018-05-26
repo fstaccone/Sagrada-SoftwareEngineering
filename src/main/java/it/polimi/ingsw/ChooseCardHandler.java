@@ -197,5 +197,10 @@ public class ChooseCardHandler implements Initializable {
         this.opponents.setText("Your match starts now! You are playing SAGRADA against:" + otherPlayers);
     }
 
+    public void setTextArea (String s){
+        s = "\n" + s;
+        this.opponents.appendText(s);
+    }
+
 }
 
