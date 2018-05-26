@@ -11,7 +11,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
@@ -21,7 +24,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     boolean myTurn;
     private ChooseCardHandler chooseCardHandler;
     private GameBoardHandler gameBoardHandler;
-    private String toolCards;
+    private List<String> toolCardsList = new ArrayList<>();
 
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller) throws RemoteException {
@@ -99,7 +102,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         gameBoardHandler = fx.getController();
         gameBoardHandler.init(windowStage, scene, controller, username );
         gameBoardHandler.setWindowPatternCardImg(imgUrl);
-        gameBoardHandler.setToolCards(toolCards);
+        gameBoardHandler.setToolCards(toolCardsList);
 
     }
 
@@ -116,7 +119,14 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onToolCards(String string) throws RemoteException {
         System.out.println("On toolcards\n" + string);
-        toolCards = string;
+        String dicesString = string.substring(1, string.length() - 1);
+        List <String> temp = Pattern.compile(", ")
+                .splitAsStream(dicesString)
+                .collect(Collectors.toList());
+        for(String s : temp){
+            s = s.split(" :", 2)[0];
+            toolCardsList.add(s);
+        }
     }
 
     @Override
