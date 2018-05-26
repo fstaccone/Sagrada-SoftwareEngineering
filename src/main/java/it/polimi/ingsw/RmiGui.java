@@ -84,6 +84,10 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
             s = s.substring(1, s.length()-1).toLowerCase().replaceAll(" ", "_");
             dicesList.add(s);
         }
+        for(String dice : dicesList) System.out.println(dice);
+        if(gameBoardHandler!=null) {
+            gameBoardHandler.setReserve(dicesList);
+        }
     }
 
     public void launch(){

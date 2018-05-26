@@ -160,6 +160,7 @@ public class GameBoardHandler implements Initializable {
         reserveDices.add(reserveDice8);
         int i = 0;
         for(Button dice : reserveDices){
+            Platform.runLater(()-> dice.setGraphic(null));
             if(dicesList.size() > i && dicesList.get(i)!=null){
                 String url = genericURL + dicesList.get(i) + ".png";
                 Image diceImg = new Image(url);
