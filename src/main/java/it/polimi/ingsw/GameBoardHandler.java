@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
@@ -73,6 +74,24 @@ public class GameBoardHandler implements Initializable {
     Button tool2;
     @FXML
     Button passButton;
+    @FXML
+    Button reserveDice0;
+    @FXML
+    Button reserveDice1;
+    @FXML
+    Button reserveDice2;
+    @FXML
+    Button reserveDice3;
+    @FXML
+    Button reserveDice4;
+    @FXML
+    Button reserveDice5;
+    @FXML
+    Button reserveDice6;
+    @FXML
+    Button reserveDice7;
+    @FXML
+    Button reserveDice8;
 
     private RemoteController controller;
     private String username;
@@ -125,6 +144,33 @@ public class GameBoardHandler implements Initializable {
         cardView2.setFitWidth(158);
         cardView2.setFitHeight(240);
         Platform.runLater(()->tool2.setGraphic(cardView2));
+    }
+
+    public void setReserve(List<String> dicesList){
+        String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
+        List<Button> reserveDices = new ArrayList<>();
+        reserveDices.add(reserveDice0);
+        reserveDices.add(reserveDice1);
+        reserveDices.add(reserveDice2);
+        reserveDices.add(reserveDice3);
+        reserveDices.add(reserveDice4);
+        reserveDices.add(reserveDice5);
+        reserveDices.add(reserveDice6);
+        reserveDices.add(reserveDice7);
+        reserveDices.add(reserveDice8);
+        int i = 0;
+        for(Button dice : reserveDices){
+            if(dicesList.size() > i && dicesList.get(i)!=null){
+                String url = genericURL + dicesList.get(i) + ".png";
+                Image diceImg = new Image(url);
+                ImageView diceView = new ImageView(diceImg);
+                diceView.setFitWidth(70);
+                diceView.setFitHeight(70);
+                Platform.runLater(()->dice.setGraphic(diceView));
+            }
+            i++;
+        }
+
     }
 
     @FXML

@@ -68,12 +68,6 @@
     -fx-background-size: cover;
 }
 
-.reserveDice{
-    -fx-background-image: url("dices/dice_4_yellow.png");
-    -fx-background-size: contain;
-    -fx-background-repeat: no-repeat;
-}
-
 #play{
     -fx-background-color: linear-gradient(firebrick, burlywood);
     -fx-background-radius: 10;
