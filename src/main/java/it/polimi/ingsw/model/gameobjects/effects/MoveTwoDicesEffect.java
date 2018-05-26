@@ -14,44 +14,35 @@ public class MoveTwoDicesEffect implements Effect{
 
     @Override
     public boolean applyEffect(Player caller, Match match) {
-        //QUI IL GIOCATORE DOVRà, ATTRAVERSO I METODI DI WINDOWPATTERNCARD DI CUI HA IL RIFERIMENTO, SCEGLIERE DUE DADI DA TOGLIERE DALLA SCHEMECARD E POI REINSERIRE)
-        //BISOGNA CONSIDERARE CHE IL TUTTO VA GESTITO ATTRAVERSO N.B.   S C E L T E   DA PARTE DEL CLIENT CHE ATTRAVERSO IL CONTROLLER RICHIAMA METODI DEL PLAYER CHE AGISCONO SUL SUO STATO E QUINDI SULLA SUA CARTA SCHEMA
-        Dice[] chosenDices = new Dice[2];
         WindowPatternCard schema = caller.getSchemeCard();
-        Scanner scan = new Scanner(System.in);
-        for(int i=0; i<2; i++) {
-            int token = 0;
-            while(token == 0) {
-                System.out.println(schema.toString());
-                System.out.println("Choose dice " + (i+1) + " row:");
-                int row = scan.nextInt();
-                System.out.println("Choose dice " + (i+1) + " column:");
-                int column = scan.nextInt();
-                Dice dice = schema.removeDice(row, column);
-                if (dice != null) {
-                    token = 1;
-                    System.out.println("You've chosen the dice: " + dice.toString());
-                    chosenDices[i]=dice;
-                }
-            }
+
+        int row1 = caller.getStartX1();
+        int column1 = caller.getStartY1();
+        int row2 = caller.getStartX2();
+        int column2 = caller.getStartY2();
+
+        Dice dice1 = schema.getDice(row1, column1);
+        Dice dice2;
+
+        if (dice1 != null) {
+            int newRow1 = caller.getFinalX1();
+            int newColumn1 = caller.getFinalY1();
+            schema.putDice(dice1, newRow1, newColumn1); //DA RIVEDERE
+            if (dice1.equals(schema.getWindow()[newRow1][newColumn1].getDice())) {
+                schema.removeDice(row1, column1); //LO PUò RIMETTERE NELLA STESSA POSIZIONE? SE Sì LA REMOVE NON VA FATTA QUI
+                dice2 = schema.getDice(row2, column2);
+                if (dice2 != null) {
+                    int newRow2 = caller.getFinalX2();
+                    int newColumn2 = caller.getFinalY2();
+                    schema.putDice(dice2, newRow2, newColumn2); //DA RIVEDERE
+                    if (dice2.equals(schema.getWindow()[newRow2][newColumn2].getDice())) {
+                        schema.removeDice(row2, column2);//LO PUò RIMETTERE NELLA STESSA POSIZIONE? SE Sì LA REMOVE NON VA FATTA QUI
+                        return true;
+                    } else
+                        return false;
+                } else return false;
+            } else return false;
         }
-        System.out.println(schema.toString());
-        for( int i=0; i<2; i++){
-            int result = 0;
-            while(result==0) {
-                System.out.println("Please put row where you want to move dice"+(i+1)+" : ");
-                int newRow = scan.nextInt();
-                System.out.println("Please put column where you want to move dice"+(i+1)+" : ");
-                int newColumn = scan.nextInt();
-                schema.putDice(chosenDices[i], newRow, newColumn);
-                //Checking if putDice worked, else get a different new position
-                if(chosenDices[i].equals(schema.getWindow()[newRow][newColumn].getDice()))
-                    result = 1;
-                else System.out.println("Please choose a different position.");
-            }
-        }
-        caller.setSchemeCard(schema);
-        System.out.println(schema.toString());
-        return false;
+        else return false;
     }
 }

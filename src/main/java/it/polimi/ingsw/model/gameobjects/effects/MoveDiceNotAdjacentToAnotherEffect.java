@@ -13,25 +13,27 @@ public class MoveDiceNotAdjacentToAnotherEffect implements Effect {
     }
 
     @Override
-    public boolean applyEffect(Player player, Match match) {/*
-        if(player.getPickedDice()==null)
-            player.setPickedDice(match.getBoard().getReserve().chooseDice());*/
-        Dice dice = player.getPickedDice();
-        WindowPatternCard schema = player.getSchemeCard();
-        Scanner scan = new Scanner(System.in);
-        int result = 0;
-        while(result == 0) {
-            System.out.println("Please put the row where you want to put your dice: ");
-            int newRow = scan.nextInt();
-            System.out.println("Please put the column where you want to put your dice: ");
-            int newColumn = scan.nextInt();
-            if(!(schema.existsAdjacentDice(newRow, newColumn))){
-                schema.putDiceWithoutCheckPos(dice, newRow, newColumn);
-                if (dice.equals(schema.getWindow()[newRow][newColumn].getDice()))
-                    result = 1;
-            }
-            else System.out.println("Please choose a different position.");
+    public boolean applyEffect(Player caller, Match match) {
+
+        WindowPatternCard schema = caller.getSchemeCard();
+
+        int newRow = caller.getFinalX1();
+        int newColumn = caller.getFinalY1();
+        if (caller.getDice()< match.getBoard().getReserve().getDices().size()) {
+            Dice dice = match.getBoard().getReserve().getDices().get(caller.getDice());
+            if (dice != null) { //PROBABILMENTE INUTILE
+                if (!(schema.existsAdjacentDice(newRow, newColumn))) {
+                    schema.putDiceWithoutCheckPos(dice, newRow, newColumn);
+                    if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
+                        match.getBoard().getReserve().getDices().remove(caller.getDice());
+                        return true;
+                    } else return false;
+                } else
+                    return false;
+            } else
+                return false;
         }
-        return false;
+        else
+            return false;
     }
 }

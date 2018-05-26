@@ -16,6 +16,6 @@ public class ReRollAllReserveDicesEffect implements Effect{
     public boolean applyEffect(Player player, Match match) {
         Reserve reserve = match.getBoard().getReserve();
         reserve.throwDices(reserve.removeAllDices());
-        return false;
+        return true; //DA RIVEDERE
     }
 }

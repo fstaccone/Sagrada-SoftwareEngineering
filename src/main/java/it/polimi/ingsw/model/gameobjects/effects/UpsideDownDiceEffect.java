@@ -10,48 +10,34 @@ public class UpsideDownDiceEffect implements Effect {
     }
 
     @Override
-    public boolean applyEffect(Player player, Match match) {/*
-        if(player.getPickedDice()==null)
-            player.setPickedDice(match.getBoard().getReserve().chooseDice());*/
-        int val = player.getPickedDice().getValue();
-        Dice modified;
+    public boolean applyEffect(Player player, Match match) {
+        if (player.getDice()< match.getBoard().getReserve().getDices().size()) {//CONTROLLO SU DICE!=NULL?
 
-        switch (val) {
-            case 1:
-                modified = player.getPickedDice();
-                modified.setValue(6);
-                player.setPickedDice(modified);
-                break;
-            case 2:
-                modified = player.getPickedDice();
-                modified.setValue(5);
-                player.setPickedDice(modified);
-                break;
-            case 3:
-                modified = player.getPickedDice();
-                modified.setValue(4);
-                player.setPickedDice(modified);
-                break;
-            case 4:
-                modified = player.getPickedDice();
-                modified.setValue(3);
-                player.setPickedDice(modified);
-                break;
-            case 5:
-                modified = player.getPickedDice();
-                modified.setValue(2);
-                player.setPickedDice(modified);
-                break;
-            case 6:
-                modified = player.getPickedDice();
-                modified.setValue(1);
-                player.setPickedDice(modified);
-                break;
-            default:
-                player.getPickedDice().setValue(0);
-                break;
+            int value = match.getBoard().getReserve().getDices().get(player.getDice()).getValue();
+            switch (value) {
+                case 1:
+                    match.getBoard().getReserve().getDices().get(player.getDice()).setValue(6);
+                    return true;
+                case 2:
+                    match.getBoard().getReserve().getDices().get(player.getDice()).setValue(5);
+                    return true;
+                case 3:
+                    match.getBoard().getReserve().getDices().get(player.getDice()).setValue(4);
+                    return true;
+                case 4:
+                    match.getBoard().getReserve().getDices().get(player.getDice()).setValue(3);
+                    return true;
+                case 5:
+                    match.getBoard().getReserve().getDices().get(player.getDice()).setValue(2);
+                    return true;
+                case 6:
+                    match.getBoard().getReserve().getDices().get(player.getDice()).setValue(1);
+                    return true;
+                default:
+                    return false;
+            }
         }
-        return false;
+        else return false;
     }
 
 }

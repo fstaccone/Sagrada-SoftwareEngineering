@@ -1,10 +1,8 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.socket.ClientController;
-import it.polimi.ingsw.socket.requests.UseToolCard1Request;
-import it.polimi.ingsw.socket.requests.UseToolCard2or3Request;
+import it.polimi.ingsw.socket.requests.*;
 
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
@@ -78,10 +76,6 @@ public class ToolCommand {
         }
     }
 
-    public String getParametersNeeded() {
-        return parametersNeeded;
-    }
-
     public int getI() {
         return i;
     }
@@ -99,17 +93,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard1Request(diceFromReserve, incrOrDecr, name, single));
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (clientController.isEffectApplied()) {
-                clientController.setEffectApplied(false);//to reset the value
-                return true;
-            } else {
-                return false;
-            }
+            waitForToolEffectAppliedResponse();
         }
         return false;
 
@@ -127,48 +111,94 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard2or3Request(n,startX, startY, finalX, finalY, name, single));
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (clientController.isEffectApplied()) {
-                clientController.setEffectApplied(false);//to reset the value
-                return true;
-            } else {
-                return false;
-            }
+            waitForToolEffectAppliedResponse();
         }
         return false;
     }
 
-    public void command4(){
-        printer.println("Comando 4, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command4(int startX1, int startY1, int finalX1, int finalY1,int startX2, int startY2, int finalX2, int finalY2){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard4(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard4Request(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single));
+            waitForToolEffectAppliedResponse();
+        }
+        return false;
     }
     public void command5(){
         printer.println("Comando 5, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void command6(){
-        printer.println("Comando 6, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command6(int diceChosen){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard6(diceChosen, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard6Request(diceChosen, name, single));
+            waitForToolEffectAppliedResponse();
+        }
+        return false;
     }
-    public void command7(){
-        printer.println("Comando 7, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command7(){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard7( name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard7Request( name, single));
+            waitForToolEffectAppliedResponse();
+        }
+        return false;
     }
     public void command8(){
         printer.println("Comando 8, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
     }
-    public void command9(){
-        printer.println("Comando 9, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command9(int diceFromReserve,int finalX, int finalY){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard9(diceFromReserve,finalX,finalY, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard9Request( diceFromReserve,finalX,finalY,name, single));
+            waitForToolEffectAppliedResponse();
+        }
+        return false;
+
     }
-    public void command10(){
-        printer.println("Comando 10, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command10(int diceFromReserve){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard10(diceFromReserve, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard10Request(diceFromReserve, name, single));
+            waitForToolEffectAppliedResponse();
+        }
+        return false;
     }
     public void command11(){
         printer.println("Comando 11, togliere il passaggio di printer da costrutture e inserire controller ");
@@ -177,5 +207,19 @@ public class ToolCommand {
     public void command12(){
         printer.println("Comando 12, togliere il passaggio di printer da costrutture e inserire controller ");
         printer.flush();
+    }
+
+    private boolean waitForToolEffectAppliedResponse(){
+        try {
+            Thread.sleep(500); //DA VERIFICARE
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (clientController.isEffectApplied()) {
+            clientController.setEffectApplied(false);//to reset the value
+            return true;
+        } else {
+            return false;
+        }
     }
 }
