@@ -8,48 +8,76 @@ public class ToolCard extends Card {
 
     private String toolID;
     private Effect effect;
+    private String description;
+    private Colors color;
 
     public ToolCard(String name, String toolID) {
         super(name);
         switch (this.name) {
-            case "Pinza Sgrossatrice":
-                this.effect = new IncrDecrDiceValueEffect();
+            case "Grozing Pliers":
+                effect = new IncrDecrDiceValueEffect();
+                description = "After drafting, increase or decrease the value of the drafted die by 1\n" +
+                        "1 may not change to 6 or 6 to 1";
+                color = Colors.VIOLET;
                 break;
-            case "Pennello per Eglomise":
-                this.effect = new MoveDiceIgnoringColorRestrEffect();
+            case "Eglomise Brush":
+                effect = new MoveDiceIgnoringColorRestrEffect();
+                description = "Move any one die in your window ignoring color restrictions\n" +
+                        "You must obey all other placement restrictions";
+                color = Colors.BLUE;
                 break;
             case "Alesatore per Lamina di Rame":
-                this.effect = new MoveDiceIgnoringValueRestrEffect();
+                effect = new MoveDiceIgnoringValueRestrEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             case "Lathekin":
-                this.effect = new MoveTwoDicesEffect();
+                effect = new MoveTwoDicesEffect();
+                description = "Move exactly two dice obeying all placement restrictions";
+                color = Colors.YELLOW;
                 break;
             case "Taglierina Circolare":
-                this.effect = new ExchangeDiceRoundTrackEffect();
+                effect = new ExchangeDiceRoundTrackEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             case "Pennello per Pasta Salda":
-                this.effect = new ReRollDiceEffect();
+                effect = new ReRollDiceEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             case "Martelletto":
-                this.effect = new ReRollAllReserveDicesEffect();
+                effect = new ReRollAllReserveDicesEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             case "Tenaglia a Rotelle":
-                this.effect = new ChooseAnotherDiceEffect();
+                effect = new ChooseAnotherDiceEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             case "Riga in Sughero":
-                this.effect = new MoveDiceNotAdjacentToAnotherEffect();
+                effect = new MoveDiceNotAdjacentToAnotherEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             case "Tampone Diamantato":
-                this.effect = new UpsideDownDiceEffect();
+                effect = new UpsideDownDiceEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             case "Diluente per Pasta Salda":
-                this.effect = new SubstituteDiceFromBagEffect();
+                effect = new SubstituteDiceFromBagEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             case "Taglierina Manuale":
-                this.effect = new MoveTwoDicesColorRoundTrackEffect();
+                effect = new MoveTwoDicesColorRoundTrackEffect();
+                description = "";
+                color = Colors.NONE;
                 break;
             default:
-                this.name = "Invalid card from ToolCard";
+                System.out.println("Invalid card from ToolCard");
                 break;
         }
         this.toolID = toolID;
@@ -64,10 +92,12 @@ public class ToolCard extends Card {
         return name;
     }
 
-    public String getToolID() { return toolID; }
+    String getToolID() {
+        return toolID;
+    }
 
     @Override
     public String toString() {
-        return toolID + " : " + this.name;
+        return toolID + ": " + name + "\ncolor: " + color + "\ndescription: " + description + "\n";
     }
 }

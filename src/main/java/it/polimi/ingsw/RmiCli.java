@@ -54,6 +54,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "\nWelcome to this fantastic game, ";
 
+    private static final String RULES = ("Da decidere se in italiano o in inglese");
+
+
     private static final String HELP_IN_TURN = (
             "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
                     "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
@@ -189,7 +192,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                 .collect(Collectors.toList());
 
         for (String card : toolCardsList) {
-            String[] strings = card.split(" ");
+            String[] strings = card.split(":");
+
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
             this.toolCommands.add(new ToolCommand(i, this.printer, this.controller, null, this.username, this.single));
         }
@@ -229,6 +233,13 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             printer.println(s);
         }
         printer.flush();
+    }
+
+    @Override
+    public void onGameClosing() {
+        printer.println("Congratulations! You are the winner. You were the only one still in game.");
+        printer.flush();
+        System.exit(0);
     }
 
     @Override
@@ -503,7 +514,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "r": {
-                                printer.println("\nRegole");
+                                printer.println(RULES);
                                 printer.flush();
                             }
                             break;

@@ -7,17 +7,32 @@ import java.util.List;
 
 public interface MatchObserver extends Serializable, Remote {
     void onPlayers(List<String> playersNames) throws RemoteException;
-    void onYourTurn( boolean isMyTurn, String string) throws RemoteException;
+
+    void onYourTurn(boolean isMyTurn, String string) throws RemoteException;
+
     void onReserve(String string) throws RemoteException;
+
     void onWindowChoise(List<String> windows) throws RemoteException;
+
     void onAfterWindowChoise() throws RemoteException;
+
     void onShowWindow(String window) throws RemoteException;
+
     void onOtherTurn(String name) throws RemoteException;
+
     void onShowToolCards() throws RemoteException;
+
     void onInitialization(String toolcards, String publicCards, String privateCard) throws RemoteException;
+
     void onPlayerExit(String name) throws RemoteException;
+
     void onPlayerReconnection(String name) throws RemoteException;
-    void onShowTrack(String track) throws  RemoteException;
+
+    void onShowTrack(String track) throws RemoteException;
+
     void onShowPrivateCard() throws RemoteException;
+
     void onShowPublicCards() throws RemoteException;
+
+    void onGameClosing() throws RemoteException;
 }

@@ -74,8 +74,6 @@ public abstract class Match {
 
     public abstract void showTrack(String name);
 
-    public abstract void terminateMatch();
-
     public abstract void setWindowPatternCard(String name, int index) throws RemoteException;
 
     public abstract boolean placeDice(String name, int index, int x, int y) throws RemoteException;

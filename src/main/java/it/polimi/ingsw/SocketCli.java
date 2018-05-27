@@ -1,14 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.socket.ClientController;
-import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
-import it.polimi.ingsw.socket.requests.GoThroughRequest;
-import it.polimi.ingsw.socket.requests.PlaceDiceRequest;
-import it.polimi.ingsw.socket.requests.ShowWindowRequest;
+import it.polimi.ingsw.socket.requests.*;
 
 import java.io.*;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -22,7 +19,9 @@ public class SocketCli implements Serializable, MatchObserver {
 
     private List<String> dicesList;
     private List<String> toolCardsList;
+    private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
+    private String privateCard;
 
     private int diceChosen = 9;
     private int coordinateX;
@@ -68,6 +67,9 @@ public class SocketCli implements Serializable, MatchObserver {
                     "\n 'q'                                         to quit the game" +
                     "\n 'r'                                         to show game rules" +
                     "\n 'sp'                                        to show all opponents' names" +
+                    "\n 'track'                                     to show current state of the round track" +
+                    "\n 'private'                                   to show your private objective card" +
+                    "\n 'public'                                    to show public objective cards" +
                     "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
                     "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
                     "\n 'toolcards'                                 to show the list of available tool cards \n");
@@ -87,6 +89,8 @@ public class SocketCli implements Serializable, MatchObserver {
         controller.setSocketCli(this);
         this.single = false; //PARALLELIZZARE CON RmiCli
         this.toolCommands = new ArrayList<>();
+        toolCardsList = new ArrayList<>();
+        publicCardsList = new ArrayList<>();
     }
 
     public void launch() {
@@ -96,7 +100,6 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
 
-    //DA CAPIRE COME CONVIENE FARE, UN'ALTRA INTERFACCIA MATCHOBSERVERSOCKET? discorso != da loginhandler, qui si doppia socket cli e rmi cli
     @Override
     public void onPlayers(List<String> playersNames) {
         printer.println("Your match starts now! You are playing SAGRADA against:");
@@ -112,30 +115,15 @@ public class SocketCli implements Serializable, MatchObserver {
         printer.flush();
     }
 
-    @Override
-    public void onShowTrack(String track) throws RemoteException {
-
-    }
 
     @Override
-    public void onShowPrivateCard(){
-
-    }
-
-    @Override
-    public void onShowPublicCards() throws RemoteException {
-
-    }
-
-
-    @Override
-    public void onYourTurn(boolean isMyTurn, String string) {
+    public void onYourTurn(boolean yourTurn, String string) {
         turnNumber++;
         if (string != null)
             onReserve(string);
-        this.myTurn = isMyTurn;
+        this.myTurn = yourTurn;
         if (myTurn)
-            printer.println("\nNow it's your turn! Please insert a command:                                  ~ ['h' for help]\n");
+            printer.println("\nNow it's your turn! Please insert a command:                            ~ ['h' for help]\n");
         else
             printer.println("\nIt's no more your turn! (h for help)");
         printer.flush();
@@ -152,10 +140,9 @@ public class SocketCli implements Serializable, MatchObserver {
     @Override
     public void onWindowChoise(List<String> windows) {
         int i = 0;
-        printer.println("Choose your window among the following                                              ~ [cw] + [number]\n");
+        printer.println("Choose your window among the following                                        ~ [cw] + [number]\n");
         printer.flush();
         for (String s : windows) {
-            s = s.replaceAll("null", " ");
             printer.println(i++ + ") " + s + "\n");
             printer.flush();
         }
@@ -168,52 +155,97 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onPlayerReconnection(String name) {
-
-    }
-
-    @Override
     public void onShowWindow(String window) {
         printer.println(window);
         printer.flush();
     }
 
+    @Override
     public void onOtherTurn(String name) {
         printer.println("Now it's " + name + "'s turn");
         printer.flush();
     }
 
     @Override
-    public void onShowToolCards() {
+    public void onInitialization(String toolcards, String publicCards, String privateCard) {
+        parseToolcards(toolcards);
+        parsePublicCards(publicCards);
+        this.privateCard = privateCard;
+    }
 
-        printer.println("Tool cards:");
+    private void parsePublicCards(String publicCards) {
+        String cards = publicCards.substring(1, publicCards.length() - 1);
+        publicCardsList = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
+    }
+
+    private void parseToolcards(String toolcards) {
+        String cards = toolcards.substring(1, toolcards.length() - 1);
+        toolCardsList = Pattern.compile(", ")
+                .splitAsStream(cards)
+                .collect(Collectors.toList());
+
+        for (String card : toolCardsList) {
+            String[] strings = card.split(" " + ":");
+
+            Arrays.stream(strings).forEach(System.out::println);
+
+            int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
+            this.toolCommands.add(new ToolCommand(i, this.printer, null, null, this.username, this.single));
+        }
+    }
+
+    @Override
+    public void onPlayerExit(String name) {
+        printer.println("Player " + name + " has left the game!");
         printer.flush();
+    }
+
+    @Override
+    public void onPlayerReconnection(String name) {
+        printer.println("Player " + name + " is now in game!");
+        printer.flush();
+    }
+
+    @Override
+    public void onShowTrack(String track) {
+        printer.println("This is the roundtrack:");
+        printer.println(track);
+        printer.flush();
+    }
+
+    @Override
+    public void onShowPrivateCard() {
+        printer.println("Your private objective card:");
+        printer.println(privateCard);
+        printer.flush();
+    }
+
+    @Override
+    public void onShowPublicCards() {
+        printer.println("Public objective cards:");
+
+        for (String s : publicCardsList) {
+            printer.println(s);
+        }
+        printer.flush();
+    }
+
+    @Override
+    public void onGameClosing() {
+        printer.println("Congratulations! You are the winner. You were the only one still in game.");
+        printer.flush();
+        System.exit(0);
+    }
+
+    @Override
+    public void onShowToolCards() {
+        printer.println("Tool cards:");
 
         for (String s : toolCardsList) {
             printer.println("- " + s);
-            printer.flush();
         }
-    }
 
-    @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard) {
-        String dicesString = toolcards.substring(1, toolcards.length() - 1);
-        toolCardsList = Pattern.compile(", ")
-                .splitAsStream(dicesString)
-                .collect(Collectors.toList());
-        printer.println("ToolCards available for this match:");
-        printer.println(toolCardsList.toString());
         printer.flush();
-        for (String card : toolCardsList) {
-            String[] strings = card.split(" ");
-            int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
-            this.toolCommands.add(new ToolCommand(i, this.printer, null, controller, username, false));
-        }
-    }
-
-    @Override
-    public void onPlayerExit(String name) throws RemoteException {
-
     }
 
     private class KeyboardHandler extends Thread {
@@ -350,7 +382,7 @@ public class SocketCli implements Serializable, MatchObserver {
                             break;
 
                             case "q": {
-                                //controller.quitGame(username, single);
+                                controller.request(new QuitGameRequest(username, single));
                                 System.exit(0);
                             }
                             break;
@@ -465,7 +497,7 @@ public class SocketCli implements Serializable, MatchObserver {
                             break;
 
                             case "q": {
-                                //controller.quitGame(username, single);
+                                controller.request(new QuitGameRequest(username, single));
                                 System.exit(0);
                             }
                             break;

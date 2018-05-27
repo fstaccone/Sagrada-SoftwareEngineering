@@ -17,4 +17,6 @@ public interface ResponseHandler {
     void handle(UpdateReserveResponse response);
     void handle(DicePlacedResponse response);
     void handle(ToolCardEffectAppliedResponse response);
+    void handle(ClosingGameResponse response);
+    void handle(PlayerExitResponse response);
 }

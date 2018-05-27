@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 import it.polimi.ingsw.model.gamelogic.MatchStarter;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.socket.responses.MatchStartedResponse;
+import it.polimi.ingsw.socket.responses.PlayerExitResponse;
+import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.responses.WaitingPlayersResponse;
 
 import java.io.IOException;
@@ -67,7 +69,7 @@ public class Lobby {
     /**
      * It puts a username into the map with the default status CONNECTED.
      *
-     * @param name is the usernam of a client.
+     * @param name is the username of a client.
      */
     public synchronized void addUsername(String name) {
         this.takenUsernames.put(name, ConnectionStatus.CONNECTED);
@@ -159,20 +161,8 @@ public class Lobby {
             }
 
             WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers, name, unique);
-            socketObservers.keySet().forEach(playerName -> {
-                try {
-                    socketObservers.get(playerName).writeObject(response);
-                    socketObservers.get(playerName).reset();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            socketResponseToAll(response);
         }
-    }
-
-    // da usare in caso di disconnessione. A fine partita?
-    public void removeObserver(String name) {
-        remoteObservers.remove(name);
     }
 
     private PlayerMultiplayer getPlayer(String name) {
@@ -190,7 +180,6 @@ public class Lobby {
             PlayerMultiplayer p;
             p = getPlayer(name);
 
-
             p.setStatus(ConnectionStatus.DISCONNECTED);
             takenUsernames.put(name, ConnectionStatus.DISCONNECTED);
             multiplayerMatches.get(name).getRemoteObservers().remove(p);
@@ -200,6 +189,10 @@ public class Lobby {
                 mo.onPlayerExit(name);
             }
 
+            Response response = new PlayerExitResponse(name);
+            socketResponseToAll(response);
+
+
             if (p.isMyTurn()) {
                 p.setMyTurn(false);
                 multiplayerMatches.get(name).goThrough();
@@ -207,16 +200,17 @@ public class Lobby {
 
             // to check if the game must be closed
             if (multiplayerMatches.get(name).checkConnection() < 2) {
-
-                // to check if the match must be closed and eventually
-                // delete observers and usernames of other players
                 for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
-                    if (!player.getName().equals(p.getName())) {
-                        removeUsername(player.getName());
+                    if (!player.getName().equals(p.getName()) && player.getStatus().equals(ConnectionStatus.CONNECTED)) {
+                        // notifica ai giocatori che la partita è finita e poi li rimuove
+                        multiplayerMatches.get(name).getRemoteObservers().get(player).onGameClosing();
                         multiplayerMatches.get(name).getRemoteObservers().remove(player);
+
+                        //multiplayerMatches.get(name).getSocketObservers().get(player).writeObject(new ClosingGameResponse());
+                        multiplayerMatches.get(name).getSocketObservers().remove(player);
                     }
                 }
-                multiplayerMatches.get(name).terminateMatch();
+
             }
 
         } catch (Exception e) {
@@ -226,7 +220,7 @@ public class Lobby {
     }
 
     // todo: the same with SOCKET
-    public void reconnect(String name) throws RemoteException, InterruptedException {
+    public void reconnect(String name) throws RemoteException {
         takenUsernames.put(name, ConnectionStatus.CONNECTED);
         multiplayerMatches.get(name).getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
         for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {
@@ -234,9 +228,9 @@ public class Lobby {
         }
     }
 
-    public void removeFromMatchSingleplayer(String name) {
+    public void removeMatchSingleplayer(String name) {
         try {
-            singleplayerMatches.get(name).terminateMatch();
+            singleplayerMatches.remove(name);
             removeUsername(name);
         } catch (Exception e) {
             e.printStackTrace();
@@ -244,6 +238,18 @@ public class Lobby {
             System.out.println("From lobby: this SinglePlayer Match doesn't exist.");
         }
     }
+
+    private void socketResponseToAll(Response response) {
+        socketObservers.keySet().forEach(playerName -> {
+            try {
+                socketObservers.get(playerName).writeObject(response);
+                socketObservers.get(playerName).reset();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
 
     public void addToWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
@@ -265,14 +271,8 @@ public class Lobby {
 
             //SOCKET
             WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers, null, false);
-            socketObservers.keySet().forEach(playerName -> {
-                try {
-                    socketObservers.get(playerName).writeObject(response);
-                    socketObservers.get(playerName).reset();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+
+            socketResponseToAll(response);
 
             //DEBUG SERVER SIDE
             if (waitingPlayers.size() == 1) System.out.println("Lobby: There is 1 player waiting for a match." + "\n");

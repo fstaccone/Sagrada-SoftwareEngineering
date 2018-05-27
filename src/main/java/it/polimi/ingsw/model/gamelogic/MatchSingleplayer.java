@@ -49,14 +49,6 @@ public class MatchSingleplayer extends Match implements Runnable{
     }
 
     @Override
-    public void terminateMatch() {
-        // todo: "ottimizzare" la chiusura della partita.
-        // Chiusura connessioni? Dovrebe avvenire automaticamente per socket
-        System.out.println("Match singleplayer " + matchId + " has been closed.");
-        System.exit(0);
-    }
-
-    @Override
     public void run() {
 
     }

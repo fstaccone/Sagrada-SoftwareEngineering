@@ -108,7 +108,7 @@ public class MatchMultiplayer extends Match implements Runnable {
      * @return the number of CONNECTED players
      */
     public int checkConnection() {
-        return (int) players.stream().map(p -> p.getStatus().equals(ConnectionStatus.CONNECTED)).count();
+        return (int) players.stream().filter(p -> p.getStatus().equals(ConnectionStatus.CONNECTED)).count();
     }
 
 
@@ -231,20 +231,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         for (PlayerMultiplayer p : players) {
             p.setPrivateObjectiveCard(this.decksContainer.getPrivateObjectiveCardDeck().getPickedCards().remove(0));
         }
-    }
-
-    @Override
-    public void terminateMatch() {
-        for (PlayerMultiplayer p : players) {
-            // chiude le connessioni
-            //...
-
-            // rimuove i nomi da takenUsernames
-            // ha bisogno il riferimento a lobby, al momento sono cancellati prima di chiamare questa funzione
-
-        }
-        System.out.println("Match multiplayer " + matchId + " has been closed.");
-        System.exit(0);
     }
 
     @Override

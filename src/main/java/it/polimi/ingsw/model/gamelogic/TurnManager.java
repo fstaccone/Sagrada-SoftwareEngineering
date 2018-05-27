@@ -15,12 +15,11 @@ import java.util.stream.Collectors;
 public class TurnManager implements Runnable {
 
     private Timer turnTimer;
-    private TurnTimer task;
     private int turnTime;
     private MatchMultiplayer match;
     private boolean expired; // it's used to avoid double canceling of timer
 
-    public TurnManager(MatchMultiplayer match, int turnTime) {
+    TurnManager(MatchMultiplayer match, int turnTime) {
         this.turnTime = turnTime;
         this.match = match;
     }
@@ -70,15 +69,19 @@ public class TurnManager implements Runnable {
         String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
 
         // Rmi notification
-        for(PlayerMultiplayer p : match.getPlayers()){
-            rmiObserverNotify(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString());
+        for (PlayerMultiplayer p : match.getPlayers()) {
+            if (rmiObserverNotify(p) != null) {
+                rmiObserverNotify(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString());
+            }
         }
 
-        /* todo: completare con socket
-        if (match.getSocketObservers().get(player) != null) {
-            socketObserverNotify(player, new ToolCardsResponse(match.getDecksContainer().getToolCardDeck().getPickedCards().toString()));
+        /*todo: notifica socket da definire
+        for (PlayerMultiplayer p : match.getSocketObservers().keySet()) {
+
         }
-        */
+        if (match.getSocketObservers().get(p) != null) {
+            socketObserverNotify(player, new ToolCardsResponse(match.getDecksContainer().getToolCardDeck().getPickedCards().toString()));
+        }*/
 
     }
 
@@ -100,6 +103,8 @@ public class TurnManager implements Runnable {
     }
 
     private void setTimer(PlayerMultiplayer player) {
+        TurnTimer task;
+
         turnTimer = new Timer();
         task = new TurnTimer(match, player);
         turnTimer.schedule(task, turnTime);
@@ -256,7 +261,7 @@ public class TurnManager implements Runnable {
         }
     }
 
-    public void setExpiredTrue() {
+    void setExpiredTrue() {
         this.expired = true;
     }
 }

@@ -124,6 +124,11 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
+    public void onGameClosing() throws RemoteException {
+
+    }
+
+    @Override
     public void onShowWindow(String window) throws RemoteException {
         System.out.println("On show windowStage");
         String imgUrl = chooseCardHandler.getImageUrl();
