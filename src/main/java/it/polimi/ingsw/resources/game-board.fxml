@@ -249,6 +249,7 @@
          </children>
       </GridPane>
       <TextArea fx:id="textArea" layoutX="962.0" layoutY="116.0" prefHeight="30.0" prefWidth="427.0" />
+      <Button id="gameBoardQuit" fx:id="quit" layoutX="1294.0" layoutY="26.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="40.0" prefWidth="92.0" text="QUIT" textFill="WHITE" />
    </children>
     <stylesheets>
         <URL value="@game-board-style.css" />

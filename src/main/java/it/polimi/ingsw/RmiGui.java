@@ -106,6 +106,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onPlayerReconnection(String name) throws RemoteException {
         System.out.println("On player reconnection");
+        if(gameBoardHandler!=null) gameBoardHandler.setTextArea("Player " + name + " is now in game!");
+        else chooseCardHandler.setTextArea("Player " + name + " is now in game!");
     }
 
     @Override
@@ -167,6 +169,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onPlayerExit(String name) throws RemoteException {
         System.out.println("On player exit");
+        if(gameBoardHandler!=null) gameBoardHandler.setTextArea("Player " + name + " has left the game!");
+        else chooseCardHandler.setTextArea("Player " + name + " has left the game!");
     }
 
     @Override
@@ -182,5 +186,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     public Boolean isMyTurn(){
         return myTurn;
+    }
+
+    public List<String> getDicesList(){
+        return dicesList;
     }
 }

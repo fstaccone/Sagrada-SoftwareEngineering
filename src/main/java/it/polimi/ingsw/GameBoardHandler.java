@@ -2,14 +2,18 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -18,8 +22,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class GameBoardHandler implements Initializable {
 
@@ -95,11 +97,26 @@ public class GameBoardHandler implements Initializable {
     Button reserveDice8;
     @FXML
     TextArea textArea;
+    @FXML
+    Button quit;
 
     private RemoteController controller;
     private String username;
     private Stage window;
     private RmiGui rmiGui;
+
+    private EventHandler reserveDiceSelected = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent event) {
+            if(rmiGui.isMyTurn()) {
+                String s = event.getSource().toString();
+                s = s.substring(21,22);
+                int i = Integer.parseInt(s);
+                s = rmiGui.getDicesList().get(i);
+                textArea.setText("You currently chose the dice: " + s);
+            }
+        }
+    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -175,6 +192,7 @@ public class GameBoardHandler implements Initializable {
                 diceView.setFitHeight(70);
                 Platform.runLater(()->dice.setGraphic(diceView));
                 dice.setDisable(false);
+                dice.setOnAction(reserveDiceSelected);
             }
             i++;
         }
@@ -190,4 +208,18 @@ public class GameBoardHandler implements Initializable {
         this.textArea.setText(s);
     }
 
+    @FXML
+    public void onQuitClicked() throws RemoteException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Exit");
+        alert.setHeaderText(null);
+        alert.setResizable(false);
+        alert.setGraphic(null);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.YES) {
+            window.close();
+            controller.quitGame(username, false);
+            System.exit(0);
+        }
+    }
 }
