@@ -11,13 +11,20 @@ public class ExchangeDiceRoundTrackEffect implements Effect{
     }
 
     @Override
-    public boolean applyEffect(Player player, Match match) {/*
-        if(player.getPickedDice() == null)
-            player.setPickedDice(match.getBoard().getReserve().chooseDice());*/
-        Dice dice = player.getPickedDice();
-        RoundTrack track = match.getBoard().getRoundTrack();
-        dice = track.switchDice(dice);
-        player.setPickedDice(dice);
-    return false;
+    public boolean applyEffect(Player player, Match match) {
+
+
+        if (player.getDice()>=0 && player.getDice()< match.getBoard().getReserve().getDices().size()) {
+            Dice dice = match.getBoard().getReserve().getDices().remove(player.getDice());
+            RoundTrack track = match.getBoard().getRoundTrack();
+            dice = track.switchDice(dice,player.getRound(),player.getDiceChosenFromRound());
+            if (dice!=null) {
+                match.getBoard().getReserve().getDices().add(player.getDice(), dice);
+                return true;
+            }
+            else
+                return false;
+        }
+        return false;
     }
 }
