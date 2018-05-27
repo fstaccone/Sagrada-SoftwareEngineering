@@ -102,3 +102,37 @@
     -fx-scale-x: 0.95;
 }
 
+.reserveDice:focused {
+    -fx-background-color: pink;
+    -fx-background-size: cover;
+}
+
+#quit {
+    -fx-background-color: linear-gradient(darkgrey, grey);
+    -fx-background-radius: 10;
+    -fx-background-size: cover;
+}
+
+#quit:hover {
+         -fx-background-color: grey;
+}
+
+#quit:pressed {
+     -fx-scale-y: 0.9;
+     -fx-scale-x: 0.9;
+ }
+
+ #gameBoardQuit {
+     -fx-background-color: linear-gradient(red, crimson);
+     -fx-background-radius: 10;
+     -fx-background-size: cover;
+ }
+
+ #gameBoardQuit:hover {
+          -fx-background-color: red;
+ }
+
+ #gameBoardQuit:pressed {
+      -fx-scale-y: 0.9;
+      -fx-scale-x: 0.9;
+  }

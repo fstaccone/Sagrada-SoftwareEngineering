@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -46,6 +47,9 @@ public class ChooseCardHandler implements Initializable {
     @FXML
     ImageView privateObjCard;
 
+    @FXML
+    Button quit;
+
     private int choice;
 
     private String url0;
@@ -63,7 +67,22 @@ public class ChooseCardHandler implements Initializable {
     }
 
     @FXML
-    public void onPlayClicked(MouseEvent mouseEvent) throws Exception {
+    public void onQuitClicked() throws RemoteException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Exit");
+        alert.setHeaderText(null);
+        alert.setResizable(false);
+        alert.setGraphic(null);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.YES) {
+            window.close();
+            controller.quitGame(username, false);
+            System.exit(0);
+        }
+    }
+
+    @FXML
+    public void onPlayClicked() throws Exception {
         if(choice==5){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have to choose a card", ButtonType.OK);
             alert.setTitle("CHOOSE A CARD");

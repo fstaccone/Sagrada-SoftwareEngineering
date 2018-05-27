@@ -41,6 +41,7 @@
             <Font name="Algerian" size="18.0" />
          </font>
       </Label>
+      <Button id="quit" fx:id="quit" layoutX="539.0" layoutY="550.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="37.0" prefWidth="108.0" text="QUIT" textFill="WHITE" />
    </children>
     <stylesheets>
         <URL value="@game-board-style.css" />
