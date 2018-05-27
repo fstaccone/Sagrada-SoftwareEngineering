@@ -19,7 +19,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     private List<String> dicesList;
     private List<String> toolCardsList;
+    private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
+    private String privateCard;
 
     private int diceChosen = 9;
     private int coordinateX;
@@ -66,6 +68,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                     "\n 'r'                                         to show game rules" +
                     "\n 'sp'                                        to show all opponents' names" +
                     "\n 'track'                                     to show current state of the round track" +
+                    "\n 'private'                                   to show your private objective card" +
+                    "\n 'public'                                    to show public objective cards" +
                     "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
                     "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
                     "\n 'toolcards'                                 to show the list of available tool cards \n");
@@ -80,11 +84,13 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         super();
         this.username = username;
         this.controller = controller;
-        this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
-        this.myTurn = false;
+        printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
+        myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
-        this.toolCommands = new ArrayList<>();
+        toolCommands = new ArrayList<>();
+        toolCardsList = new ArrayList<>();
+        publicCardsList = new ArrayList<>();
     }
 
     public void launch() throws RemoteException {
@@ -158,7 +164,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.flush();
     }
 
-
     @Override
     public void onOtherTurn(String name) {
         printer.println("Now it's " + name + "'s turn");
@@ -166,27 +171,23 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onShowToolCards(List<String> cards) {
-
-        printer.println("Tool cards:");
-        printer.flush();
-
-        for (String s : cards) {
-            printer.println("- " + s);
-            printer.println("\n");
-            printer.flush();
-        }
+    public void onInitialization(String toolcards, String publicCards, String privateCard) {
+        parseToolcards(toolcards);
+        parsePublicCards(publicCards);
+        this.privateCard = privateCard;
     }
 
-    @Override
-    public void onToolCards(String string) {
-        String dicesString = string.substring(1, string.length() - 1);
+    private void parsePublicCards(String publicCards) {
+        String cards = publicCards.substring(1, publicCards.length() - 1);
+        publicCardsList = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
+    }
+
+    private void parseToolcards(String toolcards) {
+        String cards = toolcards.substring(1, toolcards.length() - 1);
         toolCardsList = Pattern.compile(", ")
-                .splitAsStream(dicesString)
+                .splitAsStream(cards)
                 .collect(Collectors.toList());
-        printer.println("ToolCards available for this match:");
-        printer.println(toolCardsList.toString());
-        printer.flush();
+
         for (String card : toolCardsList) {
             String[] strings = card.split(" ");
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
@@ -207,12 +208,39 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onShowTrack(String track) throws RemoteException {
+    public void onShowTrack(String track) {
         printer.println("This is the roundtrack:");
         printer.println(track);
         printer.flush();
     }
 
+    @Override
+    public void onShowPrivateCard() {
+        printer.println("Your private objective card:");
+        printer.println(privateCard);
+        printer.flush();
+    }
+
+    @Override
+    public void onShowPublicCards() {
+        printer.println("Public objective cards:");
+
+        for (String s : publicCardsList) {
+            printer.println(s);
+        }
+        printer.flush();
+    }
+
+    @Override
+    public void onShowToolCards() {
+        printer.println("Tool cards:");
+
+        for (String s : toolCardsList) {
+            printer.println("- " + s);
+        }
+
+        printer.flush();
+    }
 
     private class KeyboardHandler extends Thread {
         String parts[];
@@ -418,7 +446,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
                                 printer.flush();
-                                onShowToolCards(toolCardsList);
+                                onShowToolCards();
                             }
                             break;
 
@@ -441,6 +469,16 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "track": {
                                 controller.showTrack(username, single);
+                            }
+                            break;
+
+                            case "private": {
+                                onShowPrivateCard();
+                            }
+                            break;
+
+                            case "public": {
+                                onShowPublicCards();
                             }
                             break;
 
@@ -488,12 +526,22 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards list:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
                                 printer.flush();
-                                onShowToolCards(toolCardsList);
+                                onShowToolCards();
                             }
                             break;
 
                             case "track": {
                                 controller.showTrack(username, single);
+                            }
+                            break;
+
+                            case "private": {
+                                onShowPrivateCard();
+                            }
+                            break;
+
+                            case "public": {
+                                onShowPublicCards();
                             }
                             break;
 

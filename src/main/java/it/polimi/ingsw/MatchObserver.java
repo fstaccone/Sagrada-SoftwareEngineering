@@ -13,9 +13,11 @@ public interface MatchObserver extends Serializable, Remote {
     void onAfterWindowChoise() throws RemoteException;
     void onShowWindow(String window) throws RemoteException;
     void onOtherTurn(String name) throws RemoteException;
-    void onShowToolCards(List<String> cards) throws RemoteException;
-    void onToolCards(String string) throws RemoteException;
+    void onShowToolCards() throws RemoteException;
+    void onInitialization(String toolcards, String publicCards, String privateCard) throws RemoteException;
     void onPlayerExit(String name) throws RemoteException;
     void onPlayerReconnection(String name) throws RemoteException;
     void onShowTrack(String track) throws  RemoteException;
+    void onShowPrivateCard() throws RemoteException;
+    void onShowPublicCards() throws RemoteException;
 }

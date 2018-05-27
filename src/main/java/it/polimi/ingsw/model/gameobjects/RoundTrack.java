@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.gameobjects;
 import it.polimi.ingsw.model.gamelogic.Match;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundTrack {
     //dicesLeft is a list of (list of dices) since you may have more than one dice in the same position
@@ -26,10 +27,11 @@ public class RoundTrack {
 
         for (int i = 0; i < dicesLeft.size(); i++) {
             if(dicesLeft.get(i).size() != 0) {
+                AtomicInteger j = new AtomicInteger();
                 string.append("Round ");
                 string.append(i + 1);
                 string.append("\n");
-                dicesLeft.get(i).forEach(e -> string.append(e.toString() + "\t"));
+                dicesLeft.get(i).forEach(e -> string.append(j.getAndIncrement() + ") " + e.toString() + "\t"));
                 string.append("\n");
             }
         }
