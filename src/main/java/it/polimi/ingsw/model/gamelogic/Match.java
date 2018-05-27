@@ -72,6 +72,8 @@ public abstract class Match {
 
     public abstract void calculateFinalScore();
 
+    public abstract void showTrack(String name);
+
     public abstract void terminateMatch();
 
     public abstract void setWindowPatternCard(String name, int index) throws RemoteException;

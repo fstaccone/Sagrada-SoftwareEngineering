@@ -62,7 +62,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         System.out.println("New multiplayer matchId: " + matchId);
     }
 
-    private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut){
+    private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
         clients.forEach(client -> {
             PlayerMultiplayer player = new PlayerMultiplayer(client, this);
             this.players.add(player);
@@ -77,11 +77,25 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     // getters
-    public List<WindowPatternCard> getWindowsProposed() { return windowsProposed; }
-    public TurnManager getTurnManager() { return turnManager; }
-    public Map<PlayerMultiplayer, MatchObserver> getRemoteObservers() { return remoteObservers; }
-    public Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers() { return socketObservers; }
-    public List<PlayerMultiplayer> getPlayers() { return players; }
+    public List<WindowPatternCard> getWindowsProposed() {
+        return windowsProposed;
+    }
+
+    public TurnManager getTurnManager() {
+        return turnManager;
+    }
+
+    public Map<PlayerMultiplayer, MatchObserver> getRemoteObservers() {
+        return remoteObservers;
+    }
+
+    public Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers() {
+        return socketObservers;
+    }
+
+    public List<PlayerMultiplayer> getPlayers() {
+        return players;
+    }
 
     public void windowsToBeProposed() {
         windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(0, 4);
@@ -90,6 +104,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * It checks if a player is CONNECTED and
+     *
      * @return the number of CONNECTED players
      */
     public int checkConnection() {
@@ -181,6 +196,26 @@ public class MatchMultiplayer extends Match implements Runnable {
             p.setPoints(p.getPoints() + p.getNumFavorTokens());
         }
 
+    }
+
+    @Override
+    public void showTrack(String name) {
+        if (remoteObservers.get(getPlayer(name)) != null) {
+            try {
+                remoteObservers.get(getPlayer(name)).onShowTrack(board.getRoundTrack().toString());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (socketObservers.get(getPlayer(name)) != null) {
+                try {
+                    //socketObservers.get(getPlayer(name)).writeObject(new ShowTrackResponse(board.getRoundTrack().toString());
+                    socketObservers.get(getPlayer(name)).reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void theWinnerIs() {
@@ -350,7 +385,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         getPlayer(name).setDice(diceChosen);
         getPlayer(name).setChoise(incrOrDecr);
         boolean reserveToBeUpdated = getBoard().findAndUseToolCard(1, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated,name);
+        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
         return reserveToBeUpdated;
     }
 
@@ -363,7 +398,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     }
 
-    public boolean useToolCard4( int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
+    public boolean useToolCard4(int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
         getPlayer(name).setStartX1(startX1);
         getPlayer(name).setStartY1(startY1);
         getPlayer(name).setFinalX1(finalX1);
@@ -375,36 +410,36 @@ public class MatchMultiplayer extends Match implements Runnable {
         return getBoard().findAndUseToolCard(4, getPlayer(name), this);
     }
 
-    public boolean useToolCard6(int diceChosen, String name){
+    public boolean useToolCard6(int diceChosen, String name) {
         getPlayer(name).setDice(diceChosen);
         boolean reserveToBeUpdated = getBoard().findAndUseToolCard(6, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated,name);
+        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
         return reserveToBeUpdated;
     }
 
-    public boolean useToolCard7( String name) {
-        boolean reserveToBeUpdated= getBoard().findAndUseToolCard(7, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated,name);
+    public boolean useToolCard7(String name) {
+        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(7, getPlayer(name), this);
+        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
         return reserveToBeUpdated;
     }
 
-    public boolean useToolCard9(int diceChosen,int finalX1, int finalY1, String name){
+    public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name) {
         getPlayer(name).setDice(diceChosen);
         getPlayer(name).setFinalX1(finalX1);
         getPlayer(name).setFinalY1(finalY1);
-        boolean reserveToBeUpdated= getBoard().findAndUseToolCard(9, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated,name);
+        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(9, getPlayer(name), this);
+        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
         return reserveToBeUpdated;
     }
 
-    public boolean useToolCard10(int diceChosen, String name){
+    public boolean useToolCard10(int diceChosen, String name) {
         getPlayer(name).setDice(diceChosen);
         boolean reserveToBeUpdated = getBoard().findAndUseToolCard(10, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated,name);
+        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
         return reserveToBeUpdated;
     }
 
-    private void reserveToBeUpdatedCheck(boolean reserveToBeUpdated, String name){
+    private void reserveToBeUpdatedCheck(boolean reserveToBeUpdated, String name) {
         if (reserveToBeUpdated) {
             if (remoteObservers.get(getPlayer(name)) != null) {
                 try {
