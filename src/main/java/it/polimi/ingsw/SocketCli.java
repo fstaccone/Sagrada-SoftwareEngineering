@@ -118,6 +118,17 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
+    public void onShowPrivateCard(){
+
+    }
+
+    @Override
+    public void onShowPublicCards() throws RemoteException {
+
+    }
+
+
+    @Override
     public void onYourTurn(boolean isMyTurn, String string) {
         turnNumber++;
         if (string != null)
@@ -173,20 +184,20 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onShowToolCards(List<String> cards) {
+    public void onShowToolCards() {
 
         printer.println("Tool cards:");
         printer.flush();
 
-        for (String s : cards) {
+        for (String s : toolCardsList) {
             printer.println("- " + s);
             printer.flush();
         }
     }
 
     @Override
-    public void onToolCards(String string) {
-        String dicesString = string.substring(1, string.length() - 1);
+    public void onInitialization(String toolcards, String publicCards, String privateCard) {
+        String dicesString = toolcards.substring(1, toolcards.length() - 1);
         toolCardsList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
@@ -419,7 +430,7 @@ public class SocketCli implements Serializable, MatchObserver {
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
                                 printer.flush();
-                                onShowToolCards(toolCardsList);
+                                onShowToolCards();
                             }
                             break;
 
@@ -483,7 +494,7 @@ public class SocketCli implements Serializable, MatchObserver {
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards list:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
                                 printer.flush();
-                                onShowToolCards(toolCardsList);
+                                onShowToolCards();
                             }
                             break;
 

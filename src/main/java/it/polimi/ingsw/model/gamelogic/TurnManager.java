@@ -1,13 +1,10 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.*;
+import it.polimi.ingsw.ConnectionStatus;
+import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
-import it.polimi.ingsw.socket.responses.Response;
-import it.polimi.ingsw.socket.responses.OtherTurnResponse;
-import it.polimi.ingsw.socket.responses.ProposeWindowResponse;
-import it.polimi.ingsw.socket.responses.ToolCardsResponse;
-import it.polimi.ingsw.socket.responses.YourTurnResponse;
+import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -41,12 +38,6 @@ public class TurnManager implements Runnable {
         }
     }
 
-    /**
-     * Toolcard e carte obiettivo privato e pubblico possono essere mostrate all'inizio del gioco insieme al WELCOME
-     * così allegeriamo questo metodo
-     */
-
-
     private void drawWindowPatternCard(PlayerMultiplayer player) throws RemoteException, InterruptedException {
         match.setWindowChosen(false);
 
@@ -58,11 +49,11 @@ public class TurnManager implements Runnable {
         //starting notification
         MatchObserver rmiObserver = rmiObserverNotify(player);
         if (rmiObserver != null) {
-            rmiObserver.onToolCards(match.getDecksContainer().getToolCardDeck().getPickedCards().toString());
             rmiObserver.onWindowChoise(windows);
         }
 
         if (match.getSocketObservers().get(player) != null) {
+            // todo: eliminare quando implementato in initialize
             socketObserverNotify(player, new ToolCardsResponse(match.getDecksContainer().getToolCardDeck().getPickedCards().toString()));
             socketObserverNotify(player, new ProposeWindowResponse(windows));
         }
@@ -71,6 +62,25 @@ public class TurnManager implements Runnable {
 
     }
 
+    private void initializeClients() throws RemoteException {
+        match.getPlayers().forEach(player -> player.setTurnsLeft(2));
+        match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
+
+        String toolCards = match.getDecksContainer().getToolCardDeck().getPickedCards().toString();
+        String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
+
+        // Rmi notification
+        for(PlayerMultiplayer p : match.getPlayers()){
+            rmiObserverNotify(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString());
+        }
+
+        /* todo: completare con socket
+        if (match.getSocketObservers().get(player) != null) {
+            socketObserverNotify(player, new ToolCardsResponse(match.getDecksContainer().getToolCardDeck().getPickedCards().toString()));
+        }
+        */
+
+    }
 
     private void waitForSchemeChoise() throws InterruptedException {
         while (!(match.isWindowChosen() || match.isEndsTurn())) {
@@ -78,12 +88,6 @@ public class TurnManager implements Runnable {
                 match.getLock().wait();
             }
         }
-    }
-
-
-    private void initializeRound() {
-        match.getPlayers().forEach(player -> player.setTurnsLeft(2));
-        match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
     }
 
     // initialisation of flags to control the turn's flow
@@ -203,7 +207,7 @@ public class TurnManager implements Runnable {
 
     private void turnManager() throws InterruptedException, RemoteException {
 
-        initializeRound();
+        initializeClients();
 
         playFirstTurn();
 
