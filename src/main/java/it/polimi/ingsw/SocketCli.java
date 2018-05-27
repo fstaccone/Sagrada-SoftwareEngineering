@@ -624,7 +624,25 @@ public class SocketCli implements Serializable, MatchObserver {
                         break;
 
                         case 5: {
+                            if (parametersCardinalityCheck(5)) {
+                                toolNumber1 = tryParse(parts[2]);
+                                toolNumber2 = tryParse(parts[3]);
+                                toolNumber3 = tryParse(parts[4]);
 
+                                if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null) {
+                                    if (toolCommand.command5(toolNumber1, toolNumber2, toolNumber3)) {
+                                        printer.println("\nWell done! The chosen dice has been modified correctly.\n");
+                                        printer.flush();
+                                    } else {
+                                        gameErrorPrint();
+                                    }
+                                } else {
+                                    syntaxErrorPrint();
+                                }
+                            }
+                            toolNumber1 = null;
+                            toolNumber2 = null;
+                            toolNumber3 = null;
                         }
                         break;
                         case 6: {

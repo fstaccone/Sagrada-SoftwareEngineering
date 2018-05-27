@@ -55,7 +55,7 @@ public class ToolCard extends Card {
         this.toolID = toolID;
     }
 
-    public boolean useCard(Player caller, Match match) {//CONSIDERIAMO PER ESEMPIO LA TOOLCARD4
+    public boolean useCard(Player caller, Match match) {
 
         return effect.applyEffect(caller, match);
     }

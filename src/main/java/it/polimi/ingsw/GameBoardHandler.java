@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -92,19 +93,23 @@ public class GameBoardHandler implements Initializable {
     Button reserveDice7;
     @FXML
     Button reserveDice8;
+    @FXML
+    TextArea textArea;
 
     private RemoteController controller;
     private String username;
     private Stage window;
+    private RmiGui rmiGui;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
     }
 
-    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String username) {
+    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String username, RmiGui rmiGui) {
         this.controller = controller;
         this.username = username;
+        this.rmiGui = rmiGui;
         window = windowFromRmiGui;
         Platform.runLater(() -> {
             window.setScene(sceneFromRmiGui);
@@ -161,6 +166,7 @@ public class GameBoardHandler implements Initializable {
         int i = 0;
         for(Button dice : reserveDices){
             Platform.runLater(()-> dice.setGraphic(null));
+            dice.setDisable(true);
             if(dicesList.size() > i && dicesList.get(i)!=null){
                 String url = genericURL + dicesList.get(i) + ".png";
                 Image diceImg = new Image(url);
@@ -168,6 +174,7 @@ public class GameBoardHandler implements Initializable {
                 diceView.setFitWidth(70);
                 diceView.setFitHeight(70);
                 Platform.runLater(()->dice.setGraphic(diceView));
+                dice.setDisable(false);
             }
             i++;
         }
@@ -176,7 +183,11 @@ public class GameBoardHandler implements Initializable {
 
     @FXML
     public void onPassButtonClicked() throws RemoteException {
-        controller.goThrough(username, false);
+        if(rmiGui.isMyTurn()) controller.goThrough(username, false);
+    }
+
+    public void setTextArea (String s){
+        this.textArea.setText(s);
     }
 
 }

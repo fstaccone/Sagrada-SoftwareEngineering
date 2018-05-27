@@ -93,7 +93,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public void showTrack(String name, boolean isSingle) throws RemoteException {
+    public void showTrack(String name, boolean isSingle) {
         if(isSingle){
             lobby.getSingleplayerMatches().get(name).showTrack(name);
         }else {
@@ -154,6 +154,17 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         }
         return false;
     }
+
+    @Override
+    public boolean useToolCard5(int diceChosen, int roundChosen, int diceChosenFromRound, String name, boolean isSingle) {
+        if (isSingle) {
+            //DA FARE
+        } else {
+            return lobby.getMultiplayerMatches().get(name).useToolCard5(diceChosen, roundChosen, diceChosenFromRound, name);
+        }
+        return false;
+    }
+
 
     @Override
     public boolean useToolCard6(int diceChosen, String name, boolean isSingle) {
@@ -260,6 +271,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public Response handle(UseToolCard4Request request) {
         boolean effectApplied = useToolCard4(request.startX1, request.startY1, request.finalX1, request.finalY1, request.startX2, request.startY2, request.finalX2, request.finalY2, request.username, request.isSingle);
+        return new ToolCardEffectAppliedResponse(effectApplied);
+    }
+
+    @Override
+    public Response handle(UseToolCard5Request request) {
+        boolean effectApplied = useToolCard5(request.diceChosen,request.roundChosen,request.diceChosenFromRound, request.name, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 

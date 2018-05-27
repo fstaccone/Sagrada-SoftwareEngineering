@@ -14,6 +14,9 @@ public abstract class Player implements Serializable{
     private int dice;
     private String choise;
 
+    private int roundChosen;
+    private int diceChosenFromRound;
+
     private int startX1;
     private int startY1;
     private int finalX1;
@@ -70,6 +73,7 @@ public abstract class Player implements Serializable{
     public void setFinalY1(int finalY1) {
         this.finalY1 = finalY1;
     }
+
     public void setStartX2(int startX2) {
         this.startX2 = startX2;
     }
@@ -79,28 +83,35 @@ public abstract class Player implements Serializable{
     }
 
     public void setFinalX2(int finalX2) {
-        this.finalX1 = finalX1;
+        this.finalX2 = finalX2;
     }
 
     public void setFinalY2(int finalY2) {
-        this.finalY1 = finalY1;
-    }
-
-    public void setDice(int diceChosen) {
-        dice = diceChosen;
-    }
-
-    public void setChoise(String choise) {
-        this.choise = choise;
+        this.finalY2 = finalY2;
     }
 
     public int getDice() {
         return dice;
     }
 
+    public void setDice(int diceChosen) { dice = diceChosen; }
+
     public String getChoise() {
         return choise;
     }
+
+    public void setChoise(String choise) {
+        this.choise = choise;
+    }
+
+    public int getRound(){ return this.roundChosen; }
+
+    public void setRound(int roundChosen){ this.roundChosen=roundChosen;}
+
+    public int getDiceChosenFromRound(){ return this.diceChosenFromRound; }
+
+    public void setDiceChosenFromRound(int diceChosenFromRound){ this.diceChosenFromRound=diceChosenFromRound;}
+
 
     // todo: check inheritance
     public Player(String name){
