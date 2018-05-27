@@ -410,6 +410,15 @@ public class MatchMultiplayer extends Match implements Runnable {
         return getBoard().findAndUseToolCard(4, getPlayer(name), this);
     }
 
+    public boolean useToolCard5(int diceChosen, int roundChosen, int diceChosenFromRound, String name){
+        getPlayer(name).setDice(diceChosen);
+        getPlayer(name).setRound(roundChosen);
+        getPlayer(name).setDiceChosenFromRound(diceChosenFromRound);
+        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(5,getPlayer(name),this);
+        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
+        return reserveToBeUpdated;
+    }
+
     public boolean useToolCard6(int diceChosen, String name) {
         getPlayer(name).setDice(diceChosen);
         boolean reserveToBeUpdated = getBoard().findAndUseToolCard(6, getPlayer(name), this);
