@@ -11,6 +11,7 @@ public class NameAlreadyTakenResponse implements Response {
     }
 
     @Override
-    public void handleResponse(ResponseHandler handler) { handler.handle(this);
+    public void handleResponse(ResponseHandler handler) {
+        handler.handle(this);
     }
 }

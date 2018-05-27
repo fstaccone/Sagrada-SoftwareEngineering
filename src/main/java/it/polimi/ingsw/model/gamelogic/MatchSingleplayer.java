@@ -44,6 +44,11 @@ public class MatchSingleplayer extends Match implements Runnable{
     }
 
     @Override
+    public void showTrack(String name) {
+
+    }
+
+    @Override
     public void terminateMatch() {
         // todo: "ottimizzare" la chiusura della partita.
         // Chiusura connessioni? Dovrebe avvenire automaticamente per socket

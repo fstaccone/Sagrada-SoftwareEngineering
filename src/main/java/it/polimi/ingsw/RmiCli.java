@@ -21,14 +21,14 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     private List<String> toolCardsList;
     private List<ToolCommand> toolCommands;
 
-    private int diceChosen=9;
+    private int diceChosen = 9;
     private int coordinateX;
     private int coordinateY;
 
-    private int turnNumber=0;
+    private int turnNumber = 0;
     private List<String> playersNames;
 
-    private boolean windowChosen=false;
+    private boolean windowChosen = false;
 
     private boolean single; //NON SONO CONVINTO SIA LA SOLUZIONE MIGLIORE
 
@@ -54,25 +54,26 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     private static final String HELP_IN_TURN = (
             "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
-            "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
-            "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
-            "\n 'pass'                                      to pass the turn to the next player " +
-            "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
-            "\n 'usetool' + 'number'                        to use the effect of the tool card [number]" );
+                    "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
+                    "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
+                    "\n 'pass'                                      to pass the turn to the next player " +
+                    "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
+                    "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
 
     private static final String HELP_GENERAL = (
-            "\n 'h'                                         to show game available commands"+
-            "\n 'q'                                         to quit the game" +
-            "\n 'r'                                         to show game rules" +
-            "\n 'sp'                                        to show all opponents' names" +
-            "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
-            "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
-            "\n 'toolcards'                                 to show the list of available tool cards \n");
+            "\n 'h'                                         to show game available commands" +
+                    "\n 'q'                                         to quit the game" +
+                    "\n 'r'                                         to show game rules" +
+                    "\n 'sp'                                        to show all opponents' names" +
+                    "\n 'track'                                     to show current state of the round track" +
+                    "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
+                    "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
+                    "\n 'toolcards'                                 to show the list of available tool cards \n");
 
-    private static final String SYNTAX_ERROR=(
+    private static final String SYNTAX_ERROR = (
             "\nWARNING: Invalid syntax request.\n");
 
-    private static final String GAME_ERROR=(
+    private static final String GAME_ERROR = (
             "\nWARNING: Invalid game request. You did not respect the tool card's rules!\n"); //STAMPATO ANCHE SE PROVI A MODIFICARE DADO NELLA RISERVA OUT OF BOUND , si può migliorare
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
@@ -101,7 +102,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     public void onPlayers(List<String> playersNames) {
         printer.println("Your match starts now! You are playing SAGRADA against:");
         printer.flush();
-        this.playersNames=playersNames;
+        this.playersNames = playersNames;
         for (String name : playersNames) {
             if (!name.equals(username)) {
                 printer.println("-" + name.toUpperCase());
@@ -158,7 +159,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
 
-
     @Override
     public void onOtherTurn(String name) {
         printer.println("Now it's " + name + "'s turn");
@@ -206,6 +206,13 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         printer.flush();
     }
 
+    @Override
+    public void onShowTrack(String track) throws RemoteException {
+        printer.println("This is the roundtrack:");
+        printer.println(track);
+        printer.flush();
+    }
+
 
     private class KeyboardHandler extends Thread {
         String parts[];
@@ -232,7 +239,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "cd": {
 
-                                if(windowChosenCheck(windowChosen)) {
+                                if (windowChosenCheck(windowChosen)) {
                                     if (parametersCardinalityCheck(2)) {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null) {
@@ -272,7 +279,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                         }
                                         toolNumber1 = null;
                                     }
-                                }else{
+                                } else {
                                     printer.println("\nWARNING: You have already chosen your scheme card!");
                                     printer.flush();
                                 }
@@ -286,14 +293,14 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             break;
 
                             case "pass": {
-                                if(windowChosenCheck(windowChosen)) {
+                                if (windowChosenCheck(windowChosen)) {
                                     controller.goThrough(username, single);
                                 }
                             }
                             break;
 
                             case "pd": {
-                                if(windowChosenCheck(windowChosen)) {
+                                if (windowChosenCheck(windowChosen)) {
                                     if (diceChosen != 9) {
                                         if (parametersCardinalityCheck(3)) {
                                             toolNumber1 = tryParse(parts[1]);
@@ -317,7 +324,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                                     printer.println("\nWARNING: The coordinates of your scheme card are out of bounds, please retry ");
                                                     printer.flush();
                                                 }
-                                            }else {
+                                            } else {
                                                 syntaxErrorPrint();
                                             }
                                         }
@@ -365,17 +372,16 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "sw": {
                                 if (parametersCardinalityCheck(2)) {
-                                    if (turnNumber>1) {
+                                    if (turnNumber > 1) {
                                         if (playersNames.contains(parts[1])) {
                                             printer.println("\nHere is the window pattern card of the player " + parts[1].toUpperCase());
                                             printer.flush();
                                             controller.showWindow(username, parts[1]);
-                                        }
-                                        else{
-                                            printer.println("\nWARNING: Player " +parts[1].toUpperCase()+ " does not exist!");
+                                        } else {
+                                            printer.println("\nWARNING: Player " + parts[1].toUpperCase() + " does not exist!");
                                             printer.flush();
                                         }
-                                    }else{
+                                    } else {
                                         printer.println("\nWARNING: You have to wait your second turn to ask for other players' scheme cards! " + parts[1]);
                                         printer.flush();
                                     }
@@ -401,10 +407,10 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                             printer.println("\nWARNING: Toolcard not in the ToolCard List!");
                                             printer.flush();
                                         }
-                                    }else {
+                                    } else {
                                         syntaxErrorPrint();
                                     }
-                                    toolNumber1=null;
+                                    toolNumber1 = null;
                                 }
                             }
                             break;
@@ -418,18 +424,23 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "usetool": {
                                 if (windowChosenCheck(windowChosen)) {
-                                    if (parts.length>=2){
+                                    if (parts.length >= 2) {
                                         toolNumber1 = tryParse(parts[1]);
-                                        if (toolNumber1 !=null)
+                                        if (toolNumber1 != null)
                                             useRightCommand(toolNumber1);
-                                        else{
+                                        else {
                                             syntaxErrorPrint();
                                         }
-                                        toolNumber1=null;
-                                    }else {
+                                        toolNumber1 = null;
+                                    } else {
                                         syntaxErrorPrint();
                                     }
                                 }
+                            }
+                            break;
+
+                            case "track": {
+                                controller.showTrack(username, single);
                             }
                             break;
 
@@ -481,6 +492,11 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                             }
                             break;
 
+                            case "track": {
+                                controller.showTrack(username, single);
+                            }
+                            break;
+
                             default: {
                                 printer.println("\nWARNING: Wrong command. Insert 'h' command for help!");
                                 printer.flush();
@@ -503,77 +519,77 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                     found = true;
                     switch (i) {
                         case 1: {
-                            if(parametersCardinalityCheck(4)) {
+                            if (parametersCardinalityCheck(4)) {
                                 toolNumber1 = tryParse(parts[2]);
-                                toolString1=parts[3];
-                                if(toolNumber1!=null && (toolString1.equals("+")||toolString1.equals("-"))) {
+                                toolString1 = parts[3];
+                                if (toolNumber1 != null && (toolString1.equals("+") || toolString1.equals("-"))) {
                                     if (toolCommand.command1(toolNumber1, toolString1)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {
                                         gameErrorPrint();
                                     }
-                                }else {
+                                } else {
                                     syntaxErrorPrint();
                                 }
                             }
-                            toolNumber1=null;
-                            toolString1=null;
+                            toolNumber1 = null;
+                            toolString1 = null;
                         }
                         break;
 
                         case 2: {
-                            if(parametersCardinalityCheck(6)) {
+                            if (parametersCardinalityCheck(6)) {
                                 toolNumber1 = tryParse(parts[2]);
                                 toolNumber2 = tryParse(parts[3]);
                                 toolNumber3 = tryParse(parts[4]);
                                 toolNumber4 = tryParse(parts[5]);
 
                                 if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null && toolNumber4 != null) {
-                                    if (toolCommand.command2or3(2,toolNumber1,toolNumber2,toolNumber3,toolNumber4)) {
+                                    if (toolCommand.command2or3(2, toolNumber1, toolNumber2, toolNumber3, toolNumber4)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {
                                         gameErrorPrint();
                                     }
-                                }else {
+                                } else {
                                     syntaxErrorPrint();
                                 }
                             }
-                            toolNumber1=null;
-                            toolNumber2=null;
-                            toolNumber3=null;
-                            toolNumber4=null;
+                            toolNumber1 = null;
+                            toolNumber2 = null;
+                            toolNumber3 = null;
+                            toolNumber4 = null;
                         }
                         break;
 
                         case 3: {
-                            if(parametersCardinalityCheck(6)) {
+                            if (parametersCardinalityCheck(6)) {
                                 toolNumber1 = tryParse(parts[2]);
                                 toolNumber2 = tryParse(parts[3]);
                                 toolNumber3 = tryParse(parts[4]);
                                 toolNumber4 = tryParse(parts[5]);
 
                                 if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null && toolNumber4 != null) {
-                                    if (toolCommand.command2or3(3, toolNumber1,toolNumber2,toolNumber3,toolNumber4)) {
+                                    if (toolCommand.command2or3(3, toolNumber1, toolNumber2, toolNumber3, toolNumber4)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {
                                         gameErrorPrint();
                                     }
-                                }else {
+                                } else {
                                     syntaxErrorPrint();
                                 }
                             }
-                            toolNumber1=null;
-                            toolNumber2=null;
-                            toolNumber3=null;
-                            toolNumber4=null;
+                            toolNumber1 = null;
+                            toolNumber2 = null;
+                            toolNumber3 = null;
+                            toolNumber4 = null;
                         }
                         break;
 
                         case 4: {
-                            if(parametersCardinalityCheck(10)) {
+                            if (parametersCardinalityCheck(10)) {
                                 toolNumber1 = tryParse(parts[2]);
                                 toolNumber2 = tryParse(parts[3]);
                                 toolNumber3 = tryParse(parts[4]);
@@ -584,24 +600,24 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                                 toolNumber8 = tryParse(parts[9]);
 
                                 if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null && toolNumber4 != null && toolNumber5 != null && toolNumber6 != null && toolNumber7 != null && toolNumber8 != null) {
-                                    if (toolCommand.command4( toolNumber1,toolNumber2,toolNumber3,toolNumber4,toolNumber5,toolNumber6,toolNumber7,toolNumber8)) {
+                                    if (toolCommand.command4(toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, toolNumber7, toolNumber8)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {
                                         gameErrorPrint();
                                     }
-                                }else {
+                                } else {
                                     syntaxErrorPrint();
                                 }
                             }
-                            toolNumber1=null;
-                            toolNumber2=null;
-                            toolNumber3=null;
-                            toolNumber4=null;
-                            toolNumber5=null;
-                            toolNumber6=null;
-                            toolNumber7=null;
-                            toolNumber8=null;
+                            toolNumber1 = null;
+                            toolNumber2 = null;
+                            toolNumber3 = null;
+                            toolNumber4 = null;
+                            toolNumber5 = null;
+                            toolNumber6 = null;
+                            toolNumber7 = null;
+                            toolNumber8 = null;
                         }
                         break;
 
@@ -610,31 +626,30 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         }
                         break;
                         case 6: {
-                            if(parametersCardinalityCheck(3)) {
+                            if (parametersCardinalityCheck(3)) {
                                 toolNumber1 = tryParse(parts[2]);
 
-                                if(toolNumber1!=null) {
+                                if (toolNumber1 != null) {
                                     if (toolCommand.command6(toolNumber1)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {
                                         gameErrorPrint();
                                     }
-                                }else {
+                                } else {
                                     syntaxErrorPrint();
                                 }
                             }
-                            toolNumber1=null;
+                            toolNumber1 = null;
                         }
                         break;
                         case 7: {
-                            if(turnNumber==2 && diceChosen==9) {// turno corretto  e dado non ancora scelto
+                            if (turnNumber == 2 && diceChosen == 9) {// turno corretto  e dado non ancora scelto
                                 if (toolCommand.command7()) {
                                     printer.println("\nWell done! The reserve has been rerolled correctly.\n");
                                     printer.flush();
                                 }
-                            }
-                            else {
+                            } else {
                                 gameErrorPrint();
                             }
 
@@ -646,42 +661,42 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         }
                         break;
                         case 9: {
-                            if(parametersCardinalityCheck(5)) {
+                            if (parametersCardinalityCheck(5)) {
                                 toolNumber1 = tryParse(parts[2]);
                                 toolNumber2 = tryParse(parts[3]);
                                 toolNumber3 = tryParse(parts[4]);
                                 if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null) {
-                                    if (toolCommand.command9( toolNumber1,toolNumber2,toolNumber3)) {
+                                    if (toolCommand.command9(toolNumber1, toolNumber2, toolNumber3)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {
                                         gameErrorPrint();
                                     }
-                                }else {
+                                } else {
                                     syntaxErrorPrint();
                                 }
                             }
-                            toolNumber1=null;
-                            toolNumber2=null;
-                            toolNumber3=null;
+                            toolNumber1 = null;
+                            toolNumber2 = null;
+                            toolNumber3 = null;
                         }
                         break;
 
                         case 10: {
-                            if(parametersCardinalityCheck(3)) {
+                            if (parametersCardinalityCheck(3)) {
                                 toolNumber1 = tryParse(parts[2]);
-                                if(toolNumber1!=null) {
+                                if (toolNumber1 != null) {
                                     if (toolCommand.command10(toolNumber1)) {
                                         printer.println("\nWell done! The chosen dice has been modified correctly.\n");
                                         printer.flush();
                                     } else {
                                         gameErrorPrint();
                                     }
-                                }else {
+                                } else {
                                     syntaxErrorPrint();
                                 }
                             }
-                            toolNumber1=null;
+                            toolNumber1 = null;
 
                         }
                         break;
@@ -704,26 +719,26 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             }
         }
 
-        private boolean windowChosenCheck(boolean windowChosen){
-            if(windowChosen)
+        private boolean windowChosenCheck(boolean windowChosen) {
+            if (windowChosen)
                 return true;
-            else{
+            else {
                 printer.println("WARNING: You have to choose your window card before asking for commands that necessitate the match to actually be started!");
                 printer.flush();
                 return false;
             }
         }
 
-        private Integer tryParse(String text){
-            try{
+        private Integer tryParse(String text) {
+            try {
                 return Integer.parseInt(text);
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 return null;
             }
         }
 
-        private boolean parametersCardinalityCheck(int n){
-            if (parts.length==n)
+        private boolean parametersCardinalityCheck(int n) {
+            if (parts.length == n)
                 return true;
             else {
                 syntaxErrorPrint();
@@ -731,12 +746,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
             }
         }
 
-        private void syntaxErrorPrint(){
+        private void syntaxErrorPrint() {
             printer.println(SYNTAX_ERROR);
             printer.flush();
         }
 
-        private void gameErrorPrint(){
+        private void gameErrorPrint() {
             printer.println(GAME_ERROR);
             printer.flush();
         }
