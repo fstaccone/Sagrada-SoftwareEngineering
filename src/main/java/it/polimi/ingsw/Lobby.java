@@ -87,7 +87,6 @@ public class Lobby {
 
         // debug
         System.out.println("By lobby: Match number: " + matchCounter + " type: singleplayer");
-        System.out.println("By lobby: Player: " + name);
     }
 
     private synchronized void createMultiplayerMatch(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
@@ -98,7 +97,6 @@ public class Lobby {
         }
 
         System.out.println("By lobby: Match number: " + matchCounter + " type: multiplayer");
-        System.out.println("By lobby: Players: ");
 
         clients.forEach(c -> System.out.print(c + "\t"));
         System.out.println("\n");

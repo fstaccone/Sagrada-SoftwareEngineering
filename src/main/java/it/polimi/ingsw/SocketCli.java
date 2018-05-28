@@ -19,7 +19,7 @@ public class SocketCli implements Serializable, MatchObserver {
         cli.printWelcome();
     }
 
-
+    //todo
     public void reconnect() {
         //clientController.request(new ReconnectRequest(username));
     }

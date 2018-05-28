@@ -562,6 +562,21 @@ public class Cli{
                             }
                             break;
 
+                            case "reserve": {
+                                if (windowChosenCheck(windowChosen)) {
+                                    printer.println("\nHere follows the current RESERVE state:           ~ ['cd number' to choose the dice you want]\n");
+                                    printer.flush();
+                                    int i = 0;
+                                    for (String dice : dicesList) {
+                                        printer.println(i++ + ") " + dice);
+                                        printer.flush();
+                                    }
+                                    printer.println();
+                                    printer.flush();
+                                }
+                            }
+                            break;
+
                             case "sp": {
                                 if(controller!= null)
                                     controller.showPlayers(username);
