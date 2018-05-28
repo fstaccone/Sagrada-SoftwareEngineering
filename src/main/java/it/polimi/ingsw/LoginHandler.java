@@ -337,7 +337,7 @@ public class LoginHandler implements Initializable {
     public void onMatchStartedSocket() {
         Platform.runLater(() -> window.close());
         if (isCli) {
-            new SocketCli(username, clientController).launch();
+            new SocketCli(username, clientController,false);
         } else {
             //new SocketGui(username,controller).launch();
         }
