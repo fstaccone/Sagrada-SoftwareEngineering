@@ -5,9 +5,12 @@ import it.polimi.ingsw.model.gameobjects.*;
 
 import java.util.Scanner;
 
-public class MoveTwoDicesColorRoundTrackEffect implements Effect {
+public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
+
+    private int price;
 
     public MoveTwoDicesColorRoundTrackEffect() {
+        price = 1;
     }
 
     @Override

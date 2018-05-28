@@ -7,9 +7,12 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 import java.util.Scanner;
 
-public class SubstituteDiceFromBagEffect implements Effect {
+public class SubstituteDiceFromBagEffect implements Effect { //todo
+
+    private int price;
 
     public SubstituteDiceFromBagEffect() {
+        price = 1;
     }
 
     @Override
