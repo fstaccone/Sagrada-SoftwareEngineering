@@ -101,7 +101,6 @@ public class TurnManager implements Runnable {
         match.setDiceAction(false);
         match.setToolAction(false);
         match.setEndsTurn(false);
-        match.setSecondDiceAction(true); // this is useful only when a player can play two dices in the same turn
         player.setMyTurn(true);
     }
 
@@ -249,7 +248,7 @@ public class TurnManager implements Runnable {
     }
 
     private boolean checkCondition() {
-        return !((match.isToolAction() && match.isDiceAction() && match.isSecondDiceAction()) || match.isEndsTurn());
+        return !((match.isToolAction() && match.isDiceAction()) || match.isEndsTurn());
     }
 
     private void nextRound() throws InterruptedException, RemoteException {

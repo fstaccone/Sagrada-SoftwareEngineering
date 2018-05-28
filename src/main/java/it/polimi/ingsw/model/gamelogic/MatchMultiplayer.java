@@ -441,6 +441,19 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    public boolean useToolCard8(String name) {
+        if(!isToolAction()) {
+            boolean result;
+
+            result = getBoard().findAndUseToolCard(8, getPlayer(name), this);
+            setToolAction(result);
+
+            return result;
+        } else {
+            return false;
+        }
+    }
+
     public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name) {
         getPlayer(name).setDice(diceChosen);
         getPlayer(name).setFinalX1(finalX1);
@@ -474,8 +487,6 @@ public class MatchMultiplayer extends Match implements Runnable {
                     e.printStackTrace();
                 }
             }
-
         }
-
     }
 }

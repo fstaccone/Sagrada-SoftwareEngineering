@@ -20,7 +20,6 @@ public abstract class Match {
     private boolean diceAction;
     private boolean toolAction;
     private boolean endsTurn;
-    private boolean secondDiceAction;
     private boolean windowChosen;
 
     private final Object lock;
@@ -47,7 +46,6 @@ public abstract class Match {
     public boolean isDiceAction() { return diceAction; }
     public boolean isToolAction() { return toolAction; }
     public boolean isEndsTurn() { return endsTurn; }
-    public boolean isSecondDiceAction() { return secondDiceAction; }
     public boolean isWindowChosen() { return windowChosen; }
     // end of getters
 
@@ -55,7 +53,6 @@ public abstract class Match {
     public void setDiceAction(boolean diceAction) { this.diceAction = diceAction; }
     public void setToolAction(boolean toolAction) { this.toolAction = toolAction; }
     public void setEndsTurn(boolean endsTurn) { this.endsTurn = endsTurn; }
-    public void setSecondDiceAction(boolean secondDiceAction) { this.secondDiceAction = secondDiceAction; }
     public void setWindowChosen(boolean windowChosen) { this.windowChosen = windowChosen; }
 
     public void incrementRoundCounter() { this.roundCounter++; }

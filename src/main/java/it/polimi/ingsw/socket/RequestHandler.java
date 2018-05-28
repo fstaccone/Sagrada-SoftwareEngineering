@@ -32,9 +32,12 @@ public interface RequestHandler {
 
     Response handle(UseToolCard7Request request);
 
+    Response handle(UseToolCard8Request request);
+
     Response handle(UseToolCard9Request request);
 
     Response handle(UseToolCard10Request request);
 
     Response handle(QuitGameRequest request);
+
 }

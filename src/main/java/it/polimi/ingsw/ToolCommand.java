@@ -176,10 +176,22 @@ public class ToolCommand {
         }
         return false;
     }
-    public void command8(){
-        printer.println("Comando 8, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
-    }
+    public boolean command8(){
+        if(controller!=null) {
+            try {
+                return controller.useToolCard8( name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard8Request( name, single));
+            waitForToolEffectAppliedResponse();
+        }
+        return false;
+
+        }
     public boolean command9(int diceFromReserve,int finalX, int finalY){
         if(controller!=null) {
             try {

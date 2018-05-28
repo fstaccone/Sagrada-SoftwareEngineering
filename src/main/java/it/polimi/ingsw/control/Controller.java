@@ -26,12 +26,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         this.socketHandlers = new ArrayList<>();
         // ...
     }
-/*
-    @Override
-    public String login(String username, ViewInterface view){
-        return null;
-    }*/
-
 
     // da gestire il caso di riconnessione
     @Override
@@ -183,6 +177,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
+    public boolean useToolCard8(String name, boolean isSingle){
+        if (isSingle) {
+            //DA FARE
+        } else {
+            return lobby.getMultiplayerMatches().get(name).useToolCard8(name);
+        }
+        return false;
+    }
+
+    @Override
     public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name, boolean isSingle) {
         if (isSingle) {
             //DA FARE
@@ -288,6 +292,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
+    public Response handle(UseToolCard8Request request) {
+        boolean effectApplied = useToolCard8(request.name, request.single);
+        return new ToolCardEffectAppliedResponse(effectApplied);
+    }
+
+    @Override
     public Response handle(UseToolCard9Request request) {
         boolean effectApplied = useToolCard9(request.diceChosen, request.finalX, request.finalY, request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
@@ -301,11 +311,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(QuitGameRequest request) {
-        if (request.single) {
-            lobby.removeMatchSingleplayer(request.name);
-        } else {
-            lobby.disconnect(request.name);
-        }
+        quitGame(request.name, request.single);
         return null;
     }
 

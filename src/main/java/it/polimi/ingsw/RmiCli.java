@@ -734,8 +734,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         }
                         break;
                         case 8: {
-                            toolCommand.command8();
-
+                            if(toolCommand.command8()){
+                                printer.println("\nBen fatto! Puoi piazzare il tuo secondo dado.");
+                                printer.flush();
+                            } else {
+                                gameErrorPrint();
+                            }
                         }
                         break;
                         case 9: {
