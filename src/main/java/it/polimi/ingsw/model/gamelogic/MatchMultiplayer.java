@@ -8,10 +8,7 @@ import it.polimi.ingsw.model.gameobjects.DecksContainer;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
-import it.polimi.ingsw.socket.responses.ActualPlayersResponse;
-import it.polimi.ingsw.socket.responses.AfterWindowChoiseResponse;
-import it.polimi.ingsw.socket.responses.ShowWindowResponse;
-import it.polimi.ingsw.socket.responses.UpdateReserveResponse;
+import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -242,9 +239,6 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         remoteObservers.put(getPlayer(username), observer);
 
-        System.out.println("Gli observers remoti del match" + this.matchId + " al momento sono: " + remoteObservers.size());
-        System.out.println("Il numero dei players nel match" + this.matchId + " è: " + players.size());
-
         if (!started) {
             if (this.players.size() == this.remoteObservers.size() + this.socketObservers.size()) {
                 localThread = new Thread(this);
@@ -340,24 +334,9 @@ public class MatchMultiplayer extends Match implements Runnable {
             result = getPlayer(name).getSchemeCard().putDice(board.getReserve().getDices().get(index), x, y);
             setDiceAction(result);
 
-            if (result) {
+            if(result)
                 board.getReserve().getDices().remove(index);
-                if (remoteObservers.get(getPlayer(name)) != null) {
-                    try {
-                        remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (socketObservers.get(getPlayer(name)) != null) {
-                    try {
-                        socketObservers.get(getPlayer(name)).writeObject(new UpdateReserveResponse(board.getReserve().getDices().toString()));
-                        socketObservers.get(getPlayer(name)).reset();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            reserveToBeUpdated(result);
 
             synchronized (getLock()) {
                 getLock().notifyAll();
@@ -372,11 +351,9 @@ public class MatchMultiplayer extends Match implements Runnable {
         if(!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             getPlayer(name).setChoise(incrOrDecr);
-
             boolean result = getBoard().findAndUseToolCard(1, getPlayer(name), this);
-            reserveToBeUpdatedCheck(result, name);
+            reserveToBeUpdated(result);
             setToolAction(result);
-
             return result;
         }else{
             return false;
@@ -389,10 +366,8 @@ public class MatchMultiplayer extends Match implements Runnable {
             getPlayer(name).setStartY1(startY);
             getPlayer(name).setFinalX1(finalX);
             getPlayer(name).setFinalY1(finalY);
-
             boolean result = getBoard().findAndUseToolCard(n, getPlayer(name), this);
             setToolAction(result);
-
             return result;
         }else{
             return false;
@@ -400,41 +375,55 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public boolean useToolCard4(int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
-        getPlayer(name).setStartX1(startX1);
-        getPlayer(name).setStartY1(startY1);
-        getPlayer(name).setFinalX1(finalX1);
-        getPlayer(name).setFinalY1(finalY1);
-        getPlayer(name).setStartX2(startX2);
-        getPlayer(name).setStartY2(startY2);
-        getPlayer(name).setFinalX2(finalX2);
-        getPlayer(name).setFinalY2(finalY2);
-        return getBoard().findAndUseToolCard(4, getPlayer(name), this);
+        if(!isToolAction()) {
+            getPlayer(name).setStartX1(startX1);
+            getPlayer(name).setStartY1(startY1);
+            getPlayer(name).setFinalX1(finalX1);
+            getPlayer(name).setFinalY1(finalY1);
+            getPlayer(name).setStartX2(startX2);
+            getPlayer(name).setStartY2(startY2);
+            getPlayer(name).setFinalX2(finalX2);
+            getPlayer(name).setFinalY2(finalY2);
+            boolean result= getBoard().findAndUseToolCard(4, getPlayer(name), this);
+            setToolAction(result);
+            return result;
+        }else{
+            return false;
+        }
     }
 
     public boolean useToolCard5(int diceChosen, int roundChosen, int diceChosenFromRound, String name){
-        getPlayer(name).setDice(diceChosen);
-        getPlayer(name).setRound(roundChosen);
-        getPlayer(name).setDiceChosenFromRound(diceChosenFromRound);
-        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(5,getPlayer(name),this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
-        return reserveToBeUpdated;
+        if(!isToolAction()) {
+            getPlayer(name).setDice(diceChosen);
+            getPlayer(name).setRound(roundChosen);
+            getPlayer(name).setDiceChosenFromRound(diceChosenFromRound);
+            boolean result = getBoard().findAndUseToolCard(5, getPlayer(name), this);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            return result;
+        }else{
+            return false;
+        }
     }
 
     public boolean useToolCard6(int diceChosen, String name) {
-        getPlayer(name).setDice(diceChosen);
-        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(6, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
-        return reserveToBeUpdated;
+        if(!isToolAction()) {
+            getPlayer(name).setDice(diceChosen);
+            boolean result = getBoard().findAndUseToolCard(6, getPlayer(name), this);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            return result;
+        }else{
+            return false;
+        }
     }
 
     public boolean useToolCard7(String name) {
         if(!isToolAction()) {
             boolean result;
-
             result = getBoard().findAndUseToolCard(7, getPlayer(name), this);
-            reserveToBeUpdatedCheck(result, name);
+            reserveToBeUpdated(result);
             setToolAction(result);
-
             return result;
         } else {
             return false;
@@ -444,10 +433,8 @@ public class MatchMultiplayer extends Match implements Runnable {
     public boolean useToolCard8(String name) {
         if(!isToolAction()) {
             boolean result;
-
             result = getBoard().findAndUseToolCard(8, getPlayer(name), this);
             setToolAction(result);
-
             return result;
         } else {
             return false;
@@ -455,36 +442,48 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name) {
-        getPlayer(name).setDice(diceChosen);
-        getPlayer(name).setFinalX1(finalX1);
-        getPlayer(name).setFinalY1(finalY1);
-        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(9, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
-        return reserveToBeUpdated;
+        if(!isToolAction()) {
+            getPlayer(name).setDice(diceChosen);
+            getPlayer(name).setFinalX1(finalX1);
+            getPlayer(name).setFinalY1(finalY1);
+            boolean result = getBoard().findAndUseToolCard(9, getPlayer(name), this);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            return result;
+        }else{
+            return false;
+        }
     }
 
     public boolean useToolCard10(int diceChosen, String name) {
-        getPlayer(name).setDice(diceChosen);
-        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(10, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
-        return reserveToBeUpdated;
+        if(!isToolAction()) {
+            getPlayer(name).setDice(diceChosen);
+            boolean result = getBoard().findAndUseToolCard(10, getPlayer(name), this);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            return result;
+        }
+        else return false;
     }
 
-    private void reserveToBeUpdatedCheck(boolean reserveToBeUpdated, String name) {
+    private void reserveToBeUpdated(boolean reserveToBeUpdated) {
         if (reserveToBeUpdated) {
-            if (remoteObservers.get(getPlayer(name)) != null) {
-                try {
-                    remoteObservers.get(getPlayer(name)).onReserve(board.getReserve().getDices().toString());
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+            Response response=new UpdateReserveResponse(board.getReserve().getDices().toString());
+            for (PlayerMultiplayer player: players) {
+                if (remoteObservers.get(player) != null) {
+                    try {
+                        remoteObservers.get(player).onReserve(board.getReserve().getDices().toString());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            if (socketObservers.get(getPlayer(name)) != null) {
-                try {
-                    socketObservers.get(getPlayer(name)).writeObject(new UpdateReserveResponse(board.getReserve().getDices().toString()));
-                    socketObservers.get(getPlayer(name)).reset();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (socketObservers.get(player) != null) {
+                    try {
+                        socketObservers.get(player).writeObject(response);
+                        socketObservers.get(player).reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

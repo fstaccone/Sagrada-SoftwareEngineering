@@ -26,6 +26,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private GameBoardHandler gameBoardHandler;
     private List<String> toolCardsList = new ArrayList<>();
     private List<String> dicesList;
+    private  String privateCard;
+    private List<String> publicCardsList;
 
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller) throws RemoteException {
@@ -142,6 +144,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         gameBoardHandler.setToolCards(toolCardsList);
         gameBoardHandler.setReserve(dicesList);
         gameBoardHandler.setTextArea("Now it's your turn!");
+        gameBoardHandler.setPrivateCard(privateCard);
+        gameBoardHandler.setPublicCards(publicCardsList);
     }
 
     @Override
@@ -154,7 +158,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onInitialization(String toolcards, String publicCards, String privateCard) throws RemoteException {
-        System.out.println("On toolcards\n" + toolcards);
+        System.out.println(toolcards);
         String dicesString = toolcards.substring(1, toolcards.length() - 1);
         List<String> temp = Pattern.compile(", ")
                 .splitAsStream(dicesString)
@@ -162,6 +166,24 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         for (String s : temp) {
             s = s.split(":", 2)[0];
             toolCardsList.add(s);
+            System.out.println(s);
+        }
+        System.out.println(publicCards);
+        privateCard = privateCard.substring(7, privateCard.length()-1).toLowerCase();
+        this.privateCard = privateCard;
+        chooseCardHandler.setPrivateCard(privateCard);
+        parsePublicCards(publicCards);
+    }
+
+    private void parsePublicCards(String publicCards) {
+        publicCardsList = new ArrayList<>();
+        String cards = publicCards.substring(1, publicCards.length() - 1);
+        List<String> temp = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
+        for(String s : temp){
+            s = s.substring(8).toLowerCase();
+            s = s.split("\n",2)[0];
+            s = s.replaceAll(" - ", "_").replaceAll(" ", "_");
+            publicCardsList.add(s);
         }
     }
 
@@ -190,4 +212,5 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     public List<String> getDicesList() {
         return dicesList;
     }
+
 }

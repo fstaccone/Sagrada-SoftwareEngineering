@@ -145,9 +145,6 @@ public class ChooseCardHandler implements Initializable {
             window.setResizable(false);
             window.show();
         });
-        //Va creata funzione setPrivateObjCard(), questa è per vedere se funziona
-        Image privateObjCardImg = new Image("File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/carte_obiettivo_14.png");
-        privateObjCard.setImage(privateObjCardImg);
     }
 
     //The window now shows the 4 window pattern cards the player have to choose between
@@ -219,6 +216,11 @@ public class ChooseCardHandler implements Initializable {
     public void setTextArea (String s){
         s = "\n" + s;
         this.opponents.appendText(s);
+    }
+
+    public void setPrivateCard(String privateCard){
+        Image privateObjCardImg = new Image("File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/" + privateCard + ".png");
+        privateObjCard.setImage(privateObjCardImg);
     }
 
 }

@@ -76,7 +76,7 @@
               </rowConstraints>
                <children>
                   <Button fx:id="reserveDice1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                  <Button fx:id="reserveDice0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                  <Button fx:id="reserveDice0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                   <Button fx:id="reserveDice2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="2" GridPane.rowIndex="0" />
                   <Button fx:id="reserveDice3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                   <Button fx:id="reserveDice4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -103,14 +103,20 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button id="cartaObPub1" fx:id="cartaObPub1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="card" wrapText="true" />
-                  <Button id="cartaObPub2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="card" wrapText="true" GridPane.columnIndex="1" />
-                  <Button id="cartaObPub3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="card" wrapText="true" GridPane.columnIndex="2" />
+                  <ImageView fx:id="pubObjCard1" fitHeight="160.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" styleClass="card" />
+                  <ImageView fx:id="pubObjCard2" fitHeight="160.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" styleClass="card" GridPane.columnIndex="1" />
+                  <ImageView fx:id="pubObjCard3" fitHeight="160.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" styleClass="card" GridPane.columnIndex="2" />
                </children>
             </GridPane>
-            <Label layoutX="109.0" layoutY="4.0" prefHeight="21.0" prefWidth="177.0" text="Carte obiettivo pubblico" />
-            <Label layoutX="116.0" layoutY="185.0" text="Carta obiettivo privato" />
-            <Button id="cartaObPriv" layoutX="132.0" layoutY="204.0" mnemonicParsing="false" prefHeight="163.0" prefWidth="117.0" styleClass="card" wrapText="true" />
+            <Label layoutX="109.0" layoutY="4.0" prefHeight="21.0" prefWidth="189.0" text="PUBLIC OBJECTIVE CARDS" textFill="WHITE">
+               <font>
+                  <Font name="Algerian" size="15.0" />
+               </font></Label>
+            <Label layoutX="116.0" layoutY="185.0" text="PRIVATE OBJECTIVE CARD" textFill="WHITE">
+               <font>
+                  <Font name="Algerian" size="15.0" />
+               </font></Label>
+            <ImageView fx:id="privateObjCard" fitHeight="160.0" fitWidth="116.0" layoutX="140.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true" styleClass="card" />
          </children>
       </Pane>
       <Pane layoutX="590.0" layoutY="14.0" prefHeight="192.0" prefWidth="220.0" styleClass="schemeCard" />
