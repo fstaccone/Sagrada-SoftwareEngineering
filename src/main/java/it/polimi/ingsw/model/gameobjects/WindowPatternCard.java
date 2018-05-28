@@ -2,8 +2,9 @@ package it.polimi.ingsw.model.gameobjects;
 
 import java.util.Arrays;
 
-public class WindowPatternCard extends Card{
+public class WindowPatternCard {
 
+    private String name;
     private int difficulty; //difficulty is a value between 3 and 6
     private Square[][] window;
     private int rows;
@@ -12,7 +13,7 @@ public class WindowPatternCard extends Card{
     //constructor gives window a name and creates a double array of squares without constraints (for now)
     //it should be modified to allow constraints in specific squares
     public WindowPatternCard(String name, int rows, int columns) {
-        super(name);
+        this.name = name;
         this.empty = true;
         this.rows = rows;
         this.columns = columns;
@@ -197,15 +198,15 @@ public class WindowPatternCard extends Card{
             window[row][column]. putDiceIgnoringAllConstraints(d);
     }
     public boolean fullColumn(int z){
-            boolean res=false;
-            boolean ris=true;
+            boolean res = false;
+            boolean ris = true;
             for(int i=0;i<4;i++){
                 if (this.getWindow()[i][z].getDice()==null){
                         res = false;
                         ris = false;
                     }
                     else
-                        res= true;
+                        res = true;
                 }
             return ris;
         }
@@ -261,63 +262,5 @@ public class WindowPatternCard extends Card{
                 .filter(s -> s.getDice() == null)
                 .count();
     }
-/*
-
-
-     //Test for toString correctness and dice's placing
-    public static void main(String[] args){
-        WindowPatternCard window = new LuzCelestial();
-        Room room = mock(Room.class);
-        Player player = new PlayerMultiplayer("francesca",room);
-        Dice dice1 = new Dice(Colors.GREEN);
-        dice1.setValue(4);
-        Dice dice2 = new Dice(Colors.BLUE);
-        dice2.setValue(2);
-        player.setPickedDice(dice1);
-        Dice dice3 = new Dice(Colors.YELLOW);
-        dice3.setValue(4);
-        Dice dice4 = new Dice(Colors.RED);
-        dice4.setValue(3);
-
-        System.out.print(window);
-
-        player.setSchemeCard(window);
-
-        player.getSchemeCard().putFirstDice(player.getPickedDice(),0,0);
-        player.getSchemeCard().putDice(player.getPickedDice(),1,3);
-        player.setPickedDice(dice2);
-        player.getSchemeCard().putDice(player.getPickedDice(),0,1);
-        player.getSchemeCard().putDice(player.getPickedDice(),1,1);
-        player.getSchemeCard().putDice(player.getPickedDice(),0,2);
-        player.getSchemeCard().putDice(player.getPickedDice(),0,3);
-        player.setPickedDice(dice1);
-        player.getSchemeCard().putDice(player.getPickedDice(),1,1);
-        player.setPickedDice(dice2);
-        player.getSchemeCard().putDice(player.getPickedDice(),1,2);
-        player.setPickedDice(dice4);
-        player.getSchemeCard().putDice(player.getPickedDice(),2,1);
-        player.getSchemeCard().putDice(player.getPickedDice(),0,2);
-        player.setPickedDice(dice3);
-        player.getSchemeCard().putDice(player.getPickedDice(),3,1);
-        player.getSchemeCard().putDice(player.getPickedDice(),2,2);
-        player.setPickedDice(dice2);
-        player.getSchemeCard().putDice(player.getPickedDice(),3,2);
-        player.getSchemeCard().putDice(player.getPickedDice(), 2, 3);
-        player.setPickedDice(dice1);
-        player.getSchemeCard().putDice(player.getPickedDice(),2,4);
-        player.getSchemeCard().putDice(player.getPickedDice(),3,3);
-        player.setPickedDice(dice2);
-        player.getSchemeCard().putDice(player.getPickedDice(),3,4);
-
-
-        Set<Player> players = new HashSet<>();
-        players.add(player);
-        Match match = new Match(players);
-        PublicObjectiveCard card1 = new PublicObjectiveCard("Diagonali colorate");
-        card1.useCard(player, match);
-        System.out.println(player.getPoints());
-        //il risultato è 11
-    }
-*/
 }
 

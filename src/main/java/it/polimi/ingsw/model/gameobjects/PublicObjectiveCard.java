@@ -3,14 +3,15 @@ package it.polimi.ingsw.model.gameobjects;
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gameobjects.effects.*;
 
-public class PublicObjectiveCard extends ObjectiveCard {
+public class PublicObjectiveCard {
 
+    private String name;
     private Effect effect;
     private String description;
     private int value;
 
     public PublicObjectiveCard(String name) {
-        super(name);
+        this.name = name;
         switch (this.name) {
             case "Color Variety":
                 effect = new ColorsVarietyEffect();
@@ -63,7 +64,6 @@ public class PublicObjectiveCard extends ObjectiveCard {
 
     }
 
-    @Override
     public void useCard(Player caller, Match match) {
 
         this.effect.applyEffect(caller, match);

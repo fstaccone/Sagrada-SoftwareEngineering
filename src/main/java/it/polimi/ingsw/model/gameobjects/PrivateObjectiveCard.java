@@ -3,11 +3,13 @@ package it.polimi.ingsw.model.gameobjects;
 
 import java.util.Arrays;
 
-public class PrivateObjectiveCard extends ObjectiveCard {
+public class PrivateObjectiveCard {
+
     private Colors color;
+    private String name;
 
     public PrivateObjectiveCard(Colors color) {
-        super("PrivateObjectiveCard " + color.toString());
+        this.name = "PrivateObjectiveCard " + color.toString();
         this.color = color;
     }
 
@@ -15,7 +17,6 @@ public class PrivateObjectiveCard extends ObjectiveCard {
         return color;
     }
 
-    @Override
     public void useCard(Player player) {
         player.setPoints(player.getPoints() +
                 Arrays.stream(player.getSchemeCard().getWindow())

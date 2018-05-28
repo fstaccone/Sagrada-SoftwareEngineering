@@ -4,15 +4,16 @@ package it.polimi.ingsw.model.gameobjects;
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gameobjects.effects.*;
 
-public class ToolCard extends Card {
+public class ToolCard{
 
+    private String name;
     private String toolID;
     private Effect effect;
     private String description;
     private Colors color;
 
     public ToolCard(String name, String toolID) {
-        super(name);
+        this.name = name;
         switch (this.name) {
             case "Pinza Sgrossatrice":
                 effect = new IncrDecrDiceValueEffect();
