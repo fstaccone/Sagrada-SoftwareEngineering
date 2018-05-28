@@ -2,11 +2,13 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -104,8 +106,11 @@ public class GameBoardHandler implements Initializable {
     private String username;
     private Stage window;
     private RmiGui rmiGui;
+    private int diceChosen;
+    private List<String> reserveDices;
+    private Button[][] windowPatternCard;
 
-    private EventHandler reserveDiceSelected = new EventHandler<ActionEvent>() {
+    private EventHandler<ActionEvent> reserveDiceSelected = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
             if(rmiGui.isMyTurn()) {
@@ -113,10 +118,43 @@ public class GameBoardHandler implements Initializable {
                 s = s.substring(21,22);
                 int i = Integer.parseInt(s);
                 s = rmiGui.getDicesList().get(i);
-                textArea.setText("You currently chose the dice: " + s);
+                diceChosen = i;
+                textArea.setText("You currently chose the dice: " + s + " pos: " + i);
             }
         }
     };
+
+    private EventHandler<ActionEvent> windowPatternCardSlotSelected = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent event) {
+            if(rmiGui.isMyTurn()) {
+                if(diceChosen!=9){
+                    Button slot = (Button) event.getSource();
+                    Integer tempX = GridPane.getRowIndex(slot);
+                    if (tempX == null) tempX = 0;
+                    Integer tempY = GridPane.getColumnIndex(slot);
+                    if (tempY == null) tempY = 0;
+                    int coordinateX = tempX;
+                    int coordinateY = tempY;
+                    textArea.setText("You want to put dice: " + diceChosen + "in pos: " + coordinateX + "," + coordinateY);
+                    try {
+                        putImage(diceChosen, coordinateX, coordinateY);
+                        if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
+                            textArea.setText("Well done! The chosen dice has been placed correctly.");
+                            diceChosen = 9; //FIRST VALUE NEVER PRESENT IN THE RESERVE
+                        } else {
+                            textArea.setText("WARNING: You tried to place a dice where you shouldn't, or you are trying to place a second dice in your turn!");
+                            deleteImage(coordinateX, coordinateY);
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }
+    };
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -124,6 +162,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String username, RmiGui rmiGui) {
+        diceChosen = 9;
         this.controller = controller;
         this.username = username;
         this.rmiGui = rmiGui;
@@ -134,6 +173,27 @@ public class GameBoardHandler implements Initializable {
             window.setResizable(false);
             window.show();
         });
+        windowPatternCard = new Button[4][5];
+        windowPatternCard[0][0] = b1;
+        windowPatternCard[0][1] = b2;
+        windowPatternCard[0][2] = b3;
+        windowPatternCard[0][3] = b4;
+        windowPatternCard[0][4] = b5;
+        windowPatternCard[1][0] = b6;
+        windowPatternCard[1][1] = b7;
+        windowPatternCard[1][2] = b8;
+        windowPatternCard[1][3] = b9;
+        windowPatternCard[1][4] = b10;
+        windowPatternCard[2][0] = b11;
+        windowPatternCard[2][1] = b12;
+        windowPatternCard[2][2] = b13;
+        windowPatternCard[2][3] = b14;
+        windowPatternCard[2][4] = b15;
+        windowPatternCard[3][0] = b16;
+        windowPatternCard[3][1] = b17;
+        windowPatternCard[3][2] = b18;
+        windowPatternCard[3][3] = b19;
+        windowPatternCard[3][4] = b20;
     }
 
     public void setWindowPatternCardImg(String imgURL){
@@ -141,6 +201,10 @@ public class GameBoardHandler implements Initializable {
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         playerWindowPatternCard.setBackground(new Background(myBI));
+        for(Button dicesRow[] : windowPatternCard) {
+            for(Button dice : dicesRow)
+            dice.setOnAction(windowPatternCardSlotSelected);
+        }
     }
 
     public void setToolCards(List<String> toolCardsList){
@@ -169,6 +233,8 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void setReserve(List<String> dicesList){
+        reserveDices = new ArrayList<>();
+        reserveDices.addAll(dicesList);
         String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
         List<Button> reserveDices = new ArrayList<>();
         reserveDices.add(reserveDice0);
@@ -221,5 +287,19 @@ public class GameBoardHandler implements Initializable {
             controller.quitGame(username, false);
             System.exit(0);
         }
+    }
+
+    public void putImage (int reserveDice, int x, int y){
+        String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
+        String url = genericURL + reserveDices.get(reserveDice) + ".png";
+        Image diceImg = new Image(url);
+        ImageView diceView = new ImageView(diceImg);
+        diceView.setFitWidth(58);
+        diceView.setFitHeight(54);
+        Platform.runLater(()->windowPatternCard[x][y].setGraphic(diceView));
+    }
+
+    public void deleteImage (int x, int y){
+        Platform.runLater(()->windowPatternCard[x][y].setGraphic(null));
     }
 }
