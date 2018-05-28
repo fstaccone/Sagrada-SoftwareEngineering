@@ -29,9 +29,9 @@ public class ClientController implements ResponseHandler {
     }
 
     public void request(Request request) {
-
         try {
             out.writeObject(request);
+            // out.reset(); todo Serve?
         } catch (IOException e) {
             System.err.println("Exception on network: " + e.getMessage());
         }
@@ -174,7 +174,13 @@ public class ClientController implements ResponseHandler {
         if(socketCli != null){
             socketCli.onPlayerExit(response.name);
         }
+    }
 
+    @Override
+    public void handle(PlayerReconnectionResponse response) {
+        if(socketCli != null){
+            socketCli.onPlayerReconnection(response.getName());
+        }
     }
 
     @Override

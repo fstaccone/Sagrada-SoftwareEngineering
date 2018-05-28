@@ -111,7 +111,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public void reconnect(String name) throws RemoteException, InterruptedException {
+    public void reconnect(String name){
         lobby.reconnect(name);
     }
 
@@ -312,6 +312,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public Response handle(QuitGameRequest request) {
         quitGame(request.name, request.single);
+        return null;
+    }
+
+    @Override
+    public Response handle(ReconnectionRequest request){
+        reconnect(request.username);
         return null;
     }
 

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.socket;
 
-import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.requests.*;
+import it.polimi.ingsw.socket.responses.Response;
 
 public interface RequestHandler {
     Response handle(CheckUsernameRequest request);
@@ -39,5 +39,7 @@ public interface RequestHandler {
     Response handle(UseToolCard10Request request);
 
     Response handle(QuitGameRequest request);
+
+    Response handle(ReconnectionRequest request);
 
 }

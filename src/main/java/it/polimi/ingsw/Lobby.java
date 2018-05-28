@@ -4,10 +4,7 @@ import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 import it.polimi.ingsw.model.gamelogic.MatchStarter;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.socket.responses.MatchStartedResponse;
-import it.polimi.ingsw.socket.responses.PlayerExitResponse;
-import it.polimi.ingsw.socket.responses.Response;
-import it.polimi.ingsw.socket.responses.WaitingPlayersResponse;
+import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -43,7 +40,7 @@ public class Lobby {
 
     // to simulate the timer before creating a match
     private Timer timer;
-    private MatchStarter task;
+
 
 
     public Lobby(int waitingTime, int turnTime) {
@@ -190,8 +187,16 @@ public class Lobby {
             }
 
             Response response = new PlayerExitResponse(name);
-            socketResponseToAll(response);
-
+            for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
+                if(player.getStatus().equals(ConnectionStatus.CONNECTED)) {
+                    try {
+                        multiplayerMatches.get(player.getName()).getSocketObservers().get(player).writeObject(response);
+                        multiplayerMatches.get(player.getName()).getSocketObservers().get(player).reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
             if (p.isMyTurn()) {
                 p.setMyTurn(false);
@@ -219,12 +224,29 @@ public class Lobby {
         }
     }
 
-    // todo: the same with SOCKET
-    public void reconnect(String name) throws RemoteException {
+    public void reconnect(String name) {
         takenUsernames.put(name, ConnectionStatus.CONNECTED);
         multiplayerMatches.get(name).getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
+        multiplayerMatches.get(name).getSocketObservers().put(multiplayerMatches.get(name).getPlayer(name), socketObservers.remove(name));
+
         for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {
-            mo.onPlayerReconnection(name);
+            try {
+                mo.onPlayerReconnection(name);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Response response = new PlayerReconnectionResponse(name);
+        for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
+            if (!p.getName().equals(name)) {
+                try {
+                    multiplayerMatches.get(p.getName()).getSocketObservers().get(p).writeObject(response);
+                    multiplayerMatches.get(p.getName()).getSocketObservers().get(p).reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -282,7 +304,10 @@ public class Lobby {
 
             // IF THERE ARE 2 PLAYERS WAITING FOR THE MATCH BEGINNING, THE TIMER IS SET
             if (waitingPlayers.size() == 2) {
+                MatchStarter task;
+
                 System.out.println("Lobby :Timer started: " + waitingTime / 1000 + " seconds from now!");
+
                 this.timer = new Timer();
                 task = new MatchStarter(this);
                 timer.schedule(task, waitingTime);

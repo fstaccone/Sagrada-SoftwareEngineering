@@ -234,7 +234,7 @@ public class LoginHandler implements Initializable {
                 }
             } else {
                 if (isCli) {
-                    // new SocketGUI
+                    new SocketCli(username, clientController, false).reconnect();
                 } else {
                     // new SocketGUI
                 }
@@ -275,7 +275,7 @@ public class LoginHandler implements Initializable {
         } finally { /*socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM*/}
     }
 
-    private void createClientRmi() throws RemoteException {
+    private void createClientRmi(){
         // to create the link between this Client and the Player in the model
         if (isSingleplayer) {
             //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);

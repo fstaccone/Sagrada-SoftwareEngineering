@@ -20,8 +20,6 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onOtherTurn(String name) throws RemoteException;
 
-    void onShowToolCards() throws RemoteException;
-
     void onInitialization(String toolcards, String publicCards, String privateCard) throws RemoteException;
 
     void onPlayerExit(String name) throws RemoteException;
@@ -29,10 +27,6 @@ public interface MatchObserver extends Serializable, Remote {
     void onPlayerReconnection(String name) throws RemoteException;
 
     void onShowTrack(String track) throws RemoteException;
-
-    void onShowPrivateCard() throws RemoteException;
-
-    void onShowPublicCards() throws RemoteException;
 
     void onGameClosing() throws RemoteException;
 }

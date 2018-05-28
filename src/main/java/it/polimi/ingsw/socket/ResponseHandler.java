@@ -19,4 +19,5 @@ public interface ResponseHandler {
     void handle(ToolCardEffectAppliedResponse response);
     void handle(ClosingGameResponse response);
     void handle(PlayerExitResponse response);
+    void handle(PlayerReconnectionResponse response);
 }

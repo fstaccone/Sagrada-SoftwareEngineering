@@ -5,12 +5,13 @@ import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.*;
 
 import java.io.*;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class Cli{
+public class Cli {
 
     private String username;
     private transient ClientController clientController;
@@ -33,7 +34,6 @@ public class Cli{
     private boolean windowChosen = false;
 
     private boolean single;
-
 
 
     private static final String WELCOME = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
@@ -88,8 +88,9 @@ public class Cli{
     public Cli(String username, RemoteController controller, ClientController clientController, boolean single) {
         this.username = username;
         this.controller = controller;
-        this.clientController=clientController;
-        this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));;
+        this.clientController = clientController;
+        this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
+        ;
         myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
@@ -98,7 +99,7 @@ public class Cli{
         publicCardsList = new ArrayList<>();
     }
 
-    public void printWelcome(){
+    public void printWelcome() {
         printer.println(WELCOME + username.toUpperCase() + "!\n");
         printer.flush();
     }
@@ -291,9 +292,9 @@ public class Cli{
                                                 printer.println("\nYou have chosen:");
                                                 printer.flush();
                                                 //RMI
-                                                if (controller!=null)
+                                                if (controller != null)
                                                     controller.chooseWindow(username, toolNumber1, single);
-                                                //SOCKET
+                                                    //SOCKET
                                                 else
                                                     clientController.request(new ChooseWindowRequest(username, toolNumber1, false));
                                                 windowChosen = true;
@@ -322,9 +323,9 @@ public class Cli{
                             case "pass": {
                                 if (windowChosenCheck(windowChosen)) {
                                     //RMI
-                                    if(controller!= null)
+                                    if (controller != null)
                                         controller.goThrough(username, single);
-                                    //SOCKET
+                                        //SOCKET
                                     else
                                         clientController.request(new GoThroughRequest(username, single));
                                 }
@@ -345,7 +346,7 @@ public class Cli{
                                                     printer.flush();
 
                                                     //RMI
-                                                    if (controller!=null) {
+                                                    if (controller != null) {
                                                         if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
                                                             printer.println("\nWell done! The chosen dice has been placed correctly.\n");
                                                             printer.flush();
@@ -394,16 +395,7 @@ public class Cli{
                             break;
 
                             case "q": {
-                                //RMI
-                                if(controller!=null) {
-                                    controller.quitGame(username, single);
-                                    System.exit(0);
-                                }
-                                //SOCKET
-                                else{
-                                    clientController.request(new QuitGameRequest(username, single));
-                                    System.exit(0);
-                                }
+                                quit();
                             }
                             break;
 
@@ -429,7 +421,7 @@ public class Cli{
                             break;
 
                             case "sp": {
-                                if(controller!= null)
+                                if (controller != null)
                                     controller.showPlayers(username);
                                 else {
                                     //todo
@@ -439,22 +431,7 @@ public class Cli{
                             break;
 
                             case "sw": {
-                                if (parametersCardinalityCheck(2)) {
-                                    // todo controllo sull'assegnamento dell schemeCard
-                                    if (playersNames.contains(parts[1])) {
-                                        printer.println("\nHere is the window pattern card of the player " + parts[1].toUpperCase());
-                                        printer.flush();
-                                        //RMI
-                                        if (controller!=null)
-                                            controller.showWindow(username, parts[1]);
-                                        //SOCKET
-                                        else
-                                            clientController.request(new ShowWindowRequest(username, parts[1]));
-                                    } else {
-                                        printer.println("\nWARNING: Player " + parts[1].toUpperCase() + " does not exist!");
-                                        printer.flush();
-                                    }
-                                }
+                                showWindow();
                             }
                             break;
 
@@ -509,7 +486,7 @@ public class Cli{
                             break;
 
                             case "track": {
-                                if(controller!=null)
+                                if (controller != null)
                                     controller.showTrack(username, single);
                                 else {
                                     //todo
@@ -543,16 +520,7 @@ public class Cli{
                             break;
 
                             case "q": {
-                                //RMI
-                                if(controller!=null) {
-                                    controller.quitGame(username, single);
-                                    System.exit(0);
-                                }
-                                //SOCKET
-                                else{
-                                    clientController.request(new QuitGameRequest(username, single));
-                                    System.exit(0);
-                                }
+                                quit();
                             }
                             break;
 
@@ -563,7 +531,7 @@ public class Cli{
                             break;
 
                             case "sp": {
-                                if(controller!= null)
+                                if (controller != null)
                                     controller.showPlayers(username);
                                 else {
                                     //todo
@@ -573,22 +541,7 @@ public class Cli{
                             break;
 
                             case "sw": {
-                                if (parametersCardinalityCheck(2)) {
-                                    // todo controllo sull'assegnamento dell schemeCard
-                                    if (playersNames.contains(parts[1])) {
-                                        printer.println("\nHere is the window pattern card of the player " + parts[1].toUpperCase());
-                                        printer.flush();
-                                        //RMI
-                                        if (controller!=null)
-                                            controller.showWindow(username, parts[1]);
-                                            //SOCKET
-                                        else
-                                            clientController.request(new ShowWindowRequest(username, parts[1]));
-                                    } else {
-                                        printer.println("\nWARNING: Player " + parts[1].toUpperCase() + " does not exist!");
-                                        printer.flush();
-                                    }
-                                }
+                                showWindow();
                             }
                             break;
 
@@ -600,7 +553,7 @@ public class Cli{
                             break;
 
                             case "track": {
-                                if (controller!=null)
+                                if (controller != null)
                                     controller.showTrack(username, single);
                                 else {
                                     //todo
@@ -630,6 +583,41 @@ public class Cli{
                 }
 
 
+            }
+        }
+        private void showWindow() throws RemoteException {
+            if (parametersCardinalityCheck(2)) {
+                // todo controllo sull'assegnamento dell schemeCard
+                if (playersNames.contains(parts[1])) {
+                    printer.println("\nHere is the window pattern card of the player " + parts[1].toUpperCase());
+                    printer.flush();
+                    //RMI
+                    if (controller != null)
+                        controller.showWindow(username, parts[1]);
+                    //SOCKET
+                    else
+                        clientController.request(new ShowWindowRequest(username, parts[1]));
+                } else {
+                    printer.println("\nWARNING: Player " + parts[1].toUpperCase() + " does not exist!");
+                    printer.flush();
+                }
+            }
+        }
+
+        private void quit() {
+            //RMI
+            if (controller != null) {
+                try {
+                    controller.quitGame(username, single);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                System.exit(0);
+            }
+            //SOCKET
+            else {
+                clientController.request(new QuitGameRequest(username, single));
+                System.exit(0);
             }
         }
 
@@ -799,7 +787,7 @@ public class Cli{
                         }
                         break;
                         case 8: {
-                            if(toolCommand.command8()){
+                            if (toolCommand.command8()) {
                                 printer.println("\nBen fatto! Puoi piazzare il tuo secondo dado.");
                                 printer.flush();
                             } else {
