@@ -43,26 +43,6 @@
     -fx-scale-z: 2.0;
 }
 
-#cartaObPriv{
-    -fx-background-image: url("private_objective_cards/carte_obiettivo_14.png");
-    -fx-background-size: cover;
-}
-
-#cartaObPub1{
-    -fx-background-image: url("public_objective_cards/carte_obiettivo_08.png");
-    -fx-background-size: cover;
-}
-
-#cartaObPub2{
-    -fx-background-image: url("public_objective_cards/carte_obiettivo_03.png");
-    -fx-background-size: cover;
-}
-
-#cartaObPub3{
-    -fx-background-image: url("public_objective_cards/carte_obiettivo_02.png");
-    -fx-background-size: cover;
-}
-
 #choose-card-window{
     -fx-background-image: url("other/wood.png");
     -fx-background-size: cover;

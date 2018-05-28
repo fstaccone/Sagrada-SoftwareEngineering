@@ -13,7 +13,7 @@ public class PublicObjectiveCard {
     public PublicObjectiveCard(String name) {
         this.name = name;
         switch (this.name) {
-            case "Color Variety":
+            case "Varietà di colore":
                 effect = new ColorsVarietyEffect();
                 description = "Sets of one of each color anywhere";
                 value = 4;
@@ -34,7 +34,7 @@ public class PublicObjectiveCard {
                 effect = new MediumShadesEffect();
                 description = "description card 5";
                 break;
-            case "Light Shades":
+            case "Sfumature chiare":
                 effect = new LightShadesEffect();
                 description = "Sets of 1 & 2 values anywhere";
                 value = 2;
@@ -48,7 +48,7 @@ public class PublicObjectiveCard {
                 description = "Columns with no repeated colors";
                 value = 5;
                 break;
-            case "Column Color Variety":
+            case "Colori diversi - Colonna":
                 effect = new DifferentColorsInAColumnEffect();
                 description = "description card 9";
                 break;

@@ -70,8 +70,6 @@ public class GameBoardHandler implements Initializable {
     @FXML
     Pane playerWindowPatternCard;
     @FXML
-    Button cartaObPub1;
-    @FXML
     Button tool0;
     @FXML
     Button tool1;
@@ -101,6 +99,14 @@ public class GameBoardHandler implements Initializable {
     TextArea textArea;
     @FXML
     Button quit;
+    @FXML
+    ImageView privateObjCard;
+    @FXML
+    ImageView pubObjCard1;
+    @FXML
+    ImageView pubObjCard2;
+    @FXML
+    ImageView pubObjCard3;
 
     private RemoteController controller;
     private String username;
@@ -138,13 +144,14 @@ public class GameBoardHandler implements Initializable {
                     int coordinateY = tempY;
                     textArea.setText("You want to put dice: " + diceChosen + "in pos: " + coordinateX + "," + coordinateY);
                     try {
-                        putImage(diceChosen, coordinateX, coordinateY);
+                        String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
+                        String url = genericURL + reserveDices.get(diceChosen) + ".png";
                         if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
                             textArea.setText("Well done! The chosen dice has been placed correctly.");
+                            putImage(url, coordinateX, coordinateY);
                             diceChosen = 9; //FIRST VALUE NEVER PRESENT IN THE RESERVE
                         } else {
                             textArea.setText("WARNING: You tried to place a dice where you shouldn't, or you are trying to place a second dice in your turn!");
-                            deleteImage(coordinateX, coordinateY);
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -289,9 +296,7 @@ public class GameBoardHandler implements Initializable {
         }
     }
 
-    public void putImage (int reserveDice, int x, int y){
-        String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
-        String url = genericURL + reserveDices.get(reserveDice) + ".png";
+    public void putImage (String url, int x, int y){
         Image diceImg = new Image(url);
         ImageView diceView = new ImageView(diceImg);
         diceView.setFitWidth(58);
@@ -301,5 +306,19 @@ public class GameBoardHandler implements Initializable {
 
     public void deleteImage (int x, int y){
         Platform.runLater(()->windowPatternCard[x][y].setGraphic(null));
+    }
+
+    public void setPrivateCard(String privateCard){
+        Image privateObjCardImg = new Image("File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/" + privateCard + ".png");
+        privateObjCard.setImage(privateObjCardImg);
+    }
+
+    public void setPublicCards(List<String> publicCards){
+        Image publicObjCardImg1 = new Image("File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/" + publicCards.get(0) + ".png");
+        pubObjCard1.setImage(publicObjCardImg1);
+        Image publicObjCardImg2 = new Image("File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/" + publicCards.get(1) + ".png");
+        pubObjCard2.setImage(publicObjCardImg2);
+        Image publicObjCardImg3 = new Image("File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/" + publicCards.get(2) + ".png");
+        pubObjCard3.setImage(publicObjCardImg3);
     }
 }
