@@ -126,6 +126,11 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
+    public void onGameClosing() throws RemoteException {
+
+    }
+
+    @Override
     public void onShowWindow(String window) throws RemoteException {
         System.out.println("On show windowStage");
         String imgUrl = chooseCardHandler.getImageUrl();
@@ -171,7 +176,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
         for(String s : temp){
-            s = s.split(" :", 2)[0];
+            s = s.split(":", 2)[0];
             toolCardsList.add(s);
         }
     }

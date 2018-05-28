@@ -35,4 +35,6 @@ public interface RequestHandler {
     Response handle(UseToolCard9Request request);
 
     Response handle(UseToolCard10Request request);
+
+    Response handle(QuitGameRequest request);
 }

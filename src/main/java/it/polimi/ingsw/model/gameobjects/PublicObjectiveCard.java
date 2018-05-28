@@ -7,13 +7,15 @@ public class PublicObjectiveCard extends ObjectiveCard {
 
     private Effect effect;
     private String description;
+    private int value;
 
     public PublicObjectiveCard(String name) {
         super(name);
         switch (this.name) {
-            case "Varietà di colore":
+            case "Color Variety":
                 effect = new ColorsVarietyEffect();
-                description = "description card 1";
+                description = "Sets of one of each color anywhere";
+                value = 4;
                 break;
             case "Diagonali colorate":
                 effect = new ColoredDiagonalsEffect();
@@ -31,9 +33,10 @@ public class PublicObjectiveCard extends ObjectiveCard {
                 effect = new MediumShadesEffect();
                 description = "description card 5";
                 break;
-            case "Sfumature chiare":
+            case "Light Shades":
                 effect = new LightShadesEffect();
-                description = "description card 6";
+                description = "Sets of 1 & 2 values anywhere";
+                value = 2;
                 break;
             case "Sfumature diverse - Colonna":
                 effect = new DifferentShadesInAColumnEffect();
@@ -41,9 +44,10 @@ public class PublicObjectiveCard extends ObjectiveCard {
                 break;
             case "Sfumature diverse - Riga":
                 effect = new DifferentShadesInARowEffect();
-                description = "description card 8";
+                description = "Columns with no repeated colors";
+                value = 5;
                 break;
-            case "Colori diversi - Colonna":
+            case "Column Color Variety":
                 effect = new DifferentColorsInAColumnEffect();
                 description = "description card 9";
                 break;
@@ -67,13 +71,6 @@ public class PublicObjectiveCard extends ObjectiveCard {
 
     @Override
     public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append("- cardname: ");
-        string.append(name);
-        string.append('\n');
-        string.append("  description: ");
-        string.append(description);
-        string.append('\n');
-        return string.toString();
+        return "- name: " + name + "\n value: " + value + "\n description: " + description + '\n';
     }
 }

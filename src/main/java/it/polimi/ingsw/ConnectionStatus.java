@@ -6,5 +6,5 @@ public enum ConnectionStatus {
      * active match in which he's involved.
      * The value ABSENT is used to show that a player is not involved in any match and it's not logged in.
      */
-    CONNECTED, DISCONNECTED, ABSENT;
+    CONNECTED, DISCONNECTED, ABSENT
 }

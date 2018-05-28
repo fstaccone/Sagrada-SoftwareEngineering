@@ -163,6 +163,21 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
+    public void handle(ClosingGameResponse response) {
+        if (socketCli != null){
+            socketCli.onGameClosing();
+        }
+    }
+
+    @Override
+    public void handle(PlayerExitResponse response) {
+        if(socketCli != null){
+            socketCli.onPlayerExit(response.name);
+        }
+
+    }
+
+    @Override
     public void handle(ProposeWindowResponse response) {
         if (socketCli != null) {
             socketCli.onWindowChoise(response.list);

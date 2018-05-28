@@ -1,15 +1,14 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import it.polimi.ingsw.model.gamelogic.Match;
-
 import java.io.Serializable;
 
-public abstract class Player implements Serializable{
+public abstract class Player implements Serializable {
     protected final String name;
     protected WindowPatternCard schemeCard;
     private Dice pickedDice;
     private int points;
     protected Colors color;
+    protected int turnsLeft;
 
     private int dice;
     private String choise;
@@ -94,7 +93,9 @@ public abstract class Player implements Serializable{
         return dice;
     }
 
-    public void setDice(int diceChosen) { dice = diceChosen; }
+    public void setDice(int diceChosen) {
+        dice = diceChosen;
+    }
 
     public String getChoise() {
         return choise;
@@ -104,18 +105,26 @@ public abstract class Player implements Serializable{
         this.choise = choise;
     }
 
-    public int getRound(){ return this.roundChosen; }
+    public int getRound() {
+        return this.roundChosen;
+    }
 
-    public void setRound(int roundChosen){ this.roundChosen=roundChosen;}
+    public void setRound(int roundChosen) {
+        this.roundChosen = roundChosen;
+    }
 
-    public int getDiceChosenFromRound(){ return this.diceChosenFromRound; }
+    public int getDiceChosenFromRound() {
+        return this.diceChosenFromRound;
+    }
 
-    public void setDiceChosenFromRound(int diceChosenFromRound){ this.diceChosenFromRound=diceChosenFromRound;}
+    public void setDiceChosenFromRound(int diceChosenFromRound) {
+        this.diceChosenFromRound = diceChosenFromRound;
+    }
 
 
     // todo: check inheritance
-    public Player(String name){
-        super(); // Perchè?
+    public Player(String name) {
+        super(); // todo: Perchè?
         this.name = name;
         this.points = 0;
     }
@@ -124,35 +133,37 @@ public abstract class Player implements Serializable{
     public String getName() {
         return name;
     }
+
     public Dice getPickedDice() {
         return pickedDice;
     }
+
     public WindowPatternCard getSchemeCard() {
         return schemeCard;
     }
+
     public int getPoints() {
         return points;
     }
+
     public Colors getColor() { return color; }
+
+    public int getTurnsLeft() { return turnsLeft; }
     // end of getters
 
     // setters
     public void setPickedDice(Dice pickedDice) {
         this.pickedDice = pickedDice;
     }
+
     public abstract void setSchemeCard(WindowPatternCard schemeCard);
+
     public void setPoints(int points) {
         this.points = points;
     }
+
     public void setColor(Colors color) { this.color = color; }
+    // end of setters
 
-    // Useful methods for the game's flow
-    public abstract void useToolCard(ToolCard chosenToolCardToUse);
-
-    // potrebbe essere uguale per entrambi i tipi di match, ma forse è più facile gestirlo diversamente
-    /*
-    public void chooseDice(){
-    }
-    */
 
 }

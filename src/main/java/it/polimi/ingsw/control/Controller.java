@@ -1,17 +1,13 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.*;
+import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.Lobby;
-import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.ToolCard;
+import it.polimi.ingsw.LobbyObserver;
+import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.*;
-import it.polimi.ingsw.socket.responses.DicePlacedResponse;
-import it.polimi.ingsw.socket.responses.NameAlreadyTakenResponse;
-import it.polimi.ingsw.socket.responses.Response;
-import it.polimi.ingsw.socket.responses.ToolCardEffectAppliedResponse;
+import it.polimi.ingsw.socket.responses.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -94,9 +90,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public void showTrack(String name, boolean isSingle) {
-        if(isSingle){
+        if (isSingle) {
             lobby.getSingleplayerMatches().get(name).showTrack(name);
-        }else {
+        } else {
             lobby.getMultiplayerMatches().get(name).showTrack(name);
         }
     }
@@ -114,7 +110,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void quitGame(String name, boolean isSingle) {
         if (isSingle) {
-            lobby.getSingleplayerMatches().get(name).terminateMatch();
+            lobby.removeMatchSingleplayer(name);
         } else {
             lobby.disconnect(name);
         }
@@ -276,7 +272,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(UseToolCard5Request request) {
-        boolean effectApplied = useToolCard5(request.diceChosen,request.roundChosen,request.diceChosenFromRound, request.name, request.isSingle);
+        boolean effectApplied = useToolCard5(request.diceChosen, request.roundChosen, request.diceChosenFromRound, request.name, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
@@ -301,6 +297,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     public Response handle(UseToolCard10Request request) {
         boolean effectApplied = useToolCard10(request.diceChosen, request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
+    }
+
+    @Override
+    public Response handle(QuitGameRequest request) {
+        if (request.single) {
+            lobby.removeMatchSingleplayer(request.name);
+        } else {
+            lobby.disconnect(request.name);
+        }
+        return null;
     }
 
 
