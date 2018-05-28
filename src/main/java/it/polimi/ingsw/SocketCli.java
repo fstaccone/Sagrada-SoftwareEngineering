@@ -185,9 +185,7 @@ public class SocketCli implements Serializable, MatchObserver {
                 .collect(Collectors.toList());
 
         for (String card : toolCardsList) {
-            String[] strings = card.split(" " + ":");
-
-            Arrays.stream(strings).forEach(System.out::println);
+            String[] strings = card.split(":");
 
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
             this.toolCommands.add(new ToolCommand(i, this.printer, null, null, this.username, this.single));

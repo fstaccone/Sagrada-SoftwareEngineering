@@ -14,13 +14,13 @@ public class ToolCard extends Card {
     public ToolCard(String name, String toolID) {
         super(name);
         switch (this.name) {
-            case "Grozing Pliers":
+            case "Pinza Sgrossatrice":
                 effect = new IncrDecrDiceValueEffect();
-                description = "After drafting, increase or decrease the value of the drafted die by 1\n" +
+                description = "After drafting you can increase or decrease the value of the drafted die by 1\n" +
                         "1 may not change to 6 or 6 to 1";
                 color = Colors.VIOLET;
                 break;
-            case "Eglomise Brush":
+            case "Pennello per Eglomise":
                 effect = new MoveDiceIgnoringColorRestrEffect();
                 description = "Move any one die in your window ignoring color restrictions\n" +
                         "You must obey all other placement restrictions";

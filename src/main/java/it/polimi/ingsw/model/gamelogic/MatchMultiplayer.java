@@ -367,21 +367,36 @@ public class MatchMultiplayer extends Match implements Runnable {
         return false;
     }
 
+
     public boolean useToolCard1(int diceChosen, String incrOrDecr, String name) {
-        getPlayer(name).setDice(diceChosen);
-        getPlayer(name).setChoise(incrOrDecr);
-        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(1, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
-        return reserveToBeUpdated;
+        if(!isToolAction()) {
+            getPlayer(name).setDice(diceChosen);
+            getPlayer(name).setChoise(incrOrDecr);
+
+            boolean result = getBoard().findAndUseToolCard(1, getPlayer(name), this);
+            reserveToBeUpdatedCheck(result, name);
+            setToolAction(result);
+
+            return result;
+        }else{
+            return false;
+        }
     }
 
     public boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String name) {
-        getPlayer(name).setStartX1(startX);
-        getPlayer(name).setStartY1(startY);
-        getPlayer(name).setFinalX1(finalX);
-        getPlayer(name).setFinalY1(finalY);
-        return getBoard().findAndUseToolCard(n, getPlayer(name), this);
+        if(!isToolAction()) {
+            getPlayer(name).setStartX1(startX);
+            getPlayer(name).setStartY1(startY);
+            getPlayer(name).setFinalX1(finalX);
+            getPlayer(name).setFinalY1(finalY);
 
+            boolean result = getBoard().findAndUseToolCard(n, getPlayer(name), this);
+            setToolAction(result);
+
+            return result;
+        }else{
+            return false;
+        }
     }
 
     public boolean useToolCard4(int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
@@ -413,9 +428,17 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public boolean useToolCard7(String name) {
-        boolean reserveToBeUpdated = getBoard().findAndUseToolCard(7, getPlayer(name), this);
-        reserveToBeUpdatedCheck(reserveToBeUpdated, name);
-        return reserveToBeUpdated;
+        if(!isToolAction()) {
+            boolean result;
+
+            result = getBoard().findAndUseToolCard(7, getPlayer(name), this);
+            reserveToBeUpdatedCheck(result, name);
+            setToolAction(result);
+
+            return result;
+        } else {
+            return false;
+        }
     }
 
     public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name) {

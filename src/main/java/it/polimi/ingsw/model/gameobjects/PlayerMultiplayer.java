@@ -7,7 +7,6 @@ public class PlayerMultiplayer extends Player {
     private int numFavorTokens;
     private PrivateObjectiveCard privateObjectiveCard;
     private ConnectionStatus status;
-    private int turnsLeft;
     private boolean myTurn;
     private MatchMultiplayer match;
     private boolean schemeCardSet;
@@ -38,7 +37,6 @@ public class PlayerMultiplayer extends Player {
         return privateObjectiveCard;
     }
     public ConnectionStatus getStatus() { return status; }
-    public int getTurnsLeft() { return turnsLeft; }
     public boolean isMyTurn() { return myTurn; }
     public boolean isSchemeCardSet() { return schemeCardSet; }
 

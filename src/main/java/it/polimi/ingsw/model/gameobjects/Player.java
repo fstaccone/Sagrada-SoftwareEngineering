@@ -8,6 +8,7 @@ public abstract class Player implements Serializable {
     private Dice pickedDice;
     private int points;
     protected Colors color;
+    protected int turnsLeft;
 
     private int dice;
     private String choise;
@@ -146,6 +147,8 @@ public abstract class Player implements Serializable {
     }
 
     public Colors getColor() { return color; }
+
+    public int getTurnsLeft() { return turnsLeft; }
     // end of getters
 
     // setters

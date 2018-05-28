@@ -233,4 +233,9 @@ public class ToolCommand {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "command" + i;
+    }
 }

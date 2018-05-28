@@ -27,7 +27,7 @@ public class TurnManager implements Runnable {
     @Override
     public void run() {
         try {
-            // drawWindowPatternCards();
+            initializeClients();
             turnManager();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -61,9 +61,12 @@ public class TurnManager implements Runnable {
 
     }
 
-    private void initializeClients() throws RemoteException {
+    private void initializeRound(){
         match.getPlayers().forEach(player -> player.setTurnsLeft(2));
         match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
+    }
+
+    private void initializeClients() throws RemoteException {
 
         String toolCards = match.getDecksContainer().getToolCardDeck().getPickedCards().toString();
         String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
@@ -211,8 +214,7 @@ public class TurnManager implements Runnable {
     }
 
     private void turnManager() throws InterruptedException, RemoteException {
-
-        initializeClients();
+        initializeRound();
 
         playFirstTurn();
 

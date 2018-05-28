@@ -176,7 +176,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
         for(String s : temp){
-            s = s.split(" :", 2)[0];
+            s = s.split(":", 2)[0];
             toolCardsList.add(s);
         }
     }

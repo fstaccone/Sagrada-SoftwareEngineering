@@ -125,7 +125,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onYourTurn(boolean yourTurn, String string) {
-        turnNumber++;
         if (string != null)
             onReserve(string);
         this.myTurn = yourTurn;
@@ -183,10 +182,13 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     private void parsePublicCards(String publicCards) {
         String cards = publicCards.substring(1, publicCards.length() - 1);
         publicCardsList = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
+
+
     }
 
     private void parseToolcards(String toolcards) {
         String cards = toolcards.substring(1, toolcards.length() - 1);
+
         toolCardsList = Pattern.compile(", ")
                 .splitAsStream(cards)
                 .collect(Collectors.toList());
@@ -196,7 +198,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
             this.toolCommands.add(new ToolCommand(i, this.printer, this.controller, null, this.username, this.single));
-        }
+            }
     }
 
     @Override
@@ -411,17 +413,13 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
                             case "sw": {
                                 if (parametersCardinalityCheck(2)) {
-                                    if (turnNumber > 1) {
-                                        if (playersNames.contains(parts[1])) {
-                                            printer.println("\nHere is the window pattern card of the player " + parts[1].toUpperCase());
-                                            printer.flush();
-                                            controller.showWindow(username, parts[1]);
-                                        } else {
-                                            printer.println("\nWARNING: Player " + parts[1].toUpperCase() + " does not exist!");
-                                            printer.flush();
-                                        }
+                                    // todo controllo sull'assegnamento dell schemeCard
+                                    if (playersNames.contains(parts[1])) {
+                                        printer.println("\nHere is the window pattern card of the player " + parts[1].toUpperCase());
+                                        printer.flush();
+                                        controller.showWindow(username, parts[1]);
                                     } else {
-                                        printer.println("\nWARNING: You have to wait your second turn to ask for other players' scheme cards! " + parts[1]);
+                                        printer.println("\nWARNING: Player " + parts[1].toUpperCase() + " does not exist!");
                                         printer.flush();
                                     }
                                 }
@@ -722,13 +720,15 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
                         break;
 
                         case 7: {
-                            if (turnNumber == 2 && diceChosen == 9) {// turno corretto  e dado non ancora scelto
+                            if (diceChosen == 9) { //dado non ancora scelto
                                 if (toolCommand.command7()) {
                                     printer.println("\nWell done! The reserve has been rerolled correctly.\n");
                                     printer.flush();
+                                } else {
+                                    gameErrorPrint();
                                 }
                             } else {
-                                gameErrorPrint();
+                                syntaxErrorPrint();
                             }
 
                         }
