@@ -107,6 +107,19 @@ public class GameBoardHandler implements Initializable {
     ImageView pubObjCard2;
     @FXML
     ImageView pubObjCard3;
+    @FXML
+    Pane pane1;
+    @FXML
+    Pane pane2;
+    @FXML
+    Pane pane3;
+    @FXML
+    GridPane grid1;
+    @FXML
+    GridPane grid2;
+    @FXML
+    GridPane grid3;
+
 
     private RemoteController controller;
     private String username;
@@ -126,6 +139,18 @@ public class GameBoardHandler implements Initializable {
                 s = rmiGui.getDicesList().get(i);
                 diceChosen = i;
                 textArea.setText("You currently chose the dice: " + s + " pos: " + i);
+            }
+        }
+    };
+
+    private EventHandler<ActionEvent> toolSelected = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent event) {
+            if(rmiGui.isMyTurn()) {
+                String s = event.getSource().toString().substring(14,15);
+                textArea.setText("You currently chose the toolcard " + s );
+                int tool = Integer.parseInt(s);
+                //USARE LA CARTA UTENSILE
             }
         }
     };
@@ -223,6 +248,7 @@ public class GameBoardHandler implements Initializable {
         cardView0.setFitWidth(158);
         cardView0.setFitHeight(240);
         Platform.runLater(()->tool0.setGraphic(cardView0));
+        tool0.setOnAction(toolSelected);
         //Initializing toolCard1
         String url1 = genericURL + toolCardsList.get(1) + ".png";
         Image cardImg1 = new Image(url1);
@@ -230,6 +256,7 @@ public class GameBoardHandler implements Initializable {
         cardView1.setFitWidth(158);
         cardView1.setFitHeight(240);
         Platform.runLater(()->tool1.setGraphic(cardView1));
+        tool1.setOnAction(toolSelected);
         //Initializing toolCard2
         String url2 = genericURL + toolCardsList.get(2) + ".png";
         Image cardImg2 = new Image(url2);
@@ -237,6 +264,7 @@ public class GameBoardHandler implements Initializable {
         cardView2.setFitWidth(158);
         cardView2.setFitHeight(240);
         Platform.runLater(()->tool2.setGraphic(cardView2));
+        tool2.setOnAction(toolSelected);
     }
 
     public void setReserve(List<String> dicesList){
