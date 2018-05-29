@@ -7,7 +7,9 @@ import it.polimi.ingsw.socket.requests.*;
 import java.io.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,11 @@ public class Cli {
     private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
     private String privateCard;
+    private String mySchemeCard;
+
+    private int myFavorTokens;
+    private Map<String ,Integer > otherFavorTokensMap;
+    private Map<String ,String > otherSchemeCardsMap;
 
     private int diceChosen = 9;
     private int coordinateX;
@@ -90,7 +97,8 @@ public class Cli {
         this.controller = controller;
         this.clientController = clientController;
         this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
-        ;
+        this.otherFavorTokensMap=new HashMap<>();
+        this.otherSchemeCardsMap=new HashMap<>();
         myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
@@ -102,6 +110,18 @@ public class Cli {
     public void printWelcome() {
         printer.println(WELCOME + username.toUpperCase() + "!\n");
         printer.flush();
+    }
+
+    public void onMyFavorTokens(int value){
+        this.myFavorTokens=value;
+    }
+
+    public void onOtherFavorTokens(int value, String name){
+        this.otherFavorTokensMap.put(name,value);
+    }
+
+    public void onOtherSchemeCards(String scheme, String name){
+        this.otherSchemeCardsMap.put(name,scheme);
     }
 
     public void onPlayers(List<String> playersNames) {
@@ -152,9 +172,8 @@ public class Cli {
         printer.flush();
     }
 
-    public void onShowWindow(String window) {
-        printer.println(window);
-        printer.flush();
+    public void onMyWindow(String window) {
+        this.mySchemeCard=window;
     }
 
     public void onOtherTurn(String name) {
@@ -206,13 +225,19 @@ public class Cli {
         printer.flush();
     }
 
-    public void onShowPrivateCard() {
+    public void onGameClosing() {
+        printer.println("Congratulations! You are the winner. You were the only one still in game.");
+        printer.flush();
+        System.exit(0);
+    }
+
+    public void showPrivateCard() {
         printer.println("Your private objective card:");
         printer.println(privateCard);
         printer.flush();
     }
 
-    public void onShowPublicCards() {
+    public void showPublicCards() {
         printer.println("Public objective cards:");
 
         for (String s : publicCardsList) {
@@ -221,19 +246,23 @@ public class Cli {
         printer.flush();
     }
 
-    public void onGameClosing() {
-        printer.println("Congratulations! You are the winner. You were the only one still in game.");
-        printer.flush();
-        System.exit(0);
-    }
-
-    public void onShowToolCards() {
+    public void showToolCards() {
         printer.println("Tool cards:");
 
         for (String s : toolCardsList) {
             printer.println("- " + s);
         }
 
+        printer.flush();
+    }
+
+    public void showFavorTokens(){
+        printer.println("\nAl momento hai " + myFavorTokens +" segnalini.\n");
+        printer.flush();
+    }
+
+    public void showMySchemeCard(){
+        printer.println("\nLa tua carta schema è: " + mySchemeCard +"\n");
         printer.flush();
     }
 
@@ -289,17 +318,17 @@ public class Cli {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null) {
                                             if (Integer.parseInt(parts[1]) < 4) {
-                                                printer.println("\nYou have chosen:");
-                                                printer.flush();
                                                 //RMI
                                                 if (controller != null)
                                                     controller.chooseWindow(username, toolNumber1, single);
-                                                    //SOCKET
+                                                //SOCKET
                                                 else
                                                     clientController.request(new ChooseWindowRequest(username, toolNumber1, false));
+                                                printer.println("Carta scelta correttamente!");
+                                                printer.flush();
                                                 windowChosen = true;
                                             } else {
-                                                printer.println("\nWARNING: The scheme you are trying to choose does not exist, please retry ");
+                                                printer.println("\nATTENZIONE: La carta schema che stai cercando di scegliere non esiste!");
                                                 printer.flush();
                                             }
                                         } else {
@@ -308,14 +337,26 @@ public class Cli {
                                         toolNumber1 = null;
                                     }
                                 } else {
-                                    printer.println("\nWARNING: You have already chosen your scheme card!");
+                                    printer.println("\nATTENZIONE: Hai già scelto la tua carta schema!");
                                     printer.flush();
                                 }
                             }
                             break;
 
                             case "h": {
-                                printer.println("\nInsert a new valid option between: ('+' means SPACE)" + HELP_IN_TURN + HELP_GENERAL);
+                                printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN + HELP_GENERAL);
+                                printer.flush();
+                            }
+                            break;
+
+                            case "otherschemecards": {
+                                printer.println(otherSchemeCardsMap.toString());
+                                printer.flush();
+                            }
+                            break;
+
+                            case "othertokens": {
+                                printer.println(otherFavorTokensMap.toString());
                                 printer.flush();
                             }
                             break;
@@ -342,7 +383,7 @@ public class Cli {
                                                 if (Integer.parseInt(parts[1]) < 4 && Integer.parseInt(parts[2]) < 5) {
                                                     coordinateX = Integer.parseInt(parts[1]);
                                                     coordinateY = Integer.parseInt(parts[2]);
-                                                    printer.println("\nYou have chosen to place the dice in the [" + coordinateX + "][" + coordinateY + "] square of your Scheme Card");
+                                                    printer.println("\nHai scelto di posizionare il dado nella posizione [" + coordinateX + "][" + coordinateY + "] della tua carta schema");
                                                     printer.flush();
 
                                                     //RMI
@@ -394,6 +435,16 @@ public class Cli {
                             }
                             break;
 
+                            case "private": {
+                                showPrivateCard();
+                            }
+                            break;
+
+                            case "public": {
+                                showPublicCards();
+                            }
+                            break;
+
                             case "q": {
                                 quit();
                             }
@@ -417,6 +468,11 @@ public class Cli {
                                     printer.println();
                                     printer.flush();
                                 }
+                            }
+                            break;
+
+                            case "schemecard": {
+                                showMySchemeCard();
                             }
                             break;
 
@@ -461,10 +517,26 @@ public class Cli {
                             }
                             break;
 
+                            case "tokens": {
+                                showFavorTokens();
+                            }
+                            break;
+
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
                                 printer.flush();
-                                onShowToolCards();
+                                showToolCards();
+                            }
+                            break;
+
+
+                            case "track": {
+                                if (controller != null)
+                                    controller.showTrack(username, single);
+                                else {
+                                    //todo
+                                    //clientController.request(new ShowTrackRequest(username,single));
+                                }
                             }
                             break;
 
@@ -485,26 +557,6 @@ public class Cli {
                             }
                             break;
 
-                            case "track": {
-                                if (controller != null)
-                                    controller.showTrack(username, single);
-                                else {
-                                    //todo
-                                    //clientController.request(new ShowTrackRequest(username,single));
-                                }
-                            }
-                            break;
-
-                            case "private": {
-                                onShowPrivateCard();
-                            }
-                            break;
-
-                            case "public": {
-                                onShowPublicCards();
-                            }
-                            break;
-
                             default: {
                                 printer.println("\nWARNING: Wrong command. Insert 'h' command for help!");
                                 printer.flush();
@@ -516,6 +568,30 @@ public class Cli {
                             case "h": {
                                 printer.println("\nInsert a new valid option between: ('+' means SPACE)" + HELP_GENERAL);
                                 printer.flush();
+                            }
+                            break;
+
+
+
+                            case "otherschemecards": {
+                                printer.println(otherSchemeCardsMap.toString());
+                                printer.flush();
+                            }
+                            break;
+
+                            case "othertokens": {
+                                printer.println(otherFavorTokensMap.toString());
+                                printer.flush();
+                            }
+                            break;
+
+                            case "private": {
+                                showPrivateCard();
+                            }
+                            break;
+
+                            case "public": {
+                                showPublicCards();
                             }
                             break;
 
@@ -545,6 +621,11 @@ public class Cli {
                             }
                             break;
 
+                            case "schemecard": {
+                                showMySchemeCard();
+                            }
+                            break;
+
                             case "sp": {
                                 if (controller != null)
                                     controller.showPlayers(username);
@@ -563,7 +644,7 @@ public class Cli {
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards list:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
                                 printer.flush();
-                                onShowToolCards();
+                                showToolCards();
                             }
                             break;
 
@@ -577,13 +658,8 @@ public class Cli {
                             }
                             break;
 
-                            case "private": {
-                                onShowPrivateCard();
-                            }
-                            break;
-
-                            case "public": {
-                                onShowPublicCards();
+                            case "tokens": {
+                                showFavorTokens();
                             }
                             break;
 
@@ -600,20 +676,23 @@ public class Cli {
 
             }
         }
-        private void showWindow() throws RemoteException {
+        private void showWindow() {
             if (parametersCardinalityCheck(2)) {
-                // todo controllo sull'assegnamento dell schemeCard
                 if (playersNames.contains(parts[1])) {
-                    printer.println("\nHere is the window pattern card of the player " + parts[1].toUpperCase());
-                    printer.flush();
-                    //RMI
-                    if (controller != null)
-                        controller.showWindow(username, parts[1]);
-                    //SOCKET
-                    else
-                        clientController.request(new ShowWindowRequest(username, parts[1]));
+
+                    if (otherSchemeCardsMap.containsKey(parts[1])) {
+                        printer.println("\nDi seguito la carta schema del tuo avversario " + parts[1].toUpperCase()+":");
+                        printer.println(otherSchemeCardsMap.get(parts[1]).toString());
+                        printer.flush();
+                    }else
+                    {
+                        printer.println("\nATTENZIONE:Il giocatore " + parts[1].toUpperCase() + " non è un tuo avversario!");
+                        printer.flush();
+                    }
+
+
                 } else {
-                    printer.println("\nWARNING: Player " + parts[1].toUpperCase() + " does not exist!");
+                    printer.println("\nATTENZIONE: Il giocatore " + parts[1].toUpperCase() + " non esiste!");
                     printer.flush();
                 }
             }

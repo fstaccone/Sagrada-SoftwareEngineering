@@ -1,5 +1,7 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.RemoteController;
+
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -16,7 +18,13 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onAfterWindowChoise() throws RemoteException;
 
-    void onShowWindow(String window) throws RemoteException;
+    void onMyWindow(String window) throws RemoteException;
+
+    void onMyFavorTokens(int value) throws RemoteException;
+
+    void onOtherFavorTokens(int value, String name) throws RemoteException;
+
+    void onOtherSchemeCards(String string, String name) throws RemoteException;
 
     void onOtherTurn(String name) throws RemoteException;
 

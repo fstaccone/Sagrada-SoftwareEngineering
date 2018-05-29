@@ -78,11 +78,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public void showWindow(String name, String owner) {
-        lobby.getMultiplayerMatches().get(name).showWindow(name, owner);
-    }
-
-    @Override
     public void showTrack(String name, boolean isSingle) {
         if (isSingle) {
             lobby.getSingleplayerMatches().get(name).showTrack(name);
@@ -251,12 +246,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public Response handle(ShowWindowRequest request) {
-        showWindow(request.myName, request.ownerName);
-        return null;
-    }
-
-    @Override
     public Response handle(UseToolCard1Request request) {
         boolean effectApplied = useToolCard1(request.diceChosen, request.IncrOrDecr, request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
@@ -331,8 +320,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeMatchRemote(username, observer);
     }
 
-    public void addSocketHandler(SocketHandler socketHandler) {
-        this.socketHandlers.add(socketHandler);
-    }
+    public void addSocketHandler(SocketHandler socketHandler) { this.socketHandlers.add(socketHandler); }
 
 }

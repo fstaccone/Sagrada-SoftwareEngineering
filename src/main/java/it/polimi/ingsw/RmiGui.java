@@ -122,7 +122,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onShowWindow(String window) {
+    public void onMyWindow(String window) {
         System.out.println("On show windowStage");
         String imgUrl = chooseCardHandler.getImageUrl();
         FXMLLoader fx = new FXMLLoader();
@@ -146,6 +146,21 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         gameBoardHandler.setTextArea("Now it's your turn!");
         gameBoardHandler.setPrivateCard(privateCard);
         gameBoardHandler.setPublicCards(publicCardsList);
+    }
+
+    @Override
+    public void onMyFavorTokens(int value) {
+
+    }
+
+    @Override
+    public void onOtherFavorTokens(int value, String name) throws RemoteException {
+
+    }
+
+    @Override
+    public void onOtherSchemeCards(String string, String name) throws RemoteException {
+
     }
 
     @Override
@@ -212,5 +227,6 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     public List<String> getDicesList() {
         return dicesList;
     }
+
 
 }

@@ -19,7 +19,6 @@ public interface RemoteController extends Remote{
     boolean placeDice(int dice, int x, int y, String name, boolean isSingle) throws RemoteException;
     void goThrough(String name, boolean isSingle) throws RemoteException;
     void showPlayers(String name) throws  RemoteException;
-    void showWindow(String name, String owner) throws RemoteException;
     void showTrack(String name, boolean isSingle) throws RemoteException;
     void chooseWindow(String name, int index, boolean isSingle) throws RemoteException;
     void quitGame(String name, boolean isSingle) throws RemoteException;

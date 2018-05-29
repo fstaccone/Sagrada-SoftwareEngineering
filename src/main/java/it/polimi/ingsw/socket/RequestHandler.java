@@ -18,8 +18,6 @@ public interface RequestHandler {
 
     Response handle(PlaceDiceRequest request);
 
-    Response handle(ShowWindowRequest request);
-
     Response handle(UseToolCard1Request request);
 
     Response handle(UseToolCard2or3Request request);
