@@ -122,6 +122,11 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
+    public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) throws RemoteException {
+
+    }
+
+    @Override
     public void onShowWindow(String window) {
         System.out.println("On show windowStage");
         String imgUrl = chooseCardHandler.getImageUrl();
@@ -157,7 +162,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard) throws RemoteException {
+    public void onInitialization(String toolcards, String publicCards, String privateCard, boolean windowChosen) {
         System.out.println(toolcards);
         String dicesString = toolcards.substring(1, toolcards.length() - 1);
         List<String> temp = Pattern.compile(", ")

@@ -178,8 +178,15 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(PlayerReconnectionResponse response) {
-        if(socketCli != null){
+        if(socketCli != null) {
             socketCli.onPlayerReconnection(response.getName());
+        }
+    }
+
+    @Override
+    public void handle(GameEndResponse response) {
+        if(socketCli != null) {
+            socketCli.onGameEnd(response.getWinner(), response.getNames(), response.getValues());
         }
     }
 

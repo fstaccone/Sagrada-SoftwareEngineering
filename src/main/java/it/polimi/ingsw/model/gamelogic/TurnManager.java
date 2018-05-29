@@ -74,7 +74,7 @@ public class TurnManager implements Runnable {
         // Rmi notification
         for (PlayerMultiplayer p : match.getPlayers()) {
             if (rmiObserverNotify(p) != null) {
-                rmiObserverNotify(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString());
+                rmiObserverNotify(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString(), p.isSchemeCardSet());
             }
         }
 
@@ -177,16 +177,7 @@ public class TurnManager implements Runnable {
             rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString());
         }
 
-        for(PlayerMultiplayer player1 :match.getSocketObservers().keySet()){
-            System.out.println("FUORI" +player1.getName());
-        }
-
         if (match.getSocketObservers().get(player) != null) {
-
-            for(PlayerMultiplayer player1 :match.getSocketObservers().keySet()){
-                System.out.println("DENTRO" +player1.getName());
-            }
-
             socketObserverNotify(player, new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString()));
         }
         notifyOthers(player);
@@ -270,8 +261,8 @@ public class TurnManager implements Runnable {
         match.pushLeftDicesToRoundTrack();
         match.incrementRoundCounter();
 
-        if (match.getCurrentRound() >= 10) {
-            //match.calculateFinalScore(); // può stare anche in match
+        if (match.getCurrentRound() >= 2) {
+            match.calculateFinalScore();
         } else {
             this.turnManager();
         }

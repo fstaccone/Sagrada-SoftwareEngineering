@@ -4,6 +4,7 @@ import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.ReconnectionRequest;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.List;
 
 
@@ -63,8 +64,8 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override //todo PAOLO
-    public void onInitialization(String toolcards, String publicCards, String privateCard) {
-        cli.onInitialization(toolcards, publicCards, privateCard);
+    public void onInitialization(String toolcards, String publicCards, String privateCard, boolean windowChosen) {
+        cli.onInitialization(toolcards, publicCards, privateCard, windowChosen);
     }
 
     @Override
@@ -86,6 +87,12 @@ public class SocketCli implements Serializable, MatchObserver {
     public void onGameClosing() {
         cli.onGameClosing();
     }
+
+    @Override
+    public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+        cli.onGameEnd(winner, rankingNames, rankingValues);
+    }
+
 }
 
 

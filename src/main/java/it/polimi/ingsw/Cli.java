@@ -31,7 +31,7 @@ public class Cli {
 
     private List<String> playersNames;
 
-    private boolean windowChosen = false;
+    private boolean windowChosen;
 
     private boolean single;
 
@@ -90,7 +90,7 @@ public class Cli {
         this.controller = controller;
         this.clientController = clientController;
         this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
-        ;
+        windowChosen = false;
         myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
@@ -162,10 +162,11 @@ public class Cli {
         printer.flush();
     }
 
-    public void onInitialization(String toolcards, String publicCards, String privateCard) {
+    public void onInitialization(String toolcards, String publicCards, String privateCard, boolean windowChosen) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
+        this.windowChosen = windowChosen;
     }
 
     private void parsePublicCards(String publicCards) {
@@ -234,6 +235,21 @@ public class Cli {
             printer.println("- " + s);
         }
 
+        printer.flush();
+    }
+
+    public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+        printer.println("Punteggio finale:");
+        for(int i = 0; i < rankingNames.size(); i++){
+            printer.println("- " + rankingNames.get(i) + "\t" + rankingValues.get(i));
+        }
+        printer.println();
+
+        if(winner.equals(username)){
+            printer.println("Complimenti! Sei tu il vincitore.");
+        } else {
+            printer.println(winner.toUpperCase() + " è il vincitore!");
+        }
         printer.flush();
     }
 

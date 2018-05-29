@@ -66,8 +66,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard) {
-        cli.onInitialization(toolcards, publicCards, privateCard);
+    public void onInitialization(String toolcards, String publicCards, String privateCard, boolean windowChosen) {
+        cli.onInitialization(toolcards, publicCards, privateCard, windowChosen);
     }
 
 
@@ -88,4 +88,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onGameClosing() { cli.onGameClosing(); }
+
+    @Override
+    public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+        cli.onGameEnd(winner, rankingNames, rankingValues);
+    }
 }

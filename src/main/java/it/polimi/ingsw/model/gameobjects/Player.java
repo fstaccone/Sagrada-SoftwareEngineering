@@ -1,14 +1,13 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.io.Serializable;
-
-public abstract class Player implements Serializable {
+public abstract class Player {
     protected final String name;
     protected WindowPatternCard schemeCard;
     private Dice pickedDice;
     private int points;
     protected Colors color;
     protected int turnsLeft;
+    private int pointsByPrivateObjective;
 
     private int dice;
     private String choise;
@@ -56,6 +55,10 @@ public abstract class Player implements Serializable {
     public int getFinalY2() {
         return finalY2;
     }
+
+    public int getPointsByPrivateObjective() { return pointsByPrivateObjective; }
+
+    public void setPointsByPrivateObjective(int pointsByPrivateObjective) { this.pointsByPrivateObjective = pointsByPrivateObjective; }
 
     public void setStartX1(int startX1) {
         this.startX1 = startX1;
@@ -121,12 +124,10 @@ public abstract class Player implements Serializable {
         this.diceChosenFromRound = diceChosenFromRound;
     }
 
-
-    // todo: check inheritance
     public Player(String name) {
-        super(); // todo: Perchè?
         this.name = name;
-        this.points = 0;
+        points = 0;
+        pointsByPrivateObjective = 0;
     }
 
     // getters

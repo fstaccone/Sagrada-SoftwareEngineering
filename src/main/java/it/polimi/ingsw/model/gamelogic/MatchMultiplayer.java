@@ -13,12 +13,7 @@ import it.polimi.ingsw.socket.responses.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MatchMultiplayer extends Match implements Runnable {
@@ -26,12 +21,15 @@ public class MatchMultiplayer extends Match implements Runnable {
     private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
     private Map<PlayerMultiplayer, ObjectOutputStream> socketObservers;
 
+    private List<PlayerMultiplayer> ranking;
+
     private Thread localThread;
     private boolean started;
     private int matchId;
     private TurnManager turnManager;
     private List<PlayerMultiplayer> players;
     private List<WindowPatternCard> windowsProposed;
+    private PlayerMultiplayer winner;
 
 
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut) {
@@ -174,26 +172,77 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void calculateFinalScore() {
-        // points assigned by the private objective card
-        for (PlayerMultiplayer p : players) {
+
+        List<String> rankingNames;
+        List<Integer> rankingValues;
+
+        ranking = new ArrayList<>();
+        rankingNames = new ArrayList<>();
+        rankingValues = new ArrayList<>();
+
+        for(PlayerMultiplayer p : players){
+
+            // points assigned by the private objective card
             p.getPrivateObjectiveCard().useCard(p);
-        }
-        // points assigned by public objective cards
-        for (int i = 0; i < board.getPickedPublicObjectiveCards().size(); i++) {
-            for (PlayerMultiplayer p : players) {
+
+            // points assigned by public objective cards
+            for (int i = 0; i < board.getPickedPublicObjectiveCards().size(); i++) {
                 board.getPickedPublicObjectiveCards().get(i).useCard(p, this);
             }
-        }
-        // points due to free cells
-        for (PlayerMultiplayer p : players) {
+
+            // points due to free cells
             p.setPoints(p.getPoints() - p.getSchemeCard().countFreeSquares());
-        }
-        // points due to remaining favor tokens
-        for (PlayerMultiplayer p : players) {
+
+            // points due to remaining favor tokens
             p.setPoints(p.getPoints() + p.getNumFavorTokens());
+
+            addInOrder(p);
         }
 
+        winner = theWinnerIs();
+
+        for(int i = 0; i < ranking.size(); i++){
+            rankingNames.add(i, ranking.get(i).getName());
+            rankingValues.add(i, ranking.get(i).getPoints());
+        }
+
+        ranking.clear();
+
+        for(PlayerMultiplayer p : players){
+            if(remoteObservers.get(p) != null) {
+                try {
+                    remoteObservers.get(p).onGameEnd(winner.getName(), rankingNames, rankingValues);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(socketObservers.get(p) != null) {
+                try {
+                    socketObservers.get(p).writeObject(new GameEndResponse(winner.getName(), rankingNames, rankingValues));
+                    socketObservers.get(p).reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
+
+    private void addInOrder(PlayerMultiplayer p){
+        int i = 0;
+
+        if(ranking.isEmpty()){
+            ranking.add(p);
+        } else {
+            while (i < ranking.size()) {
+                if (p.getPoints() > ranking.get(i).getPoints()) {
+                    break;
+                }
+                i++;
+            }
+            ranking.add(i, p);
+        }
+    }
+
 
     @Override
     public void showTrack(String name) {
@@ -215,12 +264,90 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public void theWinnerIs() {
-        // occorre il metodo del controller che lo notifichi a tutti gli observer del match
-        // se non abbiamo intenzione di implementare la funzionalità avanzata "persistenza" non ci serve salvare il vincitore
+    private PlayerMultiplayer theWinnerIs() {
+        List<PlayerMultiplayer> firstPlayoff;
+        List<PlayerMultiplayer> secondPlayoff;
+        List<PlayerMultiplayer> thirdPlayoff;
 
-        //il metodo prenderà come parametro il player restituito dal seguente metodo todo: test del metodo
-        //players.stream().max(Comparator.comparing(p -> p.getPoints() > p.getPoints()));
+        firstPlayoff = new ArrayList<>();
+
+        firstPlayoff.add(ranking.get(0));
+
+        // compare points
+        for(int i = 0; i < ranking.size() - 1; i++){
+            if(ranking.get(i).getPoints() == ranking.get(i + 1).getPoints()){
+                firstPlayoff.add(ranking.get(i + 1));
+            } else {
+                break;
+            }
+        }
+
+        if(firstPlayoff.size() == 1){
+            return firstPlayoff.get(0);
+        } else {
+            // compare points by private objective card
+            secondPlayoff = new ArrayList<>();
+
+            int maxPrivate;
+            maxPrivate = firstPlayoff.get(0).getPointsByPrivateObjective();
+
+            // find the max value
+            for(int i = 1; i < firstPlayoff.size(); i++){
+                if(firstPlayoff.get(i).getPointsByPrivateObjective() > maxPrivate){
+                    maxPrivate = firstPlayoff.get(i).getPointsByPrivateObjective();
+                }
+            }
+
+            // find players admitted to the second playoff
+            for (PlayerMultiplayer pla : firstPlayoff) {
+                if (pla.getPointsByPrivateObjective() == maxPrivate) {
+                    secondPlayoff.add(pla);
+                }
+            }
+
+            if(secondPlayoff.size() == 1){
+                return secondPlayoff.get(0);
+            } else {
+                thirdPlayoff = new ArrayList<>();
+
+                int maxTokens;
+                maxTokens = secondPlayoff.get(0).getNumFavorTokens();
+
+                // find the max value
+                for (int i = 1; i < firstPlayoff.size(); i++) {
+                    if (secondPlayoff.get(i).getNumFavorTokens() > maxTokens) {
+                        maxTokens = secondPlayoff.get(i).getNumFavorTokens();
+                    }
+                }
+
+                // find players admitted to the third playoff
+                for (PlayerMultiplayer p : secondPlayoff) {
+                    if (p.getNumFavorTokens() == maxTokens) {
+                        thirdPlayoff.add(p);
+                    }
+                }
+
+                if (thirdPlayoff.size() == 1) {
+                    return thirdPlayoff.get(0);
+                } else {
+                    return lastPlayoff(thirdPlayoff);
+                }
+            }
+        }
+    }
+
+    /**
+     * Determines the winner if there are players with the same points at the end of other playoffs
+     * @param playoff list of players with the same points by tokens
+     * @return the player which is in playoff and played before other players in playoff in the last round
+     */
+    private PlayerMultiplayer lastPlayoff(List<PlayerMultiplayer> playoff){
+        for(PlayerMultiplayer p : players){
+            if(playoff.contains(p)){
+                return p;
+            }
+        }
+        return null;
     }
 
     @Override

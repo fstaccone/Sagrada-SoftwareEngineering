@@ -20,4 +20,5 @@ public interface ResponseHandler {
     void handle(ClosingGameResponse response);
     void handle(PlayerExitResponse response);
     void handle(PlayerReconnectionResponse response);
+    void handle(GameEndResponse response);
 }
