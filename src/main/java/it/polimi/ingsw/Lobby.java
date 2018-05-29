@@ -89,7 +89,7 @@ public class Lobby {
 
     private synchronized void createMultiplayerMatch(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
 
-        MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime, socketsOut);
+        MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime, socketsOut, this);
         for (String s : clients) {
             multiplayerMatches.put(s, match);
         }
@@ -187,11 +187,12 @@ public class Lobby {
 
             Response response = new PlayerExitResponse(name);
             for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
-                ObjectOutputStream o = multiplayerMatches.get(p.getName()).getSocketObservers().get(p);
-                if(o != null && player.getStatus().equals(ConnectionStatus.CONNECTED) && !p.getName().equals(name)) {
+                if(player.getStatus().equals(ConnectionStatus.CONNECTED)) {
                     try {
-                        o.writeObject(response);
-                        o.reset();
+                        if (multiplayerMatches.get(player.getName()).getSocketObservers().get(player)!=null) {
+                            multiplayerMatches.get(player.getName()).getSocketObservers().get(player).writeObject(response);
+                            multiplayerMatches.get(player.getName()).getSocketObservers().get(player).reset();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -243,11 +244,12 @@ public class Lobby {
 
         Response response = new PlayerReconnectionResponse(name);
         for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
-            ObjectOutputStream o = multiplayerMatches.get(p.getName()).getSocketObservers().get(p);
-            if (!p.getName().equals(name) && o != null) {
+            if (!p.getName().equals(name)) {
                 try {
-                    o.writeObject(response);
-                    o.reset();
+                    if (multiplayerMatches.get(p.getName()).getSocketObservers().get(p)!=null) {
+                        multiplayerMatches.get(p.getName()).getSocketObservers().get(p).writeObject(response);
+                        multiplayerMatches.get(p.getName()).getSocketObservers().get(p).reset();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

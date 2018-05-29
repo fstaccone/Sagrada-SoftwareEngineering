@@ -64,6 +64,10 @@ public class ChooseCardHandler implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         choice = 5;
+        card0.setDisable(true);
+        card1.setDisable(true);
+        card2.setDisable(true);
+        card3.setDisable(true);
     }
 
     @FXML
@@ -149,6 +153,10 @@ public class ChooseCardHandler implements Initializable {
 
     //The window now shows the 4 window pattern cards the player have to choose between
     public void setWindows(List<String> windows){
+        card0.setDisable(false);
+        card1.setDisable(false);
+        card2.setDisable(false);
+        card3.setDisable(false);
         int i = 0;
         ArrayList<String> imageURLs = new ArrayList<>();
         for(String s : windows){

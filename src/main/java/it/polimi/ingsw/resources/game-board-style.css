@@ -3,15 +3,14 @@
     -fx-background-size: cover;
 }
 
-.schemeCard{
-    -fx-background-image: url("window_pattern_card/prova-img.png");
-    -fx-background-size: cover;
-}
-
 .schemeCardChoice:hover{
         -fx-scale-x: 1.10;
         -fx-scale-y: 1.10;
         -fx-scale-y: 1.10;
+}
+.schemeCardChoice:focused{
+    -fx-background-color: pink;
+    -fx-background-size: cover;
 }
 
 .button{

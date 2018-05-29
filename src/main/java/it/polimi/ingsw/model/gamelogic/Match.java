@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.model.gameobjects.Bag;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.mock;
 
 
 public abstract class Match {
+
 
     protected DecksContainer decksContainer;
     private Bag bag;

@@ -56,8 +56,22 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onShowWindow(String window) {
-        cli.onShowWindow(window);
+    public void onMyWindow(String window) {
+        cli.onMyWindow(window);
+    }
+
+    @Override
+    public void onMyFavorTokens(int value){
+        cli.onMyFavorTokens(value);
+    }
+
+    @Override
+    public void onOtherFavorTokens(int value, String name){
+        cli.onOtherFavorTokens(value,name);
+    }
+
+    public void onOtherSchemeCards(String scheme, String name){
+        cli.onOtherSchemeCards(scheme,name);
     }
 
     @Override
@@ -69,7 +83,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     public void onInitialization(String toolcards, String publicCards, String privateCard, boolean windowChosen) {
         cli.onInitialization(toolcards, publicCards, privateCard, windowChosen);
     }
-
 
     @Override
     public void onPlayerExit(String name) {

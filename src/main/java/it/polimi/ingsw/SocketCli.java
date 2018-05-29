@@ -54,8 +54,8 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onShowWindow(String window) {
-        cli.onShowWindow(window);
+    public void onMyWindow(String window) {
+        cli.onMyWindow(window);
     }
 
     @Override
@@ -86,6 +86,21 @@ public class SocketCli implements Serializable, MatchObserver {
     @Override
     public void onGameClosing() {
         cli.onGameClosing();
+    }
+
+    @Override
+    public void onMyFavorTokens(int value){
+        cli.onMyFavorTokens(value);
+    }
+
+    @Override
+    public void onOtherFavorTokens(int value, String name) {
+        cli.onOtherFavorTokens(value,name);
+    }
+
+    @Override
+    public void onOtherSchemeCards(String scheme, String name) {
+        cli.onOtherSchemeCards(scheme,name);
     }
 
     @Override

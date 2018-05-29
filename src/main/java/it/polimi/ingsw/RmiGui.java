@@ -127,30 +127,23 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onShowWindow(String window) {
-        System.out.println("On show windowStage");
-        String imgUrl = chooseCardHandler.getImageUrl();
-        FXMLLoader fx = new FXMLLoader();
-        try {
-            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board.fxml"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        Parent root = null;
-        try {
-            root = fx.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(root);
-        gameBoardHandler = fx.getController();
-        gameBoardHandler.init(windowStage, scene, controller, username, this);
-        gameBoardHandler.setWindowPatternCardImg(imgUrl);
-        gameBoardHandler.setToolCards(toolCardsList);
-        gameBoardHandler.setReserve(dicesList);
-        gameBoardHandler.setTextArea("Now it's your turn!");
-        gameBoardHandler.setPrivateCard(privateCard);
-        gameBoardHandler.setPublicCards(publicCardsList);
+    public void onMyWindow(String window) {
+        //AGGIORNAMENTO PROPRIA CARTA SCHEMA
+    }
+
+    @Override
+    public void onMyFavorTokens(int value) {
+        //AGGIORNAMENTO PROPRI SEGNALINI
+    }
+
+    @Override
+    public void onOtherFavorTokens(int value, String name) {
+        //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO SEGNALINI ALTRUI
+    }
+
+    @Override
+    public void onOtherSchemeCards(String string, String name)  {
+        //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO CARTE SCHEMA ALTRUI
     }
 
     @Override
@@ -206,8 +199,30 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterWindowChoise() {
-
+    public void onAfterWindowChoise() throws RemoteException {
+        System.out.println("On show windowStage");
+        String imgUrl = chooseCardHandler.getImageUrl();
+        FXMLLoader fx = new FXMLLoader();
+        try {
+            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board.fxml"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Parent root = null;
+        try {
+            root = fx.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        gameBoardHandler = fx.getController();
+        gameBoardHandler.init(windowStage, scene, controller, username, this );
+        gameBoardHandler.setWindowPatternCardImg(imgUrl);
+        gameBoardHandler.setToolCards(toolCardsList);
+        gameBoardHandler.setReserve(dicesList);
+        gameBoardHandler.setTextArea("Now it's your turn!");
+        gameBoardHandler.setPrivateCard(privateCard);
+        gameBoardHandler.setPublicCards(publicCardsList);
     }
 
     public Boolean isMyTurn() {
