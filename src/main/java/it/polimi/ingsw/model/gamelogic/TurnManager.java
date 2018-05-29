@@ -176,7 +176,17 @@ public class TurnManager implements Runnable {
         if (rmiObserver != null) {
             rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString());
         }
+
+        for(PlayerMultiplayer player1 :match.getSocketObservers().keySet()){
+            System.out.println("FUORI" +player1.getName());
+        }
+
         if (match.getSocketObservers().get(player) != null) {
+
+            for(PlayerMultiplayer player1 :match.getSocketObservers().keySet()){
+                System.out.println("DENTRO" +player1.getName());
+            }
+
             socketObserverNotify(player, new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString()));
         }
         notifyOthers(player);
@@ -189,6 +199,11 @@ public class TurnManager implements Runnable {
             rmiObserver.onYourTurn(false, match.getBoard().getReserve().getDices().toString());
         }
         if (match.getSocketObservers().get(player) != null) {
+
+            for(PlayerMultiplayer player1 :match.getSocketObservers().keySet()){
+                System.out.println(player1.getName());
+            }
+
             socketObserverNotify(player, new YourTurnResponse(false, null));
         }
 

@@ -31,7 +31,7 @@ public class ClientController implements ResponseHandler {
     public void request(Request request) {
         try {
             out.writeObject(request);
-            // out.reset(); todo Serve?
+            out.reset();
         } catch (IOException e) {
             System.err.println("Exception on network: " + e.getMessage());
         }

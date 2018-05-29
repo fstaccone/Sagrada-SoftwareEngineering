@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 import it.polimi.ingsw.model.gamelogic.MatchStarter;
+import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.socket.responses.*;
 
@@ -225,6 +226,7 @@ public class Lobby {
     public void reconnect(String name) {
         takenUsernames.put(name, ConnectionStatus.CONNECTED);
         multiplayerMatches.get(name).getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
+
         multiplayerMatches.get(name).getSocketObservers().put(multiplayerMatches.get(name).getPlayer(name), socketObservers.remove(name));
 
         for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {

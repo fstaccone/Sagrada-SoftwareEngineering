@@ -317,6 +317,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(ReconnectionRequest request){
+        lobby.getSocketObservers().put(request.username, socketHandlers.remove(0).getOut());
         reconnect(request.username);
         return null;
     }
