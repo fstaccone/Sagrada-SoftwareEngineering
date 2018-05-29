@@ -84,7 +84,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         cli.onInitialization(toolcards, publicCards, privateCard);
     }
 
-
     @Override
     public void onPlayerExit(String name) {
         cli.onPlayerExit(name);

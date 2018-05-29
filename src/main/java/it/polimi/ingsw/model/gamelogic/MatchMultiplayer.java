@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.ConnectionStatus;
+import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.Colors;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +24,12 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class MatchMultiplayer extends Match implements Runnable {
+
+    private Lobby lobby;
+
+    public Lobby getLobby() {
+        return lobby;
+    }
 
     private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
     private Map<PlayerMultiplayer, ObjectOutputStream> socketObservers;
@@ -34,9 +42,10 @@ public class MatchMultiplayer extends Match implements Runnable {
     private List<WindowPatternCard> windowsProposed;
 
 
-    public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut) {
+    public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut, Lobby lobby) {
 
         super();
+        this.lobby=lobby;
         this.matchId = matchId;
         started = false;
 
@@ -467,7 +476,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     try {
                         remoteObservers.get(player).onReserve(board.getReserve().getDices().toString());
                     } catch (RemoteException e) {
-                        e.printStackTrace();
+                        lobby.disconnect(player.getName());
                     }
                 }
                 if (socketObservers.get(player) != null) {
@@ -475,7 +484,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                         socketObservers.get(player).writeObject(response);
                         socketObservers.get(player).reset();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        lobby.disconnect(player.getName());
                     }
                 }
             }
@@ -506,7 +515,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                         try {
                             remoteObservers.get(otherPlayer).onOtherFavorTokens(getPlayer(name).getNumFavorTokens(), name);
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            lobby.disconnect(otherPlayer.getName());
                         }
                     }
                     if (socketObservers.get(otherPlayer) != null) {
@@ -514,7 +523,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                             socketObservers.get(otherPlayer).writeObject(response);
                             socketObservers.get(otherPlayer).reset();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            lobby.disconnect(otherPlayer.getName());
                         }
                     }
                 }
@@ -548,7 +557,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                         try {
                             remoteObservers.get(otherPlayer).onOtherSchemeCards(getPlayer(name).getSchemeCard().toString(), name);
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            lobby.disconnect(otherPlayer.getName());
                         }
                     }
                     if (socketObservers.get(otherPlayer) != null) {
@@ -556,7 +565,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                             socketObservers.get(otherPlayer).writeObject(response);
                             socketObservers.get(otherPlayer).reset();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            lobby.disconnect(otherPlayer.getName());
                         }
                     }
                 }

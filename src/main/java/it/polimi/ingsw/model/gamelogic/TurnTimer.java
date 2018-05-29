@@ -23,9 +23,10 @@ public class TurnTimer extends TimerTask {
 
         match.getTurnManager().setExpiredTrue();
 
-        // wakes up turn manager. It has been waiting for user action
+        /*// wakes up turn manager. It has been waiting for user action
         synchronized (match.getLock()) {
             match.getLock().notify();
-        }
+        }*/
+        match.goThrough();
     }
 }
