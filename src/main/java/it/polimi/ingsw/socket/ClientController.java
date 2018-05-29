@@ -29,9 +29,9 @@ public class ClientController implements ResponseHandler {
     }
 
     public void request(Request request) {
-
         try {
             out.writeObject(request);
+            out.reset();
         } catch (IOException e) {
             System.err.println("Exception on network: " + e.getMessage());
         }
@@ -114,9 +114,9 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
-    public void handle(ShowWindowResponse response) {
+    public void handle(MyWindowResponse response) {
         if (socketCli != null) {
-            socketCli.onShowWindow(response.string);
+            socketCli.onMyWindow(response.string);
         }
     }
 
@@ -174,8 +174,36 @@ public class ClientController implements ResponseHandler {
         if(socketCli != null){
             socketCli.onPlayerExit(response.name);
         }
-
     }
+
+    @Override
+    public void handle(PlayerReconnectionResponse response) {
+        if(socketCli != null){
+            socketCli.onPlayerReconnection(response.getName());
+        }
+    }
+
+    @Override
+    public void handle(MyFavorTokensResponse response) {
+        if(socketCli != null){
+            socketCli.onMyFavorTokens(response.value);
+        }
+    }
+
+    @Override
+    public void handle(OtherFavorTokensResponse response) {
+        if(socketCli != null){
+            socketCli.onOtherFavorTokens(response.value,response.name);
+        }
+    }
+
+    @Override
+    public void handle(OtherSchemeCardsResponse response) {
+        if(socketCli != null){
+            socketCli.onOtherSchemeCards(response.scheme,response.name);
+        }
+    }
+
 
     @Override
     public void handle(ProposeWindowResponse response) {

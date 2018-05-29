@@ -228,13 +228,15 @@ public class LoginHandler implements Initializable {
             reconnection = true;
             if (isRmi) {
                 if (isCli) {
+
                     new RmiCli(username, controller, false).reconnect();
                 } else {
                     // new RmiGUI
                 }
             } else {
                 if (isCli) {
-                    // new SocketGUI
+                    new Thread(new SocketListener(clientController)).start();
+                    new SocketCli(username, clientController, false).reconnect();
                 } else {
                     // new SocketGUI
                 }
@@ -275,7 +277,7 @@ public class LoginHandler implements Initializable {
         } finally { /*socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM*/}
     }
 
-    private void createClientRmi() throws RemoteException {
+    private void createClientRmi(){
         // to create the link between this Client and the Player in the model
         if (isSingleplayer) {
             //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
@@ -303,7 +305,7 @@ public class LoginHandler implements Initializable {
     }
 
 
-    private void createClientSocket() throws RemoteException {
+    private void createClientSocket() {
 
         // to create the link between this Client and the Player in the model
         if (isSingleplayer) {

@@ -1,7 +1,10 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.socket.ClientController;
-import java.io.*;
+import it.polimi.ingsw.socket.requests.ReconnectionRequest;
+
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.List;
 
 
@@ -12,7 +15,7 @@ public class SocketCli implements Serializable, MatchObserver {
     private transient ClientController clientController;
 
     public SocketCli(String username, ClientController clientController, boolean single) {
-        this.cli=new Cli(username,null,clientController,single);
+        this.cli = new Cli(username, null, clientController, single);
         clientController.setSocketCli(this);
         this.username = username;
         this.clientController = clientController;
@@ -21,18 +24,18 @@ public class SocketCli implements Serializable, MatchObserver {
 
     //todo
     public void reconnect() {
-        //clientController.request(new ReconnectRequest(username));
+        clientController.request(new ReconnectionRequest(username));
     }
 
     @Override
     public void onPlayers(List<String> playersNames) {
-       cli.onPlayers(playersNames);
+        cli.onPlayers(playersNames);
     }
 
 
     @Override
     public void onYourTurn(boolean yourTurn, String string) {
-        cli.onYourTurn(yourTurn,string);
+        cli.onYourTurn(yourTurn, string);
     }
 
     @Override
@@ -51,8 +54,8 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onShowWindow(String window) {
-        cli.onShowWindow(window);
+    public void onMyWindow(String window) {
+        cli.onMyWindow(window);
     }
 
     @Override
@@ -62,9 +65,8 @@ public class SocketCli implements Serializable, MatchObserver {
 
     @Override //todo PAOLO
     public void onInitialization(String toolcards, String publicCards, String privateCard) {
-        cli.onInitialization(toolcards,publicCards,privateCard);
+        cli.onInitialization(toolcards, publicCards, privateCard);
     }
-
 
     @Override
     public void onPlayerExit(String name) {
@@ -78,17 +80,7 @@ public class SocketCli implements Serializable, MatchObserver {
 
     @Override
     public void onShowTrack(String track) {
-       cli.onShowTrack(track);
-    }
-
-    @Override
-    public void onShowPrivateCard() {
-       cli.onShowPrivateCard();
-    }
-
-    @Override
-    public void onShowPublicCards() {
-        cli.onShowPublicCards();
+        cli.onShowTrack(track);
     }
 
     @Override
@@ -97,8 +89,18 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onShowToolCards() {
-        cli.onShowToolCards();
+    public void onMyFavorTokens(int value){
+        cli.onMyFavorTokens(value);
+    }
+
+    @Override
+    public void onOtherFavorTokens(int value, String name) {
+        cli.onOtherFavorTokens(value,name);
+    }
+
+    @Override
+    public void onOtherSchemeCards(String scheme, String name) {
+        cli.onOtherSchemeCards(scheme,name);
     }
 }
 

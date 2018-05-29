@@ -21,7 +21,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private String username;
     private RemoteController controller;
     private Stage windowStage;
-    boolean myTurn;
+    private boolean myTurn;
     private ChooseCardHandler chooseCardHandler;
     private GameBoardHandler gameBoardHandler;
     private List<String> toolCardsList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onPlayers(List<String> playersNames) throws RemoteException {
+    public void onPlayers(List<String> playersNames) {
         System.out.println("On players");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
@@ -60,7 +60,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onYourTurn(boolean isMyTurn, String string) throws RemoteException {
+    public void onYourTurn(boolean isMyTurn, String string) {
         System.out.println("On your turn");
         if (string != null)
             onReserve(string);
@@ -70,32 +70,31 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
             String s = "Now it's your turn!";
             if (gameBoardHandler != null) gameBoardHandler.setTextArea(s);
             else chooseCardHandler.setTextArea(s);
-        }
-        else
+        } else
             //Solo per verifica
             System.out.println("It's no more your turn!");
     }
 
 
     @Override
-    public void onReserve(String string) throws RemoteException {
+    public void onReserve(String string) {
         dicesList = new ArrayList<>();
         System.out.println("On reserve");
         String dicesString = string.substring(1, string.length() - 1);
         List<String> temp = Pattern.compile(", ")
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
-        for(String s : temp){
-            s = s.substring(1, s.length()-1).toLowerCase().replaceAll(" ", "_");
+        for (String s : temp) {
+            s = s.substring(1, s.length() - 1).toLowerCase().replaceAll(" ", "_");
             dicesList.add(s);
         }
-        for(String dice : dicesList) System.out.println(dice);
-        if(gameBoardHandler!=null) {
+        for (String dice : dicesList) System.out.println(dice);
+        if (gameBoardHandler != null) {
             gameBoardHandler.setReserve(dicesList);
         }
     }
 
-    public void launch(){
+    public void launch() {
         System.out.println("Launch");
         try {
             controller.observeMatch(username, this);
@@ -106,53 +105,58 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onPlayerReconnection(String name) throws RemoteException {
+    public void onPlayerReconnection(String name) {
         System.out.println("On player reconnection");
-        if(gameBoardHandler!=null) gameBoardHandler.setTextArea("Player " + name + " is now in game!");
+        if (gameBoardHandler != null) gameBoardHandler.setTextArea("Player " + name + " is now in game!");
         else chooseCardHandler.setTextArea("Player " + name + " is now in game!");
     }
 
     @Override
-    public void onShowTrack(String track) throws RemoteException {
+    public void onShowTrack(String track) {
 
     }
 
     @Override
-    public void onShowPrivateCard() throws RemoteException {
+    public void onGameClosing() {
 
     }
 
     @Override
-    public void onShowPublicCards() throws RemoteException {
-
+    public void onMyWindow(String window) {
+        //AGGIORNAMENTO PROPRIA CARTA SCHEMA
     }
 
     @Override
-    public void onGameClosing() throws RemoteException {
-
+    public void onMyFavorTokens(int value) {
+        //AGGIORNAMENTO PROPRI SEGNALINI
     }
 
     @Override
-    public void onOtherTurn(String name) throws RemoteException {
+    public void onOtherFavorTokens(int value, String name) {
+        //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO SEGNALINI ALTRUI
+    }
+
+    @Override
+    public void onOtherSchemeCards(String string, String name)  {
+        //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO CARTE SCHEMA ALTRUI
+    }
+
+    @Override
+    public void onOtherTurn(String name) {
         System.out.println("On other turn");
         String s = "Now it's " + name + "'s turn";
-        if(gameBoardHandler!=null) gameBoardHandler.setTextArea(s);
+        if (gameBoardHandler != null) gameBoardHandler.setTextArea(s);
         else chooseCardHandler.setTextArea(s);
-    }
-    
-    @Override
-    public void onShowToolCards() throws RemoteException {
-        System.out.println("On show toolcards");
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard) throws RemoteException {
+    public void onInitialization(String toolcards, String publicCards, String privateCard)  {
         System.out.println(toolcards);
         String dicesString = toolcards.substring(1, toolcards.length() - 1);
-        List <String> temp = Pattern.compile(", ")
+        List<String> temp = Pattern.compile(", ")
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
-        for(String s : temp){
+        for (String s : temp) {
             s = s.split(":", 2)[0];
             toolCardsList.add(s);
             System.out.println(s);
@@ -177,14 +181,14 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onPlayerExit(String name) throws RemoteException {
+    public void onPlayerExit(String name) {
         System.out.println("On player exit");
-        if(gameBoardHandler!=null) gameBoardHandler.setTextArea("Player " + name + " has left the game!");
+        if (gameBoardHandler != null) gameBoardHandler.setTextArea("Player " + name + " has left the game!");
         else chooseCardHandler.setTextArea("Player " + name + " has left the game!");
     }
 
     @Override
-    public void onWindowChoise(List<String> windows) throws RemoteException {
+    public void onWindowChoise(List<String> windows) {
         System.out.println("On windowStage choise");
         chooseCardHandler.setWindows(windows);
     }
@@ -216,12 +220,13 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         gameBoardHandler.setPublicCards(publicCardsList);
     }
 
-    public Boolean isMyTurn(){
+    public Boolean isMyTurn() {
         return myTurn;
     }
 
-    public List<String> getDicesList(){
+    public List<String> getDicesList() {
         return dicesList;
     }
+
 
 }

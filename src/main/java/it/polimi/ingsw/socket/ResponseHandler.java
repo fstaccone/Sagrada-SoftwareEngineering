@@ -10,7 +10,7 @@ public interface ResponseHandler {
     void handle(YourTurnResponse response);
     void handle(ReserveResponse response);
     void handle(ProposeWindowResponse response);
-    void handle(ShowWindowResponse response);
+    void handle(MyWindowResponse response);
     void handle(AfterWindowChoiseResponse response);
     void handle(ToolCardsResponse response);
     void handle(OtherTurnResponse response);
@@ -19,4 +19,8 @@ public interface ResponseHandler {
     void handle(ToolCardEffectAppliedResponse response);
     void handle(ClosingGameResponse response);
     void handle(PlayerExitResponse response);
+    void handle(PlayerReconnectionResponse response);
+    void handle(MyFavorTokensResponse response);
+    void handle(OtherFavorTokensResponse response);
+    void handle(OtherSchemeCardsResponse response);
 }
