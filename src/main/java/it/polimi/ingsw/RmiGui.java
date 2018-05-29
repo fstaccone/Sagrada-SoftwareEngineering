@@ -123,44 +123,22 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onMyWindow(String window) {
-        System.out.println("On show windowStage");
-        String imgUrl = chooseCardHandler.getImageUrl();
-        FXMLLoader fx = new FXMLLoader();
-        try {
-            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board.fxml"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        Parent root = null;
-        try {
-            root = fx.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(root);
-        gameBoardHandler = fx.getController();
-        gameBoardHandler.init(windowStage, scene, controller, username, this);
-        gameBoardHandler.setWindowPatternCardImg(imgUrl);
-        gameBoardHandler.setToolCards(toolCardsList);
-        gameBoardHandler.setReserve(dicesList);
-        gameBoardHandler.setTextArea("Now it's your turn!");
-        gameBoardHandler.setPrivateCard(privateCard);
-        gameBoardHandler.setPublicCards(publicCardsList);
+        //AGGIORNAMENTO PROPRIA CARTA SCHEMA
     }
 
     @Override
     public void onMyFavorTokens(int value) {
-
+        //AGGIORNAMENTO PROPRI SEGNALINI
     }
 
     @Override
-    public void onOtherFavorTokens(int value, String name) throws RemoteException {
-
+    public void onOtherFavorTokens(int value, String name) {
+        //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO SEGNALINI ALTRUI
     }
 
     @Override
-    public void onOtherSchemeCards(String string, String name) throws RemoteException {
-
+    public void onOtherSchemeCards(String string, String name)  {
+        //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO CARTE SCHEMA ALTRUI
     }
 
     @Override
@@ -172,7 +150,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard) throws RemoteException {
+    public void onInitialization(String toolcards, String publicCards, String privateCard)  {
         System.out.println(toolcards);
         String dicesString = toolcards.substring(1, toolcards.length() - 1);
         List<String> temp = Pattern.compile(", ")
