@@ -11,20 +11,23 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     private Cli cli;
     private String username;
     private transient RemoteController controller;
+    private boolean reconnection;
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
         super();
         this.cli = new Cli(username, controller, null, single);
         this.username = username;
         this.controller = controller;
+        reconnection = false;
         cli.printWelcome();
     }
 
     public void launch() throws RemoteException {
-        controller.observeMatch(username, this);
+        controller.observeMatch(username, this, reconnection);
     }
 
     public void reconnect() throws RemoteException, InterruptedException {
+        reconnection = true;
         controller.reconnect(username);
         launch();
     }
@@ -61,17 +64,17 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onMyFavorTokens(int value){
+    public void onMyFavorTokens(int value) {
         cli.onMyFavorTokens(value);
     }
 
     @Override
-    public void onOtherFavorTokens(int value, String name){
-        cli.onOtherFavorTokens(value,name);
+    public void onOtherFavorTokens(int value, String name) {
+        cli.onOtherFavorTokens(value, name);
     }
 
-    public void onOtherSchemeCards(String scheme, String name){
-        cli.onOtherSchemeCards(scheme,name);
+    public void onOtherSchemeCards(String scheme, String name) {
+        cli.onOtherSchemeCards(scheme, name);
     }
 
     @Override
@@ -80,8 +83,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard, boolean windowChosen) {
-        cli.onInitialization(toolcards, publicCards, privateCard, windowChosen);
+    public void onInitialization(String toolcards, String publicCards, String privateCard) {
+        cli.onInitialization(toolcards, publicCards, privateCard);
     }
 
     @Override
@@ -100,10 +103,17 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onGameClosing() { cli.onGameClosing(); }
+    public void onGameClosing() {
+        cli.onGameClosing();
+    }
 
     @Override
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
         cli.onGameEnd(winner, rankingNames, rankingValues);
+    }
+
+    @Override
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard) {
+        cli.afterReconnection(toolcards, publicCards, privateCard);
     }
 }

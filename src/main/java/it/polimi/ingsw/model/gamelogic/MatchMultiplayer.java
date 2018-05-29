@@ -3,17 +3,11 @@ package it.polimi.ingsw.model.gamelogic;
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.MatchObserver;
-import it.polimi.ingsw.model.gameobjects.Board;
-import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.model.gameobjects.DecksContainer;
-import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +37,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut, Lobby lobby) {
 
         super();
-        this.lobby=lobby;
+        this.lobby = lobby;
         this.matchId = matchId;
         started = false;
 
@@ -189,7 +183,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         rankingNames = new ArrayList<>();
         rankingValues = new ArrayList<>();
 
-        for(PlayerMultiplayer p : players){
+        for (PlayerMultiplayer p : players) {
 
             // points assigned by the private objective card
             p.getPrivateObjectiveCard().useCard(p);
@@ -210,22 +204,22 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         winner = theWinnerIs();
 
-        for(int i = 0; i < ranking.size(); i++){
+        for (int i = 0; i < ranking.size(); i++) {
             rankingNames.add(i, ranking.get(i).getName());
             rankingValues.add(i, ranking.get(i).getPoints());
         }
 
         ranking.clear();
 
-        for(PlayerMultiplayer p : players){
-            if(remoteObservers.get(p) != null) {
+        for (PlayerMultiplayer p : players) {
+            if (remoteObservers.get(p) != null) {
                 try {
                     remoteObservers.get(p).onGameEnd(winner.getName(), rankingNames, rankingValues);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             }
-            if(socketObservers.get(p) != null) {
+            if (socketObservers.get(p) != null) {
                 try {
                     socketObservers.get(p).writeObject(new GameEndResponse(winner.getName(), rankingNames, rankingValues));
                     socketObservers.get(p).reset();
@@ -236,10 +230,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    private void addInOrder(PlayerMultiplayer p){
+    private void addInOrder(PlayerMultiplayer p) {
         int i = 0;
 
-        if(ranking.isEmpty()){
+        if (ranking.isEmpty()) {
             ranking.add(p);
         } else {
             while (i < ranking.size()) {
@@ -253,6 +247,26 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
 
+    public void afterReconnection(String name) {
+        String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
+        String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
+
+        if (remoteObservers.get(getPlayer(name)) != null) {
+            try {
+                remoteObservers.get(getPlayer(name)).onAfterReconnection(toolCards, publicCards, getPlayer(name).getPrivateObjectiveCard().toString());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        } else if (socketObservers.get(getPlayer(name)) != null) {
+            try {
+                socketObservers.get(getPlayer(name)).writeObject(new AfterReconnectionResponse(toolCards, publicCards, getPlayer(name).getPrivateObjectiveCard().toString()));
+                socketObservers.get(getPlayer(name)).reset();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void showTrack(String name) {
         if (remoteObservers.get(getPlayer(name)) != null) {
@@ -264,7 +278,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         } else {
             if (socketObservers.get(getPlayer(name)) != null) {
                 try {
-                    //socketObservers.get(getPlayer(name)).writeObject(new ShowTrackResponse(board.getRoundTrack().toString());
+                    socketObservers.get(getPlayer(name)).writeObject(new ShowTrackResponse(board.getRoundTrack().toString()));
                     socketObservers.get(getPlayer(name)).reset();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -283,15 +297,15 @@ public class MatchMultiplayer extends Match implements Runnable {
         firstPlayoff.add(ranking.get(0));
 
         // compare points
-        for(int i = 0; i < ranking.size() - 1; i++){
-            if(ranking.get(i).getPoints() == ranking.get(i + 1).getPoints()){
+        for (int i = 0; i < ranking.size() - 1; i++) {
+            if (ranking.get(i).getPoints() == ranking.get(i + 1).getPoints()) {
                 firstPlayoff.add(ranking.get(i + 1));
             } else {
                 break;
             }
         }
 
-        if(firstPlayoff.size() == 1){
+        if (firstPlayoff.size() == 1) {
             return firstPlayoff.get(0);
         } else {
             // compare points by private objective card
@@ -301,8 +315,8 @@ public class MatchMultiplayer extends Match implements Runnable {
             maxPrivate = firstPlayoff.get(0).getPointsByPrivateObjective();
 
             // find the max value
-            for(int i = 1; i < firstPlayoff.size(); i++){
-                if(firstPlayoff.get(i).getPointsByPrivateObjective() > maxPrivate){
+            for (int i = 1; i < firstPlayoff.size(); i++) {
+                if (firstPlayoff.get(i).getPointsByPrivateObjective() > maxPrivate) {
                     maxPrivate = firstPlayoff.get(i).getPointsByPrivateObjective();
                 }
             }
@@ -314,7 +328,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                 }
             }
 
-            if(secondPlayoff.size() == 1){
+            if (secondPlayoff.size() == 1) {
                 return secondPlayoff.get(0);
             } else {
                 thirdPlayoff = new ArrayList<>();
@@ -347,12 +361,13 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * Determines the winner if there are players with the same points at the end of other playoffs
+     *
      * @param playoff list of players with the same points by tokens
      * @return the player which is in playoff and played before other players in playoff in the last round
      */
-    private PlayerMultiplayer lastPlayoff(List<PlayerMultiplayer> playoff){
-        for(PlayerMultiplayer p : players){
-            if(playoff.contains(p)){
+    private PlayerMultiplayer lastPlayoff(List<PlayerMultiplayer> playoff) {
+        for (PlayerMultiplayer p : players) {
+            if (playoff.contains(p)) {
                 return p;
             }
         }
@@ -421,8 +436,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         getPlayer(name).setSchemeCardSet(true);
         setWindowChosen(true);
 
-        tokensToBeUpdated(true,name);
-        schemeCardsToBeUpdated( true,  name);
+        tokensToBeUpdated(true, name);
+        schemeCardsToBeUpdated(true, name);
 
         if (remoteObservers.get(getPlayer(name)) != null) {
             try {
@@ -454,7 +469,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             if (result)
                 board.getReserve().getDices().remove(index);
             reserveToBeUpdated(result);
-            schemeCardsToBeUpdated(result,name);
+            schemeCardsToBeUpdated(result, name);
 
             synchronized (getLock()) {
                 getLock().notifyAll();
@@ -470,7 +485,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             getPlayer(name).setDice(diceChosen);
             getPlayer(name).setChoise(incrOrDecr);
             boolean result = getBoard().findAndUseToolCard(1, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
             return result;
@@ -486,8 +501,8 @@ public class MatchMultiplayer extends Match implements Runnable {
             getPlayer(name).setFinalX1(finalX);
             getPlayer(name).setFinalY1(finalY);
             boolean result = getBoard().findAndUseToolCard(n, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
-            schemeCardsToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
+            schemeCardsToBeUpdated(result, name);
             setToolAction(result);
             return result;
         } else {
@@ -506,8 +521,8 @@ public class MatchMultiplayer extends Match implements Runnable {
             getPlayer(name).setFinalX2(finalX2);
             getPlayer(name).setFinalY2(finalY2);
             boolean result = getBoard().findAndUseToolCard(4, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
-            schemeCardsToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
+            schemeCardsToBeUpdated(result, name);
             setToolAction(result);
             return result;
         } else {
@@ -521,7 +536,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             getPlayer(name).setRound(roundChosen);
             getPlayer(name).setDiceChosenFromRound(diceChosenFromRound);
             boolean result = getBoard().findAndUseToolCard(5, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
             return result;
@@ -534,7 +549,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(6, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
             return result;
@@ -547,7 +562,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (!isToolAction()) {
             boolean result;
             result = getBoard().findAndUseToolCard(7, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
             return result;
@@ -560,7 +575,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (!isToolAction()) {
             boolean result;
             result = getBoard().findAndUseToolCard(8, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
             setToolAction(result);
             return result;
         } else {
@@ -574,9 +589,9 @@ public class MatchMultiplayer extends Match implements Runnable {
             getPlayer(name).setFinalX1(finalX1);
             getPlayer(name).setFinalY1(finalY1);
             boolean result = getBoard().findAndUseToolCard(9, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
-            schemeCardsToBeUpdated(result,name);
+            schemeCardsToBeUpdated(result, name);
             setToolAction(result);
             return result;
         } else {
@@ -588,7 +603,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(10, getPlayer(name), this);
-            tokensToBeUpdated(result,name);
+            tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
             return result;
@@ -635,9 +650,9 @@ public class MatchMultiplayer extends Match implements Runnable {
                     e.printStackTrace();
                 }
             }
-            Response response=new OtherFavorTokensResponse(getPlayer(name).getNumFavorTokens(),name);
-            for (PlayerMultiplayer otherPlayer: players) {
-                if (!otherPlayer.getName().equals( name)) {
+            Response response = new OtherFavorTokensResponse(getPlayer(name).getNumFavorTokens(), name);
+            for (PlayerMultiplayer otherPlayer : players) {
+                if (!otherPlayer.getName().equals(name)) {
                     if (remoteObservers.get(otherPlayer) != null) {
                         try {
                             remoteObservers.get(otherPlayer).onOtherFavorTokens(getPlayer(name).getNumFavorTokens(), name);
@@ -658,7 +673,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    private void schemeCardsToBeUpdated(boolean result, String name){
+    private void schemeCardsToBeUpdated(boolean result, String name) {
         if (result) {
 
             if (remoteObservers.get(getPlayer(name)) != null) {
@@ -670,16 +685,16 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
             if (socketObservers.get(getPlayer(name)) != null) {
                 try {
-                    socketObservers.get(getPlayer(name)).writeObject( new MyWindowResponse(getPlayer(name).getSchemeCard().toString()));
+                    socketObservers.get(getPlayer(name)).writeObject(new MyWindowResponse(getPlayer(name).getSchemeCard().toString()));
                     socketObservers.get(getPlayer(name)).reset();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-            Response response=new OtherSchemeCardsResponse(getPlayer(name).getSchemeCard().toString(),name);
-            for (PlayerMultiplayer otherPlayer: players) {
-                if (!otherPlayer.getName().equals (name)) {
+            Response response = new OtherSchemeCardsResponse(getPlayer(name).getSchemeCard().toString(), name);
+            for (PlayerMultiplayer otherPlayer : players) {
+                if (!otherPlayer.getName().equals(name)) {
                     if (remoteObservers.get(otherPlayer) != null) {
                         try {
                             remoteObservers.get(otherPlayer).onOtherSchemeCards(getPlayer(name).getSchemeCard().toString(), name);

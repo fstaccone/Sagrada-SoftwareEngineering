@@ -4,7 +4,6 @@ import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.ReconnectionRequest;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.List;
 
 
@@ -22,7 +21,6 @@ public class SocketCli implements Serializable, MatchObserver {
         cli.printWelcome();
     }
 
-    //todo
     public void reconnect() {
         clientController.request(new ReconnectionRequest(username));
     }
@@ -63,9 +61,9 @@ public class SocketCli implements Serializable, MatchObserver {
         cli.onOtherTurn(name);
     }
 
-    @Override //todo PAOLO
-    public void onInitialization(String toolcards, String publicCards, String privateCard, boolean windowChosen) {
-        cli.onInitialization(toolcards, publicCards, privateCard, windowChosen);
+    @Override
+    public void onInitialization(String toolcards, String publicCards, String privateCard) {
+        cli.onInitialization(toolcards, publicCards, privateCard);
     }
 
     @Override
@@ -89,18 +87,18 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onMyFavorTokens(int value){
+    public void onMyFavorTokens(int value) {
         cli.onMyFavorTokens(value);
     }
 
     @Override
     public void onOtherFavorTokens(int value, String name) {
-        cli.onOtherFavorTokens(value,name);
+        cli.onOtherFavorTokens(value, name);
     }
 
     @Override
     public void onOtherSchemeCards(String scheme, String name) {
-        cli.onOtherSchemeCards(scheme,name);
+        cli.onOtherSchemeCards(scheme, name);
     }
 
     @Override
@@ -108,6 +106,11 @@ public class SocketCli implements Serializable, MatchObserver {
         cli.onGameEnd(winner, rankingNames, rankingValues);
     }
 
+    // todo: completare con i parametri
+    @Override
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard) {
+        cli.afterReconnection(toolcards, publicCards, privateCard);
+    }
 }
 
 

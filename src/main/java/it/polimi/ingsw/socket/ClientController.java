@@ -2,10 +2,9 @@ package it.polimi.ingsw.socket;
 
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.LoginHandler;
-import it.polimi.ingsw.socket.responses.Response;
+import it.polimi.ingsw.SocketCli;
 import it.polimi.ingsw.socket.requests.Request;
 import it.polimi.ingsw.socket.responses.*;
-import it.polimi.ingsw.SocketCli;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -49,7 +48,9 @@ public class ClientController implements ResponseHandler {
         return null;
     }
 
-    public ConnectionStatus isNameAlreadyTaken() { return nameStatus; }
+    public ConnectionStatus isNameAlreadyTaken() {
+        return nameStatus;
+    }
 
     public void setSocketCli(SocketCli socketCli) {
         this.socketCli = socketCli;
@@ -128,9 +129,9 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
-    public void handle(ToolCardsResponse response) {
+    public void handle(InitializationResponse response) {
         if (socketCli != null) {
-          //  socketCli.onInitialization(response.string, , );
+            socketCli.onInitialization(response.getToolcards(), response.getPublicCards(), response.getPrivateCard());
         }
     }
 
@@ -164,51 +165,65 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(ClosingGameResponse response) {
-        if (socketCli != null){
+        if (socketCli != null) {
             socketCli.onGameClosing();
         }
     }
 
     @Override
     public void handle(PlayerExitResponse response) {
-        if(socketCli != null){
+        if (socketCli != null) {
             socketCli.onPlayerExit(response.name);
         }
     }
 
     @Override
     public void handle(PlayerReconnectionResponse response) {
-        if(socketCli != null) {
+        if (socketCli != null) {
             socketCli.onPlayerReconnection(response.getName());
         }
     }
 
     @Override
     public void handle(MyFavorTokensResponse response) {
-        if(socketCli != null){
+        if (socketCli != null) {
             socketCli.onMyFavorTokens(response.value);
         }
     }
 
     @Override
     public void handle(OtherFavorTokensResponse response) {
-        if(socketCli != null){
-            socketCli.onOtherFavorTokens(response.value,response.name);
+        if (socketCli != null) {
+            socketCli.onOtherFavorTokens(response.value, response.name);
         }
     }
 
     @Override
     public void handle(OtherSchemeCardsResponse response) {
-        if(socketCli != null){
-            socketCli.onOtherSchemeCards(response.scheme,response.name);
+        if (socketCli != null) {
+            socketCli.onOtherSchemeCards(response.scheme, response.name);
         }
     }
 
 
     @Override
     public void handle(GameEndResponse response) {
-        if(socketCli != null) {
+        if (socketCli != null) {
             socketCli.onGameEnd(response.getWinner(), response.getNames(), response.getValues());
+        }
+    }
+
+    @Override
+    public void handle(ShowTrackResponse response) {
+        if (socketCli != null) {
+            socketCli.onShowTrack(response.getTrack());
+        }
+    }
+
+    @Override
+    public void handle(AfterReconnectionResponse response) {
+        if (socketCli != null) {
+            socketCli.onAfterReconnection(response.getToolcards(), response.getPublicCards(), response.getPrivateCard());
         }
     }
 
