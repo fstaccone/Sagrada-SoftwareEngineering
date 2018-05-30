@@ -43,11 +43,13 @@ public class LoginHandler implements Initializable {
     private transient boolean isSocket = false;
     private transient boolean isGui = true;
     private transient boolean isCli = false;
+
     private transient boolean isSingleplayer = false;
     private transient boolean reconnection = false;
     private transient int difficulty;
     private transient String serverAddress;
     private WaitingScreenHandler handler;
+    private WaitingRoomCli waitingRoomCli;
 
     // Values to be set by file on server, how can we set these here?
     private transient int rmiRegistryPort = 1100;
@@ -55,8 +57,7 @@ public class LoginHandler implements Initializable {
 
     private transient Registry registry;
     private transient RemoteController controller;
-
-    //private transient Client client;
+    ;
 
     @FXML
     private transient TextField usernameInput;
@@ -123,10 +124,14 @@ public class LoginHandler implements Initializable {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         readInput();
 
+        window = (Stage) playButton.getScene().getWindow();
 
+        if(isCli){
+            waitingRoomCli= new WaitingRoomCli(this,window,username,isRmi);
+            connectionSetup(null);
+        }
+        else {
 
-       // if(!reconnection) {
-            window = (Stage) playButton.getScene().getWindow();
             FXMLLoader fx = new FXMLLoader();
             fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
             Scene waiting = new Scene(fx.load());
@@ -135,12 +140,8 @@ public class LoginHandler implements Initializable {
             handler = fx.getController();
             handler.setLoginHandler(this);
 
-            connectionSetup();
+            connectionSetup(waiting);
 
-            window.setScene(waiting);
-            window.setTitle("Waiting room");
-            window.setResizable(false);
-            window.show();
             window.setOnCloseRequest(event -> {
                 try {
                     event.consume();
@@ -149,7 +150,7 @@ public class LoginHandler implements Initializable {
                     e.printStackTrace();
                 }
             });
-      //  }
+        }
     }
 
 
@@ -201,7 +202,7 @@ public class LoginHandler implements Initializable {
         alert.showAndWait();
     }
 
-    private void connectionSetup() throws IOException, InterruptedException {
+    private void connectionSetup(Scene waiting) throws IOException, InterruptedException {
         ConnectionStatus status;
 
         // connection establishment with the selected method
@@ -228,9 +229,10 @@ public class LoginHandler implements Initializable {
             reconnection = true;
             if (isRmi) {
                 if (isCli) {
+                    Platform.runLater(() -> window.close());
                     new RmiCli(username, controller, false).reconnect();
                 } else {
-                    // new RmiGUI
+                    //new RmiGui(window, username, controller).reconnect(); POTREBBE ANDARE? TRASFORMA IMMEDIATAMENTE LA SCHERMATA DI ATTESA IN SCHERMATA DI GIOCO
                 }
             } else {
                 if (isCli) {
@@ -242,6 +244,12 @@ public class LoginHandler implements Initializable {
             }
         } else{
             // views' creation and input for the model to create the Player
+            if(isGui) {
+                window.setScene(waiting);
+                window.setTitle("Waiting room");
+                window.setResizable(false);
+                window.show();
+            }
             if (isRmi) createClientRmi();
             else createClientSocket();
         }
@@ -256,7 +264,8 @@ public class LoginHandler implements Initializable {
 
         try {
             this.controller = (RemoteController) registry.lookup("Lobby");
-
+            if(isCli)
+                waitingRoomCli.setController(controller);
         } catch (NotBoundException e) {
             System.out.println("A client can't get the controller's reference");
             e.printStackTrace();
@@ -271,6 +280,9 @@ public class LoginHandler implements Initializable {
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
             clientController = new ClientController(in, out, this);
+            if(isCli){
+                waitingRoomCli.setClientController(clientController);
+            }
         } catch (SocketException e) {
             System.out.println("Unable to create socket connection");
         } finally { /*socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM*/}
@@ -279,7 +291,6 @@ public class LoginHandler implements Initializable {
     private void createClientRmi(){
         // to create the link between this Client and the Player in the model
         if (isSingleplayer) {
-            //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
                 controller.createMatch(this.username);
                 if (isCli) {
@@ -291,9 +302,13 @@ public class LoginHandler implements Initializable {
                 System.out.println("Singleplayer match can't be created!");
             }
         } else {
-            //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.controller);
             try {
-                controller.observeLobby(this.username, handler);
+                if (isCli){
+                    controller.observeLobby(this.username, waitingRoomCli);
+                }
+                else {
+                    controller.observeLobby(this.username, handler);
+                }
                 controller.addPlayer(this.username);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -308,7 +323,6 @@ public class LoginHandler implements Initializable {
 
         // to create the link between this Client and the Player in the model
         if (isSingleplayer) {
-            //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
                 clientController.request(new CreateMatchRequest(this.username));
             } catch (Exception e) {
@@ -316,7 +330,6 @@ public class LoginHandler implements Initializable {
                 System.out.println("Singleplayer match can't be created!");
             }
         } else {
-            //client = new Client(this.username, new RMIView(), ConnectionStatus.CONNECTED, this.clientController,this.controller);
             try {
                 new Thread(new SocketListener(clientController)).start();
                 clientController.request(new AddPlayerRequest(this.username));
@@ -328,15 +341,23 @@ public class LoginHandler implements Initializable {
         }
     }
 
-    public void onMatchStarted() throws RemoteException {
+    public void onMatchStartedRmi()  {
         if (isCli) {
-            Platform.runLater(() -> window.close());
-            new RmiCli(username, controller, false).launch();
-        } else new RmiGui(window, username, controller).launch();
+            try {
+                new RmiCli(username, controller, false).launch();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                new RmiGui(window, username, controller).launch();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void onMatchStartedSocket() {
-        Platform.runLater(() -> window.close());
         if (isCli) {
             new SocketCli(username, clientController,false);
         } else {
@@ -346,6 +367,14 @@ public class LoginHandler implements Initializable {
 
     public WaitingScreenHandler getWaitingScreenHandler() {
         return this.handler;
+    }
+
+    public boolean isCli() {
+        return isCli;
+    }
+
+    public WaitingRoomCli getWaitingRoomCli() {
+        return waitingRoomCli;
     }
 }
 

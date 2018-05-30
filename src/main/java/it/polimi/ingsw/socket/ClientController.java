@@ -79,14 +79,42 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(WaitingPlayersResponse response) {
-        loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+        if (loginHandler.isCli())
+            loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+        else
+            loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
         if (response.name != null) {
-            if (!response.unique)
-                loginHandler.getWaitingScreenHandler().onPlayerExit(response.name);
-            else
-                loginHandler.getWaitingScreenHandler().onLastPlayer(response.name);
+            if (!response.unique) {
+                if (loginHandler.isCli())
+                    loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+                else
+                    loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+            }
+            else {
+                if (loginHandler.isCli())
+                    loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+                else
+                    loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+            }
         }
     }
+
+    @Override
+    public void handle(PlayerExitRoomResponse response){
+        if (loginHandler.isCli())
+            loginHandler.getWaitingRoomCli().onPlayerExit(response.name);
+        else
+            loginHandler.getWaitingScreenHandler().onPlayerExit(response.name);
+    }
+
+    @Override
+    public void handle(LastPlayerRoomResponse response){
+        if (loginHandler.isCli())
+            loginHandler.getWaitingRoomCli().onLastPlayer(response.name);
+        else
+            loginHandler.getWaitingScreenHandler().onLastPlayer(response.name);
+    }
+
 
     @Override
     public void handle(MatchStartedResponse response) {
@@ -171,7 +199,7 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
-    public void handle(PlayerExitResponse response) {
+    public void handle(PlayerExitGameResponse response) {
         if (socketCli != null) {
             socketCli.onPlayerExit(response.name);
         }
@@ -232,6 +260,13 @@ public class ClientController implements ResponseHandler {
         if (socketCli != null) {
             socketCli.onWindowChoise(response.list);
         }
+    }
+
+    public void handle(CheckConnectionResponse response){
+        if (loginHandler.isCli())
+            loginHandler.getWaitingRoomCli().onCheckConnection();
+        else
+            loginHandler.getWaitingScreenHandler().onCheckConnection();
     }
 
     public ObjectInputStream getIn() {
