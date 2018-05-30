@@ -1,9 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.*;
 
+import java.awt.*;
 import java.io.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -26,11 +28,11 @@ public class Cli {
     private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
     private String privateCard;
-    private String mySchemeCard;
+    private WindowPatternCard mySchemeCard;
 
     private int myFavorTokens;
     private Map<String, Integer> otherFavorTokensMap;
-    private Map<String, String> otherSchemeCardsMap;
+    private Map<String, WindowPatternCard> otherSchemeCardsMap;
 
     private int diceChosen = 9;
     private int coordinateX;
@@ -121,7 +123,7 @@ public class Cli {
         this.otherFavorTokensMap.put(name, value);
     }
 
-    public void onOtherSchemeCards(String scheme, String name) {
+    public void onOtherSchemeCards(WindowPatternCard scheme, String name) {
         this.otherSchemeCardsMap.put(name, scheme);
     }
 
@@ -173,7 +175,7 @@ public class Cli {
         printer.flush();
     }
 
-    public void onMyWindow(String window) {
+    public void onMyWindow(WindowPatternCard window) {
         this.mySchemeCard = window;
     }
 

@@ -678,26 +678,26 @@ public class MatchMultiplayer extends Match implements Runnable {
 
             if (remoteObservers.get(getPlayer(name)) != null) {
                 try {
-                    remoteObservers.get(getPlayer(name)).onMyWindow(getPlayer(name).getSchemeCard().toString());
+                    remoteObservers.get(getPlayer(name)).onMyWindow(getPlayer(name).getSchemeCard());
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             }
             if (socketObservers.get(getPlayer(name)) != null) {
                 try {
-                    socketObservers.get(getPlayer(name)).writeObject(new MyWindowResponse(getPlayer(name).getSchemeCard().toString()));
+                    socketObservers.get(getPlayer(name)).writeObject(new MyWindowResponse(getPlayer(name).getSchemeCard()));
                     socketObservers.get(getPlayer(name)).reset();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-            Response response = new OtherSchemeCardsResponse(getPlayer(name).getSchemeCard().toString(), name);
+            Response response = new OtherSchemeCardsResponse(getPlayer(name).getSchemeCard(), name);
             for (PlayerMultiplayer otherPlayer : players) {
                 if (!otherPlayer.getName().equals(name)) {
                     if (remoteObservers.get(otherPlayer) != null) {
                         try {
-                            remoteObservers.get(otherPlayer).onOtherSchemeCards(getPlayer(name).getSchemeCard().toString(), name);
+                            remoteObservers.get(otherPlayer).onOtherSchemeCards(getPlayer(name).getSchemeCard(), name);
                         } catch (RemoteException e) {
                             lobby.disconnect(otherPlayer.getName());
                         }

@@ -117,7 +117,7 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(MyWindowResponse response) {
         if (socketCli != null) {
-            socketCli.onMyWindow(response.string);
+            socketCli.onMyWindow(response.window);
         }
     }
 

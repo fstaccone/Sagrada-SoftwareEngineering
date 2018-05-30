@@ -1,13 +1,14 @@
 package it.polimi.ingsw.socket.responses;
 
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ResponseHandler;
 
 public class MyWindowResponse implements Response {
 
-    public String string;
+    public WindowPatternCard window;
 
-    public MyWindowResponse(String string) {
-        this.string = string;
+    public MyWindowResponse(WindowPatternCard window) {
+        this.window = window;
     }
 
     @Override

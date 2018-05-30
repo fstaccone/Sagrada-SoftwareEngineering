@@ -1,7 +1,9 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
+import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -59,7 +61,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onMyWindow(String window) {
+    public void onMyWindow(WindowPatternCard window) {
         cli.onMyWindow(window);
     }
 
@@ -73,7 +75,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         cli.onOtherFavorTokens(value, name);
     }
 
-    public void onOtherSchemeCards(String scheme, String name) {
+    public void onOtherSchemeCards(WindowPatternCard scheme, String name) {
         cli.onOtherSchemeCards(scheme, name);
     }
 

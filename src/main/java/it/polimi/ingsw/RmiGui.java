@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -128,7 +129,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onMyWindow(String window) {
+    public void onMyWindow(WindowPatternCard window) {
         //AGGIORNAMENTO PROPRIA CARTA SCHEMA
     }
 
@@ -143,7 +144,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onOtherSchemeCards(String string, String name) {
+    public void onOtherSchemeCards(WindowPatternCard string, String name) {
         //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO CARTE SCHEMA ALTRUI
     }
 

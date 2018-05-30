@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.ReconnectionRequest;
 
@@ -52,7 +53,7 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onMyWindow(String window) {
+    public void onMyWindow(WindowPatternCard window) {
         cli.onMyWindow(window);
     }
 
@@ -97,7 +98,7 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onOtherSchemeCards(String scheme, String name) {
+    public void onOtherSchemeCards(WindowPatternCard scheme, String name) {
         cli.onOtherSchemeCards(scheme, name);
     }
 
