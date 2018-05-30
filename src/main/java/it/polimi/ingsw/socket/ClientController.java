@@ -116,9 +116,16 @@ public class ClientController implements ResponseHandler {
     }
 
 
-    @Override
+    @Override//DA RIVEDERE
     public void handle(MatchStartedResponse response) {
         loginHandler.onMatchStartedSocket();
+    }
+
+    @Override
+    public void handle(RoundTrackResponse response) {
+        if (socketCli != null) {
+            socketCli.onRoundTrack(response.roundTrack);
+        }
     }
 
     @Override
@@ -242,16 +249,9 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
-    public void handle(ShowTrackResponse response) {
-        if (socketCli != null) {
-            socketCli.onShowTrack(response.getTrack());
-        }
-    }
-
-    @Override
     public void handle(AfterReconnectionResponse response) {
         if (socketCli != null) {
-            socketCli.onAfterReconnection(response.getToolcards(), response.getPublicCards(), response.getPrivateCard());
+            socketCli.onAfterReconnection(response.toolcards,response.publicCards,response.privateCard,response.reserve,response.roundTrack,response.myTokens,response.schemeCard, response.otherTokens,response.otherSchemeCards, response.schemeCardChosen);
         }
     }
 

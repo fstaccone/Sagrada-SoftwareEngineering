@@ -250,39 +250,37 @@ public class MatchMultiplayer extends Match implements Runnable {
     public void afterReconnection(String name) {
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
+        String privateCard =getPlayer(name).getPrivateObjectiveCard().toString();
+        String reserve=board.getReserve().toString();
+        String roundTrack=board.getRoundTrack().toString();
+        int myTokens=getPlayer(name).getNumFavorTokens();
+        WindowPatternCard mySchemeCard=getPlayer(name).getSchemeCard();
+        Map<String,Integer> otherTokens=new HashMap<>();
+        Map<String,WindowPatternCard> otherSchemeCards=new HashMap<>();
+        boolean schemeCardChosen= getPlayer(name).isSchemeCardSet();
+        for(PlayerMultiplayer player: players){
+            if (!player.getName().equals(name)){
+                otherTokens.put(player.getName(),player.getNumFavorTokens());
+            }
+        }
+        for(PlayerMultiplayer player: players){
+            if (!player.getName().equals(name)){
+                otherSchemeCards.put(player.getName(),player.getSchemeCard());
+            }
+        }
 
         if (remoteObservers.get(getPlayer(name)) != null) {
             try {
-                remoteObservers.get(getPlayer(name)).onAfterReconnection(toolCards, publicCards, getPlayer(name).getPrivateObjectiveCard().toString());
+                remoteObservers.get(getPlayer(name)).onAfterReconnection(toolCards, publicCards, privateCard,reserve,roundTrack,myTokens,mySchemeCard,otherTokens, otherSchemeCards,schemeCardChosen);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else if (socketObservers.get(getPlayer(name)) != null) {
             try {
-                socketObservers.get(getPlayer(name)).writeObject(new AfterReconnectionResponse(toolCards, publicCards, getPlayer(name).getPrivateObjectiveCard().toString()));
+                socketObservers.get(getPlayer(name)).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard,reserve,roundTrack,myTokens,mySchemeCard,otherTokens, otherSchemeCards,schemeCardChosen));
                 socketObservers.get(getPlayer(name)).reset();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void showTrack(String name) {
-        if (remoteObservers.get(getPlayer(name)) != null) {
-            try {
-                remoteObservers.get(getPlayer(name)).onShowTrack(board.getRoundTrack().toString());
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        } else {
-            if (socketObservers.get(getPlayer(name)) != null) {
-                try {
-                    socketObservers.get(getPlayer(name)).writeObject(new ShowTrackResponse(board.getRoundTrack().toString()));
-                    socketObservers.get(getPlayer(name)).reset();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }

@@ -121,10 +121,6 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         else chooseCardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
     }
 
-    @Override
-    public void onShowTrack(String track) {
-
-    }
 
     @Override
     public void onGameClosing() {
@@ -133,6 +129,16 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+
+    }
+
+    @Override
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) throws RemoteException {
+
+    }
+
+    @Override
+    public void onRoundTrack(String track) throws RemoteException {
 
     }
 
@@ -171,10 +177,6 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         else chooseCardHandler.setTextArea(s);
     }
 
-    @Override
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard) {
-
-    }
 
     @Override
     public void onInitialization(String toolcards, String publicCards, String privateCard) {

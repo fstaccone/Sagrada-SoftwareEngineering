@@ -7,6 +7,7 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Map;
 
 public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
@@ -100,11 +101,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onShowTrack(String track) {
-        cli.onShowTrack(track);
-    }
-
-    @Override
     public void onGameClosing() {
         cli.onGameClosing();
     }
@@ -115,7 +111,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard) {
-        cli.afterReconnection(toolcards, publicCards, privateCard);
+    public void onRoundTrack(String roundTrack) {
+        cli.onRoundTrack(roundTrack);
+    }
+
+    @Override
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String,Integer> otherTokens, Map<String,WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
+        cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve,roundTrack,myTokens,mySchemeCard,otherTokens,otherSchemeCards, schemeCardChosen);
     }
 }

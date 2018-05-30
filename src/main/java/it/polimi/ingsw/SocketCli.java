@@ -5,7 +5,9 @@ import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.ReconnectionRequest;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 
 public class SocketCli implements Serializable, MatchObserver {
@@ -78,11 +80,6 @@ public class SocketCli implements Serializable, MatchObserver {
     }
 
     @Override
-    public void onShowTrack(String track) {
-        cli.onShowTrack(track);
-    }
-
-    @Override
     public void onGameClosing() {
         cli.onGameClosing();
     }
@@ -107,10 +104,14 @@ public class SocketCli implements Serializable, MatchObserver {
         cli.onGameEnd(winner, rankingNames, rankingValues);
     }
 
-    // todo: completare con i parametri
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard) {
-        cli.afterReconnection(toolcards, publicCards, privateCard);
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
+        cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
+    }
+
+    @Override
+    public void onRoundTrack(String roundTrack) {
+        cli.onRoundTrack(roundTrack);
     }
 }
 
