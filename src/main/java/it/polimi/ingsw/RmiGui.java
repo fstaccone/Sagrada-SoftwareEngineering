@@ -12,7 +12,9 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private List<String> dicesList;
     private  String privateCard;
     private List<String> publicCardsList;
+    private Map<String ,Integer > otherFavorTokensMap;
+    private Map<String ,String > otherSchemeCardsMap;
 
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller) throws RemoteException {
@@ -36,6 +40,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         this.controller = controller;
         this.myTurn = false;
         this.windowStage = fromLogin;
+        this.otherFavorTokensMap=new HashMap<>();
+        this.otherSchemeCardsMap=new HashMap<>();
     }
 
     @Override
@@ -129,6 +135,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onMyFavorTokens(int value) {
         //AGGIORNAMENTO PROPRI SEGNALINI
+        if(gameBoardHandler!=null) gameBoardHandler.setFavourTokens(value);
     }
 
     @Override
@@ -139,13 +146,17 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onOtherSchemeCards(String string, String name)  {
         //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO CARTE SCHEMA ALTRUI
+        otherSchemeCardsMap.put(name, string);
+        if(gameBoardHandler!=null) gameBoardHandler.onOtherSchemeCards();
     }
 
     @Override
     public void onOtherTurn(String name) {
         System.out.println("On other turn");
-        String s = "Now it's " + name + "'s turn";
-        if (gameBoardHandler != null) gameBoardHandler.setTextArea(s);
+        String s = "Ora è il turno di " + name;
+        if (gameBoardHandler != null){
+            gameBoardHandler.setTextArea(s);
+        }
         else chooseCardHandler.setTextArea(s);
     }
 
@@ -228,5 +239,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         return dicesList;
     }
 
-
+    public Map<String, String> getOtherSchemeCardsMap() {
+        return otherSchemeCardsMap;
+    }
 }

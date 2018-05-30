@@ -10,10 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -23,6 +20,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class GameBoardHandler implements Initializable {
@@ -119,7 +117,22 @@ public class GameBoardHandler implements Initializable {
     GridPane grid2;
     @FXML
     GridPane grid3;
-
+    @FXML
+    Pane myFavourTokensContainer;
+    @FXML
+    Pane favourTokensContainer1;
+    @FXML
+    Pane favourTokensContainer2;
+    @FXML
+    Pane favourTokensContainer3;
+    @FXML
+    Label label0;
+    @FXML
+    Label label1;
+    @FXML
+    Label label2;
+    @FXML
+    Label label3;
 
     private RemoteController controller;
     private String username;
@@ -128,6 +141,8 @@ public class GameBoardHandler implements Initializable {
     private int diceChosen;
     private List<String> reserveDices;
     private Button[][] windowPatternCard;
+    private Map<String ,Integer > otherFavorTokensMap;
+    private Map<String ,String > otherSchemeCardsMap;
 
     private EventHandler<ActionEvent> reserveDiceSelected = new EventHandler<ActionEvent>() {
         @Override
@@ -138,7 +153,7 @@ public class GameBoardHandler implements Initializable {
                 int i = Integer.parseInt(s);
                 s = rmiGui.getDicesList().get(i);
                 diceChosen = i;
-                textArea.setText("You currently chose the dice: " + s + " pos: " + i);
+                textArea.setText("Hai scelto il dado: " + s + " pos: " + i);
             }
         }
     };
@@ -167,16 +182,16 @@ public class GameBoardHandler implements Initializable {
                     if (tempY == null) tempY = 0;
                     int coordinateX = tempX;
                     int coordinateY = tempY;
-                    textArea.setText("You want to put dice: " + diceChosen + "in pos: " + coordinateX + "," + coordinateY);
+                    textArea.setText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
                     try {
                         String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
                         String url = genericURL + reserveDices.get(diceChosen) + ".png";
                         if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
-                            textArea.setText("Well done! The chosen dice has been placed correctly.");
+                            textArea.setText("Ben fatto! Il dado scelto è stato piazzato correttamente.");
                             putImage(url, coordinateX, coordinateY);
                             diceChosen = 9; //FIRST VALUE NEVER PRESENT IN THE RESERVE
                         } else {
-                            textArea.setText("WARNING: You tried to place a dice where you shouldn't, or you are trying to place a second dice in your turn!");
+                            textArea.setText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o stai provando a piazzare un secondo dado nel tuo turno!");
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -198,6 +213,7 @@ public class GameBoardHandler implements Initializable {
         this.controller = controller;
         this.username = username;
         this.rmiGui = rmiGui;
+        this.otherSchemeCardsMap = rmiGui.getOtherSchemeCardsMap();
         window = windowFromRmiGui;
         Platform.runLater(() -> {
             window.setScene(sceneFromRmiGui);
@@ -226,6 +242,10 @@ public class GameBoardHandler implements Initializable {
         windowPatternCard[3][2] = b18;
         windowPatternCard[3][3] = b19;
         windowPatternCard[3][4] = b20;
+        Platform.runLater(()->label0.setText(username));
+        label1.setText(" ");
+        label2.setText(" ");
+        label3.setText(" ");
     }
 
     public void setWindowPatternCardImg(String imgURL){
@@ -237,6 +257,7 @@ public class GameBoardHandler implements Initializable {
             for(Button dice : dicesRow)
             dice.setOnAction(windowPatternCardSlotSelected);
         }
+        onOtherSchemeCards();
     }
 
     public void setToolCards(List<String> toolCardsList){
@@ -311,8 +332,8 @@ public class GameBoardHandler implements Initializable {
 
     @FXML
     public void onQuitClicked() throws RemoteException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Exit");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi davvero uscire?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Uscita");
         alert.setHeaderText(null);
         alert.setResizable(false);
         alert.setGraphic(null);
@@ -348,5 +369,45 @@ public class GameBoardHandler implements Initializable {
         pubObjCard2.setImage(publicObjCardImg2);
         Image publicObjCardImg3 = new Image("File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/" + publicCards.get(2) + ".png");
         pubObjCard3.setImage(publicObjCardImg3);
+    }
+
+    public void setFavourTokens(int value){
+        if(myFavourTokensContainer.getChildren()!=null){
+            myFavourTokensContainer.getChildren().remove(0, myFavourTokensContainer.getChildren().size());
+        }
+        GridPane myFavourTokens = new GridPane();
+        myFavourTokens.setPrefSize(40, 240);
+        String url = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
+        Image img = new Image(url);
+        for(int i = 0; i < value; i++){
+            ImageView imgView = new ImageView(img);
+            imgView.setFitWidth(40);
+            imgView.setFitHeight(40);
+            int finalI = i;
+            Platform.runLater(()->myFavourTokens.add(imgView, 0, finalI));
+        }
+        myFavourTokensContainer.getChildren().add(myFavourTokens);
+    }
+
+    public void onOtherSchemeCards(){
+        this.otherSchemeCardsMap = rmiGui.getOtherSchemeCardsMap();
+        for(String s : otherSchemeCardsMap.keySet()){
+            System.out.println(s);
+            setName(s);
+        }
+    }
+
+    public void setName(String name){
+        List<Label> labels = new ArrayList<>();
+        labels.add(label1);
+        labels.add(label2);
+        labels.add(label3);
+        for ( Label label : labels){
+            if(label.getText().equals(name)) break;
+            if(label.getText().equals(" ")) {
+                Platform.runLater(() -> label.setText(name));
+                break;
+            }
+        }
     }
 }
