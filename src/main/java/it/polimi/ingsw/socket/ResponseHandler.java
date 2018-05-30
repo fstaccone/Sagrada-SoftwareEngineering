@@ -33,7 +33,7 @@ public interface ResponseHandler {
 
     void handle(ClosingGameResponse response);
 
-    void handle(PlayerExitResponse response);
+    void handle(PlayerExitGameResponse response);
 
     void handle(PlayerReconnectionResponse response);
 
@@ -48,4 +48,10 @@ public interface ResponseHandler {
     void handle(ShowTrackResponse response);
 
     void handle(AfterReconnectionResponse response);
+
+    void handle(CheckConnectionResponse response);
+
+    void handle(PlayerExitRoomResponse response);
+
+    void handle(LastPlayerRoomResponse response);
 }

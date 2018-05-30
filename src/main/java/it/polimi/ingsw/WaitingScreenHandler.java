@@ -26,7 +26,7 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     @Override
     public void onPlayerExit(String name) {
-        log.setText("Player " + name.toUpperCase() + " has left the room!");
+        log.setText("Player " + name.toUpperCase() + " has left the room before the starting of the match!");
     }
 
     @Override
@@ -42,8 +42,13 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
     }
 
     @Override
-    public void onMatchStarted() throws RemoteException {
-        loginHandler.onMatchStarted();
+    public void onMatchStarted()  {
+        loginHandler.onMatchStartedRmi();
+    }
+
+    @Override
+    public void onCheckConnection()  {
+        //just to check connection before the starting of the match in case other notifies didn't happen
     }
 
     public void setString(String string) {

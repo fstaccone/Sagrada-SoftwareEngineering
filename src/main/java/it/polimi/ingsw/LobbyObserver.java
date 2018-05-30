@@ -10,4 +10,5 @@ public interface LobbyObserver extends Serializable, Remote{
     void onPlayerExit(String name) throws RemoteException;
     void onWaitingPlayers(List<String> waitingPlayers) throws RemoteException;
     void onMatchStarted() throws RemoteException;
+    void onCheckConnection() throws RemoteException;
 }

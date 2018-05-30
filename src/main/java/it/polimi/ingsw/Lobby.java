@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Lobby {
 
@@ -48,10 +49,10 @@ public class Lobby {
         this.waitingPlayers = new ArrayList<>();
         this.multiplayerMatches = new HashMap<>();
         this.singleplayerMatches = new HashMap<>();
-        this.remoteObservers = new HashMap<>();
+        this.remoteObservers = new ConcurrentHashMap<>();
         this.waitingTime = waitingTime;
         this.turnTime = turnTime;
-        this.socketObservers = new HashMap<>();
+        this.socketObservers = new ConcurrentHashMap<>();
     }
 
     public Map<String, MatchMultiplayer> getMultiplayerMatches() {
@@ -110,52 +111,71 @@ public class Lobby {
 
                     // TODO: l'ho messo qui temporaneamente per testare la seconda text area
                     // to update waiting players on the exiting players
-                    for (LobbyObserver observer : remoteObservers.values()) {
+                    for (String observerName : remoteObservers.keySet()) {
                         try {
-                            observer.onWaitingPlayers(waitingPlayers);
+                            remoteObservers.get(observerName).onWaitingPlayers(waitingPlayers);
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            remoteObservers.remove(observerName);
+                            removeFromWaitingPlayers(observerName);
                         }
                     }
 
+                    WaitingPlayersResponse response1 = new WaitingPlayersResponse(waitingPlayers, name, unique);
+                    socketResponseToAll(response1);
+
                     // to keep all players updated on the player's exit
-                    for (LobbyObserver observer : remoteObservers.values()) {
+                    for (String observerName : remoteObservers.keySet()) {
                         try {
-                            observer.onLastPlayer(name);
+                            remoteObservers.get(observerName).onLastPlayer(name);
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            remoteObservers.remove(observerName);
+                            removeFromWaitingPlayers(observerName);
                         }
                     }
+
+                    LastPlayerRoomResponse response2= new LastPlayerRoomResponse(name);
+                    socketResponseToAll(response2);
+
                 } else {
                     waitingPlayers.remove(name);
                     remoteObservers.remove(name);
                     removeUsername(name);
 
                     // to update waiting players on the exiting players
-                    for (LobbyObserver observer : remoteObservers.values()) {
+                    for (String observerName : remoteObservers.keySet()) {
                         try {
-                            observer.onWaitingPlayers(waitingPlayers);
+                            remoteObservers.get(observerName).onWaitingPlayers(waitingPlayers);
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            remoteObservers.remove(observerName);
+                            removeFromWaitingPlayers(observerName);
                         }
                     }
 
+                    WaitingPlayersResponse response3 = new WaitingPlayersResponse(waitingPlayers, name, unique);
+                    socketResponseToAll(response3);
+
+
                     // to update waiting players on the names of players not anymore in the room
-                    for (LobbyObserver observer : remoteObservers.values()) {
+                    for (String observerName : remoteObservers.keySet()) {
                         try {
-                            observer.onPlayerExit(name);
+                            remoteObservers.get(observerName).onPlayerExit(name);
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            remoteObservers.remove(observerName);
+                            removeFromWaitingPlayers(observerName);
                         }
                     }
+
+                    PlayerExitRoomResponse response4 = new PlayerExitRoomResponse(name);
+                    socketResponseToAll(response4);
+
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("From lobby: Something wants to delete a name that doesn't exist!");
             }
 
-            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers, name, unique);
-            socketResponseToAll(response);
+
         }
     }
 
@@ -183,7 +203,7 @@ public class Lobby {
                 mo.onPlayerExit(name);
             }
 
-            Response response = new PlayerExitResponse(name);
+            Response response = new PlayerExitGameResponse(name);
             for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
                 if (player.getStatus().equals(ConnectionStatus.CONNECTED)) {
                     try {
@@ -269,14 +289,15 @@ public class Lobby {
     }
 
     private void socketResponseToAll(Response response) {
-        socketObservers.keySet().forEach(playerName -> {
+        for (String playerName : socketObservers.keySet()) {
             try {
                 socketObservers.get(playerName).writeObject(response);
                 socketObservers.get(playerName).reset();
             } catch (IOException e) {
-                e.printStackTrace();
+                socketObservers.remove(playerName);
+                removeFromWaitingPlayers(playerName);
             }
-        });
+        }
     }
 
     public void transferAllData(String name) {
@@ -293,11 +314,12 @@ public class Lobby {
 
             // ANY TIME A WAITING PLAYER IS ADDED, THE NOTIFICATION IS SENT TO THE WAITINGSCREENHANDLER BOTH FOR RMI AND SOCKETS
             //RMI
-            for (LobbyObserver observer : remoteObservers.values()) {
+            for (String observerName : remoteObservers.keySet()) {
                 try {
-                    observer.onWaitingPlayers(waitingPlayers);
+                    remoteObservers.get(observerName).onWaitingPlayers(waitingPlayers);
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    remoteObservers.remove(observerName);
+                    removeFromWaitingPlayers(observerName);
                 }
             }
 
@@ -338,23 +360,26 @@ public class Lobby {
 
             //SOCKETS
             MatchStartedResponse response = new MatchStartedResponse();
-            for (ObjectOutputStream out : socketObservers.values()) {
+            for (String name : socketObservers.keySet()) {
                 try {
-                    out.writeObject(response);
-                    out.reset();
+                    socketObservers.get(name).writeObject(response);
+                    socketObservers.get(name).reset();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    socketObservers.remove(name);
+                    removeFromWaitingPlayers(name);
                 }
             }
+
 
             createMultiplayerMatch(waitingPlayers, new HashMap<>(socketObservers));
 
             //RMI
-            for (LobbyObserver observer : remoteObservers.values()) {
+            for (String name : remoteObservers.keySet()) {
                 try {
-                    observer.onMatchStarted();
+                    remoteObservers.get(name).onMatchStarted();
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    remoteObservers.remove(name);
+                    removeFromWaitingPlayers(name);
                 }
             }
 
