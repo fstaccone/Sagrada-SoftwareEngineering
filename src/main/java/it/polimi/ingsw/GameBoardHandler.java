@@ -258,7 +258,7 @@ public class GameBoardHandler implements Initializable {
             for(Button dice : dicesRow)
             dice.setOnAction(windowPatternCardSlotSelected);
         }
-        onOtherSchemeCards();
+        onOtherSchemeCards(true, rmiGui.getOtherPlayers());
     }
 
     public void setToolCards(List<String> toolCardsList){
@@ -389,25 +389,66 @@ public class GameBoardHandler implements Initializable {
         }
         myFavourTokensContainer.getChildren().add(myFavourTokens);
     }
-
-    public void onOtherSchemeCards(){
-        this.otherSchemeCardsMap = rmiGui.getOtherSchemeCardsMap();
-        for(String s : otherSchemeCardsMap.keySet()){
-            System.out.println(s);
-            setName(s);
+    //The boolean "pre" tells us if we are checking for the first time or not
+    public void onOtherSchemeCards(boolean pre, List<String> players){
+        if(!pre) {
+            for (String s : players) {
+                System.out.println(username + " PUTTING !PRE " + s);
+                setName(s);
+            }
+        }
+        else{
+            List<String> names = new ArrayList<>();
+            for(int i = 1; i<players.size()+1; i++) names.add(players.get(players.size()-i));
+            for(String name : names) {
+                System.out.println(username + " PUTTING PRE " + name);
+                setNamePrev(name);
+            }
         }
     }
 
     public void setName(String name){
+        //This function adds the labels of the players who joined the match after this player
         List<Label> labels = new ArrayList<>();
         labels.add(label1);
         labels.add(label2);
         labels.add(label3);
-        for ( Label label : labels){
-            if(label.getText().equals(name)) break;
-            if(label.getText().equals(" ")) {
-                Platform.runLater(() -> label.setText(name));
-                break;
+        boolean alreadyPresent = false;
+        for (Label temp : labels){
+            if(temp.getText().equals(name)) alreadyPresent = true;
+        }
+        if(!alreadyPresent) {
+            for (Label label : labels) {
+                System.out.println(label.getId() + " CONTENUTO: " + label.getText());
+                if (label.getText().equals(name)) break;
+                if (label.getText().equals(" ")) {
+                    Platform.runLater(() -> label.setText(name));
+                    System.out.println("PIAZZATO NOME: " + name + "label "+ label.getId());
+                    break;
+                }
+            }
+        }
+    }
+
+    public void setNamePrev(String name){
+        //This function adds the labels of the players who joined the match before this player
+        List<Label> labels = new ArrayList<>();
+        labels.add(label3);
+        labels.add(label2);
+        labels.add(label1);
+        boolean alreadyPresent = false;
+        for (Label temp : labels){
+            if(temp.getText().equals(name)) alreadyPresent = true;
+        }
+        if(!alreadyPresent) {
+            for (Label label : labels) {
+                System.out.println(label.getId() + " CONTENUTO: " + label.getText());
+                if (label.getText().equals(name)) break;
+                if (label.getText().equals(" ")) {
+                    Platform.runLater(() -> label.setText(name));
+                    System.out.println("PIAZZATO NOME: " + name + "label "+ label.getId());
+                    break;
+                }
             }
         }
     }

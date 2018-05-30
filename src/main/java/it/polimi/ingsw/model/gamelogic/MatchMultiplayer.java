@@ -436,7 +436,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         getPlayer(name).setSchemeCardSet(true);
         setWindowChosen(true);
 
-        tokensToBeUpdated(true, name);
+
         schemeCardsToBeUpdated(true, name);
 
         if (remoteObservers.get(getPlayer(name)) != null) {
@@ -453,6 +453,8 @@ public class MatchMultiplayer extends Match implements Runnable {
                 e.printStackTrace();
             }
         }
+
+        tokensToBeUpdated(true, name);
 
         synchronized (getLock()) { // è più giusto mettere lock protected?
             getLock().notifyAll();
