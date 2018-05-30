@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -19,8 +20,8 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     public WaitingScreenHandler() throws RemoteException {
         super();
-        log=new TextArea();
-        text=new TextArea();
+        log = new TextArea();
+        text = new TextArea();
     }
 
     @Override
@@ -35,8 +36,8 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     @Override
     public void onWaitingPlayers(List<String> waitingPlayers) {
-        String wPlayers=waitingPlayers.toString().toUpperCase().replaceAll("\\[","");
-        wPlayers=wPlayers.replaceAll("\\]","");
+        String wPlayers = waitingPlayers.toString().toUpperCase().replaceAll("\\[", "");
+        wPlayers = wPlayers.replaceAll("\\]", "");
         text.setText("Ordered list of waiting players (including you):\n" + wPlayers);
     }
 
@@ -45,12 +46,12 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
         loginHandler.onMatchStarted();
     }
 
-    public void setString(String string){
+    public void setString(String string) {
         text.setText(string);
     }
 
-    public void setLoginHandler(LoginHandler loginHandler){
-        this.loginHandler=loginHandler;
+    public void setLoginHandler(LoginHandler loginHandler) {
+        this.loginHandler = loginHandler;
     }
 
 }

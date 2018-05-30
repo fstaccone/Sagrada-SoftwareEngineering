@@ -220,7 +220,7 @@ public class LoginHandler implements Initializable {
 
         if (status.equals(ConnectionStatus.CONNECTED)) {
             System.out.println("Invalid username");
-            showAlert(Alert.AlertType.WARNING, "Invalid username!", "Username already in use, insert another one please!");
+            showAlert(Alert.AlertType.WARNING, "Username non valido!", "Nome già in uso, inseriscine un altro!");
             if (!isRmi) {
                 socket.close();
             }
@@ -228,7 +228,6 @@ public class LoginHandler implements Initializable {
             reconnection = true;
             if (isRmi) {
                 if (isCli) {
-
                     new RmiCli(username, controller, false).reconnect();
                 } else {
                     // new RmiGUI

@@ -1,9 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.*;
 
+import java.awt.*;
 import java.io.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -26,11 +28,11 @@ public class Cli {
     private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
     private String privateCard;
-    private String mySchemeCard;
+    private WindowPatternCard mySchemeCard;
 
     private int myFavorTokens;
-    private Map<String ,Integer > otherFavorTokensMap;
-    private Map<String ,String > otherSchemeCardsMap;
+    private Map<String, Integer> otherFavorTokensMap;
+    private Map<String, WindowPatternCard> otherSchemeCardsMap;
 
     private int diceChosen = 9;
     private int coordinateX;
@@ -38,7 +40,7 @@ public class Cli {
 
     private List<String> playersNames;
 
-    private boolean windowChosen = false;
+    private boolean windowChosen;
 
     private boolean single;
 
@@ -96,9 +98,10 @@ public class Cli {
         this.username = username;
         this.controller = controller;
         this.clientController = clientController;
-        this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
-        this.otherFavorTokensMap=new HashMap<>();
-        this.otherSchemeCardsMap=new HashMap<>();
+        printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
+        windowChosen = false;
+        otherFavorTokensMap = new HashMap<>();
+        otherSchemeCardsMap = new HashMap<>();
         myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
@@ -112,16 +115,16 @@ public class Cli {
         printer.flush();
     }
 
-    public void onMyFavorTokens(int value){
-        this.myFavorTokens=value;
+    public void onMyFavorTokens(int value) {
+        this.myFavorTokens = value;
     }
 
-    public void onOtherFavorTokens(int value, String name){
-        this.otherFavorTokensMap.put(name,value);
+    public void onOtherFavorTokens(int value, String name) {
+        this.otherFavorTokensMap.put(name, value);
     }
 
-    public void onOtherSchemeCards(String scheme, String name){
-        this.otherSchemeCardsMap.put(name,scheme);
+    public void onOtherSchemeCards(WindowPatternCard scheme, String name) {
+        this.otherSchemeCardsMap.put(name, scheme);
     }
 
     public void onPlayers(List<String> playersNames) {
@@ -172,8 +175,8 @@ public class Cli {
         printer.flush();
     }
 
-    public void onMyWindow(String window) {
-        this.mySchemeCard=window;
+    public void onMyWindow(WindowPatternCard window) {
+        this.mySchemeCard = window;
     }
 
     public void onOtherTurn(String name) {
@@ -256,13 +259,36 @@ public class Cli {
         printer.flush();
     }
 
-    public void showFavorTokens(){
-        printer.println("\nAl momento hai " + myFavorTokens +" segnalini.\n");
+    // TODO: completare con altri parametri
+    public void afterReconnection(String toolcards, String publicCards, String privateCard) {
+        parseToolcards(toolcards);
+        parsePublicCards(publicCards);
+        this.privateCard = privateCard;
+    }
+
+
+    public void showFavorTokens() {
+        printer.println("\nAl momento hai " + myFavorTokens + " segnalini.\n");
         printer.flush();
     }
 
-    public void showMySchemeCard(){
-        printer.println("\nLa tua carta schema è: " + mySchemeCard +"\n");
+    public void showMySchemeCard() {
+        printer.println("\nLa tua carta schema è: " + mySchemeCard + "\n");
+        printer.flush();
+    }
+
+    public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+        printer.println("Punteggio finale:");
+        for (int i = 0; i < rankingNames.size(); i++) {
+            printer.println("- " + rankingNames.get(i) + "\t" + rankingValues.get(i));
+        }
+        printer.println();
+
+        if (winner.equals(username)) {
+            printer.println("Complimenti! Sei tu il vincitore.");
+        } else {
+            printer.println(winner.toUpperCase() + " è il vincitore!");
+        }
         printer.flush();
     }
 
@@ -321,7 +347,7 @@ public class Cli {
                                                 //RMI
                                                 if (controller != null)
                                                     controller.chooseWindow(username, toolNumber1, single);
-                                                //SOCKET
+                                                    //SOCKET
                                                 else
                                                     clientController.request(new ChooseWindowRequest(username, toolNumber1, false));
                                                 printer.println("Carta scelta correttamente!");
@@ -458,7 +484,7 @@ public class Cli {
 
                             case "reserve": {
                                 if (windowChosenCheck(windowChosen)) {
-                                    printer.println("\nHere follows the current RESERVE state:           ~ ['cd number' to choose the dice you want]\n");
+                                    printer.println("\nStato della RISERVA:           ~ ['sd + numero' per scegliere il dado che vuoi]\n");
                                     printer.flush();
                                     int i = 0;
                                     for (String dice : dicesList) {
@@ -480,8 +506,7 @@ public class Cli {
                                 if (controller != null)
                                     controller.showPlayers(username);
                                 else {
-                                    //todo
-                                    //clientController.request(new ShowPlayersRequest(username));
+                                    clientController.request(new ShowPlayersRequest(username));
                                 }
                             }
                             break;
@@ -534,8 +559,7 @@ public class Cli {
                                 if (controller != null)
                                     controller.showTrack(username, single);
                                 else {
-                                    //todo
-                                    //clientController.request(new ShowTrackRequest(username,single));
+                                    clientController.request(new ShowTrackRequest(username, single));
                                 }
                             }
                             break;
@@ -570,7 +594,6 @@ public class Cli {
                                 printer.flush();
                             }
                             break;
-
 
 
                             case "otherschemecards": {
@@ -630,8 +653,7 @@ public class Cli {
                                 if (controller != null)
                                     controller.showPlayers(username);
                                 else {
-                                    //todo
-                                    //clientController.request(new ShowPlayersRequest(username));
+                                    clientController.request(new ShowPlayersRequest(username));
                                 }
                             }
                             break;
@@ -652,8 +674,7 @@ public class Cli {
                                 if (controller != null)
                                     controller.showTrack(username, single);
                                 else {
-                                    //todo
-                                    //clientController.request(new ShowTrackRequest(username,single));
+                                    clientController.request(new ShowTrackRequest(username, single));
                                 }
                             }
                             break;
@@ -676,16 +697,16 @@ public class Cli {
 
             }
         }
+
         private void showWindow() {
             if (parametersCardinalityCheck(2)) {
                 if (playersNames.contains(parts[1])) {
 
                     if (otherSchemeCardsMap.containsKey(parts[1])) {
-                        printer.println("\nDi seguito la carta schema del tuo avversario " + parts[1].toUpperCase()+":");
+                        printer.println("\nDi seguito la carta schema del tuo avversario " + parts[1].toUpperCase() + ":");
                         printer.println(otherSchemeCardsMap.get(parts[1]).toString());
                         printer.flush();
-                    }else
-                    {
+                    } else {
                         printer.println("\nATTENZIONE:Il giocatore " + parts[1].toUpperCase() + " non è un tuo avversario!");
                         printer.flush();
                     }

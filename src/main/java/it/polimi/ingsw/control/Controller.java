@@ -311,13 +311,33 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+    @Override
+    public Response handle(ShowPlayersRequest request) {
+        lobby.getMultiplayerMatches().get(request.getUsrname()).showPlayers(request.getUsrname());
+        return null;
+    }
+
+    @Override
+    public Response handle(ShowTrackRequest request) {
+        if(request.isSingle()){
+            lobby.getSingleplayerMatches().get(request.getUsername()).showTrack(request.getUsername());
+        } else {
+            lobby.getMultiplayerMatches().get(request.getUsername()).showTrack(request.getUsername());
+        }
+        return null;
+    }
+
 
     public void observeLobby(String name, LobbyObserver lobbyObserver) {
         lobby.observeLobbyRemote(name, lobbyObserver);
     }
 
-    public void observeMatch(String username, MatchObserver observer) {
+    public void observeMatch(String username, MatchObserver observer, boolean reconnection) {
         lobby.observeMatchRemote(username, observer);
+
+        if(reconnection){
+            lobby.transferAllData(username);
+        }
     }
 
     public void addSocketHandler(SocketHandler socketHandler) { this.socketHandlers.add(socketHandler); }

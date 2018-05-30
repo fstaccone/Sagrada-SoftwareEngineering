@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.gameobjects;
 
-public class Dice {
+import java.io.Serializable;
+
+public class Dice implements Serializable{
     private Colors color;
     private int value;
 

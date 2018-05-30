@@ -40,6 +40,7 @@ public class PlayerMultiplayer extends Player {
     public boolean isMyTurn() { return myTurn; }
     public boolean isSchemeCardSet() { return schemeCardSet; }
 
+
     @Override
     public void setSchemeCard(WindowPatternCard schemeCard) {
         this.schemeCard = schemeCard;

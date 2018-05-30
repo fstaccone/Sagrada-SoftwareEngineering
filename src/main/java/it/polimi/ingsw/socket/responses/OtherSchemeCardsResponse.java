@@ -1,13 +1,14 @@
 package it.polimi.ingsw.socket.responses;
 
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ResponseHandler;
 
 public class OtherSchemeCardsResponse implements Response{
 
-    public String scheme;
+    public WindowPatternCard scheme;
     public String name;
 
-    public OtherSchemeCardsResponse(String scheme, String name) {
+    public OtherSchemeCardsResponse(WindowPatternCard scheme, String name) {
         this.scheme = scheme;
         this.name = name;
     }

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.gameobjects;
 
-public class Square {
+import java.io.Serializable;
+
+public class Square implements Serializable{
     private Colors colorConstraint;
     private int valueConstraint;
     private Dice dice;

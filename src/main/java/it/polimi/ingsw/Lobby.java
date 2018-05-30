@@ -3,7 +3,6 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 import it.polimi.ingsw.model.gamelogic.MatchStarter;
-import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.socket.responses.*;
 
@@ -41,7 +40,6 @@ public class Lobby {
 
     // to simulate the timer before creating a match
     private Timer timer;
-
 
 
     public Lobby(int waitingTime, int turnTime) {
@@ -89,7 +87,7 @@ public class Lobby {
 
     private synchronized void createMultiplayerMatch(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
 
-        MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime, socketsOut);
+        MatchMultiplayer match = new MatchMultiplayer(matchCounter, clients, turnTime, socketsOut, this);
         for (String s : clients) {
             multiplayerMatches.put(s, match);
         }
@@ -187,10 +185,12 @@ public class Lobby {
 
             Response response = new PlayerExitResponse(name);
             for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
-                if(player.getStatus().equals(ConnectionStatus.CONNECTED)) {
+                if (player.getStatus().equals(ConnectionStatus.CONNECTED)) {
                     try {
-                        multiplayerMatches.get(player.getName()).getSocketObservers().get(player).writeObject(response);
-                        multiplayerMatches.get(player.getName()).getSocketObservers().get(player).reset();
+                        if (multiplayerMatches.get(player.getName()).getSocketObservers().get(player) != null) {
+                            multiplayerMatches.get(player.getName()).getSocketObservers().get(player).writeObject(response);
+                            multiplayerMatches.get(player.getName()).getSocketObservers().get(player).reset();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -227,8 +227,13 @@ public class Lobby {
         takenUsernames.put(name, ConnectionStatus.CONNECTED);
         multiplayerMatches.get(name).getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
 
-        multiplayerMatches.get(name).getSocketObservers().put(multiplayerMatches.get(name).getPlayer(name), socketObservers.remove(name));
+        // if it's socket, make it observer of the match
+        if (socketObservers.get(name) != null) {
+            multiplayerMatches.get(name).getSocketObservers().put(multiplayerMatches.get(name).getPlayer(name), socketObservers.remove(name));
+            multiplayerMatches.get(name).afterReconnection(name);
+        }
 
+        // notify to all other players that the player is now in game
         for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {
             try {
                 mo.onPlayerReconnection(name);
@@ -241,8 +246,10 @@ public class Lobby {
         for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
             if (!p.getName().equals(name)) {
                 try {
-                    multiplayerMatches.get(p.getName()).getSocketObservers().get(p).writeObject(response);
-                    multiplayerMatches.get(p.getName()).getSocketObservers().get(p).reset();
+                    if (multiplayerMatches.get(p.getName()).getSocketObservers().get(p) != null) {
+                        multiplayerMatches.get(p.getName()).getSocketObservers().get(p).writeObject(response);
+                        multiplayerMatches.get(p.getName()).getSocketObservers().get(p).reset();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -272,6 +279,9 @@ public class Lobby {
         });
     }
 
+    public void transferAllData(String name) {
+        multiplayerMatches.get(name).afterReconnection(name);
+    }
 
     public void addToWaitingPlayers(String name) {
         synchronized (waitingPlayers) {

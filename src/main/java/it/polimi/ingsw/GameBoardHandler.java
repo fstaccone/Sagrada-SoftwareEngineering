@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -142,7 +143,7 @@ public class GameBoardHandler implements Initializable {
     private List<String> reserveDices;
     private Button[][] windowPatternCard;
     private Map<String ,Integer > otherFavorTokensMap;
-    private Map<String ,String > otherSchemeCardsMap;
+    private Map<String ,WindowPatternCard> otherSchemeCardsMap;
 
     private EventHandler<ActionEvent> reserveDiceSelected = new EventHandler<ActionEvent>() {
         @Override

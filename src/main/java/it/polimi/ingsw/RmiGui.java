@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,11 +29,11 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private GameBoardHandler gameBoardHandler;
     private List<String> toolCardsList = new ArrayList<>();
     private List<String> dicesList;
-    private  String privateCard;
+    private String privateCard;
     private List<String> publicCardsList;
     private Map<String ,Integer > otherFavorTokensMap;
-    private Map<String ,String > otherSchemeCardsMap;
-
+    private Map<String ,WindowPatternCard > otherSchemeCardsMap;
+    private boolean reconnection;
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller) throws RemoteException {
         super();
@@ -42,6 +43,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         this.windowStage = fromLogin;
         this.otherFavorTokensMap=new HashMap<>();
         this.otherSchemeCardsMap=new HashMap<>();
+        reconnection = false;
     }
 
     @Override
@@ -103,7 +105,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     public void launch() {
         System.out.println("Launch");
         try {
-            controller.observeMatch(username, this);
+            controller.observeMatch(username, this, reconnection);
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -128,7 +130,12 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onMyWindow(String window) {
+    public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+
+    }
+
+    @Override
+    public void onMyWindow(WindowPatternCard window) {
         //AGGIORNAMENTO PROPRIA CARTA SCHEMA
     }
 
@@ -144,7 +151,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onOtherSchemeCards(String string, String name)  {
+    public void onOtherSchemeCards(WindowPatternCard string, String name) {
         //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO CARTE SCHEMA ALTRUI
         otherSchemeCardsMap.put(name, string);
         if(gameBoardHandler!=null) gameBoardHandler.onOtherSchemeCards();
@@ -161,7 +168,12 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard)  {
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard) {
+
+    }
+
+    @Override
+    public void onInitialization(String toolcards, String publicCards, String privateCard) {
         System.out.println(toolcards);
         String dicesString = toolcards.substring(1, toolcards.length() - 1);
         List<String> temp = Pattern.compile(", ")
@@ -173,7 +185,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
             System.out.println(s);
         }
         System.out.println(publicCards);
-        privateCard = privateCard.substring(7, privateCard.length()-1).toLowerCase();
+        privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
         this.privateCard = privateCard;
         chooseCardHandler.setPrivateCard(privateCard);
         parsePublicCards(publicCards);
@@ -183,9 +195,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         publicCardsList = new ArrayList<>();
         String cards = publicCards.substring(1, publicCards.length() - 1);
         List<String> temp = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
-        for(String s : temp){
+        for (String s : temp) {
             s = s.substring(8).toLowerCase();
-            s = s.split("\n",2)[0];
+            s = s.split("\n", 2)[0];
             s = s.replaceAll(" - ", "_").replaceAll(" ", "_");
             publicCardsList.add(s);
         }
@@ -222,7 +234,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         }
         Scene scene = new Scene(root);
         gameBoardHandler = fx.getController();
-        gameBoardHandler.init(windowStage, scene, controller, username, this );
+        gameBoardHandler.init(windowStage, scene, controller, username, this);
         gameBoardHandler.setWindowPatternCardImg(imgUrl);
         gameBoardHandler.setToolCards(toolCardsList);
         gameBoardHandler.setReserve(dicesList);
@@ -239,7 +251,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         return dicesList;
     }
 
-    public Map<String, String> getOtherSchemeCardsMap() {
+    public Map<String, WindowPatternCard> getOtherSchemeCardsMap() {
         return otherSchemeCardsMap;
     }
+
 }

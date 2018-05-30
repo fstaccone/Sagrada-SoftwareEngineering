@@ -49,19 +49,14 @@ public class TurnManager implements Runnable {
         MatchObserver rmiObserver = rmiObserverNotify(player);
         if (rmiObserver != null) {
             rmiObserver.onWindowChoise(windows);
-        }
-
-        if (match.getSocketObservers().get(player) != null) {
-            // todo: eliminare quando implementato in initialize
-            socketObserverNotify(player, new ToolCardsResponse(match.getDecksContainer().getToolCardDeck().getPickedCards().toString()));
+        } else if (match.getSocketObservers().get(player) != null) {
             socketObserverNotify(player, new ProposeWindowResponse(windows));
         }
 
         waitForSchemeChoise();
-
     }
 
-    private void initializeRound(){
+    private void initializeRound() {
         match.getPlayers().forEach(player -> player.setTurnsLeft(2));
         match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
     }
@@ -71,21 +66,14 @@ public class TurnManager implements Runnable {
         String toolCards = match.getDecksContainer().getToolCardDeck().getPickedCards().toString();
         String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
 
-        // Rmi notification
+        // Notification RMI and Socket
         for (PlayerMultiplayer p : match.getPlayers()) {
             if (rmiObserverNotify(p) != null) {
                 rmiObserverNotify(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString());
+            } else if (match.getSocketObservers().get(p) != null) {
+                socketObserverNotify(p, new InitializationResponse(toolCards, publicCards, p.getPrivateObjectiveCard().toString()));
             }
         }
-
-        /*todo: notifica socket da definire
-        for (PlayerMultiplayer p : match.getSocketObservers().keySet()) {
-
-        }
-        if (match.getSocketObservers().get(p) != null) {
-            socketObserverNotify(player, new ToolCardsResponse(match.getDecksContainer().getToolCardDeck().getPickedCards().toString()));
-        }*/
-
     }
 
     private void waitForSchemeChoise() throws InterruptedException {
@@ -170,40 +158,34 @@ public class TurnManager implements Runnable {
         }
     }
 
-    private void notifyTurnBeginning(PlayerMultiplayer player) throws RemoteException {
+    private void notifyTurnBeginning(PlayerMultiplayer player) {
         MatchObserver rmiObserver = rmiObserverNotify(player);
 
         if (rmiObserver != null) {
-            rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString());
-        }
-
-        for(PlayerMultiplayer player1 :match.getSocketObservers().keySet()){
-            System.out.println("FUORI" +player1.getName());
+            try {
+                rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString());
+            } catch (RemoteException e) {
+                match.getLobby().disconnect(player.getName());
+            }
         }
 
         if (match.getSocketObservers().get(player) != null) {
-
-            for(PlayerMultiplayer player1 :match.getSocketObservers().keySet()){
-                System.out.println("DENTRO" +player1.getName());
-            }
 
             socketObserverNotify(player, new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString()));
         }
         notifyOthers(player);
     }
 
-    private void notifyTurnEnd(PlayerMultiplayer player) throws RemoteException {
+    private void notifyTurnEnd(PlayerMultiplayer player) {
         MatchObserver rmiObserver = rmiObserverNotify(player);
-
         if (rmiObserver != null) {
-            rmiObserver.onYourTurn(false, match.getBoard().getReserve().getDices().toString());
+            try {
+                rmiObserver.onYourTurn(false, match.getBoard().getReserve().getDices().toString());
+            } catch (RemoteException e) {
+                match.getLobby().disconnect(player.getName());
+            }
         }
         if (match.getSocketObservers().get(player) != null) {
-
-            for(PlayerMultiplayer player1 :match.getSocketObservers().keySet()){
-                System.out.println(player1.getName());
-            }
-
             socketObserverNotify(player, new YourTurnResponse(false, null));
         }
 
@@ -246,16 +228,20 @@ public class TurnManager implements Runnable {
             match.getSocketObservers().get(player).writeObject(response);
             match.getSocketObservers().get(player).reset();
         } catch (IOException e) {
-            e.printStackTrace();
+            match.getLobby().disconnect(player.getName());
         }
     }
 
-    private void notifyOthers(PlayerMultiplayer player) throws RemoteException {
+    private void notifyOthers(PlayerMultiplayer player) {
         Response response = new OtherTurnResponse(player.getName());
         for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
             if (playerNotInTurn != player) {
                 if (rmiObserverNotify(playerNotInTurn) != null)
-                    rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
+                    try {
+                        rmiObserverNotify(playerNotInTurn).onOtherTurn(player.getName());
+                    } catch (RemoteException e) {
+                        match.getLobby().disconnect(player.getName());
+                    }
                 if (match.getSocketObservers().get(playerNotInTurn) != null) {
                     socketObserverNotify(playerNotInTurn, response);
                 }
@@ -270,8 +256,8 @@ public class TurnManager implements Runnable {
         match.pushLeftDicesToRoundTrack();
         match.incrementRoundCounter();
 
-        if (match.getCurrentRound() >= 10) {
-            //match.calculateFinalScore(); // può stare anche in match
+        if (match.getCurrentRound() >= 2) {
+            match.calculateFinalScore();
         } else {
             this.turnManager();
         }

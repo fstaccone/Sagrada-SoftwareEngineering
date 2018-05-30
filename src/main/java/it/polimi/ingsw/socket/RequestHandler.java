@@ -40,4 +40,7 @@ public interface RequestHandler {
 
     Response handle(ReconnectionRequest request);
 
+    Response handle(ShowPlayersRequest request);
+
+    Response handle(ShowTrackRequest request);
 }
