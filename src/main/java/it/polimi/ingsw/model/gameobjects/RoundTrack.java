@@ -77,58 +77,12 @@ public class RoundTrack {
         return null;
     }
 
-    public Colors getColorOfAChosenDice() {
-        showRoundTrack();
-        System.out.println("Choose the number of the list from which you want to get a dice color");
-        Scanner scan = new Scanner(System.in);
-        int listNumber = scan.nextInt();
-        System.out.println(("Choose the dice id"));
-        int diceId = scan.nextInt();
-        int j = 0;
-        for (List<Dice> list : dicesLeft) {
-            if (j == listNumber) {
-                int i = 0;
-                for (Dice d : list) {
-                    if (i == diceId) {
-                        System.out.println("You've chose the dice: " + d.toString() + " so the color of the dices you can move is: " + d.getColor().toString());
-                        return d.getColor();
-                    }
-                    i++;
-                }
-            }
-            j++;
-        }
-        System.out.println("Error: wrong parameters.");
-        return null;
+
+    public Colors getColorOfAChosenDice(int chosenRound, int chosenDiceFromRound) {
+        Dice dice = dicesLeft.get(chosenRound - 1).get(chosenDiceFromRound);
+        return dice.getColor();
     }
 
-    //Questa copia di getcolorofachosendice serve solo per il test finchè non troviamo un modo migliore
-    //Ha lo scanner come parametro
-    public Colors getColorOfAChosenDice(Scanner scan) {
-        showRoundTrack();
-        System.out.println("Choose the number of the list from which you want to get a dice color");
-        int listNumber = scan.nextInt();
-        System.out.println(("Choose the dice id"));
-        int diceId = scan.nextInt();
-        int j = 0;
-        for (List<Dice> list : dicesLeft) {
-            if (j == listNumber) {
-                int i = 0;
-                for (Dice d : list) {
-                    if (i == diceId) {
-                        System.out.println("You've chose the dice: " + d.toString() + " so the color of the dices you can move is: " + d.getColor().toString());
-                        return d.getColor();
-                    }
-                    i++;
-                }
-            }
-            j++;
-        }
-        System.out.println("Error: wrong parameters.");
-        return null;
-    }
-
-    //switchDice is similar to getDice but it switches the chosen dice with a new one
     public Dice switchDice(Dice diceToSwitch, int chosenRound, int chosenDiceFromRound) {
         if (chosenRound>0 && chosenRound<=dicesLeft.size()&&chosenDiceFromRound>=0 && chosenDiceFromRound <dicesLeft.get(chosenRound-1).size()) {
             Dice returnValue = dicesLeft.get(chosenRound - 1).remove(chosenDiceFromRound);
