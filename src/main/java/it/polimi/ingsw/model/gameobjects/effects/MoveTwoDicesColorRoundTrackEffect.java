@@ -15,54 +15,48 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
 
     @Override
     public boolean applyEffect(Player player, Match match) {
-        Scanner scan = new Scanner(System.in);
-        Colors color = null;
-        while(color == null)
-            color = match.getBoard().getRoundTrack().getColorOfAChosenDice(scan);
-        Dice[] chosenDices = new Dice[2];
+
+        PlayerMultiplayer p = (PlayerMultiplayer) player; //USEFUL JUST FOR TOKENS, TO BE FIXED
+
+        Colors color = match.getBoard().getRoundTrack().getColorOfAChosenDice(player.getRound(),player.getDiceChosenFromRound());
+
         WindowPatternCard schema = player.getSchemeCard();
-        System.out.println("How many dices do you want to move? (Choose between 1 or 2)");
-        int answer = scan.nextInt();
-        while (answer!=1 && answer!=2){
-            System.out.println("Please type only '1' or '2'");
-            answer = scan.nextInt();
-        }
-        for(int i=0; i<answer; i++) {
-            int token = 0;
-            while(token == 0) {
-                System.out.println(schema.toString());
-                System.out.println("Choose dice " + (i+1) + " row:");
-                int row = scan.nextInt();
-                System.out.println("Choose dice " + (i+1) + " column:");
-                int column = scan.nextInt();
-                //TODO: we should implement a get Dice method in WindowPatterncard instead of accessing the square
-                if(schema.getWindow()[row][column].getDice().getColor()==color) {
-                    Dice dice = schema.removeDice(row, column);
-                    if (dice != null) {
-                        token = 1;
-                        System.out.println("You've chosen the dice: " + dice.toString());
-                        chosenDices[i] = dice;
-                    }
-                }
+
+        int row1= player.getStartX1();
+        int column1 = player.getStartY1();
+        int row2 = player.getStartX2();
+        int column2 = player.getStartY2();
+        Dice dice1 = schema.getDice(row1, column1);
+        Dice dice2 = schema.getDice(row2, column2);
+
+        if(p.getNumFavorTokens() >= price) {
+            if (dice1 != null && dice2!=null && dice1.getColor().equals(color) && dice2.getColor().equals(color)) {
+                int newRow1 = player.getFinalX1();
+                int newColumn1 = player.getFinalY1();
+                int newRow2 = player.getFinalX2();
+                int newColumn2 = player.getFinalY2();
+                if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
+                    schema.removeDice(row1, column1);
+                    schema.removeDice(row2, column2);
+                    p.setNumFavorTokens(p.getNumFavorTokens() - price);
+                    price = 2;
+                    return true;
+                } else
+                    return false;
             }
-        }
-        System.out.println(schema.toString());
-        for( int i=0; i<answer; i++){
-            int result = 0;
-            while(result==0) {
-                System.out.println("Please put row where you want to move dice"+(i+1)+" : ");
-                int newRow = scan.nextInt();
-                System.out.println("Please put column where you want to move dice"+(i+1)+" : ");
-                int newColumn = scan.nextInt();
-                schema.putDice(chosenDices[i], newRow, newColumn);
-                //Checking if putDice worked, else get a different new position
-                if(chosenDices[i].equals(schema.getWindow()[newRow][newColumn].getDice()))
-                    result = 1;
-                else System.out.println("Please choose a different position.");
-            }
-        }
-        player.setSchemeCard(schema);
-        System.out.println(schema.toString());
-        return false;
+            else if (dice1 != null && dice2==null && dice1.getColor().equals(color)) {
+                int newRow1 = player.getFinalX1();
+                int newColumn1 = player.getFinalY1();
+                if (schema.putDice(dice1, newRow1, newColumn1) ) {
+                    schema.removeDice(row1, column1);
+                    p.setNumFavorTokens(p.getNumFavorTokens() - price);
+                    price = 2;
+                    return true;
+                } else
+                    return false;
+            } else
+                return false;
+        } else
+            return false;
     }
 }
