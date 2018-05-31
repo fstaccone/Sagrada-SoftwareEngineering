@@ -16,10 +16,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class GameBoardHandler implements Initializable {
 
@@ -28,6 +25,7 @@ public class GameBoardHandler implements Initializable {
     private static final String DICE_IMAGES_PATH = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
     private static final String PUBLIC_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/";
     private static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
+
 
     @FXML
     Button b1;
@@ -147,6 +145,14 @@ public class GameBoardHandler implements Initializable {
     private Button[][] windowPatternCard;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
+    private Map<Integer, Label> labels = new HashMap<>();
+
+    public void createLabelsMap(){
+        labels.put(0, label0);
+        labels.put(1, label1);
+        labels.put(2, label2);
+        labels.put(3, label3);
+    }
 
     private EventHandler<ActionEvent> reserveDiceSelected = new EventHandler<ActionEvent>() {
         @Override
@@ -411,15 +417,12 @@ public class GameBoardHandler implements Initializable {
                 break;
             }
         }
+
+        players.forEach(System.out::println);
+
         // assigns the name to the right label in order to show the correct flow clockwise
         for (int i = 1; i < players.size(); i++) {
-            if (((myPosition + i) % players.size()) == 1) {
-                label1.setText(players.get(myPosition + 1));
-            } else if (((myPosition + i) % players.size()) == 2) {
-                label2.setText(players.get(myPosition + 1));
-            } else if (((myPosition + i) % players.size()) == 3) {
-                label3.setText(players.get(myPosition + 1));
-            }
+           labels.get(i).setText(players.get((myPosition + i) % players.size()));
         }
     }
 }

@@ -254,6 +254,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         gameBoardHandler.setTextArea("Now it's your turn!");
         gameBoardHandler.setPrivateCard(privateCard);
         gameBoardHandler.setPublicCards(publicCardsList);
+        gameBoardHandler.createLabelsMap();
         gameBoardHandler.initializeLabels(players);
     }
 
