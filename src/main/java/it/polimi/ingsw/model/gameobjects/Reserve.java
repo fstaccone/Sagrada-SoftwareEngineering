@@ -8,15 +8,13 @@ public class Reserve {
 
     private List<Dice> dices;
 
-    public Reserve(){
-        dices = new ArrayList<>();
-    }
+    public Reserve() { dices = new ArrayList<>(); }
 
-    public void throwDices(List<Dice> init){
+    public void throwDices(List<Dice> init) {
         Random rand = new Random();
 
-        for(Dice dice : init){
-            int val = rand.nextInt(6)+1;
+        for (Dice dice : init) {
+            int val = rand.nextInt(6) + 1;
             dice.setValue(val);
             dices.add(dice);
         }
@@ -30,7 +28,7 @@ public class Reserve {
         StringBuilder s;
         s = new StringBuilder();
         s.append("This is the state of the RESERVE:\n");
-        for(int i = 0; i < dices.size(); i++){
+        for (int i = 0; i < dices.size(); i++) {
             s.append(i);
             s.append(") ");
             s.append(dices.get(i).toString());
@@ -41,17 +39,18 @@ public class Reserve {
     }
 
     public Dice chooseDice(int index) {
-        if(!(dices.isEmpty())){
+        if (!(dices.isEmpty())) {
             return dices.remove(index);
-        }else {
+        } else {
             System.out.println("The reserve is empty."); //andrebbe fatto lanciando ExceptionEmptyReserve
             return null;
         }
     }
 
-    /** It removes all dices in dices and returns them to be put into the roundtrack
+    /**
+     * It removes all dices in dices and returns them to be put into the roundtrack
      */
-    public List<Dice> removeAllDices(){
+    public List<Dice> removeAllDices() {
 
         ArrayList<Dice> dicesLeft;
         dicesLeft = new ArrayList<>(dices);

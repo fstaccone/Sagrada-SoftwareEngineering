@@ -147,7 +147,7 @@ public class GameBoardHandler implements Initializable {
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private Map<Integer, Label> labels = new HashMap<>();
 
-    public void createLabelsMap(){
+    public void createLabelsMap() {
         labels.put(0, label0);
         labels.put(1, label1);
         labels.put(2, label2);
@@ -418,11 +418,9 @@ public class GameBoardHandler implements Initializable {
             }
         }
 
-        players.forEach(System.out::println);
-
         // assigns the name to the right label in order to show the correct flow clockwise
         for (int i = 1; i < players.size(); i++) {
-           labels.get(i).setText(players.get((myPosition + i) % players.size()));
+            labels.get(i).setText(players.get((myPosition + i) % players.size()));
         }
     }
 }
