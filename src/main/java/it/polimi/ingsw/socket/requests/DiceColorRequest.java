@@ -3,16 +3,16 @@ package it.polimi.ingsw.socket.requests;
 import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.responses.Response;
 
-public class ShowPlayersRequest implements Request {
 
-    String usrname;
 
-    public ShowPlayersRequest(String username) {
-        this.usrname = username;
-    }
+public class DiceColorRequest implements Request {
 
-    public String getUsername() {
-        return usrname;
+    public String name;
+    public boolean isSingle;
+
+    public DiceColorRequest(String name, boolean isSingle) {
+        this.name = name;
+        this.isSingle = isSingle;
     }
 
     @Override

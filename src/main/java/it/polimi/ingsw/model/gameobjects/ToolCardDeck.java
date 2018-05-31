@@ -15,7 +15,7 @@ public class ToolCardDeck extends Deck<ToolCard> {
 
         for (int j = 0; j < 3; j++) {
             randomGenerator = new Random();
-            int toolIndex = randomGenerator.nextInt(deck.size() - 1);
+            int toolIndex = randomGenerator.nextInt(deck.size());
             String toolName = deck.get(toolIndex);
             System.out.println(toolName);
             switch (toolName) {

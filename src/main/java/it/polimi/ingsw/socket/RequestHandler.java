@@ -18,6 +18,8 @@ public interface RequestHandler {
 
     Response handle(PlaceDiceRequest request);
 
+    Response handle(PlaceDiceTool11Request request);
+
     Response handle(UseToolCard1Request request);
 
     Response handle(UseToolCard2or3Request request);
@@ -36,6 +38,8 @@ public interface RequestHandler {
 
     Response handle(UseToolCard10Request request);
 
+    Response handle(UseToolCard11Request request);
+
     Response handle(UseToolCard12Request request);
 
     Response handle(QuitGameRequest request);
@@ -43,4 +47,9 @@ public interface RequestHandler {
     Response handle(ReconnectionRequest request);
 
     Response handle(ShowPlayersRequest request);
+
+    Response handle(DiceColorRequest request);
+
+    Response handle(SetDiceValueRequest request);
+
 }

@@ -1,6 +1,8 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.Colors;
+import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.*;
 
@@ -223,9 +225,21 @@ public class ToolCommand {
         }
         return false;
     }
-    public void command11(){
-        printer.println("Comando 11, togliere il passaggio di printer da costrutture e inserire controller ");
-        printer.flush();
+    public boolean command11(int diceFromReserve){
+        //RMI
+        if(controller!=null) {
+            try {
+                return controller.useToolCard11(diceFromReserve, name, single);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        //SOCKET
+        else {
+            clientController.request(new UseToolCard11Request(diceFromReserve, name, single));
+            waitForToolEffectAppliedResponse();
+        }
+        return false;
     }
 
 

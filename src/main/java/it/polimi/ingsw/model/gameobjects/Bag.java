@@ -19,9 +19,6 @@ public class Bag {
         }
     }
 
-    public List<Dice> getAllDices() {//Serve solo per test su funzionamento
-        return dices;
-    }
 
     public List<Dice> pickDices(int num) {
         List<Dice> result = new ArrayList<>();
@@ -38,8 +35,18 @@ public class Bag {
         return result;
     }
 
+    public Dice pickSingleDice(){
+        int item = new Random().nextInt(dices.size()-1);
+        for (int j=0; j<=item; j++) {
+            if (j == item) {
+                dices.remove(j);
+                return dices.get(j);
+            }
+        }
+        return null;
+    }
+
     public void putDiceInBag(Dice dice){
-        System.out.println("Ripongo nel sacchetto il dado :"+dice.toString());
         dices.add(dice);
     }
 

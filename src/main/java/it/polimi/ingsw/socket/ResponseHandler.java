@@ -5,6 +5,8 @@ import it.polimi.ingsw.socket.responses.*;
 public interface ResponseHandler {
     void handle(NameAlreadyTakenResponse response);
 
+    void handle(DiceColorResponse response);
+
     void handle(WaitingPlayersResponse response);
 
     void handle(MatchStartedResponse response);
