@@ -189,7 +189,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         parsePublicCards(publicCards);
 
         this.players = players;
-        gameBoardHandler.initializeLabels(players);
+
     }
 
     private void parseToolcards(String toolcards) {
@@ -254,6 +254,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         gameBoardHandler.setTextArea("Now it's your turn!");
         gameBoardHandler.setPrivateCard(privateCard);
         gameBoardHandler.setPublicCards(publicCardsList);
+        gameBoardHandler.initializeLabels(players);
     }
 
     public Boolean isMyTurn() {
