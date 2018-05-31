@@ -65,13 +65,15 @@ public class TurnManager implements Runnable {
 
         String toolCards = match.getDecksContainer().getToolCardDeck().getPickedCards().toString();
         String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
+        List<String> names = match.getPlayers().stream().map(PlayerMultiplayer::getName).collect(Collectors.toList());
+
 
         // Notification RMI and Socket
         for (PlayerMultiplayer p : match.getPlayers()) {
             if (rmiObserverNotify(p) != null) {
-                rmiObserverNotify(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString());
+                rmiObserverNotify(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString(), names);
             } else if (match.getSocketObservers().get(p) != null) {
-                socketObserverNotify(p, new InitializationResponse(toolCards, publicCards, p.getPrivateObjectiveCard().toString()));
+                socketObserverNotify(p, new InitializationResponse(toolCards, publicCards, p.getPrivateObjectiveCard().toString(), names));
             }
         }
     }

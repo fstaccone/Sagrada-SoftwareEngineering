@@ -3,13 +3,10 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -25,6 +22,12 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class GameBoardHandler implements Initializable {
+
+    private static final String PRIVATE_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/";
+    private static final String TOOLCARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/toolcards/";
+    private static final String DICE_IMAGES_PATH = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
+    private static final String PUBLIC_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/";
+    private static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
 
     @FXML
     Button b1;
@@ -142,15 +145,15 @@ public class GameBoardHandler implements Initializable {
     private int diceChosen;
     private List<String> reserveDices;
     private Button[][] windowPatternCard;
-    private Map<String ,Integer > otherFavorTokensMap;
-    private Map<String ,WindowPatternCard> otherSchemeCardsMap;
+    private Map<String, Integer> otherFavorTokensMap;
+    private Map<String, WindowPatternCard> otherSchemeCardsMap;
 
     private EventHandler<ActionEvent> reserveDiceSelected = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            if(rmiGui.isMyTurn()) {
+            if (rmiGui.isMyTurn()) {
                 String s = event.getSource().toString();
-                s = s.substring(21,22);
+                s = s.substring(21, 22);
                 int i = Integer.parseInt(s);
                 s = rmiGui.getDicesList().get(i);
                 diceChosen = i;
@@ -162,9 +165,9 @@ public class GameBoardHandler implements Initializable {
     private EventHandler<ActionEvent> toolSelected = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            if(rmiGui.isMyTurn()) {
-                String s = event.getSource().toString().substring(14,15);
-                textArea.setText("You currently chose the toolcard " + s );
+            if (rmiGui.isMyTurn()) {
+                String s = event.getSource().toString().substring(14, 15);
+                textArea.setText("You currently chose the toolcard " + s);
                 int tool = Integer.parseInt(s);
                 //USARE LA CARTA UTENSILE
             }
@@ -174,8 +177,8 @@ public class GameBoardHandler implements Initializable {
     private EventHandler<ActionEvent> windowPatternCardSlotSelected = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            if(rmiGui.isMyTurn()) {
-                if(diceChosen!=9){
+            if (rmiGui.isMyTurn()) {
+                if (diceChosen != 9) {
                     Button slot = (Button) event.getSource();
                     Integer tempX = GridPane.getRowIndex(slot);
                     if (tempX == null) tempX = 0;
@@ -185,14 +188,13 @@ public class GameBoardHandler implements Initializable {
                     int coordinateY = tempY;
                     textArea.setText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
                     try {
-                        String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
-                        String url = genericURL + reserveDices.get(diceChosen) + ".png";
+                        String url = DICE_IMAGES_PATH + reserveDices.get(diceChosen) + ".png";
                         if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
                             textArea.setText("Ben fatto! Il dado scelto è stato piazzato correttamente.");
                             putImage(url, coordinateX, coordinateY);
                             diceChosen = 9; //FIRST VALUE NEVER PRESENT IN THE RESERVE
                         } else {
-                            textArea.setText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o stai provando a piazzare un secondo dado nel tuo turno!");
+                            textArea.setText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o non puoi più piazzare dadi in questo turno!");
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -243,57 +245,55 @@ public class GameBoardHandler implements Initializable {
         windowPatternCard[3][2] = b18;
         windowPatternCard[3][3] = b19;
         windowPatternCard[3][4] = b20;
-        Platform.runLater(()->label0.setText(username));
+        Platform.runLater(() -> label0.setText(username));
         label1.setText(" ");
         label2.setText(" ");
         label3.setText(" ");
     }
 
-    public void setWindowPatternCardImg(String imgURL){
-        BackgroundImage myBI= new BackgroundImage(new Image(imgURL,340,300,false,true),
+    public void setWindowPatternCardImg(String imgURL) {
+        BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 340, 300, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         playerWindowPatternCard.setBackground(new Background(myBI));
-        for(Button dicesRow[] : windowPatternCard) {
-            for(Button dice : dicesRow)
-            dice.setOnAction(windowPatternCardSlotSelected);
+        for (Button dicesRow[] : windowPatternCard) {
+            for (Button dice : dicesRow) {
+                dice.setOnAction(windowPatternCardSlotSelected);
+            }
         }
-        onOtherSchemeCards(true, rmiGui.getOtherPlayers());
     }
 
-    public void setToolCards(List<String> toolCardsList){
-        String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/toolcards/";
+    public void setToolCards(List<String> toolCardsList) {
         //Initializing toolCard0
-        String url0 = genericURL + toolCardsList.get(0) + ".png";
+        String url0 = TOOLCARDS_PATH + toolCardsList.get(0) + ".png";
         Image cardImg0 = new Image(url0);
         ImageView cardView0 = new ImageView(cardImg0);
         cardView0.setFitWidth(158);
         cardView0.setFitHeight(240);
-        Platform.runLater(()->tool0.setGraphic(cardView0));
+        Platform.runLater(() -> tool0.setGraphic(cardView0));
         tool0.setOnAction(toolSelected);
         //Initializing toolCard1
-        String url1 = genericURL + toolCardsList.get(1) + ".png";
+        String url1 = TOOLCARDS_PATH + toolCardsList.get(1) + ".png";
         Image cardImg1 = new Image(url1);
         ImageView cardView1 = new ImageView(cardImg1);
         cardView1.setFitWidth(158);
         cardView1.setFitHeight(240);
-        Platform.runLater(()->tool1.setGraphic(cardView1));
+        Platform.runLater(() -> tool1.setGraphic(cardView1));
         tool1.setOnAction(toolSelected);
         //Initializing toolCard2
-        String url2 = genericURL + toolCardsList.get(2) + ".png";
+        String url2 = TOOLCARDS_PATH + toolCardsList.get(2) + ".png";
         Image cardImg2 = new Image(url2);
         ImageView cardView2 = new ImageView(cardImg2);
         cardView2.setFitWidth(158);
         cardView2.setFitHeight(240);
-        Platform.runLater(()->tool2.setGraphic(cardView2));
+        Platform.runLater(() -> tool2.setGraphic(cardView2));
         tool2.setOnAction(toolSelected);
     }
 
-    public void setReserve(List<String> dicesList){
+    public void setReserve(List<String> dicesList) {
         reserveDices = new ArrayList<>();
         reserveDices.addAll(dicesList);
-        String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
-        List<Button> reserveDices = new ArrayList<>();
+        List<Button> reserveDices = new ArrayList<>(); // todo: come mai lo stesso nome dell'attributo?
         reserveDices.add(reserveDice0);
         reserveDices.add(reserveDice1);
         reserveDices.add(reserveDice2);
@@ -304,16 +304,16 @@ public class GameBoardHandler implements Initializable {
         reserveDices.add(reserveDice7);
         reserveDices.add(reserveDice8);
         int i = 0;
-        for(Button dice : reserveDices){
-            Platform.runLater(()-> dice.setGraphic(null));
+        for (Button dice : reserveDices) {
+            Platform.runLater(() -> dice.setGraphic(null));
             dice.setDisable(true);
-            if(dicesList.size() > i && dicesList.get(i)!=null){
-                String url = genericURL + dicesList.get(i) + ".png";
+            if (dicesList.size() > i && dicesList.get(i) != null) {
+                String url = DICE_IMAGES_PATH + dicesList.get(i) + ".png";
                 Image diceImg = new Image(url);
                 ImageView diceView = new ImageView(diceImg);
                 diceView.setFitWidth(70);
                 diceView.setFitHeight(70);
-                Platform.runLater(()->dice.setGraphic(diceView));
+                Platform.runLater(() -> dice.setGraphic(diceView));
                 dice.setDisable(false);
                 dice.setOnAction(reserveDiceSelected);
             }
@@ -324,10 +324,14 @@ public class GameBoardHandler implements Initializable {
 
     @FXML
     public void onPassButtonClicked() throws RemoteException {
-        if(rmiGui.isMyTurn()) controller.goThrough(username, false);
+        if (rmiGui.isMyTurn()) {
+            controller.goThrough(username, false);
+        } else {
+            textArea.setText("Non è il tuo turno!");
+        }
     }
 
-    public void setTextArea (String s){
+    public void setTextArea(String s) {
         this.textArea.setText(s);
     }
 
@@ -346,109 +350,75 @@ public class GameBoardHandler implements Initializable {
         }
     }
 
-    public void putImage (String url, int x, int y){
+    public void putImage(String url, int x, int y) {
         Image diceImg = new Image(url);
         ImageView diceView = new ImageView(diceImg);
         diceView.setFitWidth(58);
         diceView.setFitHeight(54);
-        Platform.runLater(()->windowPatternCard[x][y].setGraphic(diceView));
+        Platform.runLater(() -> windowPatternCard[x][y].setGraphic(diceView));
     }
 
-    public void deleteImage (int x, int y){
-        Platform.runLater(()->windowPatternCard[x][y].setGraphic(null));
+    public void deleteImage(int x, int y) {
+        Platform.runLater(() -> windowPatternCard[x][y].setGraphic(null));
     }
 
-    public void setPrivateCard(String privateCard){
-        Image privateObjCardImg = new Image("File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/" + privateCard + ".png");
+    public void setPrivateCard(String privateCard) {
+        Image privateObjCardImg = new Image(PRIVATE_CARDS_PATH + privateCard + ".png");
         privateObjCard.setImage(privateObjCardImg);
     }
 
-    public void setPublicCards(List<String> publicCards){
-        Image publicObjCardImg1 = new Image("File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/" + publicCards.get(0) + ".png");
+    public void setPublicCards(List<String> publicCards) {
+        Image publicObjCardImg1 = new Image(PUBLIC_CARDS_PATH + publicCards.get(0) + ".png");
         pubObjCard1.setImage(publicObjCardImg1);
-        Image publicObjCardImg2 = new Image("File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/" + publicCards.get(1) + ".png");
+        Image publicObjCardImg2 = new Image(PUBLIC_CARDS_PATH + publicCards.get(1) + ".png");
         pubObjCard2.setImage(publicObjCardImg2);
-        Image publicObjCardImg3 = new Image("File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/" + publicCards.get(2) + ".png");
+        Image publicObjCardImg3 = new Image(PUBLIC_CARDS_PATH + publicCards.get(2) + ".png");
         pubObjCard3.setImage(publicObjCardImg3);
     }
 
-    public void setFavourTokens(int value){
-        if(myFavourTokensContainer.getChildren()!=null){
+    public void setFavourTokens(int value) {
+        if (myFavourTokensContainer.getChildren() != null) {
             myFavourTokensContainer.getChildren().remove(0, myFavourTokensContainer.getChildren().size());
         }
         GridPane myFavourTokens = new GridPane();
         myFavourTokens.setPrefSize(40, 240);
-        String url = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
-        Image img = new Image(url);
-        for(int i = 0; i < value; i++){
+        Image img = new Image(FAVOR_TOKEN_PATH);
+        for (int i = 0; i < value; i++) {
             ImageView imgView = new ImageView(img);
             imgView.setFitWidth(40);
             imgView.setFitHeight(40);
             int finalI = i;
-            Platform.runLater(()->myFavourTokens.add(imgView, 0, finalI));
+            Platform.runLater(() -> myFavourTokens.add(imgView, 0, finalI));
         }
         myFavourTokensContainer.getChildren().add(myFavourTokens);
     }
-    //The boolean "pre" tells us if we are checking for the first time or not
-    public void onOtherSchemeCards(boolean pre, List<String> players){
-        if(!pre) {
-            for (String s : players) {
-                System.out.println(username + " PUTTING !PRE " + s);
-                setName(s);
-            }
-        }
-        else{
-            List<String> names = new ArrayList<>();
-            for(int i = 1; i<players.size()+1; i++) names.add(players.get(players.size()-i));
-            for(String name : names) {
-                System.out.println(username + " PUTTING PRE " + name);
-                setNamePrev(name);
-            }
-        }
+
+    // todo: chiamata ogni volta che viene notificata una nuova scheme card
+    // todo: potrebbe essere utili discriminare i due casi in fase di invio, (carta settata, carta aggiornata)
+    // in modo da chiamare questo metodo solo quando la carta è settata
+    public void onOtherSchemeCards(WindowPatternCard window, String name) {
+        // cerca tra tutte le label quella con il nome "name" e gli setta la window
     }
 
-    public void setName(String name){
-        //This function adds the labels of the players who joined the match after this player
-        List<Label> labels = new ArrayList<>();
-        labels.add(label1);
-        labels.add(label2);
-        labels.add(label3);
-        boolean alreadyPresent = false;
-        for (Label temp : labels){
-            if(temp.getText().equals(name)) alreadyPresent = true;
-        }
-        if(!alreadyPresent) {
-            for (Label label : labels) {
-                System.out.println(label.getId() + " CONTENUTO: " + label.getText());
-                if (label.getText().equals(name)) break;
-                if (label.getText().equals(" ")) {
-                    Platform.runLater(() -> label.setText(name));
-                    System.out.println("PIAZZATO NOME: " + name + "label "+ label.getId());
-                    break;
-                }
+    public void initializeLabels(List<String> players) {
+        int myPosition = 0;
+
+        // find the position of the owner of this GUI
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).equals(username)) {
+                myPosition = i;
+                label0.setText(players.get(i));
+                break;
             }
         }
-    }
-
-    public void setNamePrev(String name){
-        //This function adds the labels of the players who joined the match before this player
-        List<Label> labels = new ArrayList<>();
-        labels.add(label3);
-        labels.add(label2);
-        labels.add(label1);
-        boolean alreadyPresent = false;
-        for (Label temp : labels){
-            if(temp.getText().equals(name)) alreadyPresent = true;
-        }
-        if(!alreadyPresent) {
-            for (Label label : labels) {
-                System.out.println(label.getId() + " CONTENUTO: " + label.getText());
-                if (label.getText().equals(name)) break;
-                if (label.getText().equals(" ")) {
-                    Platform.runLater(() -> label.setText(name));
-                    System.out.println("PIAZZATO NOME: " + name + "label "+ label.getId());
-                    break;
-                }
+        // assigns the name to the right label in order to show the correct flow clockwise
+        for (int i = 1; i < players.size(); i++) {
+            if (((myPosition + i) % players.size()) == 1) {
+                label1.setText(players.get(myPosition + 1));
+            } else if (((myPosition + i) % players.size()) == 2) {
+                label2.setText(players.get(myPosition + 1));
+            } else if (((myPosition + i) % players.size()) == 3) {
+                label3.setText(players.get(myPosition + 1));
             }
         }
     }

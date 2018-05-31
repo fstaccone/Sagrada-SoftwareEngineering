@@ -159,7 +159,7 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(InitializationResponse response) {
         if (socketCli != null) {
-            socketCli.onInitialization(response.getToolcards(), response.getPublicCards(), response.getPrivateCard());
+            socketCli.onInitialization(response.getToolcards(), response.getPublicCards(), response.getPrivateCard(), response.getPlayers());
         }
     }
 

@@ -85,8 +85,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard) {
-        cli.onInitialization(toolcards, publicCards, privateCard);
+    public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
+        cli.onInitialization(toolcards, publicCards, privateCard, players);
     }
 
     @Override

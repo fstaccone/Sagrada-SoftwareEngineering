@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.*;
 
-import java.awt.*;
 import java.io.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ public class Cli {
     private boolean myTurn;
     private final transient PrintWriter printer;
 
+    private List<String> players;
     private List<String> dicesList;
     private List<String> toolCardsList;
     private List<String> publicCardsList;
@@ -108,6 +108,7 @@ public class Cli {
         toolCommands = new ArrayList<>();
         toolCardsList = new ArrayList<>();
         publicCardsList = new ArrayList<>();
+        players = new ArrayList<>();
     }
 
     public void printWelcome() {
@@ -184,10 +185,11 @@ public class Cli {
         printer.flush();
     }
 
-    public void onInitialization(String toolcards, String publicCards, String privateCard) {
+    public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
+        this.players = players;
     }
 
     private void parsePublicCards(String publicCards) {
@@ -503,11 +505,11 @@ public class Cli {
                             break;
 
                             case "sp": {
-                                if (controller != null)
-                                    controller.showPlayers(username);
-                                else {
-                                    clientController.request(new ShowPlayersRequest(username));
+                                printer.println("Lista completa dei giocatori:");
+                                for (String p : players) {
+                                    printer.println("- " + p);
                                 }
+                                printer.flush();
                             }
                             break;
 

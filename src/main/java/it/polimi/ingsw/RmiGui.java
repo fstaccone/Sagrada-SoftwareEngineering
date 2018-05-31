@@ -31,22 +31,24 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private List<String> dicesList;
     private String privateCard;
     private List<String> publicCardsList;
-    private Map<String ,Integer > otherFavorTokensMap;
-    private Map<String ,WindowPatternCard > otherSchemeCardsMap;
+    private Map<String, Integer> otherFavorTokensMap;
+    private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private boolean reconnection;
-    private List<String> otherPlayers;
+    private List<String> players;
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller) throws RemoteException {
         super();
         this.username = username;
         this.controller = controller;
-        this.myTurn = false;
-        this.windowStage = fromLogin;
-        this.otherFavorTokensMap=new HashMap<>();
-        this.otherSchemeCardsMap=new HashMap<>();
+        myTurn = false;
+        windowStage = fromLogin;
+        otherFavorTokensMap = new HashMap<>();
+        otherSchemeCardsMap = new HashMap<>();
         reconnection = false;
-        this.otherPlayers = new ArrayList<>();
+        players = new ArrayList<>();
     }
+
+    public List<String> getPlayers() { return players; }
 
     @Override
     public void onPlayers(List<String> playersNames) {
@@ -117,7 +119,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onPlayerReconnection(String name) {
         System.out.println("On player reconnection");
-        if (gameBoardHandler != null) gameBoardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
+        if (gameBoardHandler != null)
+            gameBoardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
         else chooseCardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
     }
 
@@ -144,7 +147,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onMyFavorTokens(int value) {
         //AGGIORNAMENTO PROPRI SEGNALINI
-        if(gameBoardHandler!=null) gameBoardHandler.setFavourTokens(value);
+        if (gameBoardHandler != null) gameBoardHandler.setFavourTokens(value);
     }
 
     @Override
@@ -153,22 +156,17 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onOtherSchemeCards(WindowPatternCard string, String name) {
-        //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO CARTE SCHEMA ALTRUI
-        otherSchemeCardsMap.put(name, string);
-        if(otherPlayers.isEmpty()) otherPlayers.add(name);
-        else addToPlayers(name);
-        if(gameBoardHandler!=null) gameBoardHandler.onOtherSchemeCards(false, otherPlayers);
+    public void onOtherSchemeCards(WindowPatternCard window, String name) {
+        if (gameBoardHandler != null) gameBoardHandler.onOtherSchemeCards(window, name);
     }
 
     @Override
     public void onOtherTurn(String name) {
         System.out.println("On other turn");
         String s = "Ora è il turno di " + name;
-        if (gameBoardHandler != null){
+        if (gameBoardHandler != null) {
             gameBoardHandler.setTextArea(s);
-        }
-        else chooseCardHandler.setTextArea(s);
+        } else chooseCardHandler.setTextArea(s);
     }
 
     @Override
@@ -177,8 +175,22 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard) {
-        //System.out.println(toolcards);
+    public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
+
+        parseToolcards(toolcards);
+
+        // todo: cosa fa?
+        privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
+        this.privateCard = privateCard;
+
+        chooseCardHandler.setPrivateCard(privateCard);
+        parsePublicCards(publicCards);
+
+        this.players = players;
+        gameBoardHandler.initializeLabels(players);
+    }
+
+    private void parseToolcards(String toolcards) {
         String dicesString = toolcards.substring(1, toolcards.length() - 1);
         List<String> temp = Pattern.compile(", ")
                 .splitAsStream(dicesString)
@@ -186,13 +198,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         for (String s : temp) {
             s = s.split(":", 2)[0];
             toolCardsList.add(s);
-            //System.out.println(s);
         }
-        //System.out.println(publicCards);
-        privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
-        this.privateCard = privateCard;
-        chooseCardHandler.setPrivateCard(privateCard);
-        parsePublicCards(publicCards);
+
     }
 
     private void parsePublicCards(String publicCards) {
@@ -221,7 +228,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterWindowChoise() throws RemoteException {
+    public void onAfterWindowChoise(){
         System.out.println("On show windowStage");
         String imgUrl = chooseCardHandler.getImageUrl();
         FXMLLoader fx = new FXMLLoader();
@@ -259,17 +266,4 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         return otherSchemeCardsMap;
     }
 
-    public void addToPlayers(String name){
-        boolean found = false;
-        for(String s : otherPlayers){
-            if(s.equals(name)) found = true;
-        }
-        if(!found){
-            otherPlayers.add(name);
-        }
-    }
-
-    public List<String> getOtherPlayers() {
-        return otherPlayers;
-    }
 }
