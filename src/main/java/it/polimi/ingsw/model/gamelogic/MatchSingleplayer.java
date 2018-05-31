@@ -44,11 +44,6 @@ public class MatchSingleplayer extends Match implements Runnable{
     }
 
     @Override
-    public void showTrack(String name) {
-
-    }
-
-    @Override
     public void run() {
 
     }

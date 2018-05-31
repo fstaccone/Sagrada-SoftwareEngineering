@@ -33,6 +33,7 @@ public class Cli {
     private int myFavorTokens;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
+    private String roundTrack;
 
     private int diceChosen = 9;
     private int coordinateX;
@@ -142,6 +143,9 @@ public class Cli {
         printer.flush();
     }
 
+    public void onRoundTrack(String roundTrack) {
+        this.roundTrack = roundTrack;
+    }
 
     public void onYourTurn(boolean yourTurn, String string) {
         if (string != null)
@@ -224,11 +228,6 @@ public class Cli {
         printer.flush();
     }
 
-    public void onShowTrack(String track) {
-        printer.println("This is the roundtrack:");
-        printer.println(track);
-        printer.flush();
-    }
 
     public void onGameClosing() {
         printer.println("Congratulations! You are the winner. You were the only one still in game.");
@@ -262,10 +261,20 @@ public class Cli {
     }
 
     // TODO: completare con altri parametri
-    public void afterReconnection(String toolcards, String publicCards, String privateCard) {
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
+        String dicesString = reserve.substring(1, reserve.length() - 1);
+        this.dicesList = Pattern.compile(", ")
+                .splitAsStream(dicesString)
+                .collect(Collectors.toList());
+        this.roundTrack = roundTrack;
+        this.mySchemeCard = mySchemeCard;
+        this.myFavorTokens = myTokens;
+        this.otherSchemeCardsMap = otherSchemeCards;
+        this.otherFavorTokensMap = otherTokens;
+        this.windowChosen = schemeCardChosen;
     }
 
 
@@ -556,13 +565,9 @@ public class Cli {
                             }
                             break;
 
-
                             case "track": {
-                                if (controller != null)
-                                    controller.showTrack(username, single);
-                                else {
-                                    clientController.request(new ShowTrackRequest(username, single));
-                                }
+                                printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
+                                printer.flush();
                             }
                             break;
 
@@ -672,12 +677,10 @@ public class Cli {
                             }
                             break;
 
+
                             case "track": {
-                                if (controller != null)
-                                    controller.showTrack(username, single);
-                                else {
-                                    clientController.request(new ShowTrackRequest(username, single));
-                                }
+                                printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
+                                printer.flush();
                             }
                             break;
 

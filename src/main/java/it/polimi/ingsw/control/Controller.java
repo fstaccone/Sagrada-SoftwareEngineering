@@ -77,15 +77,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.getMultiplayerMatches().get(name).showPlayers(name);
     }
 
-    @Override
-    public void showTrack(String name, boolean isSingle) {
-        if (isSingle) {
-            lobby.getSingleplayerMatches().get(name).showTrack(name);
-        } else {
-            lobby.getMultiplayerMatches().get(name).showTrack(name);
-        }
-    }
-
 
     @Override
     public void chooseWindow(String name, int index, boolean isSingle) {
@@ -314,16 +305,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public Response handle(ShowPlayersRequest request) {
         lobby.getMultiplayerMatches().get(request.getUsrname()).showPlayers(request.getUsrname());
-        return null;
-    }
-
-    @Override
-    public Response handle(ShowTrackRequest request) {
-        if(request.isSingle()){
-            lobby.getSingleplayerMatches().get(request.getUsername()).showTrack(request.getUsername());
-        } else {
-            lobby.getMultiplayerMatches().get(request.getUsername()).showTrack(request.getUsername());
-        }
         return null;
     }
 

@@ -236,7 +236,7 @@ public class TurnManager implements Runnable {
 
     private void notifyOthers(PlayerMultiplayer player) {
         Response response = new OtherTurnResponse(player.getName());
-        for (PlayerMultiplayer playerNotInTurn : match.getPlayers())
+        for (PlayerMultiplayer playerNotInTurn : match.getPlayers()) {
             if (playerNotInTurn != player) {
                 if (rmiObserverNotify(playerNotInTurn) != null)
                     try {
@@ -248,15 +248,29 @@ public class TurnManager implements Runnable {
                     socketObserverNotify(playerNotInTurn, response);
                 }
             }
+        }
     }
 
     private boolean checkCondition() {
         return !((match.isToolAction() && match.isDiceAction()) || match.isEndsTurn());
     }
 
-    private void nextRound() throws InterruptedException, RemoteException {
+    private void nextRound() throws RemoteException, InterruptedException {
         match.pushLeftDicesToRoundTrack();
         match.incrementRoundCounter();
+
+        Response response = new RoundTrackResponse(match.getBoard().getRoundTrack().toString());
+        for (PlayerMultiplayer player : match.getPlayers()) {
+            if (rmiObserverNotify(player) != null)
+                try {
+                    rmiObserverNotify(player).onRoundTrack(match.getBoard().getRoundTrack().toString());
+                } catch (RemoteException e) {
+                    match.getLobby().disconnect(player.getName());
+                }
+            if (match.getSocketObservers().get(player) != null) {
+                socketObserverNotify(player, response);
+            }
+        }
 
         if (match.getCurrentRound() >= 2) {
             match.calculateFinalScore();
