@@ -313,6 +313,8 @@ public class Cli {
         Integer toolNumber6;
         Integer toolNumber7;
         Integer toolNumber8;
+        Integer toolNumber9;
+        Integer toolNumber10;
         String toolString1;
 
         @Override
@@ -961,7 +963,63 @@ public class Cli {
                         }
                         break;
                         case 12: {
-                            toolCommand.command12();
+                            if (parametersCardinalityCheck(8)) {
+                                toolNumber1 = tryParse(parts[2]);
+                                toolNumber2 = tryParse(parts[3]);
+                                toolNumber3 = tryParse(parts[4]);
+                                toolNumber4 = tryParse(parts[5]);
+                                toolNumber5 = tryParse(parts[6]);
+                                toolNumber6 = tryParse(parts[7]);
+                                if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null && toolNumber4 != null && toolNumber5 != null && toolNumber6 != null) {
+                                    if (toolCommand.command12(toolNumber1,toolNumber2,toolNumber3,toolNumber4,toolNumber5,toolNumber6,-1,-1,-1,-1)) {
+                                        printer.println("\nWell done! The chosen dice has been modified correctly.\n");
+                                        printer.flush();
+                                    } else {
+                                        gameErrorPrint();
+                                    }
+                                } else {
+                                    syntaxErrorPrint();
+                                }
+                                toolNumber1 = null;
+                                toolNumber2 = null;
+                                toolNumber3 = null;
+                                toolNumber4 = null;
+                                toolNumber5 = null;
+                                toolNumber6 = null;
+                            }
+                            else if(parametersCardinalityCheck(12)){
+                                toolNumber1 = tryParse(parts[2]);
+                                toolNumber2 = tryParse(parts[3]);
+                                toolNumber3 = tryParse(parts[4]);
+                                toolNumber4 = tryParse(parts[5]);
+                                toolNumber5=tryParse(parts[6]);
+                                toolNumber6=tryParse(parts[7]);
+                                toolNumber7 = tryParse(parts[8]);
+                                toolNumber8=tryParse(parts[9]);
+                                toolNumber9=tryParse(parts[10]);
+                                toolNumber10 = tryParse(parts[11]);
+
+                                if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null && toolNumber4 != null  && toolNumber5 != null  && toolNumber6 != null && toolNumber7 != null && toolNumber8 != null && toolNumber9 != null && toolNumber10 != null) {
+                                    if (toolCommand.command12(toolNumber1,toolNumber2,toolNumber3,toolNumber4,toolNumber5,toolNumber6, toolNumber7,toolNumber8,toolNumber9,toolNumber10)) {
+                                        printer.println("\nWell done! The chosen dice has been modified correctly.\n");
+                                        printer.flush();
+                                    } else {
+                                        gameErrorPrint();
+                                    }
+                                } else {
+                                    syntaxErrorPrint();
+                                }
+                                toolNumber1 = null;
+                                toolNumber2 = null;
+                                toolNumber3 = null;
+                                toolNumber4 = null;
+                                toolNumber5 = null;
+                                toolNumber6 = null;
+                                toolNumber7 = null;
+                                toolNumber8 = null;
+                                toolNumber9 = null;
+                                toolNumber10 = null;
+                            }
 
                         }
                         break;

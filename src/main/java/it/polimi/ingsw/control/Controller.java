@@ -192,6 +192,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return false;
     }
 
+    @Override
+    public boolean useToolCard12(int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
+        if (isSingle) {
+            //DA FARE
+        } else {
+            return lobby.getMultiplayerMatches().get(name).useToolCard12(roundFromTrack, diceInRound, startX1,startY1,finalX1,finalY1,startX2,startY2,finalX2,finalY2,name);
+        }
+        return false;
+    }
+
 
     @Override
     public Response handle(CheckUsernameRequest request) {
@@ -286,6 +296,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public Response handle(UseToolCard10Request request) {
         boolean effectApplied = useToolCard10(request.diceChosen, request.username, request.isSingle);
+        return new ToolCardEffectAppliedResponse(effectApplied);
+    }
+
+    @Override
+    public Response handle(UseToolCard12Request request) {
+        boolean effectApplied = useToolCard12(request.roundFromTrack, request.diceInRound, request.startX1,request.startY1,request.finalX1,request.finalY1,request.startX2,request.startY2,request.finalX2,request.finalY2,request.name, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
