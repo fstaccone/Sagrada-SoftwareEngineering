@@ -480,6 +480,22 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
 
+    public boolean placeDiceTool11(String name, int x, int y) {
+        if (!isDiceAction()) {
+            boolean result;
+            result = getPlayer(name).getSchemeCard().putDice(getPlayer(name).getDiceFromBag(), x, y);
+            setDiceAction(result);
+            schemeCardsToBeUpdated(result, name);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        }
+        return false;
+    }
+
+
     public boolean useToolCard1(int diceChosen, String incrOrDecr, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
@@ -603,6 +619,18 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(10, getPlayer(name), this);
+            tokensToBeUpdated(result, name);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            return result;
+        } else return false;
+    }
+
+
+    public boolean useToolCard11(int diceChosen, String name) {
+        if (!isToolAction()) {
+            getPlayer(name).setDice(diceChosen);
+            boolean result = getBoard().findAndUseToolCard(11, getPlayer(name), this);
             tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);

@@ -7,5 +7,5 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public interface Request extends Serializable {
-    Response handleRequest(RequestHandler handler) throws RemoteException, InterruptedException;
+    Response handleRequest(RequestHandler handler);
 }

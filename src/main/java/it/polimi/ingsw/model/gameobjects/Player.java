@@ -12,6 +12,10 @@ public abstract class Player {
     private int dice;
     private String choise;
 
+    private Dice diceFromBag;
+
+
+
     private int roundChosen;
     private int diceChosenFromRound;
 
@@ -166,5 +170,12 @@ public abstract class Player {
     public void setColor(Colors color) { this.color = color; }
     // end of setters
 
+    public void setDiceFromBag(Dice diceFromBag) {
+        this.diceFromBag = diceFromBag;
+    }
+
+    public Dice getDiceFromBag() {
+        return diceFromBag;
+    }
 
 }

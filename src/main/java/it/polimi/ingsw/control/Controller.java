@@ -4,6 +4,7 @@ import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.*;
@@ -73,6 +74,17 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
+    public boolean placeDiceTool11( int x, int y, String name, boolean isSingle) {
+        if (isSingle) {
+            lobby.getSingleplayerMatches().get(name).setDiceAction(true);
+            // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
+        } else {
+            return lobby.getMultiplayerMatches().get(name).placeDiceTool11(name, x, y);
+        }
+        return false;
+    }
+
+    @Override
     public void showPlayers(String name) {
         lobby.getMultiplayerMatches().get(name).showPlayers(name);
     }
@@ -99,6 +111,28 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void reconnect(String name){
         lobby.reconnect(name);
+    }
+
+    @Override
+    public Colors askForDiceColor(String name, boolean isSingle){
+        if (isSingle) {
+            //DA FARE
+        } else {
+             return lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag().getColor();
+        }
+        return null;
+    }
+
+    @Override
+    public void setDiceValue(int value, String name, boolean isSingle){
+        if (isSingle) {
+            //DA FARE
+        } else {
+            System.out.println("OH");
+            System.out.println(lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag());
+            lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag().setValue(value);
+            System.out.println(lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag());
+        }
     }
 
     @Override
@@ -193,6 +227,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
+    public boolean useToolCard11(int diceChosen, String name, boolean isSingle) {
+        if (isSingle) {
+            //DA FARE
+        } else {
+            return lobby.getMultiplayerMatches().get(name).useToolCard11(diceChosen, name);
+        }
+        return false;
+    }
+
+    @Override
     public boolean useToolCard12(int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
         if (isSingle) {
             //DA FARE
@@ -243,6 +287,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public Response handle(PlaceDiceRequest request) {
         boolean placed = placeDice(request.diceChosen, request.coordinateX, request.coordinateY, request.username, request.single);
+        return new DicePlacedResponse(placed);
+    }
+
+    @Override
+    public Response handle(PlaceDiceTool11Request request) {
+        boolean placed = placeDiceTool11(request.coordinateX, request.coordinateY, request.username, request.single);
         return new DicePlacedResponse(placed);
     }
 
@@ -300,6 +350,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
+    public Response handle(UseToolCard11Request request) {
+        boolean effectApplied = useToolCard11(request.diceChosen, request.username, request.isSingle);
+        return new ToolCardEffectAppliedResponse(effectApplied);
+    }
+
+    @Override
     public Response handle(UseToolCard12Request request) {
         boolean effectApplied = useToolCard12(request.roundFromTrack, request.diceInRound, request.startX1,request.startY1,request.finalX1,request.finalY1,request.startX2,request.startY2,request.finalX2,request.finalY2,request.name, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
@@ -320,7 +376,19 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(ShowPlayersRequest request) {
-        lobby.getMultiplayerMatches().get(request.getUsrname()).showPlayers(request.getUsrname());
+        lobby.getMultiplayerMatches().get(request.getUsername()).showPlayers(request.getUsername());
+        return null;
+    }
+
+    @Override
+    public Response handle(DiceColorRequest request) {
+        Colors color=askForDiceColor(request.name, request.isSingle);
+        return new DiceColorResponse(color);
+    }
+
+    @Override
+    public Response handle(SetDiceValueRequest request) {
+        setDiceValue(request.value,request.name,request.isSingle);
         return null;
     }
 
