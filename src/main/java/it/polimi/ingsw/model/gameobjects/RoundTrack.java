@@ -6,32 +6,32 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundTrack {
-    //dicesLeft is a list of (list of dices) since you may have more than one dice in the same position
-    private List<List<Dice>> dicesLeft;
+    //rounds is a list of (list of dices) since you may have more than one dice in the same position
+    private List<List<Dice>> rounds;
 
     public RoundTrack() {
         // It makes an ArrayList of 10 (constant declared in Match) Lists of Dices
-        dicesLeft = new LinkedList<>();
+        rounds = new LinkedList<>();
         for (int i = 0; i < Match.getNumberOfRounds(); i++) {
-            dicesLeft.add(new ArrayList<>());
+            rounds.add(new ArrayList<>());
         }
     }
 
     public void putDices(List<Dice> dicesToPut, int position) {
-        dicesLeft.set(position, dicesToPut);
+        rounds.set(position, dicesToPut);
     }
 
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
 
-        for (int i = 0; i < dicesLeft.size(); i++) {
-            if(dicesLeft.get(i).size() != 0) {
+        for (int i = 0; i < rounds.size(); i++) {
+            if (rounds.get(i).size() != 0) {
                 AtomicInteger j = new AtomicInteger();
                 string.append("Round ");
                 string.append(i + 1);
                 string.append("\n");
-                dicesLeft.get(i).forEach(e -> string.append(j.getAndIncrement() + ") " + e.toString() + "\t"));
+                rounds.get(i).forEach(e -> string.append(j.getAndIncrement() + ") " + e.toString() + "\t"));
                 string.append("\n");
             }
         }
@@ -41,7 +41,7 @@ public class RoundTrack {
     // todo: eliminare, anche gli utilizzi in testing
     public void showRoundTrack() {
         int j = 0;
-        for (List<Dice> list : dicesLeft) {
+        for (List<Dice> list : rounds) {
             System.out.println("List number: " + j);
             int i = 0;
             for (Dice d : list) {
@@ -60,7 +60,7 @@ public class RoundTrack {
         System.out.println(("Choose the dice id"));
         int diceId = scan.nextInt();
         int j = 0;
-        for (List<Dice> list : dicesLeft) {
+        for (List<Dice> list : rounds) {
             if (j == listNumber) {
                 int i = 0;
                 for (Dice d : list) {
@@ -79,16 +79,15 @@ public class RoundTrack {
 
 
     public Colors getColorOfAChosenDice(int chosenRound, int chosenDiceFromRound) {
-        Dice dice = dicesLeft.get(chosenRound - 1).get(chosenDiceFromRound);
+        Dice dice = rounds.get(chosenRound - 1).get(chosenDiceFromRound);
         return dice.getColor();
     }
 
     public Dice switchDice(Dice diceToSwitch, int chosenRound, int chosenDiceFromRound) {
-        if (chosenRound>0 && chosenRound<=dicesLeft.size()&&chosenDiceFromRound>=0 && chosenDiceFromRound <dicesLeft.get(chosenRound-1).size()) {
-            Dice returnValue = dicesLeft.get(chosenRound - 1).remove(chosenDiceFromRound);
-            dicesLeft.get(chosenRound - 1).add(chosenDiceFromRound, diceToSwitch);
+        if (chosenRound > 0 && chosenRound <= rounds.size() && chosenDiceFromRound >= 0 && chosenDiceFromRound < rounds.get(chosenRound - 1).size()) {
+            Dice returnValue = rounds.get(chosenRound - 1).remove(chosenDiceFromRound);
+            rounds.get(chosenRound - 1).add(chosenDiceFromRound, diceToSwitch);
             return returnValue;
-        }
-        else return null;
+        } else return null;
     }
 }

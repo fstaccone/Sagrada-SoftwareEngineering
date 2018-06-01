@@ -35,6 +35,11 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private boolean reconnection;
     private List<String> players;
+    private boolean dicePlaced;
+
+    public boolean isDicePlaced() { return dicePlaced; }
+
+    public void setDicePlaced(boolean dicePlaced) { this.dicePlaced = dicePlaced; }
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller) throws RemoteException {
         super();
@@ -80,8 +85,13 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         if (myTurn) {
             //Solo per verifica
             String s = "Ora è il tuo turno!";
-            if (gameBoardHandler != null) gameBoardHandler.setTextArea(s);
-            else chooseCardHandler.setTextArea(s);
+            if (gameBoardHandler != null) {
+                gameBoardHandler.setTextArea(s);
+                gameBoardHandler.initializeActions();
+            }
+            else {
+                chooseCardHandler.setTextArea(s);
+            }
         } else
             //Solo per verifica
             System.out.println("Non è più il tuo turno!");

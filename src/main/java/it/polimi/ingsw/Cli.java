@@ -222,7 +222,7 @@ public class Cli {
             String[] strings = card.split(":");
 
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
-            this.toolCommands.add(new ToolCommand(i, this.printer, this.controller, null, this.username, this.single));
+            this.toolCommands.add(new ToolCommand(i, this.printer, this.controller, this.clientController, this.username, this.single));
         }
     }
 

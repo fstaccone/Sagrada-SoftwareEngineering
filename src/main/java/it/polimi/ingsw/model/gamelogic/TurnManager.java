@@ -272,7 +272,7 @@ public class TurnManager implements Runnable {
             }
         }
 
-        if (match.getCurrentRound() >= 2) {
+        if (match.getCurrentRound() >= 5) {
             match.calculateFinalScore();
         } else {
             this.turnManager();
