@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.Square;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -25,48 +27,9 @@ public class GameBoardHandler implements Initializable {
     private static final String DICE_IMAGES_PATH = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
     private static final String PUBLIC_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/";
     private static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
+    private static final String WINDOW_PATTERN_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
 
 
-    @FXML
-    Button b1;
-    @FXML
-    Button b2;
-    @FXML
-    Button b3;
-    @FXML
-    Button b4;
-    @FXML
-    Button b5;
-    @FXML
-    Button b6;
-    @FXML
-    Button b7;
-    @FXML
-    Button b8;
-    @FXML
-    Button b9;
-    @FXML
-    Button b10;
-    @FXML
-    Button b11;
-    @FXML
-    Button b12;
-    @FXML
-    Button b13;
-    @FXML
-    Button b14;
-    @FXML
-    Button b15;
-    @FXML
-    Button b16;
-    @FXML
-    Button b17;
-    @FXML
-    Button b18;
-    @FXML
-    Button b19;
-    @FXML
-    Button b20;
     @FXML
     Pane playerWindowPatternCard;
     @FXML
@@ -114,12 +77,6 @@ public class GameBoardHandler implements Initializable {
     @FXML
     Pane pane3;
     @FXML
-    GridPane grid1;
-    @FXML
-    GridPane grid2;
-    @FXML
-    GridPane grid3;
-    @FXML
     Pane myFavourTokensContainer;
     @FXML
     Pane favourTokensContainer1;
@@ -142,16 +99,23 @@ public class GameBoardHandler implements Initializable {
     private RmiGui rmiGui;
     private int diceChosen;
     private List<String> reserveDices;
-    private Button[][] windowPatternCard;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private Map<Integer, Label> labels = new HashMap<>();
+    private Map<Integer, Pane> favorTokensContainers = new HashMap<>();
 
     public void createLabelsMap(){
         labels.put(0, label0);
         labels.put(1, label1);
         labels.put(2, label2);
         labels.put(3, label3);
+    }
+
+    public void createFavorTokensContainers(){
+        favorTokensContainers.put(0, myFavourTokensContainer);
+        favorTokensContainers.put(1, favourTokensContainer1);
+        favorTokensContainers.put(2, favourTokensContainer2);
+        favorTokensContainers.put(3, favourTokensContainer3);
     }
 
     private EventHandler<ActionEvent> reserveDiceSelected = new EventHandler<ActionEvent>() {
@@ -180,12 +144,13 @@ public class GameBoardHandler implements Initializable {
         }
     };
 
-    private EventHandler<ActionEvent> windowPatternCardSlotSelected = new EventHandler<ActionEvent>() {
+    private EventHandler<MouseEvent> windowPatternCardSlotSelected = new EventHandler<MouseEvent>() {
+
         @Override
-        public void handle(ActionEvent event) {
+        public void handle(MouseEvent event) {
             if (rmiGui.isMyTurn()) {
                 if (diceChosen != 9) {
-                    Button slot = (Button) event.getSource();
+                    ImageView slot = (ImageView) event.getSource();
                     Integer tempX = GridPane.getRowIndex(slot);
                     if (tempX == null) tempX = 0;
                     Integer tempY = GridPane.getColumnIndex(slot);
@@ -194,10 +159,8 @@ public class GameBoardHandler implements Initializable {
                     int coordinateY = tempY;
                     textArea.setText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
                     try {
-                        String url = DICE_IMAGES_PATH + reserveDices.get(diceChosen) + ".png";
                         if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
                             textArea.setText("Ben fatto! Il dado scelto è stato piazzato correttamente.");
-                            putImage(url, coordinateX, coordinateY);
                             diceChosen = 9; //FIRST VALUE NEVER PRESENT IN THE RESERVE
                         } else {
                             textArea.setText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o non puoi più piazzare dadi in questo turno!");
@@ -230,27 +193,6 @@ public class GameBoardHandler implements Initializable {
             window.setResizable(false);
             window.show();
         });
-        windowPatternCard = new Button[4][5];
-        windowPatternCard[0][0] = b1;
-        windowPatternCard[0][1] = b2;
-        windowPatternCard[0][2] = b3;
-        windowPatternCard[0][3] = b4;
-        windowPatternCard[0][4] = b5;
-        windowPatternCard[1][0] = b6;
-        windowPatternCard[1][1] = b7;
-        windowPatternCard[1][2] = b8;
-        windowPatternCard[1][3] = b9;
-        windowPatternCard[1][4] = b10;
-        windowPatternCard[2][0] = b11;
-        windowPatternCard[2][1] = b12;
-        windowPatternCard[2][2] = b13;
-        windowPatternCard[2][3] = b14;
-        windowPatternCard[2][4] = b15;
-        windowPatternCard[3][0] = b16;
-        windowPatternCard[3][1] = b17;
-        windowPatternCard[3][2] = b18;
-        windowPatternCard[3][3] = b19;
-        windowPatternCard[3][4] = b20;
         Platform.runLater(() -> label0.setText(username));
         label1.setText(" ");
         label2.setText(" ");
@@ -262,9 +204,38 @@ public class GameBoardHandler implements Initializable {
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         playerWindowPatternCard.setBackground(new Background(myBI));
-        for (Button dicesRow[] : windowPatternCard) {
-            for (Button dice : dicesRow) {
-                dice.setOnAction(windowPatternCardSlotSelected);
+        //Initializing the scheme card slots
+        GridPane schemeCard = new GridPane();
+        schemeCard.setGridLinesVisible(false);
+        schemeCard.setPrefSize(334, 261);
+        schemeCard.setHgap(10);
+        schemeCard.setVgap(14);
+        schemeCard.setLayoutX(3);
+        schemeCard.setLayoutY(5);
+        final int numCols = 5 ;
+        final int numRows = 4 ;
+        for (int i = 0; i < numCols; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / numCols);
+            schemeCard.getColumnConstraints().add(colConst);
+        }
+        for (int i = 0; i < numRows; i++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / numRows);
+            schemeCard.getRowConstraints().add(rowConst);
+        }
+        Platform.runLater(()->playerWindowPatternCard.getChildren().add(schemeCard));
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < numCols; j++){
+                    String url = "File:./src/main/java/it/polimi/ingsw/resources/other/transparent.png";
+                    Image img = new Image(url);
+                    ImageView imgView = new ImageView(img);
+                    imgView.setFitWidth(58);
+                    imgView.setFitHeight(55);
+                    imgView.setOnMouseClicked(windowPatternCardSlotSelected);
+                    int finalI = i;
+                    int finalJ = j;
+                    Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
             }
         }
     }
@@ -356,18 +327,6 @@ public class GameBoardHandler implements Initializable {
         }
     }
 
-    public void putImage(String url, int x, int y) {
-        Image diceImg = new Image(url);
-        ImageView diceView = new ImageView(diceImg);
-        diceView.setFitWidth(58);
-        diceView.setFitHeight(54);
-        Platform.runLater(() -> windowPatternCard[x][y].setGraphic(diceView));
-    }
-
-    public void deleteImage(int x, int y) {
-        Platform.runLater(() -> windowPatternCard[x][y].setGraphic(null));
-    }
-
     public void setPrivateCard(String privateCard) {
         Image privateObjCardImg = new Image(PRIVATE_CARDS_PATH + privateCard + ".png");
         privateObjCard.setImage(privateObjCardImg);
@@ -399,10 +358,246 @@ public class GameBoardHandler implements Initializable {
         myFavourTokensContainer.getChildren().add(myFavourTokens);
     }
 
+    //TODO: le tre funzioni riguardanti i segnalini funzionano ma il codice è abbastanza sporco, si può condensare
+    public void setOtherFavorTokens(Pane pane, int value){
+        if (pane.getChildren() != null) {
+            Platform.runLater(()->pane.getChildren().remove(0, pane.getChildren().size()));
+        }
+        GridPane myFavourTokens = new GridPane();
+        myFavourTokens.setPrefSize(40, 240);
+        Image img = new Image(FAVOR_TOKEN_PATH);
+        for (int i = 0; i < value; i++) {
+            ImageView imgView = new ImageView(img);
+            imgView.setFitWidth(40);
+            imgView.setFitHeight(40);
+            int finalI = i;
+            Platform.runLater(() -> myFavourTokens.add(imgView, 0, finalI));
+        }
+        Platform.runLater(()->pane.getChildren().add(myFavourTokens));
+    }
+
+    public void initializeFavorTokens(Map<String,Integer> map){
+        List<Label> labelsList = new ArrayList();
+        labelsList.add(label1);
+        labelsList.add(label2);
+        labelsList.add(label3);
+        for(String name : map.keySet()){
+            for(Label label : labelsList ){
+                if( label.getText().equals(name)){
+                    int a = Integer.parseInt(label.getId().substring(5,6));
+                    System.out.println(a);
+                    switch (a){
+                        case 1:
+                            setOtherFavorTokens(favourTokensContainer1, map.get(name));
+                            break;
+                        case 2:
+                            setOtherFavorTokens(favourTokensContainer2, map.get(name));
+                            break;
+                        case 3:
+                            setOtherFavorTokens(favourTokensContainer3, map.get(name));
+                            break;
+                    }
+
+                }
+            }
+        }
+    }
+
+    public void onOtherFavorTokens(Integer value, String name){
+        List<Label> labelsList = new ArrayList();
+        labelsList.add(label1);
+        labelsList.add(label2);
+        labelsList.add(label3);
+        for(Label label : labelsList ){
+            if( label.getText().equals(name)){
+                int a = Integer.parseInt(label.getId().substring(5,6));
+                System.out.println(a);
+                switch (a){
+                    case 1:
+                        setOtherFavorTokens(favourTokensContainer1, value);
+                        break;
+                    case 2:
+                        setOtherFavorTokens(favourTokensContainer2, value);
+                        break;
+                    case 3:
+                        setOtherFavorTokens(favourTokensContainer3, value);
+                        break;
+                }
+                break;
+            }
+        }
+
+
+    }
+
+    public void setMyWindow(WindowPatternCard window){
+        setMySchemeCard(playerWindowPatternCard, window);
+    }
+
+    public void setMySchemeCard(Pane pane, WindowPatternCard window){
+        if (pane.getChildren() != null) {
+            Platform.runLater(()->pane.getChildren().remove(0, pane.getChildren().size()));
+        }
+        GridPane schemeCard = new GridPane();
+        schemeCard.setGridLinesVisible(false);
+        schemeCard.setPrefSize(334, 261);
+        schemeCard.setHgap(10);
+        schemeCard.setVgap(14);
+        schemeCard.setLayoutX(3);
+        schemeCard.setLayoutY(5);
+        final int numCols = 5 ;
+        final int numRows = 4 ;
+        for (int i = 0; i < numCols; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / numCols);
+            schemeCard.getColumnConstraints().add(colConst);
+        }
+        for (int i = 0; i < numRows; i++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / numRows);
+            schemeCard.getRowConstraints().add(rowConst);
+        }
+        Platform.runLater(()->pane.getChildren().add(schemeCard));
+        Square[][] temp = window.getWindow();
+        for(int i = 0; i < window.getRows(); i++){
+            for(int j = 0; j < window.getColumns(); j++){
+                if(temp[i][j].occupiedSquare()){
+                    String dice = temp[i][j].getDice().toString().toLowerCase();
+                    dice = dice.substring(1, dice.length()-1).replace(" ", "_");
+                    System.out.println("Dado " + dice + "in posizione " + i + " " + j);
+                    String url = DICE_IMAGES_PATH + dice + ".png";
+                    Image img = new Image(url);
+                    ImageView imgView = new ImageView(img);
+                    imgView.setFitWidth(58);
+                    imgView.setFitHeight(55);
+                    imgView.setOnMouseClicked(windowPatternCardSlotSelected);
+                    int finalI = i;
+                    int finalJ = j;
+                    Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
+                }
+                else{
+                    String url = "File:./src/main/java/it/polimi/ingsw/resources/other/transparent.png";
+                    Image img = new Image(url);
+                    ImageView imgView = new ImageView(img);
+                    imgView.setFitWidth(58);
+                    imgView.setFitHeight(55);
+                    imgView.setOnMouseClicked(windowPatternCardSlotSelected);
+                    int finalI = i;
+                    int finalJ = j;
+                    Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
+                }
+
+            }
+        }
+    }
+
+    public void setOtherSchemeCards(Pane pane, WindowPatternCard window){
+        String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'","");
+        String imgURL = WINDOW_PATTERN_CARDS_PATH + s +".png";
+        System.out.println(s);
+        BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        pane.setBackground(new Background(myBI));
+        if (pane.getChildren() != null) {
+            Platform.runLater(()->pane.getChildren().remove(0, pane.getChildren().size()));
+        }
+        GridPane schemeCard = new GridPane();
+        schemeCard.setGridLinesVisible(false);
+        schemeCard.setPrefSize(214, 171);
+        schemeCard.setHgap(4);
+        schemeCard.setVgap(4);
+        schemeCard.setLayoutX(3);
+        schemeCard.setLayoutY(2);
+        final int numCols = 5 ;
+        final int numRows = 4 ;
+        for (int i = 0; i < numCols; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / numCols);
+            schemeCard.getColumnConstraints().add(colConst);
+        }
+        for (int i = 0; i < numRows; i++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / numRows);
+            schemeCard.getRowConstraints().add(rowConst);
+        }
+        Platform.runLater(()->pane.getChildren().add(schemeCard));
+        Square[][] temp = window.getWindow();
+        for(int i = 0; i < window.getRows(); i++){
+            for(int j = 0; j < window.getColumns(); j++){
+                if(temp[i][j].occupiedSquare()){
+                    String dice = temp[i][j].getDice().toString().toLowerCase();
+                    dice = dice.substring(1, dice.length()-1).replace(" ", "_");
+                    System.out.println("Dado " + dice + "in posizione " + i + " " + j);
+                    String url = DICE_IMAGES_PATH + dice + ".png";
+                    Image img = new Image(url);
+                    ImageView imgView = new ImageView(img);
+                    imgView.setFitWidth(40);
+                    imgView.setFitHeight(40);
+                    int finalI = i;
+                    int finalJ = j;
+                    Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
+                }
+
+            }
+        }
+
+
+    }
+
+    public void initializeSchemeCards(Map<String, WindowPatternCard> map){
+        List<Label> labelsList = new ArrayList();
+        labelsList.add(label1);
+        labelsList.add(label2);
+        labelsList.add(label3);
+        for(String name : map.keySet()){
+            for(Label label : labelsList ){
+                if( label.getText().equals(name)){
+                    int a = Integer.parseInt(label.getId().substring(5,6));
+                    System.out.println(a);
+                    switch (a){
+                        case 1:
+                            setOtherSchemeCards(pane1, map.get(name));
+                            break;
+                        case 2:
+                            setOtherSchemeCards(pane2, map.get(name));
+                            break;
+                        case 3:
+                            setOtherSchemeCards(pane3, map.get(name));
+                            break;
+                    }
+
+                }
+            }
+        }
+    }
+
     // todo: chiamata ogni volta che viene notificata una nuova scheme card
     // todo: potrebbe essere utili discriminare i due casi in fase di invio, (carta settata, carta aggiornata)
     // in modo da chiamare questo metodo solo quando la carta è settata
     public void onOtherSchemeCards(WindowPatternCard window, String name) {
+        List<Label> labelsList = new ArrayList();
+        labelsList.add(label1);
+        labelsList.add(label2);
+        labelsList.add(label3);
+        for(Label label : labelsList ){
+            if( label.getText().equals(name)){
+                int a = Integer.parseInt(label.getId().substring(5,6));
+                System.out.println(a);
+                switch (a){
+                    case 1:
+                        setOtherSchemeCards(pane1, window);
+                        break;
+                    case 2:
+                        setOtherSchemeCards(pane2, window);
+                        break;
+                    case 3:
+                        setOtherSchemeCards(pane3, window);
+                        break;
+                }
+                break;
+            }
+        }
         // cerca tra tutte le label quella con il nome "name" e gli setta la window
     }
 

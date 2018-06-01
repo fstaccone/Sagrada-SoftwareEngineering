@@ -147,6 +147,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onMyWindow(WindowPatternCard window) {
+        if (gameBoardHandler != null) gameBoardHandler.setMyWindow(window);
         //AGGIORNAMENTO PROPRIA CARTA SCHEMA
     }
 
@@ -159,10 +160,14 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     @Override
     public void onOtherFavorTokens(int value, String name) {
         //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO SEGNALINI ALTRUI
+        otherFavorTokensMap.put(name, value);
+        if (gameBoardHandler != null) gameBoardHandler.onOtherFavorTokens(value, name);
+
     }
 
     @Override
     public void onOtherSchemeCards(WindowPatternCard window, String name) {
+        otherSchemeCardsMap.put(name, window);
         if (gameBoardHandler != null) gameBoardHandler.onOtherSchemeCards(window, name);
     }
 
@@ -256,6 +261,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         gameBoardHandler.setPublicCards(publicCardsList);
         gameBoardHandler.createLabelsMap();
         gameBoardHandler.initializeLabels(players);
+        gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
+        gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
     }
 
     public Boolean isMyTurn() {
