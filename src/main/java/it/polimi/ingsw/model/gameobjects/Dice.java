@@ -6,6 +6,10 @@ public class Dice implements Serializable{
     private Colors color;
     private int value;
 
+    /**
+     * Creates a new dice of a specified color
+     * @param color is the color of the new dice
+     */
     public Dice (Colors color){
         this.color = color;
     }
