@@ -95,7 +95,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard1Request(diceFromReserve, incrOrDecr, name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
 
@@ -113,7 +113,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard2or3Request(n,startX, startY, finalX, finalY, name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -129,7 +129,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard4Request(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -144,7 +144,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard5Request(diceFromReserve,roundFromTrack,diceInRound, name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -159,7 +159,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard6Request(diceChosen, name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -174,7 +174,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard7Request( name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -189,7 +189,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard8Request( name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
 
@@ -205,7 +205,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard9Request( diceFromReserve,finalX,finalY,name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
 
@@ -221,7 +221,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard10Request(diceFromReserve, name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -237,7 +237,7 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard11Request(diceFromReserve, name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
     }
@@ -254,14 +254,14 @@ public class ToolCommand {
         //SOCKET
         else {
             clientController.request(new UseToolCard12Request(roundFromTrack, diceInRound, startX1,startY1,finalX1,finalY1,startX2,startY2,finalX2,finalY2,name, single));
-            waitForToolEffectAppliedResponse();
+            return waitForToolEffectAppliedResponse();
         }
         return false;
     }
 
     private boolean waitForToolEffectAppliedResponse(){
         try {
-            Thread.sleep(500); //DA VERIFICARE
+            Thread.sleep(3000); //DA VERIFICARE
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
