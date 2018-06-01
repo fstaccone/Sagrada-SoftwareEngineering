@@ -356,6 +356,7 @@ public class GameBoardHandler implements Initializable {
         }
     }
 
+
     public void putImage(String url, int x, int y) {
         Image diceImg = new Image(url);
         ImageView diceView = new ImageView(diceImg);
@@ -406,10 +407,16 @@ public class GameBoardHandler implements Initializable {
         // cerca tra tutte le label quella con il nome "name" e gli setta la window
     }
 
+    /**
+     * It sets the names contained in players in the right label over scheme cards clockwise starting from the position
+     * of the player owner of this GUI. It maintains the playing order randomly chosen during the initialization of the match
+     *
+     * @param players is a list of Strings which are the names of the players invlolved in the match
+     */
     public void initializeLabels(List<String> players) {
         int myPosition = 0;
 
-        // find the position of the owner of this GUI
+        /* find the position of the owner of this GUI */
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).equals(username)) {
                 myPosition = i;
@@ -418,9 +425,15 @@ public class GameBoardHandler implements Initializable {
             }
         }
 
-        // assigns the name to the right label in order to show the correct flow clockwise
+        /* assigns the name to the right label in order to show the correct flow clockwise */
         for (int i = 1; i < players.size(); i++) {
             labels.get(i).setText(players.get((myPosition + i) % players.size()));
         }
     }
+
+    public void initializeActions() {
+        rmiGui.setDicePlaced(false);
+        // todo: aggiungere altre azioni da compiere
+    }
+
 }
