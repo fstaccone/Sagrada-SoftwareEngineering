@@ -3,6 +3,7 @@ package it.polimi.ingsw.socket;
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.LoginHandler;
 import it.polimi.ingsw.SocketCli;
+import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.socket.requests.Request;
 import it.polimi.ingsw.socket.responses.*;
 
@@ -20,6 +21,8 @@ public class ClientController implements ResponseHandler {
     private ObjectOutputStream out;
     private LoginHandler loginHandler;
     private SocketCli socketCli;
+    private Colors diceColor;
+
 
     public ClientController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler) {
         this.in = in;
@@ -75,6 +78,11 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(NameAlreadyTakenResponse response) {
         this.nameStatus = response.status;
+    }
+
+    @Override
+    public void handle(DiceColorResponse response) {
+        this.diceColor = response.diceColor;
     }
 
     @Override
@@ -275,6 +283,10 @@ public class ClientController implements ResponseHandler {
 
     public ObjectOutputStream getOut() {
         return out;
+    }
+
+    public Colors getDiceColor() {
+        return diceColor;
     }
 
 }
