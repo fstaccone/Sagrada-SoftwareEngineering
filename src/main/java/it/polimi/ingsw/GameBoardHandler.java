@@ -170,14 +170,15 @@ public class GameBoardHandler implements Initializable {
     private void createContext1() {
         useButton = new Button();
         useButton.setText("USA");
+        useButton.setLayoutX(95);
+        useButton.setLayoutY(400);
 
         imageView = new ImageView();
-        imageView.setStyle("-fx-background-color: white");
-        imageView.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));
+        imageView.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
-        imageView.setLayoutX(50);
-        imageView.setLayoutY(350);
+        imageView.setLayoutX(70);
+        imageView.setLayoutY(300);
 
         plus = new Button();
         plus.setText("+");
@@ -726,6 +727,7 @@ public class GameBoardHandler implements Initializable {
                     imgView.setFitWidth(58);
                     imgView.setFitHeight(55);
                     imgView.setOnMouseClicked(windowPatternCardSlotSelected);
+                    setupGestureSource(imgView);
                     int finalI = i;
                     int finalJ = j;
                     Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));

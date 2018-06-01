@@ -1,5 +1,5 @@
 #gameBoard{
-    -fx-background-color: steelblue;
+    -fx-background-image: url("sagrada-background.jpg");
     -fx-background-size: cover;
 }
 
