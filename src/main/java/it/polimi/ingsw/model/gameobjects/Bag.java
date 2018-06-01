@@ -12,7 +12,6 @@ public class Bag {
         dices = new ArrayList<>();
         for (int j = 0; j < Colors.values().length-1; j++) { //lenght-1 because of NONE color
             for (int i = 0; i < num; i++) {
-                //System.out.println(Colors.values()[j] + " dice put into bag.");
                 Dice dice = new Dice(Colors.values()[j]);
                 dices.add(dice);
             }
@@ -49,16 +48,4 @@ public class Bag {
     public void putDiceInBag(Dice dice){
         dices.add(dice);
     }
-
-    /*public static void main(String args[]) {
-        Bag bag = new Bag(2);
-        System.out.println(bag.getAllDices().toString());//Just to check constructor behavior
-
-        List<Dice> pescata = bag.pickDices(4);
-        System.out.println(pescata.toString());
-
-        Dice ex = new Dice(Colors.BLUE);
-        bag.putDiceInBag(ex);
-        System.out.println("Sacchetto aggiornato :"+bag.getAllDices().toString());
-    }*/
 }
