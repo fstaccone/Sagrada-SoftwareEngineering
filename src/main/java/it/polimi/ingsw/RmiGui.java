@@ -39,6 +39,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     public boolean isDicePlaced() { return dicePlaced; }
 
+    public List<String> getToolCardsList() { return toolCardsList; }
+
     public void setDicePlaced(boolean dicePlaced) { this.dicePlaced = dicePlaced; }
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller) throws RemoteException {

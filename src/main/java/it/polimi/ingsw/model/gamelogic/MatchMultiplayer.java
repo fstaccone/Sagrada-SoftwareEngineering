@@ -576,10 +576,11 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     public boolean useToolCard7(String name) {
         if (!isToolAction()) {
+            System.out.println("MM579");
             boolean result;
             result = getBoard().findAndUseToolCard(7, getPlayer(name), this);
-            tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
+            tokensToBeUpdated(result, name);
             setToolAction(result);
             return result;
         } else {

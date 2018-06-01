@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
 
-import javax.tools.Tool;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,7 @@ public class Board {
     private RoundTrack roundTrack;
     private Map<Player, WindowPatternCard> windowPatternCardsMap; // Viene creata una mappa che associa la carta al giocatore
 
-    public Board(Match match, List <ToolCard> pickedToolCards, List <PublicObjectiveCard> pickedPublicObjectiveCards) {
+    public Board(Match match, List<ToolCard> pickedToolCards, List<PublicObjectiveCard> pickedPublicObjectiveCards) {
         // To be managed later, even in Match
         this.pickedToolCards = pickedToolCards;
         this.pickedPublicObjectiveCards = pickedPublicObjectiveCards;
@@ -23,14 +22,16 @@ public class Board {
         this.roundTrack = new RoundTrack();
     }
 
-    public boolean findAndUseToolCard(int i, Player player, Match match){
-        for (ToolCard card:pickedToolCards){
-            if (Integer.parseInt(card.getToolID().replaceAll("tool",""))==i){
-                return card.useCard(player,match);
+    public boolean findAndUseToolCard(int i, Player player, Match match) {
+        for (ToolCard card : pickedToolCards) {
+            if (Integer.parseInt(card.getToolID().replaceAll("tool", "")) == i) {
+                System.out.println("BOARD28");
+                return card.useCard(player, match);
             }
         }
         return false;
     }
+
     public Reserve getReserve() {
         return reserve;
     }

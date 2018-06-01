@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class TurnManager implements Runnable {
 
+    private final static int NUM_ROUNDS = 5; // todo: settare a 10
     private Timer turnTimer;
     private int turnTime;
     private MatchMultiplayer match;
@@ -22,6 +23,7 @@ public class TurnManager implements Runnable {
     TurnManager(MatchMultiplayer match, int turnTime) {
         this.turnTime = turnTime;
         this.match = match;
+        expired = false;
     }
 
     @Override
@@ -200,6 +202,7 @@ public class TurnManager implements Runnable {
         notifyTurnEnd(player);
         if (!expired) {
             turnTimer.cancel();
+            expired = false;
         }
     }
 
@@ -272,14 +275,13 @@ public class TurnManager implements Runnable {
             }
         }
 
-        if (match.getCurrentRound() >= 5) {
+        // todo:
+        if (match.getCurrentRound() >= NUM_ROUNDS) {
             match.calculateFinalScore();
         } else {
             this.turnManager();
         }
     }
 
-    void setExpiredTrue() {
-        this.expired = true;
-    }
+    void setExpiredTrue() { this.expired = true; }
 }

@@ -261,7 +261,7 @@ public class ToolCommand {
 
     private boolean waitForToolEffectAppliedResponse(){
         try {
-            Thread.sleep(3000); //DA VERIFICARE
+            Thread.sleep(500); //DA VERIFICARE
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

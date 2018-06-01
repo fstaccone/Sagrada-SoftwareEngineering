@@ -8,12 +8,15 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -71,6 +74,8 @@ public class GameBoardHandler implements Initializable {
     @FXML
     ImageView pubObjCard3;
     @FXML
+    AnchorPane gameBoard;
+    @FXML
     Pane pane1;
     @FXML
     Pane pane2;
@@ -93,6 +98,15 @@ public class GameBoardHandler implements Initializable {
     @FXML
     Label label3;
 
+
+    private Button useButton;
+
+    /* Useful for context 1 */
+    private ImageView imageView;
+    private Button plus;
+    private Button minus;
+
+
     private RemoteController controller;
     private String username;
     private Stage window;
@@ -103,6 +117,7 @@ public class GameBoardHandler implements Initializable {
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private Map<Integer, Label> labels = new HashMap<>();
     private Map<Integer, Pane> favorTokensContainers = new HashMap<>();
+    private GridPane schemeCard = new GridPane();
 
     public void createLabelsMap() {
         labels.put(0, label0);
@@ -111,7 +126,7 @@ public class GameBoardHandler implements Initializable {
         labels.put(3, label3);
     }
 
-    public void createFavorTokensContainers(){
+    public void createFavorTokensContainers() {
         favorTokensContainers.put(0, myFavourTokensContainer);
         favorTokensContainers.put(1, favourTokensContainer1);
         favorTokensContainers.put(2, favourTokensContainer2);
@@ -136,13 +151,251 @@ public class GameBoardHandler implements Initializable {
         @Override
         public void handle(ActionEvent event) {
             if (rmiGui.isMyTurn()) {
+
+                System.out.println("---------------- " + event.getSource());
                 String s = event.getSource().toString().substring(14, 15);
+
+                System.out.println("Valore della toolcard " + s);
+
                 textArea.setText("You currently chose the toolcard " + s);
                 int tool = Integer.parseInt(s);
-                //USARE LA CARTA UTENSILE
+                String name = rmiGui.getToolCardsList().get(tool);
+                name = name.replaceAll("tool", "");
+                int number = Integer.parseInt(name);
+                createToolContext(number);
             }
         }
     };
+
+    private void createContext1() {
+        useButton = new Button();
+        useButton.setText("USA");
+
+        imageView = new ImageView();
+        imageView.setStyle("-fx-background-color: white");
+        imageView.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));
+        imageView.setFitWidth(70);
+        imageView.setFitHeight(70);
+        imageView.setLayoutX(50);
+        imageView.setLayoutY(350);
+
+        plus = new Button();
+        plus.setText("+");
+        plus.setLayoutX(80);
+        plus.setLayoutY(350);
+
+        minus = new Button();
+        minus.setLayoutX(110);
+        minus.setLayoutY(350);
+        minus.setText("-");
+
+        gameBoard.getChildren().add(imageView);
+        gameBoard.getChildren().add(plus);
+        gameBoard.getChildren().add(minus);
+        gameBoard.getChildren().add(useButton);
+
+        useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    if(controller.useToolCard1(0, "+", username, false)){
+                        plus = null;
+                        minus = null;
+                        imageView = null;
+                        useButton = null;
+                    } else {
+                        textArea.setText("Errore in utilizzo toolcard 1");
+                        plus.setVisible(false);
+                        minus.setVisible(false);
+                        imageView.setVisible(false);
+                        useButton.setVisible(false);
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        setupGestureSource(getImageViewFromGridPane(schemeCard, 0, 0));
+        setupGestureTarget(imageView);
+    }
+
+
+    private ImageView getImageViewFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return (ImageView) node;
+            }
+        }
+        return null;
+    }
+
+    private void setupGestureSource(ImageView source) {
+
+        source.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                source.setCursor(Cursor.HAND);
+            }
+        });
+
+        source.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+
+                Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+
+                ClipboardContent content = new ClipboardContent();
+
+                content.putImage(source.getImage());
+                db.setContent(content);
+
+                event.consume();
+            }
+        });
+    }
+
+    private void setupGestureTarget(ImageView target) {
+        target.setOnDragOver(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+
+                if (event.getDragboard().hasImage()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+                event.consume();
+            }
+        });
+
+        target.setOnDragDropped(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+
+                Dragboard db = event.getDragboard();
+
+                target.setImage(db.getImage());
+
+                event.consume();
+            }
+        });
+    }
+
+    private void createToolContext(int toolNumber) {
+        switch (toolNumber) {
+
+            case 1: {
+                createContext1();
+            }
+            break;
+
+            case 2: {
+                try {
+                    boolean result = controller.useToolCard8(username, false);
+                    createContext1();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 3: {
+                try {
+                    controller.useToolCard7(username, false);
+                    createContext1();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 4: {
+                try {
+                    controller.useToolCard7(username, false);
+                    createContext1();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 5: {
+                try {
+                    controller.useToolCard7(username, false);
+                    createContext1();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 6: {
+                try {
+                    controller.useToolCard7(username, false);
+                    createContext1();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 7: {
+                try {
+                    controller.useToolCard7(username, false);
+                    createContext1();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 8: {
+                try {
+                    controller.useToolCard8(username, false);
+                    System.out.println("CORRETTO - 8");
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 9: {
+                try {
+                    controller.useToolCard7(username, false);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 10: {
+                try {
+                    controller.useToolCard7(username, false);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 11: {
+                try {
+                    controller.useToolCard7(username, false);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            case 12: {
+                try {
+                    controller.useToolCard7(username, false);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+            default: {
+                System.out.println("Carta non presente!");
+            }
+        }
+    }
 
     private EventHandler<MouseEvent> windowPatternCardSlotSelected = new EventHandler<MouseEvent>() {
 
@@ -180,7 +433,8 @@ public class GameBoardHandler implements Initializable {
 
     }
 
-    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String username, RmiGui rmiGui) {
+    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String
+            username, RmiGui rmiGui) {
         diceChosen = 9;
         this.controller = controller;
         this.username = username;
@@ -205,15 +459,15 @@ public class GameBoardHandler implements Initializable {
                 BackgroundSize.DEFAULT);
         playerWindowPatternCard.setBackground(new Background(myBI));
         //Initializing the scheme card slots
-        GridPane schemeCard = new GridPane();
+
         schemeCard.setGridLinesVisible(false);
         schemeCard.setPrefSize(334, 261);
         schemeCard.setHgap(10);
         schemeCard.setVgap(14);
         schemeCard.setLayoutX(3);
         schemeCard.setLayoutY(5);
-        final int numCols = 5 ;
-        final int numRows = 4 ;
+        final int numCols = 5;
+        final int numRows = 4;
         for (int i = 0; i < numCols; i++) {
             ColumnConstraints colConst = new ColumnConstraints();
             colConst.setPercentWidth(100.0 / numCols);
@@ -224,18 +478,18 @@ public class GameBoardHandler implements Initializable {
             rowConst.setPercentHeight(100.0 / numRows);
             schemeCard.getRowConstraints().add(rowConst);
         }
-        Platform.runLater(()->playerWindowPatternCard.getChildren().add(schemeCard));
-        for(int i = 0; i < numRows; i++){
-            for(int j = 0; j < numCols; j++){
-                    String url = "File:./src/main/java/it/polimi/ingsw/resources/other/transparent.png";
-                    Image img = new Image(url);
-                    ImageView imgView = new ImageView(img);
-                    imgView.setFitWidth(58);
-                    imgView.setFitHeight(55);
-                    imgView.setOnMouseClicked(windowPatternCardSlotSelected);
-                    int finalI = i;
-                    int finalJ = j;
-                    Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
+        Platform.runLater(() -> playerWindowPatternCard.getChildren().add(schemeCard));
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                String url = "File:./src/main/java/it/polimi/ingsw/resources/other/transparent.png";
+                Image img = new Image(url);
+                ImageView imgView = new ImageView(img);
+                imgView.setFitWidth(58);
+                imgView.setFitHeight(55);
+                imgView.setOnMouseClicked(windowPatternCardSlotSelected);
+                int finalI = i;
+                int finalJ = j;
+                Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
             }
         }
     }
@@ -343,8 +597,9 @@ public class GameBoardHandler implements Initializable {
 
     public void setFavourTokens(int value) {
         if (myFavourTokensContainer.getChildren() != null) {
-            myFavourTokensContainer.getChildren().remove(0, myFavourTokensContainer.getChildren().size());
+            Platform.runLater(() -> myFavourTokensContainer.getChildren().remove(0, myFavourTokensContainer.getChildren().size()));
         }
+
         GridPane myFavourTokens = new GridPane();
         myFavourTokens.setPrefSize(40, 240);
         Image img = new Image(FAVOR_TOKEN_PATH);
@@ -355,13 +610,13 @@ public class GameBoardHandler implements Initializable {
             int finalI = i;
             Platform.runLater(() -> myFavourTokens.add(imgView, 0, finalI));
         }
-        myFavourTokensContainer.getChildren().add(myFavourTokens);
+        Platform.runLater(() -> myFavourTokensContainer.getChildren().add(myFavourTokens));
     }
 
     //TODO: le tre funzioni riguardanti i segnalini funzionano ma il codice è abbastanza sporco, si può condensare
-    public void setOtherFavorTokens(Pane pane, int value){
+    public void setOtherFavorTokens(Pane pane, int value) {
         if (pane.getChildren() != null) {
-            Platform.runLater(()->pane.getChildren().remove(0, pane.getChildren().size()));
+            Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
         GridPane myFavourTokens = new GridPane();
         myFavourTokens.setPrefSize(40, 240);
@@ -373,20 +628,20 @@ public class GameBoardHandler implements Initializable {
             int finalI = i;
             Platform.runLater(() -> myFavourTokens.add(imgView, 0, finalI));
         }
-        Platform.runLater(()->pane.getChildren().add(myFavourTokens));
+        Platform.runLater(() -> pane.getChildren().add(myFavourTokens));
     }
 
-    public void initializeFavorTokens(Map<String,Integer> map){
+    public void initializeFavorTokens(Map<String, Integer> map) {
         List<Label> labelsList = new ArrayList();
         labelsList.add(label1);
         labelsList.add(label2);
         labelsList.add(label3);
-        for(String name : map.keySet()){
-            for(Label label : labelsList ){
-                if( label.getText().equals(name)){
-                    int a = Integer.parseInt(label.getId().substring(5,6));
+        for (String name : map.keySet()) {
+            for (Label label : labelsList) {
+                if (label.getText().equals(name)) {
+                    int a = Integer.parseInt(label.getId().substring(5, 6));
                     System.out.println(a);
-                    switch (a){
+                    switch (a) {
                         case 1:
                             setOtherFavorTokens(favourTokensContainer1, map.get(name));
                             break;
@@ -403,16 +658,16 @@ public class GameBoardHandler implements Initializable {
         }
     }
 
-    public void onOtherFavorTokens(Integer value, String name){
+    public void onOtherFavorTokens(Integer value, String name) {
         List<Label> labelsList = new ArrayList();
         labelsList.add(label1);
         labelsList.add(label2);
         labelsList.add(label3);
-        for(Label label : labelsList ){
-            if( label.getText().equals(name)){
-                int a = Integer.parseInt(label.getId().substring(5,6));
+        for (Label label : labelsList) {
+            if (label.getText().equals(name)) {
+                int a = Integer.parseInt(label.getId().substring(5, 6));
                 System.out.println(a);
-                switch (a){
+                switch (a) {
                     case 1:
                         setOtherFavorTokens(favourTokensContainer1, value);
                         break;
@@ -430,13 +685,13 @@ public class GameBoardHandler implements Initializable {
 
     }
 
-    public void setMyWindow(WindowPatternCard window){
+    public void setMyWindow(WindowPatternCard window) {
         setMySchemeCard(playerWindowPatternCard, window);
     }
 
-    public void setMySchemeCard(Pane pane, WindowPatternCard window){
+    public void setMySchemeCard(Pane pane, WindowPatternCard window) {
         if (pane.getChildren() != null) {
-            Platform.runLater(()->pane.getChildren().remove(0, pane.getChildren().size()));
+            Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
         GridPane schemeCard = new GridPane();
         schemeCard.setGridLinesVisible(false);
@@ -445,8 +700,8 @@ public class GameBoardHandler implements Initializable {
         schemeCard.setVgap(14);
         schemeCard.setLayoutX(3);
         schemeCard.setLayoutY(5);
-        final int numCols = 5 ;
-        final int numRows = 4 ;
+        final int numCols = 5;
+        final int numRows = 4;
         for (int i = 0; i < numCols; i++) {
             ColumnConstraints colConst = new ColumnConstraints();
             colConst.setPercentWidth(100.0 / numCols);
@@ -457,13 +712,13 @@ public class GameBoardHandler implements Initializable {
             rowConst.setPercentHeight(100.0 / numRows);
             schemeCard.getRowConstraints().add(rowConst);
         }
-        Platform.runLater(()->pane.getChildren().add(schemeCard));
+        Platform.runLater(() -> pane.getChildren().add(schemeCard));
         Square[][] temp = window.getWindow();
-        for(int i = 0; i < window.getRows(); i++){
-            for(int j = 0; j < window.getColumns(); j++){
-                if(temp[i][j].occupiedSquare()){
+        for (int i = 0; i < window.getRows(); i++) {
+            for (int j = 0; j < window.getColumns(); j++) {
+                if (temp[i][j].occupiedSquare()) {
                     String dice = temp[i][j].getDice().toString().toLowerCase();
-                    dice = dice.substring(1, dice.length()-1).replace(" ", "_");
+                    dice = dice.substring(1, dice.length() - 1).replace(" ", "_");
                     System.out.println("Dado " + dice + "in posizione " + i + " " + j);
                     String url = DICE_IMAGES_PATH + dice + ".png";
                     Image img = new Image(url);
@@ -474,8 +729,7 @@ public class GameBoardHandler implements Initializable {
                     int finalI = i;
                     int finalJ = j;
                     Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
-                }
-                else{
+                } else {
                     String url = "File:./src/main/java/it/polimi/ingsw/resources/other/transparent.png";
                     Image img = new Image(url);
                     ImageView imgView = new ImageView(img);
@@ -491,16 +745,16 @@ public class GameBoardHandler implements Initializable {
         }
     }
 
-    public void setOtherSchemeCards(Pane pane, WindowPatternCard window){
-        String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'","");
-        String imgURL = WINDOW_PATTERN_CARDS_PATH + s +".png";
+    public void setOtherSchemeCards(Pane pane, WindowPatternCard window) {
+        String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+        String imgURL = WINDOW_PATTERN_CARDS_PATH + s + ".png";
         System.out.println(s);
         BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         pane.setBackground(new Background(myBI));
         if (pane.getChildren() != null) {
-            Platform.runLater(()->pane.getChildren().remove(0, pane.getChildren().size()));
+            Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
         GridPane schemeCard = new GridPane();
         schemeCard.setGridLinesVisible(false);
@@ -509,8 +763,8 @@ public class GameBoardHandler implements Initializable {
         schemeCard.setVgap(4);
         schemeCard.setLayoutX(3);
         schemeCard.setLayoutY(2);
-        final int numCols = 5 ;
-        final int numRows = 4 ;
+        final int numCols = 5;
+        final int numRows = 4;
         for (int i = 0; i < numCols; i++) {
             ColumnConstraints colConst = new ColumnConstraints();
             colConst.setPercentWidth(100.0 / numCols);
@@ -521,13 +775,13 @@ public class GameBoardHandler implements Initializable {
             rowConst.setPercentHeight(100.0 / numRows);
             schemeCard.getRowConstraints().add(rowConst);
         }
-        Platform.runLater(()->pane.getChildren().add(schemeCard));
+        Platform.runLater(() -> pane.getChildren().add(schemeCard));
         Square[][] temp = window.getWindow();
-        for(int i = 0; i < window.getRows(); i++){
-            for(int j = 0; j < window.getColumns(); j++){
-                if(temp[i][j].occupiedSquare()){
+        for (int i = 0; i < window.getRows(); i++) {
+            for (int j = 0; j < window.getColumns(); j++) {
+                if (temp[i][j].occupiedSquare()) {
                     String dice = temp[i][j].getDice().toString().toLowerCase();
-                    dice = dice.substring(1, dice.length()-1).replace(" ", "_");
+                    dice = dice.substring(1, dice.length() - 1).replace(" ", "_");
                     System.out.println("Dado " + dice + "in posizione " + i + " " + j);
                     String url = DICE_IMAGES_PATH + dice + ".png";
                     Image img = new Image(url);
@@ -545,17 +799,17 @@ public class GameBoardHandler implements Initializable {
 
     }
 
-    public void initializeSchemeCards(Map<String, WindowPatternCard> map){
+    public void initializeSchemeCards(Map<String, WindowPatternCard> map) {
         List<Label> labelsList = new ArrayList();
         labelsList.add(label1);
         labelsList.add(label2);
         labelsList.add(label3);
-        for(String name : map.keySet()){
-            for(Label label : labelsList ){
-                if( label.getText().equals(name)){
-                    int a = Integer.parseInt(label.getId().substring(5,6));
+        for (String name : map.keySet()) {
+            for (Label label : labelsList) {
+                if (label.getText().equals(name)) {
+                    int a = Integer.parseInt(label.getId().substring(5, 6));
                     System.out.println(a);
-                    switch (a){
+                    switch (a) {
                         case 1:
                             setOtherSchemeCards(pane1, map.get(name));
                             break;
@@ -580,11 +834,11 @@ public class GameBoardHandler implements Initializable {
         labelsList.add(label1);
         labelsList.add(label2);
         labelsList.add(label3);
-        for(Label label : labelsList ){
-            if( label.getText().equals(name)){
-                int a = Integer.parseInt(label.getId().substring(5,6));
+        for (Label label : labelsList) {
+            if (label.getText().equals(name)) {
+                int a = Integer.parseInt(label.getId().substring(5, 6));
                 System.out.println(a);
-                switch (a){
+                switch (a) {
                     case 1:
                         setOtherSchemeCards(pane1, window);
                         break;

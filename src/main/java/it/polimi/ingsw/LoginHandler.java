@@ -22,9 +22,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -33,6 +35,7 @@ import java.util.ResourceBundle;
 
 public class LoginHandler implements Initializable {
 
+    private final static String GAME_NAME = "Lobby";
     private transient Socket socket = null;
     private transient ClientController clientController;
     private transient ObjectInputStream in;
@@ -270,7 +273,6 @@ public class LoginHandler implements Initializable {
             System.out.println("A client can't get the controller's reference");
             e.printStackTrace();
         }
-
     }
 
     private void setupSocketConnection() throws IOException {

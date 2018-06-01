@@ -86,6 +86,8 @@ public class ToolCard{
 
     public boolean useCard(Player caller, Match match) {
 
+        System.out.println("in effetto");
+
         return effect.applyEffect(caller, match);
     }
 

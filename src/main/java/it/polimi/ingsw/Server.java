@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -37,10 +38,9 @@ public class Server {
 
         //start RMI registry
         try {
-           Registry registry = LocateRegistry.createRegistry(rmiPort);
-           registry.rebind(lobbyName,controller);
-           System.out.println("RMI server online on port " + rmiPort);
-
+            Registry registry = LocateRegistry.createRegistry(rmiPort);
+            registry.rebind(lobbyName,controller);
+            System.out.println("RMI server online on port " + rmiPort);
         } catch (RemoteException e) {
             System.out.println("Cannot start RMI registry");
         }

@@ -113,8 +113,8 @@ public class Cli {
         toolCardsList = new ArrayList<>();
         publicCardsList = new ArrayList<>();
         players = new ArrayList<>();
-        diceValueToBeSet=false;
-        tool11DiceToBePlaced=false;
+        diceValueToBeSet = false;
+        tool11DiceToBePlaced = false;
     }
 
     public void printWelcome() {
@@ -160,8 +160,7 @@ public class Cli {
             printer.println("\nNow it's your turn! Please insert a command:                            ~ ['h' for help]\n");
             tool11DiceToBePlaced = false;
             diceValueToBeSet = false;
-        }
-        else
+        } else
             printer.println("\nIt's no more your turn! (h for help)");
         printer.flush();
     }
@@ -338,7 +337,7 @@ public class Cli {
 
                             case "cd": {
 
-                                if (windowChosenCheck(windowChosen)&&!diceValueToBeSet&&!tool11DiceToBePlaced) {
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parametersCardinalityCheck(2)) {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null) {
@@ -360,7 +359,7 @@ public class Cli {
                             break;
 
                             case "cw": {
-                                if (!windowChosen &&!diceValueToBeSet&&!tool11DiceToBePlaced) {
+                                if (!windowChosen && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parametersCardinalityCheck(2)) {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null) {
@@ -409,7 +408,7 @@ public class Cli {
                             break;
 
                             case "pass": {
-                                if (windowChosenCheck(windowChosen)&&!diceValueToBeSet&&!tool11DiceToBePlaced) {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
                                     //RMI
                                     if (controller != null)
                                         controller.goThrough(username, single);
@@ -421,7 +420,7 @@ public class Cli {
                             break;
 
                             case "pd": {
-                                if (windowChosenCheck(windowChosen)&&!diceValueToBeSet&&!tool11DiceToBePlaced) {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
                                     if (diceChosen != 9) {
                                         if (parametersCardinalityCheck(3)) {
                                             toolNumber1 = tryParse(parts[1]);
@@ -482,8 +481,8 @@ public class Cli {
                             }
                             break;
 
-                            case "pd11":{
-                                if (windowChosenCheck(windowChosen)&&!diceValueToBeSet&&tool11DiceToBePlaced) {
+                            case "pd11": {
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && tool11DiceToBePlaced) {
                                     if (parametersCardinalityCheck(3)) {
                                         toolNumber1 = tryParse(parts[1]);
                                         toolNumber2 = tryParse(parts[2]);
@@ -525,7 +524,8 @@ public class Cli {
                                         }
                                     }
                                 }
-                            }break;
+                            }
+                            break;
 
                             case "private": {
                                 showPrivateCard();
@@ -627,7 +627,7 @@ public class Cli {
                             break;
 
                             case "usetool": {
-                                if (windowChosenCheck(windowChosen)&&!diceValueToBeSet&&!tool11DiceToBePlaced) {
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parts.length >= 2) {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null)
@@ -643,8 +643,8 @@ public class Cli {
                             }
                             break;
 
-                            case "valore":{
-                                if (windowChosenCheck(windowChosen)&&diceValueToBeSet) {
+                            case "valore": {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSet) {
 
                                     if (parts.length == 2) {
                                         toolNumber1 = tryParse(parts[1]);
@@ -652,15 +652,14 @@ public class Cli {
                                             //RMI
                                             if (controller != null)
                                                 controller.setDiceValue(toolNumber1, username, single);
-                                            //SOCKET
+                                                //SOCKET
                                             else
                                                 clientController.request(new SetDiceValueRequest(toolNumber1, username, single));
                                             printer.println("Valore selezionato correttamente! Ora usa il comando 'pd11' seguito dalla posizione in cui vuoi piazzare il dado! \n" + roundTrack);
                                             printer.flush();
                                             diceValueToBeSet = false; //todo:VA MESSO A FALSE ANCHE SE SI PASSA IL TURNO SENZA AVER COMPLETATO L'AZIONE
-                                            tool11DiceToBePlaced=true;
-                                        }
-                                        else {
+                                            tool11DiceToBePlaced = true;
+                                        } else {
                                             syntaxErrorPrint();
                                         }
                                         toolNumber1 = null;
@@ -1044,23 +1043,23 @@ public class Cli {
                                 toolNumber1 = tryParse(parts[2]);
                                 if (toolNumber1 != null) {
                                     if (toolCommand.command11(toolNumber1)) {
-                                        Colors color=null;
+                                        Colors color = null;
                                         if (controller != null) {
                                             try {
-                                               color=controller.askForDiceColor(username, single);
+                                                color = controller.askForDiceColor(username, single);
                                             } catch (RemoteException e) {
                                                 e.printStackTrace();
                                             }
                                         }
-                                            //SOCKET
+                                        //SOCKET
                                         else {
                                             clientController.request(new DiceColorRequest(username, single));
-                                            color=clientController.getDiceColor();
+                                            color = clientController.getDiceColor();
                                         }
 
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  "+color.toString()+" e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");
+                                        printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");
                                         printer.flush();
-                                        diceValueToBeSet=true;
+                                        diceValueToBeSet = true;
                                     } else {
                                         gameErrorPrint();
                                     }
@@ -1081,7 +1080,7 @@ public class Cli {
                                 toolNumber5 = tryParse(parts[6]);
                                 toolNumber6 = tryParse(parts[7]);
                                 if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null && toolNumber4 != null && toolNumber5 != null && toolNumber6 != null) {
-                                    if (toolCommand.command12(toolNumber1,toolNumber2,toolNumber3,toolNumber4,toolNumber5,toolNumber6,-1,-1,-1,-1)) {
+                                    if (toolCommand.command12(toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, -1, -1, -1, -1)) {
                                         printer.println("\nBen fatto! Il dado da te scelto è stato spostato correttamente!\n");
                                         printer.flush();
                                     } else {
@@ -1096,21 +1095,20 @@ public class Cli {
                                 toolNumber4 = null;
                                 toolNumber5 = null;
                                 toolNumber6 = null;
-                            }
-                            else if(parametersCardinalityCheck(12)){
+                            } else if (parametersCardinalityCheck(12)) {
                                 toolNumber1 = tryParse(parts[2]);
                                 toolNumber2 = tryParse(parts[3]);
                                 toolNumber3 = tryParse(parts[4]);
                                 toolNumber4 = tryParse(parts[5]);
-                                toolNumber5=tryParse(parts[6]);
-                                toolNumber6=tryParse(parts[7]);
+                                toolNumber5 = tryParse(parts[6]);
+                                toolNumber6 = tryParse(parts[7]);
                                 toolNumber7 = tryParse(parts[8]);
-                                toolNumber8=tryParse(parts[9]);
-                                toolNumber9=tryParse(parts[10]);
+                                toolNumber8 = tryParse(parts[9]);
+                                toolNumber9 = tryParse(parts[10]);
                                 toolNumber10 = tryParse(parts[11]);
 
-                                if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null && toolNumber4 != null  && toolNumber5 != null  && toolNumber6 != null && toolNumber7 != null && toolNumber8 != null && toolNumber9 != null && toolNumber10 != null) {
-                                    if (toolCommand.command12(toolNumber1,toolNumber2,toolNumber3,toolNumber4,toolNumber5,toolNumber6, toolNumber7,toolNumber8,toolNumber9,toolNumber10)) {
+                                if (toolNumber1 != null && toolNumber2 != null && toolNumber3 != null && toolNumber4 != null && toolNumber5 != null && toolNumber6 != null && toolNumber7 != null && toolNumber8 != null && toolNumber9 != null && toolNumber10 != null) {
+                                    if (toolCommand.command12(toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, toolNumber7, toolNumber8, toolNumber9, toolNumber10)) {
                                         printer.println("\nBen fatto! I dadi da te scelti sono stati spostati correttamente!\n");
                                         printer.flush();
                                     } else {
@@ -1146,7 +1144,27 @@ public class Cli {
             if (windowChosen)
                 return true;
             else {
-                printer.println("WARNING: You have to choose your window card before asking for commands that necessitate the match to actually be started!");
+                printer.println("\nATTENZIONE: devi scegliere la tua carta schema prima di fare altre mosse!");
+                printer.flush();
+                return false;
+            }
+        }
+
+        private boolean tool11DiceToBePlacedCheck(boolean tool11DiceToBePlaced) {
+            if (!tool11DiceToBePlaced)
+                return true;
+            else {
+                printer.println("\nATTENZIONE: devi piazzare il dado di cui hai appena settato il valore prima di fare altre mosse! Usa il comando 'pd11' seguito dalle coordinate.\n");
+                printer.flush();
+                return false;
+            }
+        }
+
+        private boolean diceValueToBeSetCheck(boolean diceValueToBeSet) {
+            if (!diceValueToBeSet)
+                return true;
+            else {
+                printer.println("\nATTENZIONE: devi scegliere il valore del dado che hai ricevuto in seguito all'utilizzo dalla toolcard 11! Usa il comando 'valore' seguito dal numero che vuoi settare.\n");
                 printer.flush();
                 return false;
             }
