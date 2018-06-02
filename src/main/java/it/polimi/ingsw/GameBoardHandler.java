@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -22,6 +23,8 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GameBoardHandler implements Initializable {
 
@@ -43,7 +46,7 @@ public class GameBoardHandler implements Initializable {
     Button tool2;
     @FXML
     Button passButton;
-    @FXML
+   /* @FXML
     Button reserveDice0;
     @FXML
     Button reserveDice1;
@@ -60,7 +63,7 @@ public class GameBoardHandler implements Initializable {
     @FXML
     Button reserveDice7;
     @FXML
-    Button reserveDice8;
+    Button reserveDice8;*/
     @FXML
     TextArea textArea;
     @FXML
@@ -75,6 +78,10 @@ public class GameBoardHandler implements Initializable {
     ImageView pubObjCard3;
     @FXML
     AnchorPane gameBoard;
+    @FXML
+    Pane roundTrack;
+    @FXML
+    Pane reserve;
     @FXML
     Pane pane1;
     @FXML
@@ -133,12 +140,13 @@ public class GameBoardHandler implements Initializable {
         favorTokensContainers.put(3, favourTokensContainer3);
     }
 
-    private EventHandler<ActionEvent> reserveDiceSelected = new EventHandler<ActionEvent>() {
+    private EventHandler<MouseEvent> reserveDiceSelected = new EventHandler<MouseEvent>() {
         @Override
-        public void handle(ActionEvent event) {
+        public void handle(MouseEvent event) {
             if (rmiGui.isMyTurn()) {
                 String s = event.getSource().toString();
-                s = s.substring(21, 22);
+                System.out.println(s);
+                s = s.substring(13, 14);
                 int i = Integer.parseInt(s);
                 s = rmiGui.getDicesList().get(i);
                 diceChosen = i;
@@ -523,7 +531,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void setReserve(List<String> dicesList) {
-        reserveDices = new ArrayList<>();
+        /*reserveDices = new ArrayList<>();
         reserveDices.addAll(dicesList);
         List<Button> reserveDices = new ArrayList<>(); // todo: come mai lo stesso nome dell'attributo?
         reserveDices.add(reserveDice0);
@@ -550,6 +558,50 @@ public class GameBoardHandler implements Initializable {
                 dice.setOnAction(reserveDiceSelected);
             }
             i++;
+        }*/
+        if (reserve.getChildren() != null) {
+            Platform.runLater(() -> reserve.getChildren().remove(0, reserve.getChildren().size()));
+        }
+        GridPane grid = new GridPane();
+        grid.setGridLinesVisible(false);
+        grid.setPrefSize(276, 261);
+        grid.setHgap(15);
+        grid.setVgap(15);
+        Insets insets = new Insets(4,4,4,4);
+        grid.setPadding(insets);
+        final int numCols = 3;
+        final int numRows = 3;
+        for (int i = 0; i < numCols; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / numCols);
+            grid.getColumnConstraints().add(colConst);
+        }
+        for (int i = 0; i < numRows; i++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / numRows);
+            grid.getRowConstraints().add(rowConst);
+        }
+        Platform.runLater(() -> reserve.getChildren().add(grid));
+        int row = 0;
+        int col = 0;
+        int id = 0;
+        for(String dice : dicesList ){
+            String url = DICE_IMAGES_PATH + dice + ".png";
+            Image diceImg = new Image(url);
+            ImageView diceView = new ImageView(diceImg);
+            diceView.setFitWidth(70);
+            diceView.setFitHeight(70);
+            diceView.setOnMouseClicked(reserveDiceSelected);
+            diceView.setId(Integer.toString(id));
+            id++;
+            int finalCol = col;
+            int finalRow = row;
+            Platform.runLater(() -> grid.add(diceView, finalCol, finalRow));
+            col++;
+            if(col==3){
+                col = 0;
+                row++;
+            }
         }
 
     }
@@ -884,6 +936,41 @@ public class GameBoardHandler implements Initializable {
     public void initializeActions() {
         rmiGui.setDicePlaced(false);
         // todo: aggiungere altre azioni da compiere
+    }
+
+    public void onRoundTrack(String track){
+        GridPane grid = new GridPane();
+        grid.setGridLinesVisible(false);
+        grid.setPrefSize(320, 320);
+        grid.setHgap(1);
+        grid.setVgap(1);
+        final int numCols = 10;
+        for (int i = 0; i < numCols; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / numCols);
+            grid.getColumnConstraints().add(colConst);
+        }
+        Platform.runLater(() -> roundTrack.getChildren().add(grid));
+        System.out.println(track);
+        Pattern p = Pattern.compile("\\[.*?\\]");
+        String[] parts = track.split("\n");
+        for(int i = 0; i < parts.length-1; i = i+2){
+            //String round = (parts[i].substring(6));
+            Matcher m = p.matcher(parts[i+1]);
+            int j = 0;
+            while (m.find()){
+                String dice = (m.group(0).substring(1, m.group(0).length()-1).toLowerCase().replaceAll(" ","_"));
+                String url = DICE_IMAGES_PATH + dice + ".png";
+                Image img = new Image(url);
+                ImageView imgView = new ImageView(img);
+                imgView.setFitWidth(30);
+                imgView.setFitHeight(30);
+                int finalI = i/2;
+                int finalJ = j;
+                Platform.runLater(() -> grid.add(imgView, finalI, finalJ));
+                j++;
+            }
+        }
     }
 
 }

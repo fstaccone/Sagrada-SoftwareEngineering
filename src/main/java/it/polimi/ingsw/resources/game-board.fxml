@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -13,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="gameBoard" fx:id="gameBoard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GameBoardHandler">
+<AnchorPane id="gameBoard" fx:id="gameBoard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GameBoardHandler">
     <children>
         <Pane id="playerCard" fx:id="playerWindowPatternCard" layoutX="530.0" layoutY="575.0" prefHeight="300.0" prefWidth="340.0">
             <!--<children>
@@ -59,7 +67,7 @@
                 </GridPane>
             </children> -->
         </Pane>
-        <Pane id="reserve" layoutX="562.0" layoutY="277.0" prefHeight="261.0" prefWidth="276.0">
+        <Pane id="reserve" fx:id="reserve" layoutX="562.0" layoutY="277.0" prefHeight="261.0" prefWidth="276.0">
             <children>
                 <GridPane hgap="15.0" prefHeight="261.0" prefWidth="276.0" vgap="15.0">
                     <columnConstraints>
@@ -106,12 +114,12 @@
                         <ImageView fx:id="pubObjCard3" fitHeight="160.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" styleClass="card" GridPane.columnIndex="2" />
                     </children>
                 </GridPane>
-                <Label layoutX="109.0" layoutY="4.0" prefHeight="21.0" prefWidth="200.0" text="CARTE OBIETTIVO PUBBLICO" textFill="WHITE">
+                <Label layoutX="109.0" layoutY="4.0" prefHeight="21.0" prefWidth="200.0" text="CARTE OBIETTIVO PUBBLICO" textFill="#0004ff">
                     <font>
                         <Font name="Algerian" size="15.0" />
                     </font>
                 </Label>
-                <Label layoutX="116.0" layoutY="185.0" prefHeight="18.0" prefWidth="200.0" text="CARTA OBIETTIVO PRIVATO" textFill="WHITE">
+                <Label layoutX="116.0" layoutY="185.0" prefHeight="18.0" prefWidth="200.0" text="CARTA OBIETTIVO PRIVATO" textFill="#0004ff">
                     <font>
                         <Font name="Algerian" size="15.0" />
                     </font>
@@ -141,13 +149,20 @@
         <Pane fx:id="pane2" layoutX="590.0" layoutY="20.0" prefHeight="192.0" prefWidth="220.0" />
         <Pane fx:id="pane3" layoutX="1019.0" layoutY="244.0" prefHeight="192.0" prefWidth="220.0" />
         <Pane fx:id="myFavourTokensContainer" layoutX="882.0" layoutY="605.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
-        <Label fx:id="label1" layoutX="412.0" layoutY="389.0" prefHeight="21.0" prefWidth="133.0" textAlignment="CENTER" textFill="WHITE" />
-        <Label fx:id="label2" layoutX="835.0" layoutY="26.0" prefHeight="21.0" prefWidth="133.0" textAlignment="CENTER" textFill="WHITE" />
-        <Label fx:id="label3" layoutX="1057.0" layoutY="212.0" prefHeight="21.0" prefWidth="125.0" textAlignment="CENTER" textFill="WHITE" />
-        <Label fx:id="label0" layoutX="642.0" layoutY="548.0" prefHeight="21.0" prefWidth="116.0" textAlignment="CENTER" textFill="WHITE" />
+        <Label fx:id="label1" layoutX="412.0" layoutY="389.0" prefHeight="21.0" prefWidth="133.0" textAlignment="CENTER" textFill="#0004ff" />
+        <Label fx:id="label2" layoutX="835.0" layoutY="26.0" prefHeight="21.0" prefWidth="133.0" textAlignment="CENTER" textFill="#0004ff" />
+        <Label fx:id="label3" layoutX="1057.0" layoutY="212.0" prefHeight="21.0" prefWidth="125.0" textAlignment="CENTER" textFill="#0004ff" />
+        <Label fx:id="label0" layoutX="642.0" layoutY="548.0" prefHeight="21.0" prefWidth="116.0" textAlignment="CENTER" textFill="#0004ff" />
         <Pane fx:id="favourTokensContainer1" layoutX="131.0" layoutY="341.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
         <Pane fx:id="favourTokensContainer2" layoutX="542.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
         <Pane fx:id="favourTokensContainer3" layoutX="962.0" layoutY="233.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
+      <Pane fx:id="roundTrack" layoutX="85.0" layoutY="46.0" prefHeight="160.0" prefWidth="320.0" />
+      <Label layoutX="210.0" layoutY="10.0" prefHeight="21.0" prefWidth="105.0" text="ROUNDTRACK" textFill="#0004ff">
+         <font>
+            <Font name="Algerian" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="91.0" layoutY="26.0" prefHeight="21.0" prefWidth="356.0" text="1      2      3      4      5      6      7      8      9      10" />
     </children>
 
     <stylesheets>
