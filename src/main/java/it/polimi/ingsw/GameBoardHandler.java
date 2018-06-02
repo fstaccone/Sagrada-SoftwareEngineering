@@ -12,6 +12,10 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -19,9 +23,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.xml.soap.Text;
+import java.awt.*;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.List;
 
 public class GameBoardHandler implements Initializable {
 
@@ -32,7 +39,13 @@ public class GameBoardHandler implements Initializable {
     private static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
     private static final String WINDOW_PATTERN_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
 
+    private int startX;
+    private int startY;
+    TextField finalX;
+    TextField finalY;
 
+    @FXML
+    Button useButton;
     @FXML
     Pane playerWindowPatternCard;
     @FXML
@@ -98,8 +111,6 @@ public class GameBoardHandler implements Initializable {
     @FXML
     Label label3;
 
-
-    private Button useButton;
 
     /* Useful for context 1 */
     private ImageView imageView;
@@ -167,13 +178,11 @@ public class GameBoardHandler implements Initializable {
         }
     };
 
-    private void createContext1() {
-        useButton = new Button();
-        useButton.setText("USA");
-        useButton.setLayoutX(95);
-        useButton.setLayoutY(400);
 
+    private void createContext1() {
+        useButton.setVisible(true);
         imageView = new ImageView();
+        //DA SOSTITUIRE CON IMMAGINE BIANCA
         imageView.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
@@ -193,17 +202,16 @@ public class GameBoardHandler implements Initializable {
         gameBoard.getChildren().add(imageView);
         gameBoard.getChildren().add(plus);
         gameBoard.getChildren().add(minus);
-        gameBoard.getChildren().add(useButton);
 
         useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 try {
-                    if(controller.useToolCard1(0, "+", username, false)){
-                        plus = null;
-                        minus = null;
-                        imageView = null;
-                        useButton = null;
+                    if (controller.useToolCard1(0, "+", username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+                        plus.setVisible(false);
+                        minus.setVisible(false);
+                        imageView.setVisible(false);
+                        useButton.setVisible(false);
                     } else {
                         textArea.setText("Errore in utilizzo toolcard 1");
                         plus.setVisible(false);
@@ -217,21 +225,105 @@ public class GameBoardHandler implements Initializable {
 
             }
         });
-        setupGestureSource(getImageViewFromGridPane(schemeCard, 0, 0));
+        setupGestureTarget(imageView);
+    }
+
+    private void createContext2or3(int n) {
+        useButton.setVisible(true);
+        //DA SOSTITUIRE CON IMMAGINE BIANCA
+        imageView = new ImageView();
+        imageView.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
+        imageView.setFitWidth(70);
+        imageView.setFitHeight(70);
+        imageView.setLayoutX(70);
+        imageView.setLayoutY(300);
+
+        finalX = new TextField();
+        finalY = new TextField();
+        finalX.setMaxWidth(30);
+        finalY.setMaxWidth(30);
+        finalX.setLayoutX(140);
+        finalX.setLayoutY(300);
+        finalY.setLayoutX(170);
+        finalY.setLayoutY(300);
+
+        gameBoard.getChildren().add(imageView);
+        gameBoard.getChildren().add(finalX);
+        gameBoard.getChildren().add(finalY);
+
+        useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+
+                int finalCoordinateX = Integer.parseInt(finalX.getText());
+                int finalCoordinateY = Integer.parseInt(finalY.getText());
+
+                try {
+                    if (controller.useToolCard2or3(n, startX, startY, finalCoordinateX, finalCoordinateY, username, false)) {
+                        finalX.setVisible(false);
+                        finalY.setVisible(false);
+                        imageView.setVisible(false);
+                        useButton.setVisible(false);
+                    } else {
+                        textArea.setText("Errore in utilizzo toolcard " + n);
+                        finalX.setVisible(false);
+                        finalY.setVisible(false);
+                        imageView.setVisible(false);
+                        useButton.setVisible(false);
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        setupGestureTarget(imageView);
+
+    }
+
+    private void createContext7or8(int n) {
+        useButton.setVisible(true);
+
+        useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (n == 7) {
+                    try {
+
+                        if (controller.useToolCard7(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+
+                            useButton.setVisible(false);
+                        } else {
+                            textArea.setText("Errore in utilizzo toolcard 7");
+                            useButton.setVisible(false);
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        if (controller.useToolCard8(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+
+                            useButton.setVisible(false);
+                        } else {
+                            textArea.setText("Errore in utilizzo toolcard 8");
+                            useButton.setVisible(false);
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
         setupGestureTarget(imageView);
     }
 
 
-    private ImageView getImageViewFromGridPane(GridPane gridPane, int col, int row) {
-        for (Node node : gridPane.getChildren()) {
-            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                return (ImageView) node;
-            }
-        }
-        return null;
-    }
-
     private void setupGestureSource(ImageView source) {
+
+
 
         source.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
@@ -242,6 +334,10 @@ public class GameBoardHandler implements Initializable {
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
+
+                //todo:Valido solo se prendiamo da scheme card e non riserve, può essere gestito meglio anche per quanto riguarda source/target per assegnamento attributi;
+                startX = GridPane.getRowIndex(source);
+                startY = GridPane.getColumnIndex(source);
 
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
 
@@ -287,108 +383,67 @@ public class GameBoardHandler implements Initializable {
             break;
 
             case 2: {
-                try {
-                    boolean result = controller.useToolCard8(username, false);
-                    createContext1();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                createContext2or3(2);
             }
             break;
 
             case 3: {
-                try {
-                    controller.useToolCard7(username, false);
-                    createContext1();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                createContext2or3(3);
             }
             break;
 
             case 4: {
-                try {
-                    controller.useToolCard7(username, false);
-                    createContext1();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+
+                createContext1();
+
             }
             break;
 
             case 5: {
-                try {
-                    controller.useToolCard7(username, false);
-                    createContext1();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+
+                createContext1();
+
             }
             break;
 
             case 6: {
-                try {
-                    controller.useToolCard7(username, false);
-                    createContext1();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+
+                createContext1();
+
             }
             break;
 
             case 7: {
-                try {
-                    controller.useToolCard7(username, false);
-                    createContext1();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+
+                createContext7or8(7);
+
             }
             break;
 
             case 8: {
-                try {
-                    controller.useToolCard8(username, false);
-                    System.out.println("CORRETTO - 8");
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+
+                createContext7or8(8);
+
             }
             break;
 
             case 9: {
-                try {
-                    controller.useToolCard7(username, false);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                createContext1();
             }
             break;
 
             case 10: {
-                try {
-                    controller.useToolCard7(username, false);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                createContext1();
             }
             break;
 
             case 11: {
-                try {
-                    controller.useToolCard7(username, false);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                createContext1();
             }
             break;
 
             case 12: {
-                try {
-                    controller.useToolCard7(username, false);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                createContext1();
             }
             break;
 
@@ -440,6 +495,7 @@ public class GameBoardHandler implements Initializable {
         this.controller = controller;
         this.username = username;
         this.rmiGui = rmiGui;
+        useButton.setVisible(false);
         this.otherSchemeCardsMap = rmiGui.getOtherSchemeCardsMap();
         window = windowFromRmiGui;
         Platform.runLater(() -> {
@@ -641,7 +697,6 @@ public class GameBoardHandler implements Initializable {
             for (Label label : labelsList) {
                 if (label.getText().equals(name)) {
                     int a = Integer.parseInt(label.getId().substring(5, 6));
-                    System.out.println(a);
                     switch (a) {
                         case 1:
                             setOtherFavorTokens(favourTokensContainer1, map.get(name));
@@ -667,7 +722,7 @@ public class GameBoardHandler implements Initializable {
         for (Label label : labelsList) {
             if (label.getText().equals(name)) {
                 int a = Integer.parseInt(label.getId().substring(5, 6));
-                System.out.println(a);
+
                 switch (a) {
                     case 1:
                         setOtherFavorTokens(favourTokensContainer1, value);
@@ -727,7 +782,9 @@ public class GameBoardHandler implements Initializable {
                     imgView.setFitWidth(58);
                     imgView.setFitHeight(55);
                     imgView.setOnMouseClicked(windowPatternCardSlotSelected);
+                    //NB
                     setupGestureSource(imgView);
+
                     int finalI = i;
                     int finalJ = j;
                     Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
@@ -750,7 +807,6 @@ public class GameBoardHandler implements Initializable {
     public void setOtherSchemeCards(Pane pane, WindowPatternCard window) {
         String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
         String imgURL = WINDOW_PATTERN_CARDS_PATH + s + ".png";
-        System.out.println(s);
         BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
@@ -810,7 +866,6 @@ public class GameBoardHandler implements Initializable {
             for (Label label : labelsList) {
                 if (label.getText().equals(name)) {
                     int a = Integer.parseInt(label.getId().substring(5, 6));
-                    System.out.println(a);
                     switch (a) {
                         case 1:
                             setOtherSchemeCards(pane1, map.get(name));
@@ -839,7 +894,6 @@ public class GameBoardHandler implements Initializable {
         for (Label label : labelsList) {
             if (label.getText().equals(name)) {
                 int a = Integer.parseInt(label.getId().substring(5, 6));
-                System.out.println(a);
                 switch (a) {
                     case 1:
                         setOtherSchemeCards(pane1, window);
