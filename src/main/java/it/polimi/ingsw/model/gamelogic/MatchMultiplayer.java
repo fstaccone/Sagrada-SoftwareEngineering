@@ -555,6 +555,24 @@ public class MatchMultiplayer extends Match implements Runnable {
             tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
+            Response response = new RoundTrackResponse(board.getRoundTrack().toString());
+            for (PlayerMultiplayer player : players) {
+                    if (remoteObservers.get(player) != null) {
+                        try {
+                            remoteObservers.get(player).onRoundTrack(board.getRoundTrack().toString());
+                        } catch (RemoteException e) {
+                            lobby.disconnect(player.getName());
+                        }
+                    }
+                    if (socketObservers.get(player) != null) {
+                        try {
+                            socketObservers.get(player).writeObject(response);
+                            socketObservers.get(player).reset();
+                        } catch (IOException e) {
+                            lobby.disconnect(player.getName());
+                        }
+                    }
+                }
             return result;
         } else {
             return false;

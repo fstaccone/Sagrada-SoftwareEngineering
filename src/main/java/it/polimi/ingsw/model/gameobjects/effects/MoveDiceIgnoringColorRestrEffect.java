@@ -13,6 +13,7 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
     private int price;
 
     public MoveDiceIgnoringColorRestrEffect() {
+
         price = 1;
     }
 

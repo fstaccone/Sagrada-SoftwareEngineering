@@ -7,16 +7,21 @@ import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 
 import java.util.Scanner;
 
-public class IncrDecrDiceValueEffect implements Effect{
+public class IncrDecrDiceValueEffect implements Effect {
+
+    private int price;
 
     public IncrDecrDiceValueEffect() {
+        price = 1;
     }
 
     @Override
     public boolean applyEffect(Player player, Match match) {
+        PlayerMultiplayer p = (PlayerMultiplayer) player;
 
-            String plusOrMinus= player.getChoise();
-            if (player.getDice()< match.getBoard().getReserve().getDices().size()) {
+        String plusOrMinus = player.getChoise();
+        if (p.getNumFavorTokens() >= price) {
+            if (player.getDice() < match.getBoard().getReserve().getDices().size()) {
                 Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
                 if (dice != null) {//PROBABILMENTE INUTILE
                     int value = dice.getValue();
@@ -25,6 +30,8 @@ public class IncrDecrDiceValueEffect implements Effect{
                             if (value != 6) {
                                 value = value + 1;
                                 match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
+                                p.setNumFavorTokens(p.getNumFavorTokens() - price);
+                                price = 2;
                                 return true;
                             } else return false;
 
@@ -32,6 +39,8 @@ public class IncrDecrDiceValueEffect implements Effect{
                             if (value != 1) {
                                 value = value - 1;
                                 match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value);
+                                p.setNumFavorTokens(p.getNumFavorTokens() - price);
+                                price = 2;
                                 return true;
                             } else return false;
 
@@ -39,6 +48,8 @@ public class IncrDecrDiceValueEffect implements Effect{
                             return false;
                     }
                 } else return false;
-            }else return false;
+            } else return false;
         }
+        else return false;
     }
+}

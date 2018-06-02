@@ -154,7 +154,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onRoundTrack(String track) throws RemoteException {
+    public void onRoundTrack(String track) {
         if(gameBoardHandler!=null) gameBoardHandler.onRoundTrack(track);
     }
 

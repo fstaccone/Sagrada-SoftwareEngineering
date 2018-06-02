@@ -42,8 +42,9 @@ public class GameBoardHandler implements Initializable {
 
     private int startX;
     private int startY;
-    TextField finalX;
-    TextField finalY;
+    private TextField finalX;
+    private TextField finalY;
+    private int reserveIndexForTools;
 
     @FXML
     Button useButton;
@@ -213,7 +214,7 @@ public class GameBoardHandler implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 try {
-                    if (controller.useToolCard1(0, "+", username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+                    if (controller.useToolCard1(reserveIndexForTools, "+", username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI (il +)
                         plus.setVisible(false);
                         minus.setVisible(false);
                         imageView.setVisible(false);
@@ -340,10 +341,15 @@ public class GameBoardHandler implements Initializable {
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
-
+                // ci vuole un if (fromSchemeCard) else if (fromReserve) ecc.
                 //todo:Valido solo se prendiamo da scheme card e non riserve, può essere gestito meglio anche per quanto riguarda source/target per assegnamento attributi;
                 startX = GridPane.getRowIndex(source);
                 startY = GridPane.getColumnIndex(source);
+
+                //todo:Valido solo per riserva
+                //String s = event.getSource().toString();
+                //s = s.substring(13, 14);
+                //reserveIndexForTools=Integer.parseInt(s);
 
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
 
@@ -645,6 +651,9 @@ public class GameBoardHandler implements Initializable {
             ImageView diceView = new ImageView(diceImg);
             diceView.setFitWidth(70);
             diceView.setFitHeight(70);
+            //NB
+            setupGestureSource(diceView);
+
             diceView.setOnMouseClicked(reserveDiceSelected);
             diceView.setId(Integer.toString(id));
             id++;
@@ -1017,6 +1026,9 @@ public class GameBoardHandler implements Initializable {
                 ImageView imgView = new ImageView(img);
                 imgView.setFitWidth(30);
                 imgView.setFitHeight(30);
+                //NB
+                setupGestureSource(imgView);
+
                 int finalI = i/2;
                 int finalJ = j;
                 Platform.runLater(() -> grid.add(imgView, finalI, finalJ));
