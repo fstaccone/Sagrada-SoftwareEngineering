@@ -261,8 +261,8 @@ public class TurnManager implements Runnable {
     private void nextRound() throws RemoteException, InterruptedException {
         match.pushLeftDicesToRoundTrack();
         match.incrementRoundCounter();
-
-        Response response = new RoundTrackResponse(match.getBoard().getRoundTrack().toString());
+        
+        Response response1 = new RoundTrackResponse(match.getBoard().getRoundTrack().toString());
         for (PlayerMultiplayer player : match.getPlayers()) {
             if (rmiObserverNotify(player) != null)
                 try {
@@ -271,7 +271,20 @@ public class TurnManager implements Runnable {
                     match.getLobby().disconnect(player.getName());
                 }
             if (match.getSocketObservers().get(player) != null) {
-                socketObserverNotify(player, response);
+                socketObserverNotify(player, response1);
+            }
+        }
+
+        Response response2 = new ReserveResponse(match.getBoard().getReserve().toString());
+        for (PlayerMultiplayer player : match.getPlayers()) {
+            if (rmiObserverNotify(player) != null)
+                try {
+                    rmiObserverNotify(player).onReserve(match.getBoard().getReserve().toString());
+                } catch (RemoteException e) {
+                    match.getLobby().disconnect(player.getName());
+                }
+            if (match.getSocketObservers().get(player) != null) {
+                socketObserverNotify(player, response2);
             }
         }
 
