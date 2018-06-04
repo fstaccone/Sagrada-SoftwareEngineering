@@ -74,7 +74,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public boolean placeDiceTool11( int x, int y, String name, boolean isSingle) {
+    public boolean placeDiceTool11(int x, int y, String name, boolean isSingle) {
         if (isSingle) {
             lobby.getSingleplayerMatches().get(name).setDiceAction(true);
             // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
@@ -109,22 +109,22 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public void reconnect(String name){
+    public void reconnect(String name) {
         lobby.reconnect(name);
     }
 
     @Override
-    public Colors askForDiceColor(String name, boolean isSingle){
+    public Colors askForDiceColor(String name, boolean isSingle) {
         if (isSingle) {
             //DA FARE
         } else {
-             return lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag().getColor();
+            return lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag().getColor();
         }
         return null;
     }
 
     @Override
-    public void setDiceValue(int value, String name, boolean isSingle){
+    public void setDiceValue(int value, String name, boolean isSingle) {
         if (isSingle) {
             //DA FARE
         } else {
@@ -197,7 +197,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public boolean useToolCard8(String name, boolean isSingle){
+    public boolean useToolCard8(String name, boolean isSingle) {
         if (isSingle) {
             //DA FARE
         } else {
@@ -241,7 +241,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         if (isSingle) {
             //DA FARE
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard12(roundFromTrack, diceInRound, startX1,startY1,finalX1,finalY1,startX2,startY2,finalX2,finalY2,name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard12(roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
         }
         return false;
     }
@@ -357,7 +357,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(UseToolCard12Request request) {
-        boolean effectApplied = useToolCard12(request.roundFromTrack, request.diceInRound, request.startX1,request.startY1,request.finalX1,request.finalY1,request.startX2,request.startY2,request.finalX2,request.finalY2,request.name, request.isSingle);
+        boolean effectApplied = useToolCard12(request.roundFromTrack, request.diceInRound, request.startX1, request.startY1, request.finalX1, request.finalY1, request.startX2, request.startY2, request.finalX2, request.finalY2, request.name, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
@@ -368,7 +368,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public Response handle(ReconnectionRequest request){
+    public Response handle(ReconnectionRequest request) {
         lobby.getSocketObservers().put(request.username, socketHandlers.remove(0).getOut());
         reconnect(request.username);
         return null;
@@ -382,13 +382,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(DiceColorRequest request) {
-        Colors color=askForDiceColor(request.name, request.isSingle);
+        Colors color = askForDiceColor(request.name, request.isSingle);
         return new DiceColorResponse(color);
     }
 
     @Override
     public Response handle(SetDiceValueRequest request) {
-        setDiceValue(request.value,request.name,request.isSingle);
+        setDiceValue(request.value, request.name, request.isSingle);
         return null;
     }
 
@@ -400,11 +400,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     public void observeMatch(String username, MatchObserver observer, boolean reconnection) {
         lobby.observeMatchRemote(username, observer);
 
-        if(reconnection){
+        if (reconnection) {
             lobby.transferAllData(username);
         }
     }
 
-    public void addSocketHandler(SocketHandler socketHandler) { this.socketHandlers.add(socketHandler); }
+    public void addSocketHandler(SocketHandler socketHandler) {
+        this.socketHandlers.add(socketHandler);
+    }
 
 }

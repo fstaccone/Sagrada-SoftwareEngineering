@@ -133,7 +133,7 @@ public class Lobby {
                         }
                     }
 
-                    LastPlayerRoomResponse response2= new LastPlayerRoomResponse(name);
+                    LastPlayerRoomResponse response2 = new LastPlayerRoomResponse(name);
                     socketResponseToAll(response2);
 
                 } else {

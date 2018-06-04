@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.socket.ClientController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -56,7 +57,8 @@ public class ChooseCardHandler implements Initializable {
     private String url2;
     private String url3;
     private Stage window;
-    private RemoteController controller;
+    private RemoteController remoteController;
+    private ClientController clientController;
     private String username;
     private String imgURL;
 
@@ -79,7 +81,7 @@ public class ChooseCardHandler implements Initializable {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
-            controller.quitGame(username, false);
+            remoteController.quitGame(username, false);
             System.exit(0);
         }
     }
@@ -113,7 +115,7 @@ public class ChooseCardHandler implements Initializable {
                 default:
                     imgURL = null;
             }
-            controller.chooseWindow(username, choice, false);
+            remoteController.chooseWindow(username, choice, false);
         }
     }
 
@@ -138,8 +140,12 @@ public class ChooseCardHandler implements Initializable {
     }
 
     //Initializing
-    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String username) {
-        this.controller = controller;
+    public void initRemote(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController remoteController, ClientController clientController, String username) {
+        if (remoteController != null) {
+            this.remoteController = remoteController;
+        } else {
+            this.clientController = clientController;
+        }
         this.username = username;
         window = windowFromRmiGui;
         Platform.runLater(() -> {
@@ -231,4 +237,3 @@ public class ChooseCardHandler implements Initializable {
     }
 
 }
-

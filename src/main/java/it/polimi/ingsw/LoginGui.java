@@ -30,10 +30,11 @@ public class LoginGui extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
-                event.consume();
-                onClosing();
+            event.consume();
+            onClosing();
         });
     }
+
     private void onClosing() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi veramente uscire?", ButtonType.YES, ButtonType.NO);
         alert.setTitle("Uscita");

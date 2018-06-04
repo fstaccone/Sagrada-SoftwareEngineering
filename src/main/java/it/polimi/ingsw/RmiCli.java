@@ -3,7 +3,6 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
-import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -12,26 +11,28 @@ import java.util.Map;
 public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     private Cli cli;
-    private String username;
     private transient RemoteController controller;
     private boolean reconnection;
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
         super();
-        this.cli = new Cli(username, controller, null, single);
-        this.username = username;
+        cli = new Cli(username, controller, null, single);
         this.controller = controller;
         reconnection = false;
         cli.printWelcome();
     }
 
-    public void launch() throws RemoteException {
-        controller.observeMatch(username, this, reconnection);
+    public void launch() {
+        try {
+            controller.observeMatch(cli.getUsername(), this, reconnection);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void reconnect() throws RemoteException, InterruptedException {
         reconnection = true;
-        controller.reconnect(username);
+        controller.reconnect(cli.getUsername());
         launch();
     }
 
@@ -54,7 +55,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     public void onWindowChoise(List<String> windows) {
         cli.onWindowChoise(windows);
     }
-
 
     @Override
     public void onAfterWindowChoise() {
@@ -116,7 +116,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String,Integer> otherTokens, Map<String,WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
-        cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve,roundTrack,myTokens,mySchemeCard,otherTokens,otherSchemeCards, schemeCardChosen);
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
+        cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
     }
 }

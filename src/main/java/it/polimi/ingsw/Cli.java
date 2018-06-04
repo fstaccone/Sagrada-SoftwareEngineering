@@ -122,6 +122,10 @@ public class Cli {
         printer.flush();
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public void onMyFavorTokens(int value) {
         this.myFavorTokens = value;
     }

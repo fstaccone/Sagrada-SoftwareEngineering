@@ -1,8 +1,8 @@
 package it.polimi.ingsw;
 
 
-import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.SocketListener;
 import it.polimi.ingsw.socket.requests.AddPlayerRequest;
 import it.polimi.ingsw.socket.requests.CheckUsernameRequest;
@@ -22,11 +22,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -59,33 +57,24 @@ public class LoginHandler implements Initializable {
     private transient int socketPort = 1101;
 
     private transient Registry registry;
-    private transient RemoteController controller;
-    ;
+    private transient RemoteController remoteController;
 
     @FXML
     private transient TextField usernameInput;
-
     @FXML
     private transient TextField serverAddressInput;
-
     @FXML
     private transient CheckBox rmiCheckmark;
-
     @FXML
     private transient CheckBox socketCheckmark;
-
     @FXML
     private transient CheckBox cliCheckmark;
-
     @FXML
     private transient CheckBox guiCheckmark;
-
     @FXML
     private transient CheckBox modeCheckmark;
-
     @FXML
     private transient Button playButton;
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -129,11 +118,10 @@ public class LoginHandler implements Initializable {
 
         window = (Stage) playButton.getScene().getWindow();
 
-        if(isCli){
-            waitingRoomCli= new WaitingRoomCli(this,window,username,isRmi);
+        if (isCli) {
+            waitingRoomCli = new WaitingRoomCli(this, window, username, isRmi);
             connectionSetup(null);
-        }
-        else {
+        } else {
 
             FXMLLoader fx = new FXMLLoader();
             fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
@@ -167,7 +155,7 @@ public class LoginHandler implements Initializable {
         if (alert.getResult() == ButtonType.YES) {
             window.close();
             if (isRmi)
-                controller.removePlayer(this.username);
+                remoteController.removePlayer(this.username);
             else
                 clientController.request(new RemoveFromWaitingPlayersRequest(this.username));
             System.exit(1);
@@ -215,7 +203,7 @@ public class LoginHandler implements Initializable {
         // name is controlled in the model to be sure that it's unique
 
         if (isRmi)
-            status = controller.checkName(username);
+            status = remoteController.checkName(username);
         else {
             clientController.request(new CheckUsernameRequest(username));
             clientController.nextResponse().handleResponse(clientController);
@@ -233,21 +221,21 @@ public class LoginHandler implements Initializable {
             if (isRmi) {
                 if (isCli) {
                     Platform.runLater(() -> window.close());
-                    new RmiCli(username, controller, false).reconnect();
+                    new RmiCli(username, remoteController, false).reconnect();
                 } else {
-                    //new RmiGui(window, username, controller).reconnect(); POTREBBE ANDARE? TRASFORMA IMMEDIATAMENTE LA SCHERMATA DI ATTESA IN SCHERMATA DI GIOCO
+                    new RmiGui(window, username, remoteController, false).reconnect(); //POTREBBE ANDARE? TRASFORMA IMMEDIATAMENTE LA SCHERMATA DI ATTESA IN SCHERMATA DI GIOCO
                 }
             } else {
+                new Thread(new SocketListener(clientController)).start();
                 if (isCli) {
-                    new Thread(new SocketListener(clientController)).start();
                     new SocketCli(username, clientController, false).reconnect();
                 } else {
-                    // new SocketGUI
+                    new SocketGui(window, username, clientController, false);
                 }
             }
-        } else{
+        } else {
             // views' creation and input for the model to create the Player
-            if(isGui) {
+            if (isGui) {
                 window.setScene(waiting);
                 window.setTitle("Waiting room");
                 window.setResizable(false);
@@ -256,7 +244,6 @@ public class LoginHandler implements Initializable {
             if (isRmi) createClientRmi();
             else createClientSocket();
         }
-
     }
 
 
@@ -266,11 +253,11 @@ public class LoginHandler implements Initializable {
         registry = LocateRegistry.getRegistry(rmiRegistryPort);
 
         try {
-            this.controller = (RemoteController) registry.lookup("Lobby");
-            if(isCli)
-                waitingRoomCli.setController(controller);
+            this.remoteController = (RemoteController) registry.lookup("Lobby");
+            if (isCli)
+                waitingRoomCli.setController(remoteController);
         } catch (NotBoundException e) {
-            System.out.println("A client can't get the controller's reference");
+            System.out.println("A client can't get the remoteController's reference");
             e.printStackTrace();
         }
     }
@@ -282,7 +269,7 @@ public class LoginHandler implements Initializable {
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
             clientController = new ClientController(in, out, this);
-            if(isCli){
+            if (isCli) {
                 waitingRoomCli.setClientController(clientController);
             }
         } catch (SocketException e) {
@@ -290,13 +277,13 @@ public class LoginHandler implements Initializable {
         } finally { /*socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM*/}
     }
 
-    private void createClientRmi(){
+    private void createClientRmi() {
         // to create the link between this Client and the Player in the model
         if (isSingleplayer) {
             try {
-                controller.createMatch(this.username);
+                remoteController.createMatch(this.username);
                 if (isCli) {
-                    new RmiCli(username, controller, false).launch(); // false per il momento, per simulare match multiplayer
+                    new RmiCli(username, remoteController, false).launch(); // false per il momento, per simulare match multiplayer
                 } else {
                 }
             } catch (Exception e) {
@@ -305,13 +292,12 @@ public class LoginHandler implements Initializable {
             }
         } else {
             try {
-                if (isCli){
-                    controller.observeLobby(this.username, waitingRoomCli);
+                if (isCli) {
+                    remoteController.observeLobby(this.username, waitingRoomCli);
+                } else {
+                    remoteController.observeLobby(this.username, handler);
                 }
-                else {
-                    controller.observeLobby(this.username, handler);
-                }
-                controller.addPlayer(this.username);
+                remoteController.addPlayer(this.username);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Player " + this.username + " can't be added to a multiplayer match!");
@@ -343,16 +329,16 @@ public class LoginHandler implements Initializable {
         }
     }
 
-    public void onMatchStartedRmi()  {
+    public void onMatchStartedRmi() {
         if (isCli) {
             try {
-                new RmiCli(username, controller, false).launch();
+                new RmiCli(username, remoteController, false).launch();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                new RmiGui(window, username, controller).launch();
+                new RmiGui(window, username, remoteController, false).launch();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -361,9 +347,9 @@ public class LoginHandler implements Initializable {
 
     public void onMatchStartedSocket() {
         if (isCli) {
-            new SocketCli(username, clientController,false);
+            new SocketCli(username, clientController, false);
         } else {
-            //new SocketGui(username,controller).launch();
+            new SocketGui(window, username, clientController, false);
         }
     }
 

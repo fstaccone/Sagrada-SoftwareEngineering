@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.gameobjects.Square;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
+import it.polimi.ingsw.socket.ClientController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,22 +13,15 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
-
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,24 +56,6 @@ public class GameBoardHandler implements Initializable {
     Button tool2;
     @FXML
     Button passButton;
-   /* @FXML
-    Button reserveDice0;
-    @FXML
-    Button reserveDice1;
-    @FXML
-    Button reserveDice2;
-    @FXML
-    Button reserveDice3;
-    @FXML
-    Button reserveDice4;
-    @FXML
-    Button reserveDice5;
-    @FXML
-    Button reserveDice6;
-    @FXML
-    Button reserveDice7;
-    @FXML
-    Button reserveDice8;*/
     @FXML
     TextArea textArea;
     @FXML
@@ -129,10 +105,11 @@ public class GameBoardHandler implements Initializable {
     private Button minus;
 
 
-    private RemoteController controller;
+    private RemoteController remoteController;
+    private ClientController clientController;
     private String username;
     private Stage window;
-    private RmiGui rmiGui;
+    private Gui gui;
     private int diceChosen;
     private List<String> reserveDices;
     private Map<String, Integer> otherFavorTokensMap;
@@ -158,12 +135,12 @@ public class GameBoardHandler implements Initializable {
     private EventHandler<MouseEvent> reserveDiceSelected = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            if (rmiGui.isMyTurn()) {
+            if (gui.isMyTurn()) {
                 String s = event.getSource().toString();
                 System.out.println(s);
                 s = s.substring(13, 14);
                 int i = Integer.parseInt(s);
-                s = rmiGui.getDicesList().get(i);
+                s = gui.getDicesList().get(i);
                 diceChosen = i;
                 textArea.setText("Hai scelto il dado: " + s + " pos: " + i);
             }
@@ -173,7 +150,7 @@ public class GameBoardHandler implements Initializable {
     private EventHandler<ActionEvent> toolSelected = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            if (rmiGui.isMyTurn()) {
+            if (gui.isMyTurn()) {
 
                 System.out.println("---------------- " + event.getSource());
                 String s = event.getSource().toString().substring(14, 15);
@@ -182,7 +159,7 @@ public class GameBoardHandler implements Initializable {
 
                 textArea.setText("You currently chose the toolcard " + s);
                 int tool = Integer.parseInt(s);
-                String name = rmiGui.getToolCardsList().get(tool);
+                String name = gui.getToolCardsList().get(tool);
                 name = name.replaceAll("tool", "");
                 int number = Integer.parseInt(name);
                 createToolContext(number);
@@ -219,7 +196,7 @@ public class GameBoardHandler implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 try {
-                    if (controller.useToolCard1(reserveIndexForTools, "+", username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI (il +)
+                    if (remoteController.useToolCard1(reserveIndexForTools, "+", username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI (il +)
                         plus.setVisible(false);
                         minus.setVisible(false);
                         imageView1.setVisible(false);
@@ -272,7 +249,7 @@ public class GameBoardHandler implements Initializable {
                 int finalCoordinateY = Integer.parseInt(finalY.getText());
 
                 try {
-                    if (controller.useToolCard2or3(n, startXForTools, startYForTools, finalCoordinateX, finalCoordinateY, username, false)) {
+                    if (remoteController.useToolCard2or3(n, startXForTools, startYForTools, finalCoordinateX, finalCoordinateY, username, false)) {
                         finalX.setVisible(false);
                         finalY.setVisible(false);
                         imageView1.setVisible(false);
@@ -321,7 +298,7 @@ public class GameBoardHandler implements Initializable {
             public void handle(MouseEvent event) {
 
                 try {
-                    if (controller.useToolCard5(reserveIndexForTools,roundForTools,diceFromRoundForTools,username,false)) {
+                    if (remoteController.useToolCard5(reserveIndexForTools, roundForTools, diceFromRoundForTools, username, false)) {
 
                         imageView1.setVisible(false);
                         imageView2.setVisible(false);
@@ -351,7 +328,7 @@ public class GameBoardHandler implements Initializable {
                 if (n == 7) {
                     try {
 
-                        if (controller.useToolCard7(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+                        if (remoteController.useToolCard7(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
 
                             useButton.setVisible(false);
                         } else {
@@ -363,7 +340,7 @@ public class GameBoardHandler implements Initializable {
                     }
                 } else {
                     try {
-                        if (controller.useToolCard8(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+                        if (remoteController.useToolCard8(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
 
                             useButton.setVisible(false);
                         } else {
@@ -421,7 +398,7 @@ public class GameBoardHandler implements Initializable {
 
                 String s = event.getSource().toString();
                 s = s.substring(13, 14);
-                reserveIndexForTools=Integer.parseInt(s);
+                reserveIndexForTools = Integer.parseInt(s);
 
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
 
@@ -447,10 +424,10 @@ public class GameBoardHandler implements Initializable {
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
 
-                roundForTools = GridPane.getColumnIndex(source)+1;
+                roundForTools = GridPane.getColumnIndex(source) + 1;
                 diceFromRoundForTools = GridPane.getRowIndex(source);
 
-                System.out.println("round "+roundForTools +" dado"+ diceFromRoundForTools);
+                System.out.println("round " + roundForTools + " dado" + diceFromRoundForTools);
 
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
 
@@ -571,7 +548,7 @@ public class GameBoardHandler implements Initializable {
 
         @Override
         public void handle(MouseEvent event) {
-            if (rmiGui.isMyTurn()) {
+            if (gui.isMyTurn()) {
                 if (diceChosen != 9) {
                     ImageView slot = (ImageView) event.getSource();
                     Integer tempX = GridPane.getRowIndex(slot);
@@ -582,7 +559,7 @@ public class GameBoardHandler implements Initializable {
                     int coordinateY = tempY;
                     textArea.setText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
                     try {
-                        if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
+                        if (remoteController.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
                             textArea.setText("Ben fatto! Il dado scelto è stato piazzato correttamente.");
                             diceChosen = 9; //FIRST VALUE NEVER PRESENT IN THE RESERVE
                         } else {
@@ -603,25 +580,26 @@ public class GameBoardHandler implements Initializable {
 
     }
 
-    public void init(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController controller, String
-            username, RmiGui rmiGui) {
+    public void init(Scene scene, Gui gui) {
         diceChosen = 9;
-        this.controller = controller;
-        this.username = username;
-        this.rmiGui = rmiGui;
-        useButton.setVisible(false);
-        this.otherSchemeCardsMap = rmiGui.getOtherSchemeCardsMap();
-        window = windowFromRmiGui;
+        this.gui = gui;
+        username = gui.getUsername();
+        remoteController = gui.getRemoteController();
+        otherSchemeCardsMap = gui.getOtherSchemeCardsMap();
+        window = gui.getWindowStage();
+
         Platform.runLater(() -> {
-            window.setScene(sceneFromRmiGui);
+            window.setScene(scene);
             window.setTitle("GameBoard");
             window.setResizable(false);
             window.show();
         });
-        Platform.runLater(() -> label0.setText(username));
+
+        Platform.runLater(() -> label0.setText(username.toUpperCase()));
         label1.setText(" ");
         label2.setText(" ");
         label3.setText(" ");
+        useButton.setVisible(false);
     }
 
     public void setWindowPatternCardImg(String imgURL) {
@@ -729,7 +707,7 @@ public class GameBoardHandler implements Initializable {
         grid.setPrefSize(276, 261);
         grid.setHgap(15);
         grid.setVgap(15);
-        Insets insets = new Insets(4,4,4,4);
+        Insets insets = new Insets(4, 4, 4, 4);
         grid.setPadding(insets);
         final int numCols = 3;
         final int numRows = 3;
@@ -747,7 +725,7 @@ public class GameBoardHandler implements Initializable {
         int row = 0;
         int col = 0;
         int id = 0;
-        for(String dice : dicesList ){
+        for (String dice : dicesList) {
             String url = DICE_IMAGES_PATH + dice + ".png";
             Image diceImg = new Image(url);
             ImageView diceView = new ImageView(diceImg);
@@ -763,7 +741,7 @@ public class GameBoardHandler implements Initializable {
             int finalRow = row;
             Platform.runLater(() -> grid.add(diceView, finalCol, finalRow));
             col++;
-            if(col==3){
+            if (col == 3) {
                 col = 0;
                 row++;
             }
@@ -773,8 +751,8 @@ public class GameBoardHandler implements Initializable {
 
     @FXML
     public void onPassButtonClicked() throws RemoteException {
-        if (rmiGui.isMyTurn()) {
-            controller.goThrough(username, false);
+        if (gui.isMyTurn()) {
+            remoteController.goThrough(username, false);
         } else {
             textArea.setText("Non è il tuo turno!");
         }
@@ -794,7 +772,7 @@ public class GameBoardHandler implements Initializable {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
-            controller.quitGame(username, false);
+            remoteController.quitGame(username, false);
             System.exit(0);
         }
     }
@@ -1097,11 +1075,11 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void initializeActions() {
-        rmiGui.setDicePlaced(false);
+        gui.setDicePlaced(false);
         // todo: aggiungere altre azioni da compiere
     }
 
-    public void onRoundTrack(String track){
+    public void onRoundTrack(String track) {
         GridPane grid = new GridPane();
         grid.setGridLinesVisible(false);
         grid.setPrefSize(320, 320);
@@ -1117,19 +1095,19 @@ public class GameBoardHandler implements Initializable {
         System.out.println(track);
         Pattern p = Pattern.compile("\\[.*?\\]");
         String[] parts = track.split("\n");
-        for(int i = 0; i < parts.length-1; i = i+2){
+        for (int i = 0; i < parts.length - 1; i = i + 2) {
             //String round = (parts[i].substring(6));
-            Matcher m = p.matcher(parts[i+1]);
+            Matcher m = p.matcher(parts[i + 1]);
             int j = 0;
-            while (m.find()){
-                String dice = (m.group(0).substring(1, m.group(0).length()-1).toLowerCase().replaceAll(" ","_"));
+            while (m.find()) {
+                String dice = (m.group(0).substring(1, m.group(0).length() - 1).toLowerCase().replaceAll(" ", "_"));
                 String url = DICE_IMAGES_PATH + dice + ".png";
                 Image img = new Image(url);
                 ImageView imgView = new ImageView(img);
                 imgView.setFitWidth(30);
                 imgView.setFitHeight(30);
                 //NB
-                int finalX = i/2;
+                int finalX = i / 2;
                 int finalY = j;
                 setupRoundTrackSource(imgView);
 
