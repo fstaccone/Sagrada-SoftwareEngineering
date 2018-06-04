@@ -28,6 +28,8 @@
 #reserve{
     -fx-background-image: url("other/wood.png");
     -fx-background-size: cover;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
 }
 
 .card:hover {
