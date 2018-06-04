@@ -35,8 +35,8 @@ public class LoginGui extends Application {
         });
     }
     private void onClosing() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Exit");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi veramente uscire?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Uscita");
         alert.setHeaderText(null);
         alert.setResizable(false);
         alert.setGraphic(null);

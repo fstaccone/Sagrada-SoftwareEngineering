@@ -40,11 +40,15 @@ public class GameBoardHandler implements Initializable {
     private static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
     private static final String WINDOW_PATTERN_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
 
-    private int startX;
-    private int startY;
+    private int startXForTools;
+    private int startYForTools;
+    private int roundForTools;
+    private int diceFromRoundForTools;
+    private int reserveIndexForTools;
+
     private TextField finalX;
     private TextField finalY;
-    private int reserveIndexForTools;
+
 
     @FXML
     Button useButton;
@@ -118,8 +122,9 @@ public class GameBoardHandler implements Initializable {
     Label label3;
 
 
-    /* Useful for context 1 */
-    private ImageView imageView;
+    /* Useful for contexts */
+    private ImageView imageView1;
+    private ImageView imageView2;
     private Button plus;
     private Button minus;
 
@@ -188,13 +193,13 @@ public class GameBoardHandler implements Initializable {
 
     private void createContext1() {
         useButton.setVisible(true);
-        imageView = new ImageView();
+        imageView1 = new ImageView();
         //DA SOSTITUIRE CON IMMAGINE BIANCA
-        imageView.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
-        imageView.setFitWidth(70);
-        imageView.setFitHeight(70);
-        imageView.setLayoutX(70);
-        imageView.setLayoutY(300);
+        imageView1.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
+        imageView1.setFitWidth(70);
+        imageView1.setFitHeight(70);
+        imageView1.setLayoutX(70);
+        imageView1.setLayoutY(300);
 
         plus = new Button();
         plus.setText("+");
@@ -206,7 +211,7 @@ public class GameBoardHandler implements Initializable {
         minus.setLayoutY(350);
         minus.setText("-");
 
-        gameBoard.getChildren().add(imageView);
+        gameBoard.getChildren().add(imageView1);
         gameBoard.getChildren().add(plus);
         gameBoard.getChildren().add(minus);
 
@@ -217,13 +222,13 @@ public class GameBoardHandler implements Initializable {
                     if (controller.useToolCard1(reserveIndexForTools, "+", username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI (il +)
                         plus.setVisible(false);
                         minus.setVisible(false);
-                        imageView.setVisible(false);
+                        imageView1.setVisible(false);
                         useButton.setVisible(false);
                     } else {
                         textArea.setText("Errore in utilizzo toolcard 1");
                         plus.setVisible(false);
                         minus.setVisible(false);
-                        imageView.setVisible(false);
+                        imageView1.setVisible(false);
                         useButton.setVisible(false);
                     }
                 } catch (RemoteException e) {
@@ -232,18 +237,18 @@ public class GameBoardHandler implements Initializable {
 
             }
         });
-        setupGestureTarget(imageView);
+        setupGestureTarget(imageView1);
     }
 
     private void createContext2or3(int n) {
         useButton.setVisible(true);
         //DA SOSTITUIRE CON IMMAGINE BIANCA
-        imageView = new ImageView();
-        imageView.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
-        imageView.setFitWidth(70);
-        imageView.setFitHeight(70);
-        imageView.setLayoutX(70);
-        imageView.setLayoutY(300);
+        imageView1 = new ImageView();
+        imageView1.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
+        imageView1.setFitWidth(70);
+        imageView1.setFitHeight(70);
+        imageView1.setLayoutX(70);
+        imageView1.setLayoutY(300);
 
         finalX = new TextField();
         finalY = new TextField();
@@ -254,7 +259,7 @@ public class GameBoardHandler implements Initializable {
         finalY.setLayoutX(170);
         finalY.setLayoutY(300);
 
-        gameBoard.getChildren().add(imageView);
+        gameBoard.getChildren().add(imageView1);
         gameBoard.getChildren().add(finalX);
         gameBoard.getChildren().add(finalY);
 
@@ -267,16 +272,16 @@ public class GameBoardHandler implements Initializable {
                 int finalCoordinateY = Integer.parseInt(finalY.getText());
 
                 try {
-                    if (controller.useToolCard2or3(n, startX, startY, finalCoordinateX, finalCoordinateY, username, false)) {
+                    if (controller.useToolCard2or3(n, startXForTools, startYForTools, finalCoordinateX, finalCoordinateY, username, false)) {
                         finalX.setVisible(false);
                         finalY.setVisible(false);
-                        imageView.setVisible(false);
+                        imageView1.setVisible(false);
                         useButton.setVisible(false);
                     } else {
                         textArea.setText("Errore in utilizzo toolcard " + n);
                         finalX.setVisible(false);
                         finalY.setVisible(false);
-                        imageView.setVisible(false);
+                        imageView1.setVisible(false);
                         useButton.setVisible(false);
                     }
                 } catch (RemoteException e) {
@@ -285,8 +290,56 @@ public class GameBoardHandler implements Initializable {
 
             }
         });
-        setupGestureTarget(imageView);
+        setupGestureTarget(imageView1);
 
+    }
+
+    private void createContext5() {
+        useButton.setVisible(true);
+        //DA SOSTITUIRE CON IMMAGINE BIANCA
+        imageView1 = new ImageView();
+        imageView1.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
+        imageView1.setFitWidth(70);
+        imageView1.setFitHeight(70);
+        imageView1.setLayoutX(70);
+        imageView1.setLayoutY(300);
+
+        imageView2 = new ImageView();
+        imageView2.setImage(new Image(DICE_IMAGES_PATH + "1_green.png"));//SOLO UNA PROVA
+        imageView2.setFitWidth(70);
+        imageView2.setFitHeight(70);
+        imageView2.setLayoutX(70);
+        imageView2.setLayoutY(220);
+
+
+        gameBoard.getChildren().add(imageView1);
+        gameBoard.getChildren().add(imageView2);
+
+        useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+
+                try {
+                    if (controller.useToolCard5(reserveIndexForTools,roundForTools,diceFromRoundForTools,username,false)) {
+
+                        imageView1.setVisible(false);
+                        imageView2.setVisible(false);
+                        useButton.setVisible(false);
+                    } else {
+                        textArea.setText("Errore in utilizzo toolcard 5");
+                        imageView1.setVisible(false);
+                        imageView2.setVisible(false);
+                        useButton.setVisible(false);
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        setupGestureTarget(imageView1);
+        setupGestureTarget(imageView2);
     }
 
     private void createContext7or8(int n) {
@@ -324,13 +377,10 @@ public class GameBoardHandler implements Initializable {
 
             }
         });
-        setupGestureTarget(imageView);
     }
 
 
-    private void setupGestureSource(ImageView source) {
-
-
+    private void setupSchemeCardSource(ImageView source) {
 
         source.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
@@ -341,15 +391,66 @@ public class GameBoardHandler implements Initializable {
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
-                // ci vuole un if (fromSchemeCard) else if (fromReserve) ecc.
-                //todo:Valido solo se prendiamo da scheme card e non riserve, può essere gestito meglio anche per quanto riguarda source/target per assegnamento attributi;
-                startX = GridPane.getRowIndex(source);
-                startY = GridPane.getColumnIndex(source);
 
-                //todo:Valido solo per riserva
-                //String s = event.getSource().toString();
-                //s = s.substring(13, 14);
-                //reserveIndexForTools=Integer.parseInt(s);
+                startXForTools = GridPane.getRowIndex(source);
+                startYForTools = GridPane.getColumnIndex(source);
+
+                Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+
+                ClipboardContent content = new ClipboardContent();
+
+                content.putImage(source.getImage());
+                db.setContent(content);
+
+                event.consume();
+            }
+        });
+    }
+
+    private void setupReserveSource(ImageView source) {
+
+        source.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                source.setCursor(Cursor.HAND);
+            }
+        });
+
+        source.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+
+                String s = event.getSource().toString();
+                s = s.substring(13, 14);
+                reserveIndexForTools=Integer.parseInt(s);
+
+                Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+
+                ClipboardContent content = new ClipboardContent();
+
+                content.putImage(source.getImage());
+                db.setContent(content);
+
+                event.consume();
+            }
+        });
+    }
+
+    private void setupRoundTrackSource(ImageView source) {
+
+        source.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                source.setCursor(Cursor.HAND);
+            }
+        });
+
+        source.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+
+                roundForTools = GridPane.getColumnIndex(source)+1;
+                diceFromRoundForTools = GridPane.getRowIndex(source);
+
+                System.out.println("round "+roundForTools +" dado"+ diceFromRoundForTools);
 
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
 
@@ -380,6 +481,7 @@ public class GameBoardHandler implements Initializable {
                 Dragboard db = event.getDragboard();
 
                 target.setImage(db.getImage());
+
 
                 event.consume();
             }
@@ -413,7 +515,7 @@ public class GameBoardHandler implements Initializable {
 
             case 5: {
 
-                createContext1();
+                createContext5();
 
             }
             break;
@@ -652,7 +754,7 @@ public class GameBoardHandler implements Initializable {
             diceView.setFitWidth(70);
             diceView.setFitHeight(70);
             //NB
-            setupGestureSource(diceView);
+            setupReserveSource(diceView);
 
             diceView.setOnMouseClicked(reserveDiceSelected);
             diceView.setId(Integer.toString(id));
@@ -842,7 +944,7 @@ public class GameBoardHandler implements Initializable {
                     imgView.setFitHeight(55);
                     imgView.setOnMouseClicked(windowPatternCardSlotSelected);
                     //NB
-                    setupGestureSource(imgView);
+                    setupSchemeCardSource((imgView));
 
                     int finalI = i;
                     int finalJ = j;
@@ -1027,11 +1129,12 @@ public class GameBoardHandler implements Initializable {
                 imgView.setFitWidth(30);
                 imgView.setFitHeight(30);
                 //NB
-                setupGestureSource(imgView);
+                int finalX = i/2;
+                int finalY = j;
+                setupRoundTrackSource(imgView);
 
-                int finalI = i/2;
-                int finalJ = j;
-                Platform.runLater(() -> grid.add(imgView, finalI, finalJ));
+
+                Platform.runLater(() -> grid.add(imgView, finalX, finalY));
                 j++;
             }
         }
