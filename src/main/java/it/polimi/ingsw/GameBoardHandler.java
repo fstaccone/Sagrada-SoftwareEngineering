@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,6 +127,14 @@ public class GameBoardHandler implements Initializable {
     private Map<Integer, Label> labels = new HashMap<>();
     private Map<Integer, Pane> favorTokensContainers = new HashMap<>();
     private GridPane schemeCard = new GridPane();
+
+    private List<Label> labelsList = new ArrayList<>();
+
+    public void createOtherLabelsList() {
+        labelsList.add(label1);
+        labelsList.add(label2);
+        labelsList.add(label3);
+    }
 
     public void createLabelsMap() {
         labels.put(0, label0);
@@ -1111,10 +1120,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void initializeFavorTokens(Map<String, Integer> map) {
-        List<Label> labelsList = new ArrayList();
-        labelsList.add(label1);
-        labelsList.add(label2);
-        labelsList.add(label3);
+
         for (String name : map.keySet()) {
             for (Label label : labelsList) {
                 if (label.getText().equals(name)) {
@@ -1130,17 +1136,13 @@ public class GameBoardHandler implements Initializable {
                             setOtherFavorTokens(favourTokensContainer3, map.get(name));
                             break;
                     }
-
                 }
             }
         }
     }
 
     public void onOtherFavorTokens(Integer value, String name) {
-        List<Label> labelsList = new ArrayList();
-        labelsList.add(label1);
-        labelsList.add(label2);
-        labelsList.add(label3);
+
         for (Label label : labelsList) {
             if (label.getText().equals(name)) {
                 int a = Integer.parseInt(label.getId().substring(5, 6));
@@ -1159,8 +1161,6 @@ public class GameBoardHandler implements Initializable {
                 break;
             }
         }
-
-
     }
 
     public void setMyWindow(WindowPatternCard window) {
@@ -1280,10 +1280,6 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void initializeSchemeCards(Map<String, WindowPatternCard> map) {
-        List<Label> labelsList = new ArrayList();
-        labelsList.add(label1);
-        labelsList.add(label2);
-        labelsList.add(label3);
         for (String name : map.keySet()) {
             for (Label label : labelsList) {
                 if (label.getText().equals(name)) {
@@ -1307,10 +1303,7 @@ public class GameBoardHandler implements Initializable {
 
 
     public void onOtherSchemeCards(WindowPatternCard window, String name) {
-        List<Label> labelsList = new ArrayList();
-        labelsList.add(label1);
-        labelsList.add(label2);
-        labelsList.add(label3);
+
         for (Label label : labelsList) {
             if (label.getText().equals(name)) {
                 int a = Integer.parseInt(label.getId().substring(5, 6));
@@ -1337,20 +1330,32 @@ public class GameBoardHandler implements Initializable {
      * @param players is a list of Strings which are the names of the players invlolved in the match
      */
     public void initializeLabels(List<String> players) {
-        int myPosition = 0;
 
+        //FOR RMI CONNECTION
+        if (remoteController != null) {
+            setLabels(players);
+        }
+        //FOR SOCKET CONNECTION
+        else {
+            Platform.runLater(() -> {
+                setLabels(players);
+            });
+        }
+    }
+
+    private void setLabels(List<String> players) {
+        AtomicInteger myPosition = new AtomicInteger();
         /* find the position of the owner of this GUI */
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).equals(username)) {
-                myPosition = i;
+                myPosition.set(i);
                 label0.setText(players.get(i));
                 break;
             }
         }
-
         /* assigns the name to the right label in order to show the correct flow clockwise */
         for (int i = 1; i < players.size(); i++) {
-             labels.get(i).setText(players.get((myPosition + i) % players.size()));
+            labels.get(i).setText(players.get((myPosition.get() + i) % players.size()));
         }
     }
 
@@ -1420,4 +1425,20 @@ public class GameBoardHandler implements Initializable {
         }
     }
 
+
+    public void showRanking(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < rankingNames.size(); i++) {
+            s.append("- " + rankingNames.get(i) + "\t" + rankingValues.get(i) + "\n");
+        }
+
+        if (winner.equals(username)) {
+            s.append("\nComplimenti! Sei il vincitore.");
+            Platform.runLater(() -> textArea.setText(s.toString()));
+        } else {
+            s.append("\n" + winner.toUpperCase() + " è il vincitore!");
+            Platform.runLater(() -> textArea.setText(s.toString()));
+        }
+    }
 }

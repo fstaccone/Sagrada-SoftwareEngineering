@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class TurnManager implements Runnable {
 
-    private final static int NUM_ROUNDS = 5; // todo: settare a 10
+    private final static int NUM_ROUNDS = 10;
     private Timer turnTimer;
     private int turnTime;
     private MatchMultiplayer match;
@@ -288,9 +288,9 @@ public class TurnManager implements Runnable {
             }
         }
 
-        // todo:
         if (match.getCurrentRound() >= NUM_ROUNDS) {
             match.calculateFinalScore();
+            // todo: Notifica a tutti
         } else {
             this.turnManager();
         }

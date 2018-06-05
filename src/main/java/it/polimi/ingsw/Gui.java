@@ -79,7 +79,6 @@ public class Gui {
     }
 
 
-
     public List<String> getPlayers() {
         return players;
     }
@@ -161,7 +160,9 @@ public class Gui {
     }
 
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
-
+        if (gameBoardHandler != null) {
+            gameBoardHandler.showRanking(winner, rankingNames, rankingValues);
+        }
     }
 
     public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
@@ -241,8 +242,11 @@ public class Gui {
 
     public void onPlayerExit(String name) {
         System.out.println("On player exit");
-        if (gameBoardHandler != null) gameBoardHandler.setTextArea("Player " + name + " has left the game!");
-        else chooseCardHandler.setTextArea("Player " + name + " has left the game!");
+        if (gameBoardHandler != null) {
+            gameBoardHandler.setTextArea("Player " + name + " has left the game!");
+        } else {
+            chooseCardHandler.setTextArea("Player " + name + " has left the game!");
+        }
     }
 
     public void onWindowChoise(List<String> windows) {
@@ -276,6 +280,7 @@ public class Gui {
         gameBoardHandler.setPrivateCard(privateCard);
         gameBoardHandler.setPublicCards(publicCardsList);
         gameBoardHandler.createLabelsMap();
+        gameBoardHandler.createOtherLabelsList();
         gameBoardHandler.initializeLabels(players);
         gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
         gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
