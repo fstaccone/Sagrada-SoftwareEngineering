@@ -2,6 +2,8 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
+import it.polimi.ingsw.socket.requests.QuitGameRequest;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -81,7 +83,10 @@ public class ChooseCardHandler implements Initializable {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
-            remoteController.quitGame(username, false);
+            if(remoteController!=null)
+                remoteController.quitGame(username, false);
+            else
+                clientController.request(new QuitGameRequest(username,false));
             System.exit(0);
         }
     }
@@ -97,7 +102,7 @@ public class ChooseCardHandler implements Initializable {
             alert.showAndWait();
         } else {
             Stage window = (Stage) play.getScene().getWindow();
-            window.close();
+            //window.close();
             //Getting the image URL of the chosen window pattern card
             switch (choice) {
                 case 0:
@@ -115,7 +120,10 @@ public class ChooseCardHandler implements Initializable {
                 default:
                     imgURL = null;
             }
-            remoteController.chooseWindow(username, choice, false);
+            if (remoteController != null)
+                remoteController.chooseWindow(username, choice, false);
+            else
+                clientController.request(new ChooseWindowRequest(username, choice, false));
         }
     }
 
@@ -140,16 +148,13 @@ public class ChooseCardHandler implements Initializable {
     }
 
     //Initializing
-    public void initRemote(Stage windowFromRmiGui, Scene sceneFromRmiGui, RemoteController remoteController, ClientController clientController, String username) {
-        if (remoteController != null) {
-            this.remoteController = remoteController;
-        } else {
-            this.clientController = clientController;
-        }
+    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, ClientController clientController, String username) {
+        this.remoteController = remoteController;
+        this.clientController = clientController;
         this.username = username;
-        window = windowFromRmiGui;
+        window = windowFromGui;
         Platform.runLater(() -> {
-            window.setScene(sceneFromRmiGui);
+            window.setScene(sceneFromGui);
             window.setTitle("Game");
             window.setResizable(false);
             window.show();

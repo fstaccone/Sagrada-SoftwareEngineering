@@ -228,8 +228,10 @@ public class WindowPatternCard implements Serializable{
      * @param column is the column of the chosen position
      */
     public void putDiceIgnoringValueConstraint(Dice d, int row, int column){
-        if(checkPos(d, row, column))
+        if(checkPos(d, row, column)) {
+            System.out.println("ORA LO PIAZZO");
             window[row][column].putDiceIgnoringValueConstraint(d);
+        }
     }
 
     /**
@@ -239,8 +241,10 @@ public class WindowPatternCard implements Serializable{
      * @param column is the column of the chosen position
      */
     public void putDiceIgnoringColorConstraint(Dice d, int row, int column){
-        if(checkPos(d, row, column))
+        if(checkPos(d, row, column)) {
+            System.out.println("ORA LO PIAZZO");
             window[row][column].putDiceIgnoringColorConstraint(d);
+        }
     }
     /**
      * places a new dice d without checking any constraints of the chosen position
