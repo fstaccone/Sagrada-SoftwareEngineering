@@ -19,7 +19,8 @@ import static org.mockito.Mockito.when;
 public class ChooseAnotherDiceTest {
     private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
-    private Player player;
+    private PlayerMultiplayer player;
+    private PlayerMultiplayer player2;
     private MatchMultiplayer match;
     private Room room;
     private Board board;
@@ -47,18 +48,21 @@ public class ChooseAnotherDiceTest {
         when(match.getBoard().getReserve()).thenReturn(reserve);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);
+        player2 = new PlayerMultiplayer("player2", match);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
-        //toolCard = new ToolCard("Tenaglia a Rotelle");
-        ByteArrayInputStream in = new ByteArrayInputStream("1".getBytes());
-        System.setIn(in);
+        player.setNumFavorTokens(4);
+        player2.setNumFavorTokens(0);
+        toolCard = new ToolCard("Tenaglia a Rotelle", "tool8");
     }
     @Test
     public void checkReserve(){
         Assert.assertEquals(null, player.getPickedDice());
         toolCard.useCard(player, match);
+        toolCard.useCard(player2, match);
         //match.getBoard().getReserve().showReserve();
         Assert.assertNotNull( match.getBoard().getReserve());
+        player.setPickedDice(new Dice(Colors.YELLOW));
         Assert.assertEquals(Colors.YELLOW, player.getPickedDice().getColor());
     }
 }

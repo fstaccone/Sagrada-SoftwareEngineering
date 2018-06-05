@@ -13,6 +13,12 @@ public class Board {
     private RoundTrack roundTrack;
     private Map<Player, WindowPatternCard> windowPatternCardsMap; // Viene creata una mappa che associa la carta al giocatore
 
+    /**
+     * Creates the board where the gameobjects will be placed
+     * @param match is the current match
+     * @param pickedToolCards are the toolcards for the current match
+     * @param pickedPublicObjectiveCards are the public objective cards for the current match
+     */
     public Board(Match match, List<ToolCard> pickedToolCards, List<PublicObjectiveCard> pickedPublicObjectiveCards) {
         // To be managed later, even in Match
         this.pickedToolCards = pickedToolCards;
@@ -22,6 +28,13 @@ public class Board {
         this.roundTrack = new RoundTrack();
     }
 
+    /**
+     * allows a player to use a toolcard
+     * @param i is tool card number
+     * @param player is the player that wants to use the toolcard
+     * @param match is the current match
+     * @return true is the toolcard is available and used by the player, false otherwise.
+     */
     public boolean findAndUseToolCard(int i, Player player, Match match) {
         for (ToolCard card : pickedToolCards) {
             if (Integer.parseInt(card.getToolID().replaceAll("tool", "")) == i) {

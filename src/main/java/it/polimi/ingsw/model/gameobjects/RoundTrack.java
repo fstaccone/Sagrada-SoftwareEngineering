@@ -9,14 +9,22 @@ public class RoundTrack {
     //rounds is a list of (list of dices) since you may have more than one dice in the same position
     private List<List<Dice>> rounds;
 
+    /**
+     * It makes an ArrayList of 10 (constant declared in Match) Lists of Dices
+     */
     public RoundTrack() {
-        // It makes an ArrayList of 10 (constant declared in Match) Lists of Dices
         rounds = new LinkedList<>();
         for (int i = 0; i < Match.getNumberOfRounds(); i++) {
             rounds.add(new ArrayList<>());
         }
     }
 
+    /**
+     * At the end of each round, the remaining dices in the reserve are put in the round track, in the position
+     * corresponding to the round
+     * @param dicesToPut is the list of dices to place in the round track
+     * @param position is the position corresponding to the round that has just ended
+     */
     public void putDices(List<Dice> dicesToPut, int position) {
         rounds.set(position, dicesToPut);
     }
@@ -52,6 +60,11 @@ public class RoundTrack {
         }
     }
 
+    /**
+     *
+     * @return the dice from the round track chosen by the player
+     */
+   // todo: va modificata?
     public Dice getDice() {
         showRoundTrack();
         System.out.println("Choose the number of the list from which you want to get a dice");
@@ -83,6 +96,13 @@ public class RoundTrack {
         return dice.getColor();
     }
 
+    /**
+     * Switches a dice of the round track with the player's picked dice
+     * @param diceToSwitch is the player's picked dice to place in the round track
+     * @param chosenRound is the round slot in the round track from which the player wants to take a dice
+     * @param chosenDiceFromRound is the position of the dice in the eventual pile of dices in the round track slot
+     * @return the dice chosen from the round track
+     */
     public Dice switchDice(Dice diceToSwitch, int chosenRound, int chosenDiceFromRound) {
         if (chosenRound > 0 && chosenRound <= rounds.size() && chosenDiceFromRound >= 0 && chosenDiceFromRound < rounds.get(chosenRound - 1).size()) {
             Dice returnValue = rounds.get(chosenRound - 1).remove(chosenDiceFromRound);

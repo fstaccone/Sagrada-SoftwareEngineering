@@ -26,7 +26,9 @@ public abstract class Match {
 
     private final Object lock;
 
-
+    /**
+     * When the match is initialized the bag is created (with 18 dices for each of the 5 available colors)
+     */
     public Match() {
         lock = new Object();
         bag = new Bag(18);
@@ -59,6 +61,9 @@ public abstract class Match {
 
     public void incrementRoundCounter() { this.roundCounter++; }
 
+    /**
+     * At the end of each round, all the dices left on the reserve are taken and placed on the round track
+     */
     public void pushLeftDicesToRoundTrack(){
         this.getBoard().getRoundTrack().putDices(this.getBoard().getReserve().removeAllDices(), this.roundCounter);
     }
@@ -75,6 +80,9 @@ public abstract class Match {
 
     public abstract boolean placeDice(String name, int index, int x, int y) throws RemoteException;
 
+    /**
+     * Sets the end of the turn
+     */
     public void goThrough(){
         setEndsTurn(true);
         synchronized (lock) {

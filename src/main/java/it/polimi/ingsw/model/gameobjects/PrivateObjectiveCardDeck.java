@@ -6,6 +6,10 @@ public  class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
 
     private Random randomGenerator;
 
+    /**
+     *Initializes the deck with the names of all possible private objective cards
+     * @param numOfPlayers is the match number of players
+     */
     public PrivateObjectiveCardDeck(int numOfPlayers) {
         super();
         for (Colors c: Colors.values()) {
@@ -19,6 +23,10 @@ public  class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
 
     }
 
+    /**
+     * Creates the necessary number of private objective cards, one for each player
+     * @param numOfPlayers is the match number of players
+     */
     public void setReallyCreatedCards(int numOfPlayers){
         int n;
         if(numOfPlayers == 1)

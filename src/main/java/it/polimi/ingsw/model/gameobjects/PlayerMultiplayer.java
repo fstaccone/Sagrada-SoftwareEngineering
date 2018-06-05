@@ -11,6 +11,11 @@ public class PlayerMultiplayer extends Player {
     private MatchMultiplayer match;
     private boolean schemeCardSet;
 
+    /**
+     * Creates a new Player for multiplayer match
+     * @param name is the name of the player
+     * @param match is the match he is joining
+     */
     public PlayerMultiplayer(String name, MatchMultiplayer match) {
         super(name);
         status = ConnectionStatus.CONNECTED;
@@ -40,7 +45,10 @@ public class PlayerMultiplayer extends Player {
     public boolean isMyTurn() { return myTurn; }
     public boolean isSchemeCardSet() { return schemeCardSet; }
 
-
+    /**
+     * Sets the new player's scheme card
+     * @param schemeCard is the new player's scheme card
+     */
     @Override
     public void setSchemeCard(WindowPatternCard schemeCard) {
         this.schemeCard = schemeCard;

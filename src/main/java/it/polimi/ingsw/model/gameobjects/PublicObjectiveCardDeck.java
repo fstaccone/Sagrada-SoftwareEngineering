@@ -6,6 +6,11 @@ public  class PublicObjectiveCardDeck extends Deck<PublicObjectiveCard>{
 
     private Random randomGenerator;
 
+    /**
+     * Initializes the deck with all the public objective card id names and then it really creates 2 cards if it's a
+     * single player match, 3 if it's a multiplayer match
+     * @param numOfPlayers
+     */
     public PublicObjectiveCardDeck(int numOfPlayers) {
         super();
         for(int i=1; i<11; i++) {
@@ -15,6 +20,10 @@ public  class PublicObjectiveCardDeck extends Deck<PublicObjectiveCard>{
         setReallyCreatedCards(numOfPlayers);
     }
 
+    /**
+     * Creates a number of cards based on the number of players of the match (2 for single player, 3 for multiplayer)
+     * @param numOfPlayers is the number of players of the match
+     */
     public void setReallyCreatedCards(int numOfPlayers){
         int n;
         if(numOfPlayers == 1)

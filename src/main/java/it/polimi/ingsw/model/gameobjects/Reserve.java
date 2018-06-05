@@ -8,8 +8,15 @@ public class Reserve {
 
     private List<Dice> dices;
 
+    /**
+     * Creates a new reserve with no dices
+     */
     public Reserve() { dices = new ArrayList<>(); }
 
+    /**
+     * Populates the reserve with the dices
+     * @param init is the list of dices to put in the reserve, a random value between 1 and 6 is assigned to each dice
+     */
     public void throwDices(List<Dice> init) {
         Random rand = new Random();
 
@@ -38,6 +45,11 @@ public class Reserve {
         return s.toString();
     }
 
+    /**
+     * Takes a dice from the reserve
+     * @param index is the index of the dice the player wants to pick
+     * @return returns the dice chosen by the player
+     */
     public Dice chooseDice(int index) {
         if (!(dices.isEmpty())) {
             return dices.remove(index);

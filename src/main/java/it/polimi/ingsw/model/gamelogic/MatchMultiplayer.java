@@ -33,7 +33,14 @@ public class MatchMultiplayer extends Match implements Runnable {
     private List<WindowPatternCard> windowsProposed;
     private PlayerMultiplayer winner;
 
-
+    /**
+     * Initializes the multiplayer match
+     * @param matchId is the match id
+     * @param clients is the list of players
+     * @param turnTime
+     * @param socketsOut
+     * @param lobby
+     */
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut, Lobby lobby) {
 
         super();

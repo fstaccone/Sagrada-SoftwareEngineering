@@ -4,6 +4,7 @@ import it.polimi.ingsw.Room;
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
+import it.polimi.ingsw.model.gameobjects.windowpatterncards.AuroraSagradis;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,9 +18,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ExchangeDiceRoundTrackTest {
-    private KaleidoscopicDream schemeCard;
+    private WindowPatternCard schemeCard;
     private ToolCard toolCard;
-    private Player player;
+    private PlayerMultiplayer player;
     private MatchMultiplayer match;
     private Room room;
     @Before
@@ -31,10 +32,10 @@ public class ExchangeDiceRoundTrackTest {
         dice.setValue(4);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);
-        schemeCard = new KaleidoscopicDream();
+        schemeCard = new AuroraSagradis();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
-        //toolCard = new ToolCard("Taglierina Circolare");
+        toolCard = new ToolCard("Taglierina Circolare", "tool5");
         RoundTrack roundTrack = new RoundTrack();
         roundTrack.showRoundTrack();
         List<Dice> list0 = new LinkedList<>();
@@ -58,6 +59,7 @@ public class ExchangeDiceRoundTrackTest {
     @Test
     public void checkDice(){
         System.out.println(player.getPickedDice().toString());
+        player.setNumFavorTokens(4);
         toolCard.useCard(player, match);
         System.out.println(player.getPickedDice().toString());
         Assert.assertEquals(5,player.getPickedDice().getValue());

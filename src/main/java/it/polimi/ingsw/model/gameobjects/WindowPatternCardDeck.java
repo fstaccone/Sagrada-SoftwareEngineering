@@ -4,7 +4,10 @@ import it.polimi.ingsw.model.gameobjects.windowpatterncards.*;
 import java.util.*;
 
 public class WindowPatternCardDeck extends Deck<WindowPatternCard>{
-
+    /**
+     * Initializes the deck with all the scheme cards and then chooses randomly 4 scheme cards to show to each player
+     * @param numOfPlayers is the number of players
+     */
     public WindowPatternCardDeck(int numOfPlayers) {
         super();
         for(int i=1;i<25;i++) {
