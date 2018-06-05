@@ -185,13 +185,17 @@ public class WindowPatternCard implements Serializable{
     }
 
     public void putDiceIgnoringValueConstraint(Dice d, int row, int column){
-        if(checkPos(d, row, column))
+        if(checkPos(d, row, column)) {
+            System.out.println("ORA LO PIAZZO");
             window[row][column].putDiceIgnoringValueConstraint(d);
+        }
     }
 
     public void putDiceIgnoringColorConstraint(Dice d, int row, int column){
-        if(checkPos(d, row, column))
+        if(checkPos(d, row, column)) {
+            System.out.println("ORA LO PIAZZO");
             window[row][column].putDiceIgnoringColorConstraint(d);
+        }
     }
 
     public void putDiceIgnoringAllConstraints(Dice d, int row, int column){

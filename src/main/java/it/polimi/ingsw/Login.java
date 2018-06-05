@@ -12,7 +12,6 @@ import java.net.URL;
 
 
 public class Login extends Application {
-
     private Stage window;
     private LoginHandler loginHandler;
 

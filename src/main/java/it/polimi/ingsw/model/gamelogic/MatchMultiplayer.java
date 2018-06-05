@@ -447,6 +447,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (socketObservers.get(getPlayer(name)) != null) {
             try {
                 socketObservers.get(getPlayer(name)).writeObject(new AfterWindowChoiseResponse());
+                socketObservers.get(getPlayer(name)).reset();
             } catch (IOException e) {
                 e.printStackTrace();
             }

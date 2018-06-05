@@ -24,6 +24,8 @@ public class Gui {
     private RemoteController remoteController;
     private ClientController clientController;
     private Stage windowStage;
+
+
     private boolean myTurn;
     private boolean reconnection;
 
@@ -77,6 +79,7 @@ public class Gui {
     }
 
 
+
     public List<String> getPlayers() {
         return players;
     }
@@ -105,7 +108,7 @@ public class Gui {
         }
         chooseCardHandler = fxmlLoader.getController();
         Scene scene = new Scene(root);
-        chooseCardHandler.initRemote(windowStage, scene, remoteController, clientController, username);
+        chooseCardHandler.init(windowStage, scene, remoteController, clientController, username);
         chooseCardHandler.setOpponents(playersNames);
     }
 
@@ -192,7 +195,6 @@ public class Gui {
     }
 
     public void onOtherTurn(String name) {
-        System.out.println("On other turn");
         String s = "Ora è il turno di " + name;
         if (gameBoardHandler != null) {
             gameBoardHandler.setTextArea(s);
@@ -249,7 +251,7 @@ public class Gui {
     }
 
     public void onAfterWindowChoise() {
-        System.out.println("On show windowStage");
+
         String imgUrl = chooseCardHandler.getImageUrl();
         FXMLLoader fx = new FXMLLoader();
         try {

@@ -30,7 +30,14 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect{
             if (dice != null) {
                 int newRow = caller.getFinalX1();
                 int newColumn = caller.getFinalY1();
+                System.out.println(newRow);
+                System.out.println(newColumn);
+                System.out.println(dice.toString());
                 schema.putDiceIgnoringValueConstraint(dice, newRow, newColumn); //DA RIVEDERE
+                System.out.println(newRow);
+                System.out.println(newColumn);
+                System.out.println(row);
+                System.out.println(column);
                 if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
                     schema.removeDice(row, column); //LO PUò RIMETTERE NELLA STESSA POSIZIONE? SE Sì LA REMOVE NON VA FATTA QUI
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
