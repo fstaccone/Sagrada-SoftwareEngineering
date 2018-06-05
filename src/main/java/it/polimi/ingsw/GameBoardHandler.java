@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1337,20 +1338,32 @@ public class GameBoardHandler implements Initializable {
      * @param players is a list of Strings which are the names of the players invlolved in the match
      */
     public void initializeLabels(List<String> players) {
-        int myPosition = 0;
 
+        //FOR RMI CONNECTION
+        if (remoteController != null) {
+            setLabels(players);
+        }
+        //FOR SOCKET CONNECTION
+        else {
+            Platform.runLater(() -> {
+                setLabels(players);
+            });
+        }
+    }
+
+    private void setLabels(List<String> players) {
+        AtomicInteger myPosition = new AtomicInteger();
         /* find the position of the owner of this GUI */
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).equals(username)) {
-                myPosition = i;
+                myPosition.set(i);
                 label0.setText(players.get(i));
                 break;
             }
         }
-
         /* assigns the name to the right label in order to show the correct flow clockwise */
         for (int i = 1; i < players.size(); i++) {
-             labels.get(i).setText(players.get((myPosition + i) % players.size()));
+            labels.get(i).setText(players.get((myPosition.get() + i) % players.size()));
         }
     }
 

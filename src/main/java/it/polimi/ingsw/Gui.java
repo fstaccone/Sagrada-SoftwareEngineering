@@ -277,6 +277,14 @@ public class Gui {
         gameBoardHandler.setPublicCards(publicCardsList);
         gameBoardHandler.createLabelsMap();
         gameBoardHandler.initializeLabels(players);
+        //FOR SOCKET CONNECTION
+        if (remoteController==null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
         gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
     }
