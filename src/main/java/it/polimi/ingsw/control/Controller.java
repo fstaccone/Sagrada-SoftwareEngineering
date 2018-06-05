@@ -4,7 +4,9 @@ import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.Colors;
+import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.*;
@@ -14,6 +16,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Controller extends UnicastRemoteObject implements RemoteController, RequestHandler {
 
@@ -401,6 +404,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeMatchRemote(username, observer);
 
         if (reconnection) {
+            /*MatchMultiplayer match = lobby.getMultiplayerMatches().get(username);
+            List<String> names = match.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
+            try {
+                match.getRemoteObservers().get(match.getPlayer(username)).onPlayers(names);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }*/
             lobby.transferAllData(username);
         }
     }

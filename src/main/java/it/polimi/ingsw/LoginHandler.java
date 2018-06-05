@@ -76,6 +76,19 @@ public class LoginHandler implements Initializable {
     @FXML
     private transient Button playButton;
 
+    // getters
+    public WaitingScreenHandler getWaitingScreenHandler() {
+        return this.handler;
+    }
+
+    public boolean isCli() {
+        return isCli;
+    }
+
+    public WaitingRoomCli getWaitingRoomCli() {
+        return waitingRoomCli;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.rmiCheckmark.setSelected(true);
@@ -223,7 +236,7 @@ public class LoginHandler implements Initializable {
                     Platform.runLater(() -> window.close());
                     new RmiCli(username, remoteController, false).reconnect();
                 } else {
-                    new RmiGui(window, username, remoteController, false).reconnect(); //POTREBBE ANDARE? TRASFORMA IMMEDIATAMENTE LA SCHERMATA DI ATTESA IN SCHERMATA DI GIOCO
+                    new RmiGui(window, username, remoteController, false).reconnect();
                 }
             } else {
                 new Thread(new SocketListener(clientController)).start();
@@ -351,18 +364,6 @@ public class LoginHandler implements Initializable {
         } else {
             new SocketGui(window, username, clientController, false);
         }
-    }
-
-    public WaitingScreenHandler getWaitingScreenHandler() {
-        return this.handler;
-    }
-
-    public boolean isCli() {
-        return isCli;
-    }
-
-    public WaitingRoomCli getWaitingRoomCli() {
-        return waitingRoomCli;
     }
 }
 

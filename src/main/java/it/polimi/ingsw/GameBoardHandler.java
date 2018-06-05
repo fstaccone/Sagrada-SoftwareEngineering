@@ -851,8 +851,8 @@ public class GameBoardHandler implements Initializable {
         diceChosen = 9;
         this.gui = gui;
         username = gui.getUsername();
-        remoteController = gui.getRemoteController();
-        clientController = gui.getClientController();
+        remoteController = gui.getControllerRmi();
+        clientController = gui.getControllerSocket();
         otherSchemeCardsMap = gui.getOtherSchemeCardsMap();
         window = gui.getWindowStage();
 
@@ -1440,5 +1440,9 @@ public class GameBoardHandler implements Initializable {
             s.append("\n" + winner.toUpperCase() + " è il vincitore!");
             Platform.runLater(() -> textArea.setText(s.toString()));
         }
+    }
+
+    public void onGameClosing(){
+        textArea.setText("Congratulations! You are the winner. You were the only one still in game.");
     }
 }

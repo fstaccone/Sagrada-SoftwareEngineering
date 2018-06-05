@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 public class Gui {
 
     private String username;
-    private RemoteController remoteController;
-    private ClientController clientController;
+    private RemoteController controllerRmi;
+    private ClientController controllerSocket;
     private Stage windowStage;
 
 
@@ -44,10 +44,10 @@ public class Gui {
     private boolean windowChosen;
     private boolean single;
 
-    public Gui(Stage fromLogin, String username, RemoteController remoteController, ClientController clientController, boolean single) {
+    public Gui(Stage fromLogin, String username, RemoteController controllerRmi, ClientController controllerSocket, boolean single) {
         this.username = username;
-        this.remoteController = remoteController;
-        this.clientController = clientController;
+        this.controllerRmi = controllerRmi;
+        this.controllerSocket = controllerSocket;
 
         myTurn = false;
         windowChosen = false;
@@ -62,22 +62,34 @@ public class Gui {
         players = new ArrayList<>();
     }
 
+    // getters
     public List<String> getToolCardsList() {
         return toolCardsList;
     }
 
-    public RemoteController getRemoteController() {
-        return remoteController;
+    public RemoteController getControllerRmi() {
+        return controllerRmi;
     }
 
-    public ClientController getClientController() {
-        return clientController;
+    public ClientController getControllerSocket() {
+        return controllerSocket;
     }
 
     public Stage getWindowStage() {
         return windowStage;
     }
 
+    public Boolean isMyTurn() {
+        return myTurn;
+    }
+
+    public List<String> getDicesList() {
+        return dicesList;
+    }
+
+    public Map<String, WindowPatternCard> getOtherSchemeCardsMap() {
+        return otherSchemeCardsMap;
+    }
 
     public List<String> getPlayers() {
         return players;
@@ -87,28 +99,13 @@ public class Gui {
         return username;
     }
 
+    // setters
     public void setDicePlaced(boolean dicePlaced) {
         this.dicePlaced = dicePlaced;
     }
 
     public void onPlayers(List<String> playersNames) {
-        System.out.println("On players");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        try {
-            fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/choose-card.fxml"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        Parent root = null;
-        try {
-            root = fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        chooseCardHandler = fxmlLoader.getController();
-        Scene scene = new Scene(root);
-        chooseCardHandler.init(windowStage, scene, remoteController, clientController, username);
-        chooseCardHandler.setOpponents(playersNames);
+        players = playersNames;
     }
 
     public void onYourTurn(boolean isMyTurn, String string) {
@@ -122,7 +119,7 @@ public class Gui {
             if (gameBoardHandler != null) {
                 gameBoardHandler.setTextArea(s);
                 gameBoardHandler.initializeActions();
-            } else {
+            } else if (chooseCardHandler != null) {
                 chooseCardHandler.setTextArea(s);
             }
         } else
@@ -155,8 +152,40 @@ public class Gui {
         }
     }
 
-    public void onGameClosing() {
+    public void onGameStarted(Boolean windowChosen){
+        if(windowChosen){
+            // direttamente alla schermata di gioco
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            try {
+                fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/choose-card.fxml"));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            Parent root = null;
+            try {
+                root = fxmlLoader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
+            chooseCardHandler = fxmlLoader.getController();
+            Scene scene = new Scene(root);
+            chooseCardHandler.init(windowStage, scene, controllerRmi, controllerSocket, username);
+            chooseCardHandler.setOpponents(players);
+            //chooseCardHandler.setPrivateCard(privateCard);
+        }
+    }
+
+    public void onGameClosing() {
+        gameBoardHandler.onGameClosing();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        windowStage.close();
+        System.exit(0);
     }
 
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
@@ -166,28 +195,37 @@ public class Gui {
     }
 
     public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
-
+        parseToolcards(toolcards);
+        privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
+        this.privateCard = privateCard;
+        parsePublicCards(publicCards);
     }
 
     public void onRoundTrack(String track) {
-        if (gameBoardHandler != null) gameBoardHandler.onRoundTrack(track);
+        if (gameBoardHandler != null) {
+            gameBoardHandler.onRoundTrack(track);
+        }
     }
 
     public void onMyWindow(WindowPatternCard window) {
-        if (gameBoardHandler != null) gameBoardHandler.setMyWindow(window);
-        //AGGIORNAMENTO PROPRIA CARTA SCHEMA
+        if (gameBoardHandler != null) {
+            gameBoardHandler.setMyWindow(window);
+        }
     }
 
+    /* to update the owner's tokens*/
     public void onMyFavorTokens(int value) {
-        //AGGIORNAMENTO PROPRI SEGNALINI
-        if (gameBoardHandler != null) gameBoardHandler.setFavourTokens(value);
+        if (gameBoardHandler != null) {
+            gameBoardHandler.setFavourTokens(value);
+        }
     }
 
+    /* to update the others' tokens*/
     public void onOtherFavorTokens(int value, String name) {
-        //PRIMA INIZIALIZZAZIONE E AGGIORNAMENTO SEGNALINI ALTRUI
         otherFavorTokensMap.put(name, value);
-        if (gameBoardHandler != null) gameBoardHandler.onOtherFavorTokens(value, name);
-
+        if (gameBoardHandler != null) {
+            gameBoardHandler.onOtherFavorTokens(value, name);
+        }
     }
 
     public void onOtherSchemeCards(WindowPatternCard window, String name) {
@@ -199,22 +237,18 @@ public class Gui {
         String s = "Ora è il turno di " + name;
         if (gameBoardHandler != null) {
             gameBoardHandler.setTextArea(s);
-        } else chooseCardHandler.setTextArea(s);
+        } else if (chooseCardHandler != null) {
+            chooseCardHandler.setTextArea(s);
+        }
     }
 
 
     public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
-
         parseToolcards(toolcards);
-
         privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
         this.privateCard = privateCard;
-
-        chooseCardHandler.setPrivateCard(privateCard);
         parsePublicCards(publicCards);
-
         this.players = players;
-
     }
 
     private void parseToolcards(String toolcards) {
@@ -250,7 +284,6 @@ public class Gui {
     }
 
     public void onWindowChoise(List<String> windows) {
-        System.out.println("On windowStage choise");
         chooseCardHandler.setWindows(windows);
     }
 
@@ -283,7 +316,7 @@ public class Gui {
         gameBoardHandler.createOtherLabelsList();
         gameBoardHandler.initializeLabels(players);
         //FOR SOCKET CONNECTION
-        if (remoteController==null) {
+        if (controllerRmi == null) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -293,17 +326,4 @@ public class Gui {
         gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
         gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
     }
-
-    public Boolean isMyTurn() {
-        return myTurn;
-    }
-
-    public List<String> getDicesList() {
-        return dicesList;
-    }
-
-    public Map<String, WindowPatternCard> getOtherSchemeCardsMap() {
-        return otherSchemeCardsMap;
-    }
-
 }

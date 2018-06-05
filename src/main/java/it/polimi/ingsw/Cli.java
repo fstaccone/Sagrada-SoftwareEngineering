@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 public class Cli {
 
     private String username;
-    private transient ClientController clientController;
-    private transient RemoteController controller;
+    private transient ClientController controllerSocket;
+    private transient RemoteController controllerRmi;
     private boolean myTurn;
     private final transient PrintWriter printer;
 
@@ -98,10 +98,10 @@ public class Cli {
             "\nWARNING: Invalid game request. You did not respect the tool card's rules!\n"); //STAMPATO ANCHE SE PROVI A MODIFICARE DADO NELLA RISERVA OUT OF BOUND , si può migliorare
 
 
-    public Cli(String username, RemoteController controller, ClientController clientController, boolean single) {
+    public Cli(String username, RemoteController controllerRmi, ClientController controllerSocket, boolean single) {
         this.username = username;
-        this.controller = controller;
-        this.clientController = clientController;
+        this.controllerRmi = controllerRmi;
+        this.controllerSocket = controllerSocket;
         printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
         windowChosen = false;
         otherFavorTokensMap = new HashMap<>();
@@ -138,10 +138,10 @@ public class Cli {
         this.otherSchemeCardsMap.put(name, scheme);
     }
 
-    public void onPlayers(List<String> playersNames) {
+    public void onGameStarted(){
         printer.println("Your match starts now! You are playing SAGRADA against:");
         printer.flush();
-        this.playersNames = playersNames;
+
         for (String name : playersNames) {
             if (!name.equals(username)) {
                 printer.println("-" + name.toUpperCase());
@@ -150,6 +150,10 @@ public class Cli {
         }
         printer.println();
         printer.flush();
+    }
+
+    public void onPlayers(List<String> playersNames) {
+        this.playersNames = playersNames;
     }
 
     public void onRoundTrack(String roundTrack) {
@@ -225,7 +229,7 @@ public class Cli {
             String[] strings = card.split(":");
 
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
-            this.toolCommands.add(new ToolCommand(i, this.printer, this.controller, this.clientController, this.username, this.single));
+            this.toolCommands.add(new ToolCommand(i, this.printer, this.controllerRmi, this.controllerSocket, this.username, this.single));
         }
     }
 
@@ -243,6 +247,11 @@ public class Cli {
     public void onGameClosing() {
         printer.println("Congratulations! You are the winner. You were the only one still in game.");
         printer.flush();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.exit(0);
     }
 
@@ -369,11 +378,11 @@ public class Cli {
                                         if (toolNumber1 != null) {
                                             if (Integer.parseInt(parts[1]) < 4) {
                                                 //RMI
-                                                if (controller != null)
-                                                    controller.chooseWindow(username, toolNumber1, single);
+                                                if (controllerRmi != null)
+                                                    controllerRmi.chooseWindow(username, toolNumber1, single);
                                                     //SOCKET
                                                 else
-                                                    clientController.request(new ChooseWindowRequest(username, toolNumber1, false));
+                                                    controllerSocket.request(new ChooseWindowRequest(username, toolNumber1, false));
                                                 printer.println("Carta scelta correttamente!");
                                                 printer.flush();
                                                 windowChosen = true;
@@ -414,11 +423,11 @@ public class Cli {
                             case "pass": {
                                 if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
                                     //RMI
-                                    if (controller != null)
-                                        controller.goThrough(username, single);
+                                    if (controllerRmi != null)
+                                        controllerRmi.goThrough(username, single);
                                         //SOCKET
                                     else
-                                        clientController.request(new GoThroughRequest(username, single));
+                                        controllerSocket.request(new GoThroughRequest(username, single));
                                 }
                             }
                             break;
@@ -437,8 +446,8 @@ public class Cli {
                                                     printer.flush();
 
                                                     //RMI
-                                                    if (controller != null) {
-                                                        if (controller.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
+                                                    if (controllerRmi != null) {
+                                                        if (controllerRmi.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
                                                             printer.println("\nWell done! The chosen dice has been placed correctly.\n");
                                                             printer.flush();
                                                             diceChosen = 9; //FIRST VALUE NEVER PRESENT IN THE RESERVE
@@ -451,14 +460,14 @@ public class Cli {
 
                                                     //SOCKET
                                                     else {
-                                                        clientController.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
+                                                        controllerSocket.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
                                                         try {
                                                             Thread.sleep(500);
                                                         } catch (InterruptedException e) {
                                                             e.printStackTrace();
                                                         }
-                                                        if (clientController.isDicePlaced()) {
-                                                            clientController.setDicePlaced(false);//to reset the value
+                                                        if (controllerSocket.isDicePlaced()) {
+                                                            controllerSocket.setDicePlaced(false);//to reset the value
                                                             printer.println("\nWell done! The chosen dice has been placed correctly.\n");
                                                             printer.flush();
                                                         } else {
@@ -496,8 +505,8 @@ public class Cli {
                                                 coordinateY = Integer.parseInt(parts[2]);
                                                 printer.println("\nHai scelto di posizionare il dado nella posizione [" + coordinateX + "][" + coordinateY + "] della tua carta schema");
                                                 printer.flush();
-                                                if (controller != null) {
-                                                    if (controller.placeDiceTool11(coordinateX, coordinateY, username, single)) {
+                                                if (controllerRmi != null) {
+                                                    if (controllerRmi.placeDiceTool11(coordinateX, coordinateY, username, single)) {
                                                         printer.println("\nWell done! The chosen dice has been placed correctly.\n");
                                                         printer.flush();
                                                     } else {
@@ -509,14 +518,14 @@ public class Cli {
 
                                                 //SOCKET
                                                 else {
-                                                    clientController.request(new PlaceDiceTool11Request(coordinateX, coordinateY, username, single));
+                                                    controllerSocket.request(new PlaceDiceTool11Request(coordinateX, coordinateY, username, single));
                                                     try {
                                                         Thread.sleep(500);
                                                     } catch (InterruptedException e) {
                                                         e.printStackTrace();
                                                     }
-                                                    if (clientController.isDicePlaced()) {
-                                                        clientController.setDicePlaced(false);//to reset the value
+                                                    if (controllerSocket.isDicePlaced()) {
+                                                        controllerSocket.setDicePlaced(false);//to reset the value
                                                         printer.println("\nWell done! The chosen dice has been placed correctly.\n");
                                                         printer.flush();
                                                     } else {
@@ -654,11 +663,11 @@ public class Cli {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null) {
                                             //RMI
-                                            if (controller != null)
-                                                controller.setDiceValue(toolNumber1, username, single);
+                                            if (controllerRmi != null)
+                                                controllerRmi.setDiceValue(toolNumber1, username, single);
                                                 //SOCKET
                                             else
-                                                clientController.request(new SetDiceValueRequest(toolNumber1, username, single));
+                                                controllerSocket.request(new SetDiceValueRequest(toolNumber1, username, single));
                                             printer.println("Valore selezionato correttamente! Ora usa il comando 'pd11' seguito dalla posizione in cui vuoi piazzare il dado! \n" + roundTrack);
                                             printer.flush();
                                             diceValueToBeSet = false; //todo:VA MESSO A FALSE ANCHE SE SI PASSA IL TURNO SENZA AVER COMPLETATO L'AZIONE
@@ -743,10 +752,10 @@ public class Cli {
                             break;
 
                             case "sp": {
-                                if (controller != null)
-                                    controller.showPlayers(username);
+                                if (controllerRmi != null)
+                                    controllerRmi.showPlayers(username);
                                 else {
-                                    clientController.request(new ShowPlayersRequest(username));
+                                    controllerSocket.request(new ShowPlayersRequest(username));
                                 }
                             }
                             break;
@@ -812,9 +821,9 @@ public class Cli {
 
         private void quit() {
             //RMI
-            if (controller != null) {
+            if (controllerRmi != null) {
                 try {
-                    controller.quitGame(username, single);
+                    controllerRmi.quitGame(username, single);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -822,7 +831,7 @@ public class Cli {
             }
             //SOCKET
             else {
-                clientController.request(new QuitGameRequest(username, single));
+                controllerSocket.request(new QuitGameRequest(username, single));
                 System.exit(0);
             }
         }
@@ -1048,17 +1057,17 @@ public class Cli {
                                 if (toolNumber1 != null) {
                                     if (toolCommand.command11(toolNumber1)) {
                                         Colors color = null;
-                                        if (controller != null) {
+                                        if (controllerRmi != null) {
                                             try {
-                                                color = controller.askForDiceColor(username, single);
+                                                color = controllerRmi.askForDiceColor(username, single);
                                             } catch (RemoteException e) {
                                                 e.printStackTrace();
                                             }
                                         }
                                         //SOCKET
                                         else {
-                                            clientController.request(new DiceColorRequest(username, single));
-                                            color = clientController.getDiceColor();
+                                            controllerSocket.request(new DiceColorRequest(username, single));
+                                            color = controllerSocket.getDiceColor();
                                         }
 
                                         printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");

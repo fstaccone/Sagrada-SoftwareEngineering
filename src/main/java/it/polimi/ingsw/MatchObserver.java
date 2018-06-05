@@ -35,11 +35,12 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onPlayerReconnection(String name) throws RemoteException;
 
+    void onGameStarted(boolean windowChosen) throws RemoteException;
+
     void onGameClosing() throws RemoteException;
 
     void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) throws RemoteException;
 
-    // todo: completare con gli altri elementi (mappe, segnalini, ...)
     void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens,WindowPatternCard schemeCard, Map<String,Integer> otherTokens, Map<String,WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) throws RemoteException;
 
     void onRoundTrack(String track) throws RemoteException;

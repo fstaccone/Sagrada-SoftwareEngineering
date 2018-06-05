@@ -107,6 +107,11 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
+    public void onGameStarted(boolean windowChosen) {
+        gui.onGameStarted(windowChosen);
+    }
+
+    @Override
     public void onGameClosing() {
         gui.onGameClosing();
     }
