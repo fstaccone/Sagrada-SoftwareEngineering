@@ -36,21 +36,30 @@ public class GameBoardHandler implements Initializable {
     private static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
     private static final String WINDOW_PATTERN_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
 
-    private int partialStartXForTools = 5;
-    private int partialStartYForTools = 5;
-    private int targetStartXForTools = 4;
-    private int targetStartYForTools = 4;
+    private int partialStartXForTools1 = 5;
+    private int partialStartYForTools1 = 5;
+    private int targetStartXForTools1 = 4;
+    private int targetStartYForTools1 = 4;
+    private int partialStartXForTools2 = 5;
+    private int partialStartYForTools2 = 5;
+    private int targetStartXForTools2 = 4;
+    private int targetStartYForTools2 = 4;
     private int partialRoundForTools = 0;
     private int partialDiceFromRoundForTools = 9;
     private int targetRoundForTools = 0;
     private int targetDiceFromRoundForTools = 9;
     private int partialReserveIndexForTools = 9;
     private int targetReserveIndexForTools = 9;
-    private Integer finalCoordinateX;
-    private Integer finalCoordinateY;
+    private Integer finalCoordinateX1;
+    private Integer finalCoordinateY1;
+    private Integer finalCoordinateX2;
+    private Integer finalCoordinateY2;
     private String incrOrDecr;
-    private TextField finalX;
-    private TextField finalY;
+    private TextField finalX1;
+    private TextField finalY1;
+    private TextField finalX2;
+    private TextField finalY2;
+    private int pickedDices=0;
 
     @FXML
     Pane toolPane;
@@ -270,35 +279,35 @@ public class GameBoardHandler implements Initializable {
         imageView1.setLayoutX(63);
         imageView1.setLayoutY(250);
 
-        finalX = new TextField();
-        finalY = new TextField();
-        finalX.setMaxWidth(30);
-        finalY.setMaxWidth(30);
-        finalX.setLayoutX(65);
-        finalX.setLayoutY(370);
-        finalY.setLayoutX(105);
-        finalY.setLayoutY(370);
+        finalX1 = new TextField();
+        finalY1 = new TextField();
+        finalX1.setMaxWidth(30);
+        finalY1.setMaxWidth(30);
+        finalX1.setLayoutX(65);
+        finalX1.setLayoutY(370);
+        finalY1.setLayoutX(105);
+        finalY1.setLayoutY(370);
 
         gameBoard.getChildren().add(imageView1);
-        gameBoard.getChildren().add(finalX);
-        gameBoard.getChildren().add(finalY);
+        gameBoard.getChildren().add(finalX1);
+        gameBoard.getChildren().add(finalY1);
         setupSchemeCardTarget(imageView1);
 
         useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
-                finalCoordinateX = tryParse(finalX.getText());
-                finalCoordinateY = tryParse(finalY.getText());
-                if (finalCoordinateX != null && finalCoordinateY != null && 0 <= finalCoordinateX && finalCoordinateX < 5 && 0 <= finalCoordinateY && finalCoordinateY < 4 && targetStartXForTools != 5 && targetStartYForTools != 4) {
+                finalCoordinateX1 = tryParse(finalX1.getText());
+                finalCoordinateY1 = tryParse(finalY1.getText());
+                if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4 && targetStartXForTools1 != 5 && targetStartYForTools1 != 4) {
                     if (remoteController != null) {
                         try {
-                            System.out.println(targetStartXForTools);
-                            System.out.println(targetStartYForTools);
-                            System.out.println(finalCoordinateX);
-                            System.out.println(finalCoordinateY);
+                            System.out.println(targetStartXForTools1);
+                            System.out.println(targetStartYForTools1);
+                            System.out.println(finalCoordinateX1);
+                            System.out.println(finalCoordinateY1);
 
-                            if (remoteController.useToolCard2or3(n, targetStartXForTools, targetStartYForTools, finalCoordinateX, finalCoordinateY, username, false)) {
+                            if (remoteController.useToolCard2or3(n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false)) {
                                 textArea.setText("Carta utensile " + n + " utilizzata correttamente!");
                             } else {
                                 textArea.setText("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!");
@@ -308,7 +317,7 @@ public class GameBoardHandler implements Initializable {
                             e.printStackTrace();
                         }
                     } else {
-                        clientController.request(new UseToolCard2or3Request(n, targetStartXForTools, targetStartYForTools, finalCoordinateX, finalCoordinateY, username, false));
+                        clientController.request(new UseToolCard2or3Request(n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
                         if (waitForToolEffectAppliedResponse()) {
                             textArea.setText("Carta utensile " + n + " utilizzata correttamente!");
                         } else {
@@ -323,6 +332,87 @@ public class GameBoardHandler implements Initializable {
             }
         });
 
+    }
+
+    private void createContext4(){
+        toolPane.setVisible(true);
+        useButton.setVisible(true);
+        imageView1 = new ImageView();
+        imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
+        imageView1.setFitWidth(70);
+        imageView1.setFitHeight(70);
+        imageView1.setLayoutX(63);
+        imageView1.setLayoutY(180);
+        imageView2 = new ImageView();
+        imageView2.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
+        imageView2.setFitWidth(70);
+        imageView2.setFitHeight(70);
+        imageView2.setLayoutX(63);
+        imageView2.setLayoutY(350);
+
+        finalX1 = new TextField();
+        finalY1 = new TextField();
+        finalX1.setMaxWidth(30);
+        finalY1.setMaxWidth(30);
+        finalX1.setLayoutX(65);
+        finalX1.setLayoutY(280);
+        finalY1.setLayoutX(100);
+        finalY1.setLayoutY(280);
+        finalX2 = new TextField();
+        finalY2 = new TextField();
+        finalX2.setMaxWidth(30);
+        finalY2.setMaxWidth(30);
+        finalX2.setLayoutX(65);
+        finalX2.setLayoutY(450);
+        finalY2.setLayoutX(100);
+        finalY2.setLayoutY(450);
+
+        gameBoard.getChildren().add(imageView1);
+        gameBoard.getChildren().add(imageView2);
+        gameBoard.getChildren().add(finalX1);
+        gameBoard.getChildren().add(finalY1);
+        gameBoard.getChildren().add(finalX2);
+        gameBoard.getChildren().add(finalY2);
+        setupSchemeCardTarget(imageView1);
+        setupSchemeCardTarget(imageView2);
+
+        useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                finalCoordinateX1 = tryParse(finalX1.getText());
+                finalCoordinateY1 = tryParse(finalY1.getText());
+                finalCoordinateX2 = tryParse(finalX2.getText());
+                finalCoordinateY2 = tryParse(finalY2.getText());
+                if (finalCoordinateX1 != null  && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 &&  0 <= finalCoordinateY1 && finalCoordinateY1 < 4 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 5 &&  0 <= finalCoordinateY2 && finalCoordinateY2 < 4 && targetStartXForTools1 != 5 && targetStartYForTools1 != 4 && targetStartXForTools2 != 5 && targetStartYForTools2 != 4) {
+                    if (remoteController != null) {
+                        try {
+
+
+                            if (remoteController.useToolCard4(targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1,targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
+                                textArea.setText("Carta utensile 4 utilizzata correttamente!");
+                            } else {
+                                textArea.setText("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+
+                            }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        clientController.request(new UseToolCard4Request(targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1,targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
+                        if (waitForToolEffectAppliedResponse()) {
+                            textArea.setText("Carta utensile 4 utilizzata correttamente!");
+                        } else {
+                            textArea.setText("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                        }
+                    }
+
+                } else {
+                    textArea.setText("Non hai scelto alcun dado dalla carta schema o non hai settato correttamente le coordinate!");
+                }
+                resetToolValues();
+            }
+        });
     }
 
     private void createContext5() {
@@ -382,6 +472,53 @@ public class GameBoardHandler implements Initializable {
             }
         });
 
+    }
+
+    private void createcontext6(){
+        toolPane.setVisible(true);
+        useButton.setVisible(true);
+        imageView1 = new ImageView();
+        imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));//SOLO UNA PROVA
+        imageView1.setFitWidth(70);
+        imageView1.setFitHeight(70);
+        imageView1.setLayoutX(63);
+        imageView1.setLayoutY(250);
+        gameBoard.getChildren().add(imageView1);
+        setupReserveTarget(imageView1);
+
+        useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (targetReserveIndexForTools != 9) {
+                    //RMI
+                    if (remoteController != null) {
+                        try {
+
+                            if (remoteController.useToolCard6(targetReserveIndexForTools, username, false)) {
+                                textArea.setText("Carta utensile 6 utilizzata correttamente!");
+                            } else {
+                                textArea.setText("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                            }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    //SOCKET
+                    else {
+                        clientController.request(new UseToolCard6Request(targetReserveIndexForTools, username, false));
+                        if (waitForToolEffectAppliedResponse()) {
+                            textArea.setText("Carta utensile 6 utilizzata correttamente!");
+                        } else {
+                            textArea.setText("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                        }
+                    }
+
+                } else {
+                    textArea.setText("Non hai scelto alcun dado dalla riserva!");
+                }
+                resetToolValues();
+            }
+        });
     }
 
     private void createContext7or8(int n) {
@@ -449,30 +586,30 @@ public class GameBoardHandler implements Initializable {
         imageView1.setLayoutX(63);
         imageView1.setLayoutY(250);
 
-        finalX = new TextField();
-        finalY = new TextField();
-        finalX.setMaxWidth(30);
-        finalY.setMaxWidth(30);
-        finalX.setLayoutX(65);
-        finalX.setLayoutY(370);
-        finalY.setLayoutX(105);
-        finalY.setLayoutY(370);
+        finalX1 = new TextField();
+        finalY1 = new TextField();
+        finalX1.setMaxWidth(30);
+        finalY1.setMaxWidth(30);
+        finalX1.setLayoutX(65);
+        finalX1.setLayoutY(370);
+        finalY1.setLayoutX(105);
+        finalY1.setLayoutY(370);
 
         gameBoard.getChildren().add(imageView1);
-        gameBoard.getChildren().add(finalX);
-        gameBoard.getChildren().add(finalY);
+        gameBoard.getChildren().add(finalX1);
+        gameBoard.getChildren().add(finalY1);
         setupReserveTarget(imageView1);
 
         useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
-                finalCoordinateX = tryParse(finalX.getText());
-                finalCoordinateY = tryParse(finalY.getText());
-                if (finalCoordinateX != null && finalCoordinateY != null && 0 <= finalCoordinateX && finalCoordinateX < 5 && 0 <= finalCoordinateY && finalCoordinateY < 4 && targetReserveIndexForTools != 9) {
+                finalCoordinateX1 = tryParse(finalX1.getText());
+                finalCoordinateY1 = tryParse(finalY1.getText());
+                if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4 && targetReserveIndexForTools != 9) {
                     if (remoteController != null) {
                         try {
-                            if (remoteController.useToolCard9(targetReserveIndexForTools, finalCoordinateX, finalCoordinateY, username, false)) {
+                            if (remoteController.useToolCard9(targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false)) {
                                 textArea.setText("Carta utensile 9 utilizzata correttamente!");
                             } else {
                                 textArea.setText("Carta utensile 9 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
@@ -482,7 +619,7 @@ public class GameBoardHandler implements Initializable {
                             e.printStackTrace();
                         }
                     } else {
-                        clientController.request(new UseToolCard9Request(targetReserveIndexForTools, finalCoordinateX, finalCoordinateY, username, false));
+                        clientController.request(new UseToolCard9Request(targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false));
                         if (waitForToolEffectAppliedResponse()) {
                             textArea.setText("Carta utensile 9 utilizzata correttamente!");
                         } else {
@@ -546,26 +683,43 @@ public class GameBoardHandler implements Initializable {
 
     }
 
+    private void createContext11(){
+
+    }
+
+    private void createContext12(){
+
+    }
+
     private void resetToolValues() {
         partialReserveIndexForTools = 9;
         targetReserveIndexForTools = 9;
         partialDiceFromRoundForTools = 9;
         targetDiceFromRoundForTools = 9;
-        partialStartXForTools = 5;
-        targetStartXForTools = 5;
-        partialStartYForTools = 4;
-        targetStartYForTools = 4;
+        partialStartXForTools1 = 5;
+        targetStartXForTools1 = 5;
+        partialStartYForTools1 = 4;
+        targetStartYForTools1 = 4;
+        partialStartXForTools2 = 5;
+        targetStartXForTools2 = 5;
+        partialStartYForTools2 = 4;
+        targetStartYForTools2 = 4;
         partialRoundForTools = 0;
         targetRoundForTools = 0;
-        finalCoordinateX = null;
-        finalCoordinateY = null;
+        finalCoordinateX1 = null;
+        finalCoordinateY1 = null;
+        finalCoordinateX2 = null;
+        finalCoordinateY2 = null;
         incrOrDecr = null;
+        pickedDices=0;
         imageView1.setVisible(false);
         imageView2.setVisible(false);
         useButton.setVisible(false);
         toolPane.setVisible(false);
-        finalX.setVisible(false);
-        finalY.setVisible(false);
+        finalX1.setVisible(false);
+        finalY1.setVisible(false);
+        finalX2.setVisible(false);
+        finalY2.setVisible(false);
         plus.setVisible(false);
         minus.setVisible(false);
     }
@@ -583,8 +737,14 @@ public class GameBoardHandler implements Initializable {
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
 
-                partialStartXForTools = GridPane.getRowIndex(source);
-                partialStartYForTools = GridPane.getColumnIndex(source);
+                if(pickedDices==0) {
+                    partialStartXForTools1 = GridPane.getRowIndex(source);
+                    partialStartYForTools1 = GridPane.getColumnIndex(source);
+                }
+                else {
+                    partialStartXForTools2 = GridPane.getRowIndex(source);
+                    partialStartYForTools2 = GridPane.getColumnIndex(source);
+                }
 
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
 
@@ -695,8 +855,15 @@ public class GameBoardHandler implements Initializable {
                 Dragboard db = event.getDragboard();
 
                 target.setImage(db.getImage());
-                targetStartXForTools = partialStartXForTools;
-                targetStartYForTools = partialStartYForTools;
+                if(pickedDices==0) {
+                    targetStartXForTools1 = partialStartXForTools1;
+                    targetStartYForTools1 = partialStartYForTools1;
+                    pickedDices=1;
+                }
+                else{
+                    targetStartXForTools2 = partialStartXForTools2;
+                    targetStartYForTools2 = partialStartYForTools2;
+                }
 
                 event.consume();
             }
@@ -748,7 +915,7 @@ public class GameBoardHandler implements Initializable {
 
             case 4: {
 
-                createContext1();//MANCA
+                createContext4();
 
             }
             break;
@@ -762,7 +929,7 @@ public class GameBoardHandler implements Initializable {
 
             case 6: {
 
-                createContext1();//MANCA
+                createContext5();//MANCA
 
             }
             break;
@@ -792,12 +959,12 @@ public class GameBoardHandler implements Initializable {
             break;
 
             case 11: {
-                createContext1();//MANCA
+                createContext11();//MANCA
             }
             break;
 
             case 12: {
-                createContext1();//MANCA
+                createContext12();//MANCA
             }
             break;
 
@@ -874,8 +1041,10 @@ public class GameBoardHandler implements Initializable {
         imageView2 = new ImageView();
         plus = new Button();
         minus = new Button();
-        finalX = new TextField();
-        finalY = new TextField();
+        finalX1 = new TextField();
+        finalY1 = new TextField();
+        finalX2 = new TextField();
+        finalY2 = new TextField();
     }
 
     public void setWindowPatternCardImg(String imgURL) {
@@ -1027,6 +1196,7 @@ public class GameBoardHandler implements Initializable {
 
     @FXML
     public void onPassButtonClicked() {
+        resetToolValues();
         if (gui.isMyTurn()) {
             if (remoteController != null) {
                 try {
