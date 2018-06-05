@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 
-public class LoginGui extends Application {
+public class Login extends Application {
 
     private Stage window;
     private LoginHandler loginHandler;

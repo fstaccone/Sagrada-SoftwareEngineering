@@ -14,6 +14,7 @@ public class SocketGui implements Serializable {
     public SocketGui(Stage fromLogin, String username, ClientController clientController, boolean single) {
         this.gui = new Gui(fromLogin, username, null, clientController, single);
         this.clientController = clientController;
+        clientController.setSocketGui(this);
     }
 
     public void reconnect() {
