@@ -35,12 +35,11 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * Initializes the multiplayer match
-     *
      * @param matchId    is the match id
      * @param clients    is the list of players
-     * @param turnTime
-     * @param socketsOut
-     * @param lobby
+     * @param turnTime   is the time for each player turn
+     * @param socketsOut is a map playerName-ObjectOutputStream
+     * @param lobby      is the match lobby
      */
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut, Lobby lobby) {
 
@@ -68,6 +67,11 @@ public class MatchMultiplayer extends Match implements Runnable {
         System.out.println("New multiplayer matchId: " + matchId);
     }
 
+    /**
+     * Initializes the match players and links every socketsOut with the player name ina new map
+     * @param clients is the list of players names
+     * @param socketsOut is a map with players names as keys as socketsOut as values
+     */
     private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
         clients.forEach(client -> {
             PlayerMultiplayer player = new PlayerMultiplayer(client, this);
@@ -118,7 +122,9 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
 
-    // game's initialisation
+    /**
+     * Game initialization
+     */
     @Override
     public void gameInit() {
 
@@ -181,7 +187,9 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-
+    /**
+     * Calculates the final score at the end of the game.
+     */
     @Override
     public void calculateFinalScore() {
 
@@ -295,6 +303,14 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     *      * The player with the highest score is the winner.
+     * If two or more players have the same score, the winner is the one who got more points from
+     * his PrivateObjectiveCard. If a winner is still not found, the winner is the player who has more FavorTokens left
+     * at the end of the game. If a winner is still not found, the winner is the player in the lowest position in
+     * last round order.
+     * @return the winner player
+     */
     private PlayerMultiplayer theWinnerIs() {
         List<PlayerMultiplayer> firstPlayoff;
         List<PlayerMultiplayer> secondPlayoff;

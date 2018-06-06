@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,11 +22,14 @@ public class SubstituteDiceFromBagTest {
     private Player player;
     private MatchMultiplayer match;
     private Room room;
+    private Reserve reserve;
+    private Board board;
 
     @Before
     public void before() {
         room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
+        board = mock(Board.class);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);
         schemeCard = new KaleidoscopicDream();
@@ -42,27 +47,31 @@ public class SubstituteDiceFromBagTest {
         dr.setValue(3);
 
         Dice db= new Dice(Colors.BLUE);
-        db.setValue(2);
 
         Dice dv= new Dice(Colors.VIOLET);
-        dv.setValue(2);
 
-        player.getSchemeCard().putFirstDice(dy,0,0);
+        reserve = new Reserve();
+        List<Dice> list = new ArrayList<>();
+        list.add(dv);
+        list.add(db);
+        reserve.throwDices(list);
+        player.getSchemeCard().putDice(dy,0,0);
         player.getSchemeCard().putDice(dg,1,0);
         player.getSchemeCard().putDice(dr,2,0);
         player.setPickedDice(db);
+        player.setDice(1);
 
-        //toolCard = new ToolCard("Diluente per Pasta Salda");
-        ByteArrayInputStream in = new ByteArrayInputStream("5 3 1".getBytes());
-        System.setIn(in);
+        toolCard = new ToolCard("Diluente per Pasta Salda", "tool11");
+        when(match.getBag()).thenReturn(bag);
+        when(match.getBoard()).thenReturn(board);
+        when(board.getReserve()).thenReturn(reserve);
+        when(match.getBoard().getReserve()).thenReturn(reserve);
     }
 
     @Test
     public void checkPoints() {
-        System.out.println(player.getPickedDice().toString());
-        System.out.println(player.getSchemeCard().toString());
         toolCard.useCard(player, match);
-        Assert.assertEquals(5, schemeCard.getWindow()[3][1].getDice().getValue());
-        System.out.println(player.getSchemeCard().toString());
+        System.out.println(player.getDiceFromBag().toString());
+        Assert.assertNotNull(player.getDiceFromBag());
     }
 }

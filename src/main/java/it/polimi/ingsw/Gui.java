@@ -44,6 +44,8 @@ public class Gui {
     private boolean windowChosen;
     private boolean single;
 
+    private String playerSchemeCardImageURL;
+
     public Gui(Stage fromLogin, String username, RemoteController controllerRmi, ClientController controllerSocket, boolean single) {
         this.username = username;
         this.controllerRmi = controllerRmi;
@@ -290,7 +292,7 @@ public class Gui {
     public void onAfterWindowChoice() {
 
         // todo: trovare un'alternativa, genera eccezione quando il giocatore si riccnnette e non passa per chooseCardHandler
-        String imgUrl = chooseCardHandler.getImageUrl();
+        if(chooseCardHandler!=null) playerSchemeCardImageURL = chooseCardHandler.getImageUrl();
 
         FXMLLoader fx = new FXMLLoader();
         try {
@@ -308,7 +310,7 @@ public class Gui {
         Scene scene = new Scene(root);
         gameBoardHandler = fx.getController();
         gameBoardHandler.init(scene, this);
-        gameBoardHandler.setWindowPatternCardImg(imgUrl);
+        gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
         gameBoardHandler.setToolCards(toolCardsList);
         gameBoardHandler.setReserve(dicesList);
         gameBoardHandler.setTextArea("Now it's your turn!");
