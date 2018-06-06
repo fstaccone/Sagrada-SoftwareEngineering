@@ -243,7 +243,7 @@ public class LoginHandler implements Initializable {
                 if (isCli) {
                     new SocketCli(username, clientController, false).reconnect();
                 } else {
-                    new SocketGui(window, username, clientController, false);
+                    new SocketGui(window, username, clientController, false).reconnect();
                 }
             }
         } else {

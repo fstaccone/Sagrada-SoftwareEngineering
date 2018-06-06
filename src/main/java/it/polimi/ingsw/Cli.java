@@ -138,7 +138,9 @@ public class Cli {
         this.otherSchemeCardsMap.put(name, scheme);
     }
 
-    public void onGameStarted(){
+    public void onGameStarted(List<String> names){
+        playersNames = names;
+
         printer.println("Your match starts now! You are playing SAGRADA against:");
         printer.flush();
 

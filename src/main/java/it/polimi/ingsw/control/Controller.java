@@ -404,13 +404,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeMatchRemote(username, observer);
 
         if (reconnection) {
-            /*MatchMultiplayer match = lobby.getMultiplayerMatches().get(username);
-            List<String> names = match.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
-            try {
-                match.getRemoteObservers().get(match.getPlayer(username)).onPlayers(names);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }*/
             lobby.transferAllData(username);
         }
     }

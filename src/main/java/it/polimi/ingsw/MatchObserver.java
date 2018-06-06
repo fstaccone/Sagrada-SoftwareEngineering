@@ -35,7 +35,7 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onPlayerReconnection(String name) throws RemoteException;
 
-    void onGameStarted(boolean windowChosen) throws RemoteException;
+    void onGameStarted(boolean windowChosen, List<String> names) throws RemoteException;
 
     void onGameClosing() throws RemoteException;
 

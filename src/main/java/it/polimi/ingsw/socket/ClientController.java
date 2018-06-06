@@ -142,6 +142,15 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
+    public void handle(GameStartedResponse response) {
+        if(socketCli != null){
+            socketCli.getCli().onGameStarted(response.getNames());
+        } else {
+            socketGui.getGui().onGameStarted(response.isWindowChosen(), response.getNames());
+        }
+    }
+
+    @Override
     public void handle(ActualPlayersResponse response) {
         if (socketCli != null) {
             socketCli.getCli().onPlayers(response.playersNames);

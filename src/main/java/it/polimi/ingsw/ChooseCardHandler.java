@@ -83,10 +83,10 @@ public class ChooseCardHandler implements Initializable {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
-            if(remoteController!=null)
+            if (remoteController != null)
                 remoteController.quitGame(username, false);
             else
-                clientController.request(new QuitGameRequest(username,false));
+                clientController.request(new QuitGameRequest(username, false));
             System.exit(0);
         }
     }
@@ -170,7 +170,6 @@ public class ChooseCardHandler implements Initializable {
         int i = 0;
         ArrayList<String> imageURLs = new ArrayList<>();
         for (String s : windows) {
-            //TODO: si può usare libreria java.io?
             BufferedReader reader = new BufferedReader(new StringReader(s));
             try {
                 reader.readLine();
@@ -222,18 +221,19 @@ public class ChooseCardHandler implements Initializable {
     }
 
     public void setOpponents(List<String> players) {
-        String otherPlayers = new String();
+        StringBuilder otherPlayers = new StringBuilder();
         for (String s : players) {
             if (!s.equals(username)) {
-                otherPlayers = otherPlayers + " - " + s;
+                otherPlayers.append(" - ");
+                otherPlayers.append(s);
             }
         }
-        this.opponents.setText("Your match starts now! You are playing SAGRADA against:" + otherPlayers);
+        opponents.setText("Your match starts now! You are playing SAGRADA against:" + otherPlayers.toString());
     }
 
     public void setTextArea(String s) {
         s = "\n" + s;
-        this.opponents.appendText(s);
+        opponents.appendText(s);
     }
 
     public void setPrivateCard(String privateCard) {

@@ -56,4 +56,6 @@ public interface ResponseHandler {
     void handle(LastPlayerRoomResponse response);
 
     void handle(RoundTrackResponse response);
+
+    void handle(GameStartedResponse response);
 }

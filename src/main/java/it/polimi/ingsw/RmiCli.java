@@ -101,8 +101,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onGameStarted(boolean windowChosen) {
-        cli.onGameStarted();
+    public void onGameStarted(boolean windowChosen, List<String> names) {
+        cli.onGameStarted(names);
     }
 
     @Override

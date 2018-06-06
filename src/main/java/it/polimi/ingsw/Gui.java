@@ -152,7 +152,9 @@ public class Gui {
         }
     }
 
-    public void onGameStarted(Boolean windowChosen){
+    public void onGameStarted(Boolean windowChosen, List<String> names){
+        players = names;
+
         if(windowChosen){
             onAfterWindowChoice(); // todo: controllare
         } else {
