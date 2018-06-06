@@ -36,6 +36,7 @@ public class MoveDiceNotAdjacentToAnotherEffect implements Effect {
                             match.getBoard().getReserve().getDices().remove(caller.getDice());
                             p.setNumFavorTokens(p.getNumFavorTokens() - price);
                             price = 2;
+
                             return true;
                         } else return false;
                     } else

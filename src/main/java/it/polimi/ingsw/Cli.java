@@ -526,10 +526,10 @@ public class Cli {
                                                     }
                                                     if (controllerSocket.isDicePlaced()) {
                                                         controllerSocket.setDicePlaced(false);//to reset the value
-                                                        printer.println("\nWell done! The chosen dice has been placed correctly.\n");
+                                                        printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
                                                         printer.flush();
                                                     } else {
-                                                        printer.println("\nWARNING:You tried to place a dice when you shouldn't!");
+                                                        printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi!");
                                                         printer.flush();
                                                     }
                                                 }
@@ -661,7 +661,7 @@ public class Cli {
 
                                     if (parts.length == 2) {
                                         toolNumber1 = tryParse(parts[1]);
-                                        if (toolNumber1 != null) {
+                                        if (toolNumber1 != null&&toolNumber1>0 &&toolNumber1<7) {
                                             //RMI
                                             if (controllerRmi != null)
                                                 controllerRmi.setDiceValue(toolNumber1, username, single);
