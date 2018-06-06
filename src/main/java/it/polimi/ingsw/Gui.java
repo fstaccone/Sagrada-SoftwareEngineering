@@ -106,10 +106,6 @@ public class Gui {
         this.dicePlaced = dicePlaced;
     }
 
-    public void onPlayers(List<String> playersNames) {
-        players = playersNames;
-    }
-
     public void onYourTurn(boolean isMyTurn, String string) {
         if (string != null) {
             onReserve(string);
@@ -154,7 +150,9 @@ public class Gui {
         }
     }
 
-    public void onGameStarted(Boolean windowChosen){
+    public void onGameStarted(Boolean windowChosen, List<String> names){
+        players = names;
+
         if(windowChosen){
             onAfterWindowChoice(); // todo: controllare
         } else {

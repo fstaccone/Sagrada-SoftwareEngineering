@@ -37,11 +37,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onPlayers(List<String> playersNames) {
-        cli.onPlayers(playersNames);
-    }
-
-    @Override
     public void onYourTurn(boolean yourTurn, String string) {
         cli.onYourTurn(yourTurn, string);
     }
@@ -101,8 +96,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onGameStarted(boolean windowChosen) {
-        cli.onGameStarted();
+    public void onGameStarted(boolean windowChosen, List<String> names) {
+        cli.onGameStarted(names);
     }
 
     @Override

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface MatchObserver extends Serializable, Remote {
-    void onPlayers(List<String> playersNames) throws RemoteException;
 
     void onYourTurn(boolean isMyTurn, String string) throws RemoteException;
 
@@ -35,7 +34,7 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onPlayerReconnection(String name) throws RemoteException;
 
-    void onGameStarted(boolean windowChosen) throws RemoteException;
+    void onGameStarted(boolean windowChosen, List<String> names) throws RemoteException;
 
     void onGameClosing() throws RemoteException;
 

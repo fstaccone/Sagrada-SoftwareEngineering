@@ -11,8 +11,6 @@ public interface ResponseHandler {
 
     void handle(MatchStartedResponse response);
 
-    void handle(ActualPlayersResponse response);
-
     void handle(YourTurnResponse response);
 
     void handle(ReserveResponse response);
@@ -56,4 +54,6 @@ public interface ResponseHandler {
     void handle(LastPlayerRoomResponse response);
 
     void handle(RoundTrackResponse response);
+
+    void handle(GameStartedResponse response);
 }

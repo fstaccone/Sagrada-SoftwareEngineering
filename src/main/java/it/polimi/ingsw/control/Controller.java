@@ -88,12 +88,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public void showPlayers(String name) {
-        lobby.getMultiplayerMatches().get(name).showPlayers(name);
-    }
-
-
-    @Override
     public void chooseWindow(String name, int index, boolean isSingle) {
         if (isSingle) {
             lobby.getSingleplayerMatches().get(name).setWindowPatternCard(name, index);
@@ -378,12 +372,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public Response handle(ShowPlayersRequest request) {
-        lobby.getMultiplayerMatches().get(request.getUsername()).showPlayers(request.getUsername());
-        return null;
-    }
-
-    @Override
     public Response handle(DiceColorRequest request) {
         Colors color = askForDiceColor(request.name, request.isSingle);
         return new DiceColorResponse(color);
@@ -404,13 +392,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeMatchRemote(username, observer);
 
         if (reconnection) {
-            /*MatchMultiplayer match = lobby.getMultiplayerMatches().get(username);
-            List<String> names = match.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
-            try {
-                match.getRemoteObservers().get(match.getPlayer(username)).onPlayers(names);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }*/
             lobby.transferAllData(username);
         }
     }

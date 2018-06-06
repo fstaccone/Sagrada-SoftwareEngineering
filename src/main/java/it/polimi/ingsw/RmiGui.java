@@ -42,11 +42,6 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onPlayers(List<String> playersNames) {
-        gui.onPlayers(playersNames);
-    }
-
-    @Override
     public void onYourTurn(boolean isMyTurn, String string) {
         gui.onYourTurn(isMyTurn, string);
     }
@@ -107,8 +102,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onGameStarted(boolean windowChosen) {
-        gui.onGameStarted(windowChosen);
+    public void onGameStarted(boolean windowChosen, List<String> names) {
+        gui.onGameStarted(windowChosen, names);
     }
 
     @Override

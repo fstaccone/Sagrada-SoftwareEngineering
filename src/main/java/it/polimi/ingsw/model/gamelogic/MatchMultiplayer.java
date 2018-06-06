@@ -111,10 +111,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(0, 4);
     }
 
-
     /**
      * It checks if a player is CONNECTED and
-     *
      * @return the number of CONNECTED players
      */
     public int checkConnection() {
@@ -128,25 +126,22 @@ public class MatchMultiplayer extends Match implements Runnable {
     @Override
     public void gameInit() {
 
-        // todo: revision of the creation of this arraylist
         List<String> playersNames = new ArrayList<>();
         players.forEach(p -> playersNames.add(p.getName()));
 
         // notification to remote observers
         for (PlayerMultiplayer p : remoteObservers.keySet()) {
             try {
-                remoteObservers.get(p).onPlayers(playersNames);
-                remoteObservers.get(p).onGameStarted(p.isSchemeCardSet());
+                remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
 
         //notification to sockets
-        ActualPlayersResponse response = new ActualPlayersResponse(playersNames);
         for (PlayerMultiplayer p : socketObservers.keySet()) {
             try {
-                socketObservers.get(p).writeObject(response);
+                socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), playersNames));
                 socketObservers.get(p).reset();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -265,6 +260,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
 
     public void afterReconnection(String name) {
+        List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
         String privateCard = getPlayer(name).getPrivateObjectiveCard().toString();
@@ -275,6 +271,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         Map<String, Integer> otherTokens = new HashMap<>();
         Map<String, WindowPatternCard> otherSchemeCards = new HashMap<>();
         boolean schemeCardChosen = getPlayer(name).isSchemeCardSet();
+
         for (PlayerMultiplayer player : players) {
             if (!player.getName().equals(name)) {
                 otherTokens.put(player.getName(), player.getNumFavorTokens());
@@ -288,13 +285,14 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         if (remoteObservers.get(getPlayer(name)) != null) {
             try {
-                remoteObservers.get(getPlayer(name)).onGameStarted(getPlayer(name).isSchemeCardSet());
+                remoteObservers.get(getPlayer(name)).onGameStarted(getPlayer(name).isSchemeCardSet(), names);
                 remoteObservers.get(getPlayer(name)).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else if (socketObservers.get(getPlayer(name)) != null) {
             try {
+                socketObservers.get(getPlayer(name)).writeObject(new GameStartedResponse(getPlayer(name).isSchemeCardSet(), names));
                 socketObservers.get(getPlayer(name)).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen));
                 socketObservers.get(getPlayer(name)).reset();
             } catch (IOException e) {
@@ -421,27 +419,6 @@ public class MatchMultiplayer extends Match implements Runnable {
                 started = true;
             }
         }
-    }
-
-    // todo: rinominare in seguito alla sistemazione della creazione delle finestre in gui, (introduzione di onGameStarted)
-    public void showPlayers(String name) {
-        // RMI
-        if (remoteObservers.get(getPlayer(name)) != null) {
-            try {
-                remoteObservers.get(getPlayer(name)).onPlayers(players.stream().map(Player::getName).collect(Collectors.toList()));
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-        if (socketObservers.get(getPlayer(name)) != null) {
-            try {
-                socketObservers.get(getPlayer(name)).writeObject(new ActualPlayersResponse(players.stream().map(Player::getName).collect(Collectors.toList())));
-                socketObservers.get(getPlayer(name)).reset();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
     public PlayerMultiplayer getPlayer(String name) {
