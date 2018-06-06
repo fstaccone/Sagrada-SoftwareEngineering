@@ -58,12 +58,12 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onWindowChoise(List<String> windows) {
-        gui.onWindowChoise(windows);
+        gui.onWindowChoice(windows);
     }
 
     @Override
     public void onAfterWindowChoise() {
-        gui.onAfterWindowChoise();
+        gui.onAfterWindowChoice();
     }
 
     @Override

@@ -177,7 +177,7 @@ public class ClientController implements ResponseHandler {
         if (socketCli != null) {
             socketCli.getCli().onAfterWindowChoise();
         } else
-            socketGui.getGui().onAfterWindowChoise();
+            socketGui.getGui().onAfterWindowChoice();
     }
 
     @Override
@@ -290,7 +290,7 @@ public class ClientController implements ResponseHandler {
     public void handle(ProposeWindowResponse response) {
         if (socketCli != null) {
             socketCli.getCli().onWindowChoise(response.list);
-        } else socketGui.getGui().onWindowChoise(response.list);
+        } else socketGui.getGui().onWindowChoice(response.list);
     }
 
     public void handle(CheckConnectionResponse response) { //DA SISTEMARE ANCHE CON GUI

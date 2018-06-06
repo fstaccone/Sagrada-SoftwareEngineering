@@ -147,14 +147,14 @@ public class Gui {
     public void onPlayerReconnection(String name) {
         if (gameBoardHandler != null) {
             gameBoardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
-        } else {
+        } else if(chooseCardHandler != null){
             chooseCardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
         }
     }
 
     public void onGameStarted(Boolean windowChosen){
         if(windowChosen){
-            // direttamente alla schermata di gioco
+            onAfterWindowChoice(); // todo: controllare
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader();
             try {
@@ -173,7 +173,6 @@ public class Gui {
             Scene scene = new Scene(root);
             chooseCardHandler.init(windowStage, scene, controllerRmi, controllerSocket, username);
             chooseCardHandler.setOpponents(players);
-            //chooseCardHandler.setPrivateCard(privateCard);
         }
     }
 
@@ -283,13 +282,16 @@ public class Gui {
         }
     }
 
-    public void onWindowChoise(List<String> windows) {
+    public void onWindowChoice(List<String> windows) {
+        chooseCardHandler.setPrivateCard(privateCard);
         chooseCardHandler.setWindows(windows);
     }
 
-    public void onAfterWindowChoise() {
+    public void onAfterWindowChoice() {
 
+        // todo: trovare un'alternativa, genera eccezione quando il giocatore si riccnnette e non passa per chooseCardHandler
         String imgUrl = chooseCardHandler.getImageUrl();
+
         FXMLLoader fx = new FXMLLoader();
         try {
             fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board.fxml"));

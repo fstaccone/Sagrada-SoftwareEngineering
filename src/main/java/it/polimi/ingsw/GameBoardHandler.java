@@ -1213,7 +1213,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void setTextArea(String s) {
-        this.textArea.setText(s);
+        textArea.setText(s);
     }
 
     @FXML
