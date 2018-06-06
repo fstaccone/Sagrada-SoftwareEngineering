@@ -405,27 +405,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    // todo: rinominare in seguito alla sistemazione della creazione delle finestre in gui, (introduzione di onGameStarted)
-    public void showPlayers(String name) {
-        // RMI
-        if (remoteObservers.get(getPlayer(name)) != null) {
-            try {
-                remoteObservers.get(getPlayer(name)).onPlayers(players.stream().map(Player::getName).collect(Collectors.toList()));
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-        if (socketObservers.get(getPlayer(name)) != null) {
-            try {
-                socketObservers.get(getPlayer(name)).writeObject(new ActualPlayersResponse(players.stream().map(Player::getName).collect(Collectors.toList())));
-                socketObservers.get(getPlayer(name)).reset();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
     public PlayerMultiplayer getPlayer(String name) {
 
         for (PlayerMultiplayer p : players) {

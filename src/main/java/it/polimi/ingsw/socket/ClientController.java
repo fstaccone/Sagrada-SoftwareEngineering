@@ -14,7 +14,6 @@ import java.io.ObjectOutputStream;
 
 public class ClientController implements ResponseHandler {
 
-
     private ConnectionStatus nameStatus = ConnectionStatus.ABSENT;
     private boolean dicePlaced = false;
     private boolean effectApplied = false;
@@ -148,14 +147,6 @@ public class ClientController implements ResponseHandler {
         } else {
             socketGui.getGui().onGameStarted(response.isWindowChosen(), response.getNames());
         }
-    }
-
-    @Override
-    public void handle(ActualPlayersResponse response) {
-        if (socketCli != null) {
-            socketCli.getCli().onPlayers(response.playersNames);
-        } else
-            socketGui.getGui().onPlayers(response.playersNames);
     }
 
     @Override

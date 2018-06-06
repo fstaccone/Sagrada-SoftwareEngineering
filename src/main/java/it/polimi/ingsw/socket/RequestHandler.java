@@ -46,8 +46,6 @@ public interface RequestHandler {
 
     Response handle(ReconnectionRequest request);
 
-    Response handle(ShowPlayersRequest request);
-
     Response handle(DiceColorRequest request);
 
     Response handle(SetDiceValueRequest request);

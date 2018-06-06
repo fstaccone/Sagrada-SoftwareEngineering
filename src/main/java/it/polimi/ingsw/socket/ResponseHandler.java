@@ -11,8 +11,6 @@ public interface ResponseHandler {
 
     void handle(MatchStartedResponse response);
 
-    void handle(ActualPlayersResponse response);
-
     void handle(YourTurnResponse response);
 
     void handle(ReserveResponse response);

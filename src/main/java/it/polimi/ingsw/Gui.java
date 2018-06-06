@@ -104,10 +104,6 @@ public class Gui {
         this.dicePlaced = dicePlaced;
     }
 
-    public void onPlayers(List<String> playersNames) {
-        players = playersNames;
-    }
-
     public void onYourTurn(boolean isMyTurn, String string) {
         if (string != null) {
             onReserve(string);

@@ -144,18 +144,17 @@ public class Cli {
         printer.println("Your match starts now! You are playing SAGRADA against:");
         printer.flush();
 
+        printNames();
+    }
+
+    private void printNames(){
         for (String name : playersNames) {
             if (!name.equals(username)) {
                 printer.println("-" + name.toUpperCase());
-                printer.flush();
             }
         }
         printer.println();
         printer.flush();
-    }
-
-    public void onPlayers(List<String> playersNames) {
-        this.playersNames = playersNames;
     }
 
     public void onRoundTrack(String roundTrack) {
@@ -584,11 +583,9 @@ public class Cli {
                             break;
 
                             case "sp": {
-                                printer.println("Lista completa dei giocatori:");
-                                for (String p : players) {
-                                    printer.println("- " + p);
-                                }
+                                printer.println("Stai giocando contro:");
                                 printer.flush();
+                                printNames();
                             }
                             break;
 
@@ -754,11 +751,9 @@ public class Cli {
                             break;
 
                             case "sp": {
-                                if (controllerRmi != null)
-                                    controllerRmi.showPlayers(username);
-                                else {
-                                    controllerSocket.request(new ShowPlayersRequest(username));
-                                }
+                                printer.println("Stai giocando contro:");
+                                printer.flush();
+                                printNames();
                             }
                             break;
 
