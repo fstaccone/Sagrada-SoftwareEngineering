@@ -43,20 +43,24 @@ public class MoveDiceIgnoringColorRestrTest {
         Dice dv= new Dice(Colors.VIOLET);
         dv.setValue(2);
 
-        player.getSchemeCard().putFirstDice(dy,0,0);
+        player.getSchemeCard().putDice(dy,0,0);
         player.getSchemeCard().putDice(dg,1,0);
         player.getSchemeCard().putDice(dr,2,0);
         player.getSchemeCard().putDice(db,3,0);
+        System.out.println(player.getSchemeCard().toString());
 
-        //toolCard = new ToolCard("Pennello per Eglomise");
-        ByteArrayInputStream in = new ByteArrayInputStream("1 0 0 1".getBytes());
-        System.setIn(in);
+        player.setStartX1(1);
+        player.setStartY1(0);
+        player.setFinalX1(0);
+        player.setFinalY1(1);
+
+        toolCard = new ToolCard("Pennello per Eglomise", "tool2");
     }
 
     @Test
     public void checkPoints() {
         toolCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(Colors.GREEN,player.getSchemeCard().getWindow()[0][1].getDice().getColor());
+        Assert.assertEquals(Colors.GREEN, player.getSchemeCard().getWindow()[0][1].getDice().getColor());
     }
 }

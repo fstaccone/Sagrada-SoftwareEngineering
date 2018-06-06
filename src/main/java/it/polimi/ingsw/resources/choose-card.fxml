@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.image.*?>
 <?import java.net.*?>
 <?import javafx.scene.text.*?>
@@ -8,9 +9,9 @@
 
 <AnchorPane id="choose-card-window" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.ChooseCardHandler">
    <children>
-      <Label layoutX="189.0" layoutY="14.0" text="PLEASE CHOOSE ONE WINDOW PATTERN CARD" textFill="WHITE">
+      <Label layoutX="253.0" layoutY="14.0" text="SCEGLI LA TUA CARTA SCHEMA" textFill="WHITE">
          <font>
-            <Font name="Algerian" size="20.0" />
+            <Font name="Courier New Bold" size="20.0" />
          </font>
       </Label>
       <GridPane hgap="14.0" layoutX="277.0" layoutY="122.0" prefHeight="397.0" prefWidth="455.0" vgap="14.0">
@@ -29,15 +30,21 @@
             <Button fx:id="card3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#chosen3" styleClass="schemeCardChoice" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <Button id="play" fx:id="play" layoutX="678.0" layoutY="549.0" mnemonicParsing="false" onMouseClicked="#onPlayClicked" prefHeight="37.0" prefWidth="108.0" text="PLAY" textFill="WHITE" />
+      <Button id="play" fx:id="play" layoutX="678.0" layoutY="549.0" mnemonicParsing="false" onMouseClicked="#onPlayClicked" prefHeight="37.0" prefWidth="108.0" text="GIOCA" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Button>
       <TextArea fx:id="opponents" layoutX="125.0" layoutY="38.0" prefHeight="37.0" prefWidth="554.0" />
       <ImageView fx:id="privateObjCard" fitHeight="364.0" fitWidth="239.0" layoutX="14.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="47.0" layoutY="122.0" prefHeight="74.0" prefWidth="157.0" text="YOUR Private objective card" textFill="WHITE" wrapText="true">
+      <Label layoutX="47.0" layoutY="122.0" prefHeight="74.0" prefWidth="157.0" text="LA TUA CARTA OBIETTIVO PRIVATO" textFill="WHITE" wrapText="true">
          <font>
-            <Font name="Algerian" size="18.0" />
+            <Font name="Courier New Bold" size="18.0" />
          </font>
       </Label>
-      <Button id="quit" fx:id="quit" layoutX="539.0" layoutY="550.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="37.0" prefWidth="108.0" text="QUIT" textFill="WHITE" />
+      <Button id="quit" fx:id="quit" layoutX="539.0" layoutY="550.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="37.0" prefWidth="108.0" text="ESCI" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Button>
    </children>
     <stylesheets>
         <URL value="@game-board-style.css" />
