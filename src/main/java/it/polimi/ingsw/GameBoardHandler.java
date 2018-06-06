@@ -65,6 +65,8 @@ public class GameBoardHandler implements Initializable {
     private int pickedDices = 0;
 
     @FXML
+    Label toolLabel;
+    @FXML
     Pane toolPane;
     @FXML
     Button useButton;
@@ -205,7 +207,7 @@ public class GameBoardHandler implements Initializable {
 
     private void createContext1() {
         imageView1 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
 
@@ -275,7 +277,7 @@ public class GameBoardHandler implements Initializable {
 
     private void createContext2or3(int n) {
         imageView1 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
         imageView1 = new ImageView();
@@ -343,7 +345,7 @@ public class GameBoardHandler implements Initializable {
     private void createContext4() {
         imageView1 = null;
         imageView2 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
 
@@ -428,7 +430,7 @@ public class GameBoardHandler implements Initializable {
     private void createContext5() {
         imageView1 = null;
         imageView2 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
         imageView1 = new ImageView();
@@ -488,7 +490,7 @@ public class GameBoardHandler implements Initializable {
 
     private void createContext6() {
         imageView1 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
         imageView1 = new ImageView();
@@ -536,6 +538,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     private void createContext7or8(int n) {
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
 
@@ -550,8 +553,6 @@ public class GameBoardHandler implements Initializable {
                             } else {
                                 textArea.setText("Carta utensile 7 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
                             }
-                            useButton.setVisible(false);
-                            toolPane.setVisible(false);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -571,8 +572,6 @@ public class GameBoardHandler implements Initializable {
                             } else {
                                 textArea.setText("Carta utensile 8 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
                             }
-                            useButton.setVisible(false);
-                            toolPane.setVisible(false);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -592,7 +591,7 @@ public class GameBoardHandler implements Initializable {
 
     private void createContext9() {
         imageView1 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
         imageView1 = new ImageView();
@@ -654,7 +653,7 @@ public class GameBoardHandler implements Initializable {
     private void createContext10() {
 
         imageView1 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
         imageView1 = new ImageView();
@@ -704,7 +703,7 @@ public class GameBoardHandler implements Initializable {
 
     private void createContext11() {
         imageView1 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
         imageView1 = new ImageView();
@@ -757,7 +756,7 @@ public class GameBoardHandler implements Initializable {
         imageView1 = null;
         imageView2 = null;
         imageView3 = null;
-
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         useButton.setVisible(true);
         imageView3 = new ImageView();
@@ -884,6 +883,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     private void createContext11bis() {
+        toolLabel.setVisible(true);
         toolPane.setVisible(true);
         Colors color = null;
         if (remoteController!=null) {
@@ -1001,6 +1001,7 @@ public class GameBoardHandler implements Initializable {
         imageView2.setVisible(false);
         imageView3.setVisible(false);
         useButton.setVisible(false);
+        toolLabel.setVisible(false);
         toolPane.setVisible(false);
         finalX1.setVisible(false);
         finalY1.setVisible(false);
@@ -1322,6 +1323,7 @@ public class GameBoardHandler implements Initializable {
         label2.setText(" ");
         label3.setText(" ");
         useButton.setVisible(false);
+        toolLabel.setVisible(false);
         toolPane.setVisible(false);
         imageView1 = new ImageView();
         imageView2 = new ImageView();

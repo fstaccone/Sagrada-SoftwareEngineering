@@ -26,10 +26,8 @@
 }
 
 #reserve{
-    -fx-background-color: lightgray;
+    -fx-background-image: url("reserve.png");
     -fx-background-size: cover;
-    -fx-border-radius: 5;
-    -fx-background-radius: 15;
 }
 
 .card:hover {
@@ -116,4 +114,8 @@
  #gameBoardQuit:pressed {
       -fx-scale-y: 0.9;
       -fx-scale-x: 0.9;
+  }
+
+  #toolpane{
+  -fx-background-radius: 10;
   }

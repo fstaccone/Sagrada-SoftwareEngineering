@@ -16,9 +16,9 @@
 <AnchorPane id="gameBoard" fx:id="gameBoard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GameBoardHandler">
     <children>
         <Pane id="playerCard" fx:id="playerWindowPatternCard" layoutX="601.0" layoutY="548.0" prefHeight="300.0" prefWidth="340.0" />
-        <Pane id="reserve" fx:id="reserve" layoutX="633.0" layoutY="233.0" prefHeight="261.0" prefWidth="276.0">
+        <Pane id="reserve" fx:id="reserve" layoutX="629.0" layoutY="246.0" prefHeight="261.0" prefWidth="285.0">
             <children>
-                <GridPane hgap="15.0" prefHeight="261.0" prefWidth="276.0" vgap="15.0">
+                <GridPane hgap="15.0" layoutX="14.0" layoutY="7.0" prefHeight="261.0" prefWidth="270.0" vgap="15.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -33,7 +33,7 @@
                         <Button fx:id="reserveDice1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <Button fx:id="reserveDice0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                         <Button fx:id="reserveDice2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                        <Button fx:id="reserveDice3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Button fx:id="reserveDice3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="67.0" styleClass="reserveDice" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                         <Button fx:id="reserveDice4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Button fx:id="reserveDice5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Button fx:id="reserveDice6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="reserveDice" GridPane.columnIndex="0" GridPane.rowIndex="2" />
@@ -48,7 +48,7 @@
         </Pane>
         <Pane layoutX="956.0" layoutY="460.0" prefHeight="408.0" prefWidth="394.0">
             <children>
-                <GridPane hgap="15.0" layoutX="8.0" layoutY="25.0" prefHeight="160.0" prefWidth="379.0" vgap="15.0">
+                <GridPane hgap="15.0" layoutX="9.0" layoutY="227.0" prefHeight="160.0" prefWidth="379.0" vgap="15.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -63,20 +63,20 @@
                         <ImageView fx:id="pubObjCard3" fitHeight="160.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" styleClass="card" GridPane.columnIndex="2" />
                     </children>
                 </GridPane>
-                <Label layoutX="108.0" layoutY="3.0" prefHeight="23.0" prefWidth="200.0" text="OBIETTIVI PUBBLICI" textFill="#251494">
+                <Label layoutX="107.0" layoutY="193.0" prefHeight="23.0" prefWidth="200.0" text="OBIETTIVI PUBBLICI" textFill="#251494">
                <font>
                   <Font name="Courier New Bold" size="18.0" />
                </font>
                 </Label>
-                <Label layoutX="115.0" layoutY="189.0" prefHeight="31.0" prefWidth="186.0" text="OBIETTIVO PRIVATO" textFill="#251494">
-                    <font>
-                        <Font name="Courier New Bold" size="18.0" />
-                    </font>
-                </Label>
-                <ImageView fx:id="privateObjCard" fitHeight="160.0" fitWidth="116.0" layoutX="140.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true" styleClass="card" />
+                <ImageView fx:id="privateObjCard" fitHeight="160.0" fitWidth="116.0" layoutX="272.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" styleClass="card" />
+              <Label fx:id="label3" layoutX="50.0" layoutY="49.0" prefHeight="31.0" prefWidth="207.0" textAlignment="CENTER" textFill="#251494">
+               <font>
+                  <Font name="Courier New Bold" size="18.0" />
+               </font>
+            </Label>
             </children>
         </Pane>
-        <Button id="passButton" fx:id="passButton" layoutX="1129.0" layoutY="166.0" mnemonicParsing="false" onAction="#onPassButtonClicked" prefHeight="40.0" prefWidth="92.0" text="PASSA" textFill="WHITE">
+        <Button id="passButton" fx:id="passButton" layoutX="1130.0" layoutY="211.0" mnemonicParsing="false" onAction="#onPassButtonClicked" prefHeight="40.0" prefWidth="92.0" text="PASSA" textFill="WHITE">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Button>
@@ -95,19 +95,15 @@
                 <Button fx:id="tool2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="card" GridPane.columnIndex="2" />
             </children>
         </GridPane>
-        <TextArea fx:id="textArea" layoutX="962.0" layoutY="83.0" prefHeight="74.0" prefWidth="427.0" wrapText="true" />
-        <Button id="gameBoardQuit" fx:id="quit" layoutX="1294.0" layoutY="26.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="40.0" prefWidth="92.0" text="ESCI" textFill="WHITE">
+        <TextArea fx:id="textArea" layoutX="962.0" layoutY="83.0" prefHeight="120.0" prefWidth="427.0" wrapText="true" />
+        <Button id="gameBoardQuit" fx:id="quit" layoutX="1130.0" layoutY="25.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="40.0" prefWidth="92.0" text="ESCI" textFill="WHITE">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Button>
         <Pane fx:id="pane2" layoutX="661.0" layoutY="14.0" prefHeight="192.0" prefWidth="220.0" />
-        <Pane fx:id="pane3" layoutX="1019.0" layoutY="257.0" prefHeight="192.0" prefWidth="220.0" />
-        <Pane fx:id="myFavourTokensContainer" layoutX="542.0" layoutY="592.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
-        <Label fx:id="label2" layoutX="924.0" layoutY="26.0" prefHeight="31.0" prefWidth="239.0" textAlignment="CENTER" textFill="#251494">
-         <font>
-            <Font name="Courier New Bold" size="18.0" />
-         </font></Label>
-        <Label fx:id="label3" layoutX="1029.0" layoutY="215.0" prefHeight="31.0" prefWidth="207.0" textAlignment="CENTER" textFill="#251494">
+        <Pane fx:id="pane3" layoutX="995.0" layoutY="310.0" prefHeight="192.0" prefWidth="220.0" />
+        <Pane fx:id="myFavourTokensContainer" layoutX="544.0" layoutY="551.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="282.0" prefWidth="40.0" />
+        <Label fx:id="label2" layoutX="675.0" layoutY="206.0" prefHeight="31.0" prefWidth="239.0" textAlignment="CENTER" textFill="#251494">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Label>
@@ -115,20 +111,20 @@
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Label>
-        <Pane fx:id="favourTokensContainer1" layoutX="280.0" layoutY="254.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
-        <Pane fx:id="favourTokensContainer2" layoutX="552.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
-        <Pane fx:id="favourTokensContainer3" layoutX="962.0" layoutY="233.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
-      <Pane fx:id="roundTrack" layoutX="195.0" layoutY="66.0" prefHeight="160.0" prefWidth="320.0" />
-      <Label layoutX="251.0" layoutY="11.0" prefHeight="31.0" prefWidth="207.0" text="TRACCIATO DEI ROUND" textAlignment="CENTER" textFill="#251494">
+        <Pane fx:id="favourTokensContainer1" layoutX="292.0" layoutY="310.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
+        <Pane fx:id="favourTokensContainer2" layoutX="601.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
+        <Pane fx:id="favourTokensContainer3" layoutX="936.0" layoutY="310.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="240.0" prefWidth="40.0" />
+      <Pane fx:id="roundTrack" layoutX="257.0" layoutY="35.0" prefHeight="166.0" prefWidth="320.0" />
+      <Label layoutX="33.0" layoutY="10.0" prefHeight="31.0" prefWidth="220.0" text="TRACCIATO DEI ROUND:" textAlignment="CENTER" textFill="#251494">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="196.0" layoutY="47.0" prefHeight="21.0" prefWidth="356.0" text=" 1  2  3  4  5  6  7  8  9  10" textFill="#251494">
+      <Label layoutX="253.0" layoutY="15.0" prefHeight="21.0" prefWidth="328.0" text=" 1  2  3  4  5  6  7  8  9  10" textFill="#251494">
          <font>
             <Font name="Courier New Bold Italic" size="17.0" />
          </font></Label>
-        <Pane fx:id="pane1" layoutX="349.0" layoutY="268.0" prefHeight="192.0" prefWidth="220.0" />
+        <Pane fx:id="pane1" layoutX="344.0" layoutY="310.0" prefHeight="192.0" prefWidth="220.0" />
       <Pane id="toolPane" fx:id="toolPane" depthTest="DISABLE" layoutX="19.0" layoutY="78.0" prefHeight="463.0" prefWidth="159.0" style="-fx-background-color: #251494;">
          <children>
               <Button id="passButton" fx:id="useButton" layoutX="34.0" layoutY="409.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="92.0" text="USA" textFill="WHITE">
@@ -137,16 +133,25 @@
                   </font>
             </Button>
             <Label layoutX="46.0" layoutY="6.0" />
+            <Label fx:id="toolLabel" id="toolLabel" layoutX="25.0" layoutY="7.0" text="   Pannello &#10;Carta Utensile" textFill="WHITE">
+               <font>
+                  <Font name="Courier New Bold" size="13.0" />
+               </font></Label>
          </children></Pane>
       <Label layoutX="185.0" layoutY="561.0" prefHeight="31.0" prefWidth="159.0" text="CARTE UTENSILI" textFill="#251494">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Label>
-        <Label fx:id="label1" layoutX="364.0" layoutY="235.0" prefHeight="23.0" prefWidth="228.0" textAlignment="CENTER" textFill="#251494">
+        <Label fx:id="label1" layoutX="353.0" layoutY="516.0" prefHeight="23.0" prefWidth="228.0" textAlignment="CENTER" textFill="#251494">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font>
       </Label>
+          <Label layoutX="1239.0" layoutY="416.0" prefHeight="55.0" prefWidth="104.0" text="OBIETTIVO&#10; PRIVATO" textFill="#251494">
+              <font>
+                  <Font name="Courier New Bold" size="18.0" />
+              </font>
+          </Label>
     </children>
 
     <stylesheets>
