@@ -1070,7 +1070,7 @@ public class Cli {
                                             color = controllerSocket.getDiceColor();
                                         }
 
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");
+                                        printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");
                                         printer.flush();
                                         diceValueToBeSet = true;
                                     } else {
