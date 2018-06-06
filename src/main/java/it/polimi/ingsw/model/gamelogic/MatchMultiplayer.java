@@ -639,6 +639,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             schemeCardsToBeUpdated(result, name);
+            setDiceAction(result);
             setToolAction(result);
             return result;
         } else {

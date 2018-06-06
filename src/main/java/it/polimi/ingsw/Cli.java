@@ -526,10 +526,10 @@ public class Cli {
                                                     }
                                                     if (controllerSocket.isDicePlaced()) {
                                                         controllerSocket.setDicePlaced(false);//to reset the value
-                                                        printer.println("\nWell done! The chosen dice has been placed correctly.\n");
+                                                        printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
                                                         printer.flush();
                                                     } else {
-                                                        printer.println("\nWARNING:You tried to place a dice when you shouldn't!");
+                                                        printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi!");
                                                         printer.flush();
                                                     }
                                                 }
@@ -661,7 +661,7 @@ public class Cli {
 
                                     if (parts.length == 2) {
                                         toolNumber1 = tryParse(parts[1]);
-                                        if (toolNumber1 != null) {
+                                        if (toolNumber1 != null&&toolNumber1>0 &&toolNumber1<7) {
                                             //RMI
                                             if (controllerRmi != null)
                                                 controllerRmi.setDiceValue(toolNumber1, username, single);
@@ -1070,7 +1070,7 @@ public class Cli {
                                             color = controllerSocket.getDiceColor();
                                         }
 
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");
+                                        printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");
                                         printer.flush();
                                         diceValueToBeSet = true;
                                     } else {
