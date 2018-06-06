@@ -10,8 +10,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MoveDiceNotAdjacentToAnotherTest {
     private KaleidoscopicDream schemeCard;
@@ -19,10 +22,14 @@ public class MoveDiceNotAdjacentToAnotherTest {
     private Player player;
     private MatchMultiplayer match;
     private Room room;
+    private Board board;
+    private Reserve reserve;
     @Before
     public void before() {
         room = mock(Room.class);
+        board = mock(Board.class);
         match = mock(MatchMultiplayer.class);
+        reserve = mock(Reserve.class);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);
         schemeCard = new KaleidoscopicDream();
@@ -42,16 +49,25 @@ public class MoveDiceNotAdjacentToAnotherTest {
 
         Dice dplayer= new Dice(Colors.GREEN);
         dplayer.setValue(4);
+        List<Dice> list = new ArrayList<>();
+        list.add(dplayer);
+        list.add(db);
         player.setPickedDice(dplayer);
+        player.setDice(0);
 
         player.getSchemeCard().putFirstDice(dy,0,0);
         player.getSchemeCard().putDice(dg,1,0);
         player.getSchemeCard().putDice(dr,2,0);
         player.getSchemeCard().putDice(db,3,0);
 
-        //toolCard = new ToolCard("Riga in Sughero");
-        ByteArrayInputStream in = new ByteArrayInputStream("2 4".getBytes());
-        System.setIn(in);
+        toolCard = new ToolCard("Riga in Sughero", "tool9");
+        player.setFinalX1(2);
+        player.setFinalY1(4);
+
+        when(match.getBoard()).thenReturn(board);
+        when(match.getBoard().getReserve()).thenReturn(reserve);
+        when(reserve.getDices()).thenReturn(list);
+        when(match.getBoard().getReserve().getDices()).thenReturn(list);
     }
 
     @Test

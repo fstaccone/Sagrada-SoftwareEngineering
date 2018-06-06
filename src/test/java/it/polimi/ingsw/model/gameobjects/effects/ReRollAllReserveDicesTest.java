@@ -48,7 +48,7 @@ public class ReRollAllReserveDicesTest {
         player = new PlayerMultiplayer("player", match);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
-        //toolCard = new ToolCard("Martelletto");
+        toolCard = new ToolCard("Martelletto", "tool7");
     }
     @Test
     public void checkReserve(){
@@ -56,5 +56,10 @@ public class ReRollAllReserveDicesTest {
         toolCard.useCard(player, match);
         //match.getBoard().getReserve().showReserve();
         Assert.assertNotNull( match.getBoard().getReserve());
+        Assert.assertEquals(Colors.RED,match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.YELLOW,match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.VIOLET,match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.GREEN,match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.BLUE,match.getBoard().getReserve().chooseDice(0).getColor());
     }
 }

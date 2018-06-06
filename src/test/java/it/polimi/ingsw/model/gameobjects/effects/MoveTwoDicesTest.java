@@ -12,17 +12,21 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MoveTwoDicesTest {
     private SymphonyOfLight schemeCard;
     private ToolCard toolCard;
     private Player player;
     private MatchMultiplayer match;
+    Reserve reserve;
     private Room room;
     @Before
     public void before() {
         room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
+        Board board = mock(Board.class);
+        reserve = mock(Reserve.class);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);
         schemeCard = new SymphonyOfLight();
@@ -40,14 +44,21 @@ public class MoveTwoDicesTest {
         Dice db = new Dice(Colors.BLUE);
         db.setValue(4);
 
-        player.getSchemeCard().putFirstDice(dg, 0, 1);
+        player.getSchemeCard().putDice(dg, 0, 1);
         player.getSchemeCard().putDice(dy, 1, 0);
         player.getSchemeCard().putDice(dr, 2, 0);
         player.getSchemeCard().putDice(db, 3, 0);
 
-        //toolCard = new ToolCard("Lathekin");
-        ByteArrayInputStream in = new ByteArrayInputStream("0 1 1 0 3 1 1 1".getBytes());
-        System.setIn(in);
+        player.setStartX1(0);
+        player.setStartY1(1);
+        player.setStartX2(1);
+        player.setStartY2(0);
+        player.setFinalX1(3);
+        player.setFinalY1(1);
+        player.setFinalX2(1);
+        player.setFinalY2(1);
+
+        toolCard = new ToolCard("Lathekin", "tool4");
     }
     @Test
     public void checkPoints() {

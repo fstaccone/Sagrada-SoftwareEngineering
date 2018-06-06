@@ -51,7 +51,11 @@ public class MoveDiceIgnoringValueRestrTest {
         player.getSchemeCard().putDice(db,3,0);
         player.getSchemeCard().putDice(dv,1,1);
 
-        //toolCard = new ToolCard("Alesatore per Lamina di Rame");
+        toolCard = new ToolCard("Alesatore per Lamina di Rame", "tool3");
+        player.setStartX1(3);
+        player.setStartY1(0);
+        player.setFinalX1(1);
+        player.setFinalY1(2);
         ByteArrayInputStream in = new ByteArrayInputStream("3 0 1 2".getBytes());
         System.setIn(in);
     }

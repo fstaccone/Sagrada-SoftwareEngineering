@@ -47,7 +47,7 @@ public class DifferentShadesTest {
         Dice dr1= new Dice(Colors.RED);
         dr1.setValue(6);
 
-        player.getSchemeCard().putFirstDice(dy,0,0);
+        player.getSchemeCard().putDice(dy,0,0);
         player.getSchemeCard().putDice(dg,1,1);
         player.getSchemeCard().putDice(db,0,1);
         player.getSchemeCard().putDice(dv,1,0);

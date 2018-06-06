@@ -21,19 +21,22 @@ import static org.mockito.Mockito.when;
 public class MoveTwoDicesColorRoundTrackTest {
     private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
-    private Player player;
+    private PlayerMultiplayer player;
     private MatchMultiplayer match;
+    private RoundTrack roundTrack;
+    private Reserve reserve;
     private Room room;
     @Before
     public void before() {
         room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
         Board board = mock(Board.class);
+        reserve = mock(Reserve.class);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
-        //toolCard = new ToolCard("Taglierina Manuale");
+        toolCard = new ToolCard("Taglierina Manuale", "tool12");
         RoundTrack roundTrack = new RoundTrack();
         roundTrack.showRoundTrack();
         List<Dice> list0 = new LinkedList<>();
@@ -49,6 +52,7 @@ public class MoveTwoDicesColorRoundTrackTest {
         list1.add(d11);
         roundTrack.putDices(list0,0);
         roundTrack.putDices(list1, 1);
+        roundTrack.showRoundTrack();
         when(match.getBoard()).thenReturn(board);
         when(match.getBoard().getRoundTrack()).thenReturn(roundTrack);
 
@@ -61,27 +65,35 @@ public class MoveTwoDicesColorRoundTrackTest {
         Dice dr = new Dice(Colors.RED);
         dr.setValue(3);
 
+        Dice dr2 = new Dice(Colors.RED);
+        dr2.setValue(4);
+
         Dice db = new Dice(Colors.BLUE);
         db.setValue(2);
 
         Dice dv = new Dice(Colors.VIOLET);
         dv.setValue(2);
 
-        player.getSchemeCard().putFirstDice(dy,0,0);
+        player.getSchemeCard().putDice(dy,0,0);
         player.getSchemeCard().putDice(dg,1,0);
         player.getSchemeCard().putDice(dr,2,0);
         player.getSchemeCard().putDice(db,3,0);
-        player.getSchemeCard().putDice(dr,3,1);
+        player.getSchemeCard().putDice(dr2,3,1);
         player.getSchemeCard().putDice(dy,1,1);
+        System.out.println(player.getSchemeCard().toString());
+        player.setRound(1);
+        player.setDiceChosenFromRound(0);
+        player.setNumFavorTokens(5);
+        player.setStartX1(2);
+        player.setStartY1(0);
+        player.setStartX2(3);
+        player.setStartY2(1);
+        player.setFinalX1(2);
+        player.setFinalY1(2);
+        player.setFinalX2(0);
+        player.setFinalY2(2);
 
-        //toolCard = new ToolCard("Taglierina Manuale");
-        //input funziona per scegliere colore, poi si blocca quando bisogna dire quanti dadi si vogliono spostare.
-        //Secondo me problema è che si apre lo stream per prendere i primi due interi nella riga 16 del relativo effetto
-        //poi quando al rigo 21 si prende altro input lo stream è vuoto e test non va avanti.
-        //Per farlo funzionare ho ricreato il metodo ChooseDiceColor però passandogli per parametro uno scanner
-        //Facendo così funziona.
-        ByteArrayInputStream in = new ByteArrayInputStream("1 0 2 0 0 1 1 0 1 2 1 3 2".getBytes());
-        setIn(in);
+        toolCard = new ToolCard("Taglierina Manuale", "tool12");
     }
 
     @Test
@@ -89,9 +101,9 @@ public class MoveTwoDicesColorRoundTrackTest {
         System.out.println(player.getSchemeCard().toString());
         toolCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(Colors.YELLOW,player.getSchemeCard().getWindow()[2][1].getDice().getColor());
-        Assert.assertEquals(1, player.getSchemeCard().getWindow()[2][1].getDice().getValue());
-        Assert.assertEquals(Colors.YELLOW,player.getSchemeCard().getWindow()[3][2].getDice().getColor());
-        Assert.assertEquals(1, player.getSchemeCard().getWindow()[3][2].getDice().getValue());
+        Assert.assertEquals(Colors.RED,player.getSchemeCard().getWindow()[2][2].getDice().getColor());
+        Assert.assertEquals(3, player.getSchemeCard().getWindow()[2][2].getDice().getValue());
+        Assert.assertEquals(Colors.RED,player.getSchemeCard().getWindow()[0][2].getDice().getColor());
+        Assert.assertEquals(4, player.getSchemeCard().getWindow()[0][2].getDice().getValue());
     }
 }
