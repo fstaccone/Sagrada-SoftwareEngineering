@@ -1394,20 +1394,17 @@ public class GameBoardHandler implements Initializable {
         Platform.runLater(() -> tool0.setGraphic(cardView0));
         tool0.setOnAction(toolSelected);
         tool0.setOnMouseEntered(event -> {
-            toolCardsLabel.setVisible(false);
-
             tool0.setTranslateX(20);
             tool0.setTranslateY(-60);
-            tool0.setStyle("-fx-scale-x: 1.5;-fx-scale-y: 1.5;-fx-scale-z:1.5");
+            tool0.setStyle("-fx-scale-x: 1.5;-fx-scale-y: 1.5");
             tool1.setVisible(false);
             tool2.setVisible(false);
             toolCardsLabel.setVisible(false);
         });
         tool0.setOnMouseExited(event -> {
-
-            tool0.setTranslateX(-20);
-            tool0.setTranslateY(60);
-            tool0.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0;-fx-scale-z:1.0");
+            tool0.setTranslateX(0);
+            tool0.setTranslateY(0);
+            tool0.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
             tool1.setVisible(true);
             tool2.setVisible(true);
             toolCardsLabel.setVisible(true);
@@ -1420,6 +1417,18 @@ public class GameBoardHandler implements Initializable {
         cardView1.setFitHeight(240);
         Platform.runLater(() -> tool1.setGraphic(cardView1));
         tool1.setOnAction(toolSelected);
+        tool1.setOnMouseEntered(event -> {
+            tool1.setTranslateY(-60);
+            tool1.setStyle("-fx-scale-x: 1.5;-fx-scale-y: 1.5");
+            tool0.setVisible(false);
+            tool2.setVisible(false);
+        });
+        tool1.setOnMouseExited(event -> {
+            tool1.setTranslateY(0);
+            tool1.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
+            tool0.setVisible(true);
+            tool2.setVisible(true);
+        });
         //Initializing toolCard2
         String url2 = TOOLCARDS_PATH + toolCardsList.get(2) + ".png";
         Image cardImg2 = new Image(url2);
@@ -1428,6 +1437,20 @@ public class GameBoardHandler implements Initializable {
         cardView2.setFitHeight(240);
         Platform.runLater(() -> tool2.setGraphic(cardView2));
         tool2.setOnAction(toolSelected);
+        tool2.setOnMouseEntered(event -> {
+            tool2.setTranslateY(-60);
+            tool2.setStyle("-fx-scale-x: 1.5;-fx-scale-y: 1.5");
+            tool0.setVisible(false);
+            tool1.setVisible(false);
+            toolCardsLabel.setVisible(false);
+        });
+        tool2.setOnMouseExited(event -> {
+            tool2.setTranslateY(0);
+            tool2.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
+            tool0.setVisible(true);
+            tool1.setVisible(true);
+            toolCardsLabel.setVisible(true);
+        });
     }
 
     public void setReserve(List<String> dicesList) {

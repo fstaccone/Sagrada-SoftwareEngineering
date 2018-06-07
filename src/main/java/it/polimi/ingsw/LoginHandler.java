@@ -22,9 +22,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -263,14 +265,17 @@ public class LoginHandler implements Initializable {
     // the connection is established between client and lobby
     private void setupRmiConnection() throws RemoteException {
 
-        registry = LocateRegistry.getRegistry(rmiRegistryPort);
+        //registry = LocateRegistry.getRegistry(rmiRegistryPort);
 
         try {
-            this.remoteController = (RemoteController) registry.lookup("Lobby");
+            //this.remoteController = (RemoteController) registry.lookup("Lobby");
+            this.remoteController=(RemoteController) Naming.lookup(("//"+serverAddress+"/Lobby"));
             if (isCli)
                 waitingRoomCli.setController(remoteController);
         } catch (NotBoundException e) {
             System.out.println("A client can't get the remoteController's reference");
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
