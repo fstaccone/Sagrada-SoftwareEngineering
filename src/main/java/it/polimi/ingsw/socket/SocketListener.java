@@ -1,5 +1,7 @@
 package it.polimi.ingsw.socket;
 
+import it.polimi.ingsw.socket.responses.Response;
+
 public class SocketListener implements Runnable {
 
     private ClientController clientController;
@@ -11,7 +13,12 @@ public class SocketListener implements Runnable {
     @Override
     public void run() {
         while (clientController != null) {
-            clientController.nextResponse().handleResponse(clientController);
+            Response response = clientController.nextResponse();
+            if(response != null){
+                response.handleResponse(clientController);
+            } else {
+                System.out.println("\nErrore in ricezione\n");
+            }
         }
     }
 }

@@ -899,6 +899,11 @@ public class GameBoardHandler implements Initializable {
             }
         } else {
             clientController.request(new DiceColorRequest(username, false));
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             color = clientController.getDiceColor();
         }
         textArea.setText("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!");
