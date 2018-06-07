@@ -63,7 +63,7 @@
                         <ImageView fx:id="pubObjCard3" fitHeight="160.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" styleClass="card" GridPane.columnIndex="2" />
                     </children>
                 </GridPane>
-                <Label layoutX="107.0" layoutY="193.0" prefHeight="23.0" prefWidth="200.0" text="OBIETTIVI PUBBLICI" textFill="#251494">
+                <Label fx:id="pubObjLabel" layoutX="107.0" layoutY="193.0" prefHeight="23.0" prefWidth="200.0" text="OBIETTIVI PUBBLICI" textFill="#251494">
                <font>
                   <Font name="Courier New Bold" size="18.0" />
                </font>
@@ -134,7 +134,7 @@
             <Font name="Courier New Bold" size="18.0" />
          </font>
       </Label>
-          <Label layoutX="1239.0" layoutY="416.0" prefHeight="55.0" prefWidth="104.0" text="OBIETTIVO&#10; PRIVATO" textFill="#251494">
+          <Label fx:id="privObjLabel" layoutX="1239.0" layoutY="416.0" prefHeight="55.0" prefWidth="104.0" text="OBIETTIVO&#10; PRIVATO" textFill="#251494">
               <font>
                   <Font name="Courier New Bold" size="18.0" />
               </font>

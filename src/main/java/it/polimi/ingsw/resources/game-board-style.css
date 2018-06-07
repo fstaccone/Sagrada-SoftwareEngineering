@@ -30,14 +30,6 @@
     -fx-background-size: cover;
 }
 
-.card:hover {
-    -fx-scale-x: 2.0;
-    -fx-scale-y: 2.0;
-    -fx-scale-z: 2.0;
-}
-
-
-
 #choose-card-window{
     -fx-background-image: url("other/wood.png");
     -fx-background-size: cover;

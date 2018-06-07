@@ -64,7 +64,10 @@ public class GameBoardHandler implements Initializable {
     private TextField finalY2;
     private int pickedDices = 0;
 
-
+    @FXML
+    Label privObjLabel;
+    @FXML
+    Label pubObjLabel;
     @FXML
     Label toolCardsLabel;
     @FXML
@@ -1585,15 +1588,82 @@ public class GameBoardHandler implements Initializable {
     public void setPrivateCard(String privateCard) {
         Image privateObjCardImg = new Image(PRIVATE_CARDS_PATH + privateCard + ".png");
         privateObjCard.setImage(privateObjCardImg);
+        privateObjCard.setOnMouseEntered(event -> {
+            privObjLabel.setVisible(false);
+            privateObjCard.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
+            privateObjCard.setTranslateX(-10);
+            privateObjCard.setTranslateY(-70);
+        });
+        privateObjCard.setOnMouseExited(event -> {
+            privObjLabel.setVisible(true);
+            privateObjCard.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
+            privateObjCard.setTranslateX(0);
+            privateObjCard.setTranslateY(0);
+
+        });
     }
 
     public void setPublicCards(List<String> publicCards) {
         Image publicObjCardImg1 = new Image(PUBLIC_CARDS_PATH + publicCards.get(0) + ".png");
         pubObjCard1.setImage(publicObjCardImg1);
+        pubObjCard1.setOnMouseEntered(event -> {
+            pubObjCard1.setTranslateX(40);
+            pubObjCard1.setTranslateY(-60);
+            pubObjCard1.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
+            pubObjCard2.setVisible(false);
+            pubObjCard3.setVisible(false);
+            pubObjLabel.setVisible(false);
+        });
+        pubObjCard1.setOnMouseExited(event -> {
+            pubObjCard1.setTranslateX(0);
+            pubObjCard1.setTranslateY(0);
+            pubObjCard1.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
+            pubObjCard2.setVisible(true);
+            pubObjCard3.setVisible(true);
+            pubObjLabel.setVisible(true);
+        });
         Image publicObjCardImg2 = new Image(PUBLIC_CARDS_PATH + publicCards.get(1) + ".png");
         pubObjCard2.setImage(publicObjCardImg2);
+        pubObjCard2.setOnMouseEntered(event -> {
+            pubObjCard2.setTranslateY(-60);
+            pubObjCard2.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
+            pubObjCard3.setVisible(false);
+            pubObjCard1.setVisible(false);
+            privateObjCard.setVisible(false);
+            privObjLabel.setVisible(false);
+            pubObjLabel.setVisible(false);
+        });
+        pubObjCard2.setOnMouseExited(event -> {
+            pubObjCard2.setTranslateY(0);
+            pubObjCard2.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
+            pubObjCard3.setVisible(true);
+            pubObjCard1.setVisible(true);
+            privateObjCard.setVisible(true);
+            privObjLabel.setVisible(true);
+            pubObjLabel.setVisible(true);
+        });
         Image publicObjCardImg3 = new Image(PUBLIC_CARDS_PATH + publicCards.get(2) + ".png");
         pubObjCard3.setImage(publicObjCardImg3);
+        pubObjCard3.setOnMouseEntered(event -> {
+            pubObjCard3.setTranslateX(-10);
+            pubObjCard3.setTranslateY(-60);
+            pubObjCard3.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
+            pubObjCard2.setVisible(false);
+            pubObjCard1.setVisible(false);
+            privateObjCard.setVisible(false);
+            privObjLabel.setVisible(false);
+            pubObjLabel.setVisible(false);
+        });
+        pubObjCard3.setOnMouseExited(event -> {
+            pubObjCard3.setTranslateX(0);
+            pubObjCard3.setTranslateY(0);
+            pubObjCard3.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
+            pubObjCard2.setVisible(true);
+            pubObjCard1.setVisible(true);
+            privateObjCard.setVisible(true);
+            privObjLabel.setVisible(true);
+            pubObjLabel.setVisible(true);
+        });
     }
 
     public void setFavourTokens(int value) {
