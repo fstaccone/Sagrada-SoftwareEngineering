@@ -64,6 +64,9 @@ public class GameBoardHandler implements Initializable {
     private TextField finalY2;
     private int pickedDices = 0;
 
+
+    @FXML
+    Label toolCardsLabel;
     @FXML
     Label toolLabel;
     @FXML
@@ -182,6 +185,8 @@ public class GameBoardHandler implements Initializable {
     };
 
     private EventHandler<ActionEvent> toolSelected = new EventHandler<ActionEvent>() {
+
+
         @Override
         public void handle(ActionEvent event) {
             if (gui.isMyTurn()) {
@@ -886,13 +891,13 @@ public class GameBoardHandler implements Initializable {
         toolLabel.setVisible(true);
         toolPane.setVisible(true);
         Colors color = null;
-        if (remoteController!=null) {
+        if (remoteController != null) {
             try {
                 color = remoteController.askForDiceColor(username, false);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             clientController.request(new DiceColorRequest(username, false));
             color = clientController.getDiceColor();
         }
@@ -935,7 +940,7 @@ public class GameBoardHandler implements Initializable {
                 finalCoordinateY1 = tryParse(finalY1.getText());
 
                 if (value11 != null && finalCoordinateX1 != null && finalCoordinateY1 != null && value11 > 0 && value11 < 7 && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4) {
-                    if (remoteController!=null) {
+                    if (remoteController != null) {
                         try {
                             remoteController.setDiceValue(value11, username, false);//POTREBBE MANCARE CONTROLLO SU VALORE DADO
                         } catch (RemoteException e) {
@@ -952,7 +957,7 @@ public class GameBoardHandler implements Initializable {
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
-                    }else{
+                    } else {
                         clientController.request(new SetDiceValueRequest(value11, username, false));
                         clientController.request(new PlaceDiceTool11Request(finalCoordinateX1, finalCoordinateY1, username, false));
                         try {
@@ -968,7 +973,7 @@ public class GameBoardHandler implements Initializable {
                         }
                     }
 
-                }else{
+                } else {
                     textArea.setText("Non hai inserito un valore corretto oppure non hai settato correttamente le coordinate!");
                 }
             }
@@ -1388,6 +1393,25 @@ public class GameBoardHandler implements Initializable {
         cardView0.setFitHeight(240);
         Platform.runLater(() -> tool0.setGraphic(cardView0));
         tool0.setOnAction(toolSelected);
+        tool0.setOnMouseEntered(event -> {
+            toolCardsLabel.setVisible(false);
+
+            tool0.setTranslateX(20);
+            tool0.setTranslateY(-60);
+            tool0.setStyle("-fx-scale-x: 1.5;-fx-scale-y: 1.5;-fx-scale-z:1.5");
+            tool1.setVisible(false);
+            tool2.setVisible(false);
+            toolCardsLabel.setVisible(false);
+        });
+        tool0.setOnMouseExited(event -> {
+
+            tool0.setTranslateX(-20);
+            tool0.setTranslateY(60);
+            tool0.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0;-fx-scale-z:1.0");
+            tool1.setVisible(true);
+            tool2.setVisible(true);
+            toolCardsLabel.setVisible(true);
+        });
         //Initializing toolCard1
         String url1 = TOOLCARDS_PATH + toolCardsList.get(1) + ".png";
         Image cardImg1 = new Image(url1);
@@ -1504,7 +1528,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void setTextArea(String s) {
-        textArea.setText(s);
+        textArea.appendText(s);
     }
 
     @FXML

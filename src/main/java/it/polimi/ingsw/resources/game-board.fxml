@@ -138,7 +138,7 @@
                   <Font name="Courier New Bold" size="13.0" />
                </font></Label>
          </children></Pane>
-      <Label layoutX="185.0" layoutY="561.0" prefHeight="31.0" prefWidth="159.0" text="CARTE UTENSILI" textFill="#251494">
+      <Label fx:id="toolCardsLabel" layoutX="185.0" layoutY="561.0" prefHeight="31.0" prefWidth="159.0" text="CARTE UTENSILI" textFill="#251494">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Label>

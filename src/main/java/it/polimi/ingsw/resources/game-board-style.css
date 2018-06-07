@@ -36,11 +36,7 @@
     -fx-scale-z: 2.0;
 }
 
-.cartaUtensile:hover {
-    -fx-scale-x: 1.5;
-    -fx-scale-y: 2.0;
-    -fx-scale-z: 2.0;
-}
+
 
 #choose-card-window{
     -fx-background-image: url("other/wood.png");

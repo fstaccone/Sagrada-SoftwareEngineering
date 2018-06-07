@@ -122,7 +122,9 @@ public class Gui {
             }
         } else
             //Solo per verifica
-            gameBoardHandler.setTextArea("Non è il tuo turno!");
+            if(gameBoardHandler!=null) {
+                gameBoardHandler.setTextArea("Non è il tuo turno!");
+            }
     }
 
     public void onReserve(String string) {
