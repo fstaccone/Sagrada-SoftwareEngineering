@@ -269,7 +269,9 @@ public class LoginHandler implements Initializable {
 
         try {
             //this.remoteController = (RemoteController) registry.lookup("Lobby");
-            this.remoteController=(RemoteController) Naming.lookup(("//"+serverAddress+"/Lobby"));
+
+            remoteController=(RemoteController) Naming.lookup(("//"+serverAddress+"/Lobby"));
+
             if (isCli)
                 waitingRoomCli.setController(remoteController);
         } catch (NotBoundException e) {

@@ -41,6 +41,7 @@ public class Server {
             //Registry registry = LocateRegistry.createRegistry(rmiPort);
             //registry.rebind(lobbyName,controller);
             Naming.rebind("//localhost/"+lobbyName,controller);
+
             System.out.println("RMI server online on port " + rmiPort);
         } catch (RemoteException e) {
             System.out.println("Cannot start RMI registry");
