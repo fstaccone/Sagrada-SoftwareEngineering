@@ -231,7 +231,7 @@ public class TurnManager implements Runnable {
     private void socketObserverNotify(PlayerMultiplayer player, Response response) {
         try {
             match.getSocketObservers().get(player).writeObject(response);
-            match.getSocketObservers().get(player).reset();
+           // match.getSocketObservers().get(player).reset();
         } catch (IOException e) {
             match.getLobby().disconnect(player.getName());
         }
