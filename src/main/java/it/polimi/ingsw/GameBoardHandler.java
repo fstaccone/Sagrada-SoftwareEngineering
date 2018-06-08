@@ -1478,34 +1478,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void setReserve(List<String> dicesList) {
-        /*reserveDices = new ArrayList<>();
-        reserveDices.addAll(dicesList);
-        List<Button> reserveDices = new ArrayList<>(); // todo: come mai lo stesso nome dell'attributo?
-        reserveDices.add(reserveDice0);
-        reserveDices.add(reserveDice1);
-        reserveDices.add(reserveDice2);
-        reserveDices.add(reserveDice3);
-        reserveDices.add(reserveDice4);
-        reserveDices.add(reserveDice5);
-        reserveDices.add(reserveDice6);
-        reserveDices.add(reserveDice7);
-        reserveDices.add(reserveDice8);
-        int i = 0;
-        for (Button dice : reserveDices) {
-            Platform.runLater(() -> dice.setGraphic(null));
-            dice.setDisable(true);
-            if (dicesList.size() > i && dicesList.get(i) != null) {
-                String url = DICE_IMAGES_PATH + dicesList.get(i) + ".png";
-                Image diceImg = new Image(url);
-                ImageView diceView = new ImageView(diceImg);
-                diceView.setFitWidth(70);
-                diceView.setFitHeight(70);
-                Platform.runLater(() -> dice.setGraphic(diceView));
-                dice.setDisable(false);
-                dice.setOnAction(reserveDiceSelected);
-            }
-            i++;
-        }*/
+
         if (reserve.getChildren() != null) {
             Platform.runLater(() -> reserve.getChildren().remove(0, reserve.getChildren().size()));
         }

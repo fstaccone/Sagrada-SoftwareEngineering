@@ -6,10 +6,12 @@ import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.*;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Timer;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class TurnManager implements Runnable {
@@ -61,18 +63,7 @@ public class TurnManager implements Runnable {
     private void initializeRound() {
         match.getPlayers().forEach(player -> player.setTurnsLeft(2));
         match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
-        Response response2 = new ReserveResponse(match.getBoard().getReserve().toString());
-        for (PlayerMultiplayer player : match.getPlayers()) {
-            if (rmiObserverNotify(player) != null)
-                try {
-                    rmiObserverNotify(player).onReserve(match.getBoard().getReserve().toString());
-                } catch (RemoteException e) {
-                    match.getLobby().disconnect(player.getName());
-                }
-            if (match.getSocketObservers().get(player) != null) {
-                socketObserverNotify(player, response2);
-            }
-        }
+
     }
 
     private void initializeClients() throws RemoteException {
@@ -179,7 +170,7 @@ public class TurnManager implements Runnable {
 
         if (rmiObserver != null) {
             try {
-                rmiObserver.onYourTurn(true, null);
+                rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString());
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
             }
@@ -187,7 +178,7 @@ public class TurnManager implements Runnable {
 
         if (match.getSocketObservers().get(player) != null) {
 
-            socketObserverNotify(player, new YourTurnResponse(true, null));
+            socketObserverNotify(player, new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString()));
         }
         notifyOthers(player);
     }
@@ -283,6 +274,20 @@ public class TurnManager implements Runnable {
                 }
             if (match.getSocketObservers().get(player) != null) {
                 socketObserverNotify(player, response1);
+            }
+        }
+
+        Response response2 = new ReserveResponse(match.getBoard().getReserve().toString());
+
+        for (PlayerMultiplayer player : match.getPlayers()) {
+            if (rmiObserverNotify(player) != null)
+                try {
+                    rmiObserverNotify(player).onReserve(match.getBoard().getReserve().toString());
+                } catch (RemoteException e) {
+                    match.getLobby().disconnect(player.getName());
+                }
+            if (match.getSocketObservers().get(player) != null) {
+                socketObserverNotify(player, response2);
             }
         }
 
