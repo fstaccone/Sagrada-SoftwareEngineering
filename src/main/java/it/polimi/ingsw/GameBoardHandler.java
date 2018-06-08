@@ -2011,7 +2011,7 @@ public class GameBoardHandler implements Initializable {
         }
 
         if (clientController.isEffectApplied()) {
-            clientController.setEffectApplied(false);//to reset the value
+            clientController.setEffectApplied(false);   //to reset the value
             return true;
         } else {
             return false;
