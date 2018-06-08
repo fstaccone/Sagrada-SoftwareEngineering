@@ -1301,6 +1301,18 @@ public class GameBoardHandler implements Initializable {
                         }
                     } else {
                         clientController.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, false));
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (clientController.isDicePlaced()) {
+                            clientController.setDicePlaced(false);//to reset the value
+                            textArea.setText("Ben fatto! Il dado scelto è stato piazzato correttamente.");
+                            diceChosen = 9;
+                        } else {
+                            textArea.setText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o non puoi più piazzare dadi in questo turno!");
+                        }
                     }
                 }
 
