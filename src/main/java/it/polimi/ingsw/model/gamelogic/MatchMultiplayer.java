@@ -35,6 +35,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * Initializes the multiplayer match
+     *
      * @param matchId    is the match id
      * @param clients    is the list of players
      * @param turnTime   is the time for each player turn
@@ -69,7 +70,8 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * Initializes the match players and links every socketsOut with the player name ina new map
-     * @param clients is the list of players names
+     *
+     * @param clients    is the list of players names
      * @param socketsOut is a map with players names as keys as socketsOut as values
      */
     private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
@@ -113,6 +115,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * It checks if a player is CONNECTED and
+     *
      * @return the number of CONNECTED players
      */
     public int checkConnection() {
@@ -302,11 +305,12 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     /**
-     *      * The player with the highest score is the winner.
+     * The player with the highest score is the winner.
      * If two or more players have the same score, the winner is the one who got more points from
      * his PrivateObjectiveCard. If a winner is still not found, the winner is the player who has more FavorTokens left
      * at the end of the game. If a winner is still not found, the winner is the player in the lowest position in
      * last round order.
+     *
      * @return the winner player
      */
     private PlayerMultiplayer theWinnerIs() {
