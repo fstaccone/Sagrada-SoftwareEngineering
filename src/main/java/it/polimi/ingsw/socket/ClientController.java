@@ -96,19 +96,20 @@ public class ClientController implements ResponseHandler {
             loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
         else
             loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-        if (response.name != null) {
-            if (!response.unique) {
-                if (loginHandler.isCli())
-                    loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-                else
-                    loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-            } else {
-                if (loginHandler.isCli())
-                    loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-                else
-                    loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-            }
-        }
+
+        //if (response.name != null) {
+            //if (!response.unique) {
+             //   if (loginHandler.isCli())
+             //       loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+             //   else
+              //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+            //} else {
+              //  if (loginHandler.isCli())
+              //      loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+              //  else
+              //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+          //  }
+       // }
     }
 
     @Override
