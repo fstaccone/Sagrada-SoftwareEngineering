@@ -14,10 +14,9 @@ public class SocketListener implements Runnable {
     public void run() {
         while (clientController != null) {
             Response response = clientController.nextResponse();
-            if(response != null){
+            if (response != null) {
                 response.handleResponse(clientController);
-            }
-            else {
+            } else {
                 System.out.println("\n Errore in ricezione\n");
             }
         }
