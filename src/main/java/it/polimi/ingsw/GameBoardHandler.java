@@ -556,10 +556,14 @@ public class GameBoardHandler implements Initializable {
                 if (n == 7) {
                     if (remoteController != null) {
                         try {
-                            if (remoteController.useToolCard7(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
-                                textArea.setText("Carta utensile 7 utilizzata correttamente!");
-                            } else {
-                                textArea.setText("Carta utensile 7 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                            if (diceChosen == 9) {
+                                if (remoteController.useToolCard7(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+                                    textArea.appendText("Carta utensile 7 utilizzata correttamente!\n");
+                                } else {
+                                    textArea.appendText("Carta utensile 7 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
+                                }
+                            }else{
+                                textArea.appendText("Non puoi scegliere un dado prima di utilizzare questa carta utensile!\n");
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -567,18 +571,18 @@ public class GameBoardHandler implements Initializable {
                     } else {
                         clientController.request(new UseToolCard7Request(username, false));
                         if (waitForToolEffectAppliedResponse()) {
-                            textArea.setText("Carta utensile 7 utilizzata correttamente!");
+                            textArea.appendText("Carta utensile 7 utilizzata correttamente!\n");
                         } else {
-                            textArea.setText("Carta utensile 7 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                            textArea.appendText("Carta utensile 7 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                         }
                     }
                 } else {
                     if (remoteController != null) {
                         try {
                             if (remoteController.useToolCard8(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
-                                textArea.setText("Carta utensile 8 utilizzata correttamente!");
+                                textArea.appendText("Carta utensile 8 utilizzata correttamente!\n");
                             } else {
-                                textArea.setText("Carta utensile 8 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 8 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -586,9 +590,9 @@ public class GameBoardHandler implements Initializable {
                     } else {
                         clientController.request(new UseToolCard8Request(username, false));
                         if (waitForToolEffectAppliedResponse()) {
-                            textArea.setText("Carta utensile 8 utilizzata correttamente!");
+                            textArea.appendText("Carta utensile 8 utilizzata correttamente!\n");
                         } else {
-                            textArea.setText("Carta utensile 8 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                            textArea.appendText("Carta utensile 8 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                         }
                     }
                 }
@@ -1566,12 +1570,12 @@ public class GameBoardHandler implements Initializable {
                 clientController.request(new GoThroughRequest(username, false));
             }
         } else {
-            textArea.setText("Non è il tuo turno!");
+            textArea.appendText("Non è il tuo turno!\n");
         }
     }
 
     public void setTextArea(String s) {
-        textArea.appendText(s);
+        textArea.appendText(s+"\n");
     }
 
     @FXML
