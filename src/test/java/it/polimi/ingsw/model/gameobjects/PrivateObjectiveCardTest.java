@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 import org.junit.Assert;
@@ -15,10 +13,8 @@ public class PrivateObjectiveCardTest {
     private PrivateObjectiveCard privateObjectiveCard;
     private Player player;
     private MatchMultiplayer match;
-    private Room room;
     @Before
     public void Before(){
-        room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);

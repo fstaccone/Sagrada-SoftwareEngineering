@@ -1,7 +1,5 @@
 package it.polimi.ingsw.socket;
 
-import it.polimi.ingsw.socket.responses.Response;
-
 public class SocketListener implements Runnable {
 
     private ClientController clientController;

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
@@ -19,10 +17,8 @@ public class MoveDiceIgnoringValueRestrTest {
     private ToolCard toolCard;
     private Player player;
     private MatchMultiplayer match;
-    private Room room;
     @Before
     public void before() {
-        room = mock(Room.class);
         match=mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);

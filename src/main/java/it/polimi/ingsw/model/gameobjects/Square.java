@@ -6,13 +6,22 @@ public class Square implements Serializable{
     private Colors colorConstraint;
     private int valueConstraint;
     private Dice dice;
-
+    private boolean checked;
     /**
      * Creates a square with no constraints
      */
     public Square(){
         colorConstraint = null;
         valueConstraint = 0;
+        checked = false;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     //getters

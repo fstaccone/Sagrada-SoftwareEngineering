@@ -184,7 +184,7 @@ public class TurnManager implements Runnable {
         MatchObserver rmiObserver = rmiObserverNotify(player);
         if (rmiObserver != null) {
             try {
-                rmiObserver.onYourTurn(false, match.getBoard().getReserve().getDices().toString());
+                rmiObserver.onYourTurn(false, null);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
             }
@@ -231,7 +231,6 @@ public class TurnManager implements Runnable {
     private void socketObserverNotify(PlayerMultiplayer player, Response response) {
         try {
             match.getSocketObservers().get(player).writeObject(response);
-           // match.getSocketObservers().get(player).reset();
         } catch (IOException e) {
             match.getLobby().disconnect(player.getName());
         }
@@ -276,6 +275,7 @@ public class TurnManager implements Runnable {
         }
 
         Response response2 = new ReserveResponse(match.getBoard().getReserve().toString());
+
         for (PlayerMultiplayer player : match.getPlayers()) {
             if (rmiObserverNotify(player) != null)
                 try {
@@ -290,7 +290,6 @@ public class TurnManager implements Runnable {
 
         if (match.getCurrentRound() >= NUM_ROUNDS) {
             match.calculateFinalScore();
-            // todo: Notifica a tutti
         } else {
             this.turnManager();
         }

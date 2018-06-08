@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
@@ -16,10 +14,8 @@ public class ColoredDiagonalsTest {
     private PublicObjectiveCard publicCard;
     private Player player;
     private MatchMultiplayer match;
-    private Room room;
     @Before
     public void Before() {
-        room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);
@@ -40,7 +36,7 @@ public class ColoredDiagonalsTest {
         dice4.setValue(3);
 
         player.setPickedDice(dice1);
-        player.getSchemeCard().putFirstDice(player.getPickedDice(), 0, 0);
+        player.getSchemeCard().putDice(player.getPickedDice(), 0, 0);
         player.setPickedDice(dice2);
         player.getSchemeCard().putDice(player.getPickedDice(), 0, 1);
         player.setPickedDice(dice1);
@@ -62,6 +58,7 @@ public class ColoredDiagonalsTest {
         player.getSchemeCard().putDice(player.getPickedDice(), 3, 3);
         player.setPickedDice(dice2);
         player.getSchemeCard().putDice(player.getPickedDice(), 3, 4);
+        System.out.println(player.getSchemeCard().toString());
 
         publicCard = new PublicObjectiveCard("Diagonali colorate");
     }
@@ -69,7 +66,7 @@ public class ColoredDiagonalsTest {
     @Test
     public void checkPoints() {
         publicCard.useCard(player, match);
-        System.out.println(schemeCard.toString());
+        System.out.println(player.getSchemeCard().toString());
         Assert.assertEquals(11,player.getPoints());
     }
 }

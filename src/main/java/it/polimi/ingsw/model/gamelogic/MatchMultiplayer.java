@@ -35,6 +35,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * Initializes the multiplayer match
+     *
      * @param matchId    is the match id
      * @param clients    is the list of players
      * @param turnTime   is the time for each player turn
@@ -69,7 +70,8 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * Initializes the match players and links every socketsOut with the player name ina new map
-     * @param clients is the list of players names
+     *
+     * @param clients    is the list of players names
      * @param socketsOut is a map with players names as keys as socketsOut as values
      */
     private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
@@ -113,6 +115,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * It checks if a player is CONNECTED and
+     *
      * @return the number of CONNECTED players
      */
     public int checkConnection() {
@@ -264,7 +267,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
         String privateCard = getPlayer(name).getPrivateObjectiveCard().toString();
-        String reserve = board.getReserve().toString();
+        String reserve = board.getReserve().getDices().toString();
         String roundTrack = board.getRoundTrack().toString();
         int myTokens = getPlayer(name).getNumFavorTokens();
         WindowPatternCard mySchemeCard = getPlayer(name).getSchemeCard();
@@ -285,15 +288,16 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         if (remoteObservers.get(getPlayer(name)) != null) {
             try {
-                remoteObservers.get(getPlayer(name)).onGameStarted(getPlayer(name).isSchemeCardSet(), names);
                 remoteObservers.get(getPlayer(name)).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
+                // todo: controllare dopo
+                remoteObservers.get(getPlayer(name)).onGameStarted(getPlayer(name).isSchemeCardSet(), names);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else if (socketObservers.get(getPlayer(name)) != null) {
             try {
-                socketObservers.get(getPlayer(name)).writeObject(new GameStartedResponse(getPlayer(name).isSchemeCardSet(), names));
                 socketObservers.get(getPlayer(name)).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen));
+                socketObservers.get(getPlayer(name)).writeObject(new GameStartedResponse(getPlayer(name).isSchemeCardSet(), names));
                 socketObservers.get(getPlayer(name)).reset();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -302,11 +306,12 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     /**
-     *      * The player with the highest score is the winner.
+     * The player with the highest score is the winner.
      * If two or more players have the same score, the winner is the one who got more points from
      * his PrivateObjectiveCard. If a winner is still not found, the winner is the player who has more FavorTokens left
      * at the end of the game. If a winner is still not found, the winner is the player in the lowest position in
      * last round order.
+     *
      * @return the winner player
      */
     private PlayerMultiplayer theWinnerIs() {

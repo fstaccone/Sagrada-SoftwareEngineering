@@ -207,18 +207,12 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(DicePlacedResponse response) {
-        //if (socketCli != null) {
         dicePlaced = response.done;
-        //}
-        //DA RIVEDERE PER GUI
     }
 
     @Override
     public void handle(ToolCardEffectAppliedResponse response) {
-        //if (socketCli != null) {
         effectApplied = response.effectApplied;
-        //}
-
     }
 
     @Override

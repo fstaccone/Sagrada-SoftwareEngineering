@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
@@ -9,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +18,10 @@ public class MoveDiceNotAdjacentToAnotherTest {
     private ToolCard toolCard;
     private Player player;
     private MatchMultiplayer match;
-    private Room room;
     private Board board;
     private Reserve reserve;
     @Before
     public void before() {
-        room = mock(Room.class);
         board = mock(Board.class);
         match = mock(MatchMultiplayer.class);
         reserve = mock(Reserve.class);

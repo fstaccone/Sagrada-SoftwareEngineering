@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
@@ -9,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +19,9 @@ public class ChooseAnotherDiceTest {
     private PlayerMultiplayer player;
     private PlayerMultiplayer player2;
     private MatchMultiplayer match;
-    private Room room;
     private Board board;
     @Before
     public void before() {
-        room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
         board = mock(Board.class);
 

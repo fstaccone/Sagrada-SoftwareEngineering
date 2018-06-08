@@ -1,15 +1,11 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
 
 import static org.mockito.Mockito.mock;
 
@@ -18,10 +14,8 @@ public class MoveDiceIgnoringColorRestrTest {
     private ToolCard toolCard;
     private Player player;
     private MatchMultiplayer match;
-    private Room room;
     @Before
     public void before() {
-        room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player", match);

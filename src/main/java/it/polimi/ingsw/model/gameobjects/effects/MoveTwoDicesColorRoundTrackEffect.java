@@ -56,13 +56,15 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
             else if (dice1 != null && dice2==null && dice1.getColor().equals(color)) {
                 int newRow1 = player.getFinalX1();
                 int newColumn1 = player.getFinalY1();
+                schema.removeDice(row1, column1);
                 if (schema.putDice(dice1, newRow1, newColumn1) ) {
-                    schema.removeDice(row1, column1);
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
                     price = 2;
                     return true;
-                } else
+                } else {
+                    schema.putDice(dice1, row1, column1);
                     return false;
+                }
             } else
                 return false;
         } else
