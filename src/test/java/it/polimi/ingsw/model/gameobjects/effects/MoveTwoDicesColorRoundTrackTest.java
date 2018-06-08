@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
@@ -9,12 +7,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.util.LinkedList;
 import java.util.List;
 
 
-import static java.lang.System.setIn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,10 +21,8 @@ public class MoveTwoDicesColorRoundTrackTest {
     private MatchMultiplayer match;
     private RoundTrack roundTrack;
     private Reserve reserve;
-    private Room room;
     @Before
     public void before() {
-        room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
         Board board = mock(Board.class);
         reserve = mock(Reserve.class);

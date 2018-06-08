@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
@@ -20,12 +18,10 @@ public class ReRollDiceTest {
     private ToolCard toolCard;
     private Player player;
     private MatchMultiplayer match;
-    private Room room;
     private Reserve reserve;
     private Board board;
     @Before
     public void before() {
-        room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
         board = mock(Board.class);
         Dice dice = new Dice(Colors.BLUE);

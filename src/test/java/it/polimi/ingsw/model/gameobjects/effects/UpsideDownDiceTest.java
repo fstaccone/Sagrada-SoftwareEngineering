@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.Room;
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
@@ -20,12 +18,10 @@ public class UpsideDownDiceTest {
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private MatchMultiplayer match;
-    private Room room;
     private Reserve reserve;
     private Board board;
     @Before
     public void before() {
-        room = mock(Room.class);
         match = mock(MatchMultiplayer.class);
         board = mock(Board.class);
         reserve = mock(Reserve.class);
