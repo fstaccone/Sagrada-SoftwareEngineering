@@ -37,14 +37,14 @@ public class GameBoardHandler implements Initializable {
     private static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
     private static final String WINDOW_PATTERN_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
 
-    private int partialStartXForTools1 = 5;
-    private int partialStartYForTools1 = 5;
-    private int targetStartXForTools1 = 4;
-    private int targetStartYForTools1 = 4;
-    private int partialStartXForTools2 = 5;
-    private int partialStartYForTools2 = 5;
-    private int targetStartXForTools2 = 4;
-    private int targetStartYForTools2 = 4;
+    private int partialStartXForTools1 = 4;
+    private int partialStartYForTools1 = 4;
+    private int targetStartXForTools1 = 5;
+    private int targetStartYForTools1 = 5;
+    private int partialStartXForTools2 = 4;
+    private int partialStartYForTools2 = 4;
+    private int targetStartXForTools2 = 5;
+    private int targetStartYForTools2 = 5;
     private int partialRoundForTools = 0;
     private int partialDiceFromRoundForTools = 9;
     private int targetRoundForTools = 0;
@@ -315,7 +315,7 @@ public class GameBoardHandler implements Initializable {
             public void handle(MouseEvent event) {
                 finalCoordinateX1 = tryParse(finalX1.getText());
                 finalCoordinateY1 = tryParse(finalY1.getText());
-                if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4 && targetStartXForTools1 != 5 && targetStartYForTools1 != 4) {
+                if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetStartXForTools1 != 4 && targetStartYForTools1 != 5) {
                     if (remoteController != null) {
                         try {
                             System.out.println(targetStartXForTools1);
@@ -404,7 +404,7 @@ public class GameBoardHandler implements Initializable {
                 finalCoordinateY1 = tryParse(finalY1.getText());
                 finalCoordinateX2 = tryParse(finalX2.getText());
                 finalCoordinateY2 = tryParse(finalY2.getText());
-                if (finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 5 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 4 && targetStartXForTools1 != 5 && targetStartYForTools1 != 4 && targetStartXForTools2 != 5 && targetStartYForTools2 != 4) {
+                if (finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 4 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 5 && targetStartXForTools1 != 4 && targetStartYForTools1 != 5 && targetStartXForTools2 != 4 && targetStartYForTools2 != 5) {
                     if (remoteController != null) {
                         try {
 
@@ -629,7 +629,7 @@ public class GameBoardHandler implements Initializable {
             public void handle(MouseEvent event) {
                 finalCoordinateX1 = tryParse(finalX1.getText());
                 finalCoordinateY1 = tryParse(finalY1.getText());
-                if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4 && targetReserveIndexForTools != 9) {
+                if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetReserveIndexForTools != 9) {
                     if (remoteController != null) {
                         try {
                             if (remoteController.useToolCard9(targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false)) {
@@ -836,7 +836,7 @@ public class GameBoardHandler implements Initializable {
                 System.out.println(targetStartYForTools2);
 
 
-                if (targetDiceFromRoundForTools != 9 && targetRoundForTools != 0 && finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 5 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 4 && targetStartXForTools1 != 5 && targetStartYForTools1 != 4 && targetStartXForTools2 != 5 && targetStartYForTools2 != 4) {
+                if (targetDiceFromRoundForTools != 9 && targetRoundForTools != 0 && finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 4 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 5 && targetStartXForTools1 != 4 && targetStartYForTools1 != 5 && targetStartXForTools2 != 4 && targetStartYForTools2 != 5) {
                     if (remoteController != null) {
                         try {
 
@@ -859,7 +859,7 @@ public class GameBoardHandler implements Initializable {
                         }
                     }
 
-                } else if (targetReserveIndexForTools != 9 && targetRoundForTools != 0 && finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4 && targetStartXForTools1 == 5 && targetStartYForTools1 != 4 && (finalCoordinateX2 == null || finalCoordinateY2 == null || 0 > finalCoordinateX2 || finalCoordinateX2 < 5 || 0 > finalCoordinateY2 || finalCoordinateY2 > 4 || targetStartXForTools2 == 5 || targetStartYForTools2 == 4)) {
+                } else if (targetReserveIndexForTools != 9 && targetRoundForTools != 0 && finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetStartXForTools1 == 4 && targetStartYForTools1 != 5 && (finalCoordinateX2 == null || finalCoordinateY2 == null || 0 > finalCoordinateX2 || finalCoordinateX2 < 4 || 0 > finalCoordinateY2 || finalCoordinateY2 > 5 || targetStartXForTools2 == 4 || targetStartYForTools2 == 5)) {
 
                     if (remoteController != null) {
                         try {
@@ -947,7 +947,7 @@ public class GameBoardHandler implements Initializable {
                 finalCoordinateX1 = tryParse(finalX1.getText());
                 finalCoordinateY1 = tryParse(finalY1.getText());
 
-                if (value11 != null && finalCoordinateX1 != null && finalCoordinateY1 != null && value11 > 0 && value11 < 7 && 0 <= finalCoordinateX1 && finalCoordinateX1 < 5 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 4) {
+                if (value11 != null && finalCoordinateX1 != null && finalCoordinateY1 != null && value11 > 0 && value11 < 7 && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5) {
                     if (remoteController != null) {
                         try {
                             remoteController.setDiceValue(value11, username, false);//POTREBBE MANCARE CONTROLLO SU VALORE DADO
@@ -993,14 +993,14 @@ public class GameBoardHandler implements Initializable {
         targetReserveIndexForTools = 9;
         partialDiceFromRoundForTools = 9;
         targetDiceFromRoundForTools = 9;
-        partialStartXForTools1 = 5;
-        targetStartXForTools1 = 5;
-        partialStartYForTools1 = 4;
-        targetStartYForTools1 = 4;
-        partialStartXForTools2 = 5;
-        targetStartXForTools2 = 5;
-        partialStartYForTools2 = 4;
-        targetStartYForTools2 = 4;
+        partialStartXForTools1 = 4;
+        targetStartXForTools1 = 4;
+        partialStartYForTools1 = 5;
+        targetStartYForTools1 = 5;
+        partialStartXForTools2 = 4;
+        targetStartXForTools2 = 4;
+        partialStartYForTools2 = 5;
+        targetStartYForTools2 = 5;
         partialRoundForTools = 0;
         targetRoundForTools = 0;
         value11 = null;
