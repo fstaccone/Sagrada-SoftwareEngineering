@@ -33,13 +33,13 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                 System.out.println(newRow);
                 System.out.println(newColumn);
                 System.out.println(dice.toString());
+                schema.removeDice(row, column);
                 schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn); //DA RIVEDERE
                 System.out.println(newRow);
                 System.out.println(newColumn);
                 System.out.println(row);
                 System.out.println(column);
-                if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {//SERVE VERAMENTE?
-                    schema.removeDice(row, column);//LO PUò RIMETTERE NELLA STESSA POSIZIONE? SE Sì LA REMOVE NON VA FATTA QUI
+                if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
                     caller.setStartX1(5);//UNREACHABLE VALUE, USED TO RESET
                     caller.setFinalX1(5);
                     caller.setStartY1(4);//UNREACHABLE VALUE, USED TO RESET
@@ -48,6 +48,7 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                     price = 2;
                     return true;
                 } else {
+                    schema.putDice(dice, row, column);
                     caller.setStartX1(5);//UNREACHABLE VALUE, USED TO RESET
                     caller.setFinalX1(5);
                     caller.setStartY1(4);//UNREACHABLE VALUE, USED TO RESET

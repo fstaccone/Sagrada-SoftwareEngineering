@@ -35,14 +35,23 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                 int newColumn1 = player.getFinalY1();
                 int newRow2 = player.getFinalX2();
                 int newColumn2 = player.getFinalY2();
+                schema.removeDice(row1, column1);
+                schema.removeDice(row2, column2);
                 if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
-                    schema.removeDice(row1, column1);
-                    schema.removeDice(row2, column2);
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
                     price = 2;
                     return true;
-                } else
+                } else {
+                    if(dice1.equals(schema.getDice(newRow1, newColumn1))) {
+                        schema.removeDice(newRow1, newColumn1);
+                    }
+                    if(dice2.equals(schema.getDice(newRow2, newColumn2))) {
+                        schema.removeDice(newRow2, newColumn2);
+                    }
+                    schema.putDice(dice1, row1, column1);
+                    schema.putDice(dice2, row2, column2);
                     return false;
+                }
             }
             else if (dice1 != null && dice2==null && dice1.getColor().equals(color)) {
                 int newRow1 = player.getFinalX1();

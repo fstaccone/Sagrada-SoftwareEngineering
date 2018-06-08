@@ -33,17 +33,18 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect{
                 System.out.println(newRow);
                 System.out.println(newColumn);
                 System.out.println(dice.toString());
+                schema.removeDice(row, column);
                 schema.putDiceIgnoringValueConstraint(dice, newRow, newColumn); //DA RIVEDERE
                 System.out.println(newRow);
                 System.out.println(newColumn);
                 System.out.println(row);
                 System.out.println(column);
                 if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
-                    schema.removeDice(row, column); //LO PUò RIMETTERE NELLA STESSA POSIZIONE? SE Sì LA REMOVE NON VA FATTA QUI
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
                     price = 2;
                     return true;
                 } else
+                    schema.putDice(dice,row,column);
                     return false;
             } else return false;
         }else
