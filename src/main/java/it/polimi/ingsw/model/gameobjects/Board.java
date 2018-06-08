@@ -38,7 +38,6 @@ public class Board {
     public boolean findAndUseToolCard(int i, Player player, Match match) {
         for (ToolCard card : pickedToolCards) {
             if (Integer.parseInt(card.getToolID().replaceAll("tool", "")) == i) {
-                System.out.println("BOARD28");
                 return card.useCard(player, match);
             }
         }

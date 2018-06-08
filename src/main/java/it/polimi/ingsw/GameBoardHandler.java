@@ -1988,10 +1988,12 @@ public class GameBoardHandler implements Initializable {
 
     private boolean waitForToolEffectAppliedResponse() {
         try {
-            Thread.sleep(500); //DA VERIFICARE
+            Thread.sleep(1000); //DA VERIFICARE
         } catch (InterruptedException e) {
             e.printStackTrace();
+            System.out.println("Riga 1994 GBH");
         }
+
         if (clientController.isEffectApplied()) {
             clientController.setEffectApplied(false);//to reset the value
             return true;

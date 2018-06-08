@@ -15,8 +15,8 @@ public class UseToolCard9Request implements Request {
         this.diceChosen = diceChosen;
         this.finalX = finalX;
         this.finalY = finalY;
-        this.username=username;
-        this.isSingle=isSingle;
+        this.username = username;
+        this.isSingle = isSingle;
     }
 
     @Override

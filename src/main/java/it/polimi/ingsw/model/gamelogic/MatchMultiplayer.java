@@ -471,8 +471,9 @@ public class MatchMultiplayer extends Match implements Runnable {
             result = getPlayer(name).getSchemeCard().putDice(board.getReserve().getDices().get(index), x, y);
             setDiceAction(result);
 
-            if (result)
+            if (result) {
                 board.getReserve().getDices().remove(index);
+            }
             reserveToBeUpdated(result);
             schemeCardsToBeUpdated(result, name);
 
@@ -509,6 +510,11 @@ public class MatchMultiplayer extends Match implements Runnable {
             tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else {
             return false;
@@ -525,6 +531,11 @@ public class MatchMultiplayer extends Match implements Runnable {
             tokensToBeUpdated(result, name);
             schemeCardsToBeUpdated(result, name);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else {
             return false;
@@ -545,6 +556,11 @@ public class MatchMultiplayer extends Match implements Runnable {
             tokensToBeUpdated(result, name);
             schemeCardsToBeUpdated(result, name);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else {
             return false;
@@ -578,6 +594,11 @@ public class MatchMultiplayer extends Match implements Runnable {
                     }
                 }
             }
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else {
             return false;
@@ -591,6 +612,11 @@ public class MatchMultiplayer extends Match implements Runnable {
             tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else {
             return false;
@@ -599,12 +625,16 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     public boolean useToolCard7(String name) {
         if (!isToolAction()) {
-            System.out.println("MM579");
             boolean result;
             result = getBoard().findAndUseToolCard(7, getPlayer(name), this);
             reserveToBeUpdated(result);
             tokensToBeUpdated(result, name);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else {
             return false;
@@ -617,6 +647,11 @@ public class MatchMultiplayer extends Match implements Runnable {
             result = getBoard().findAndUseToolCard(8, getPlayer(name), this);
             tokensToBeUpdated(result, name);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else {
             return false;
@@ -624,7 +659,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name) {
-        if (!isToolAction()) {
+        if (!isToolAction() && !isDiceAction()) {
             getPlayer(name).setDice(diceChosen);
             getPlayer(name).setFinalX1(finalX1);
             getPlayer(name).setFinalY1(finalY1);
@@ -634,6 +669,11 @@ public class MatchMultiplayer extends Match implements Runnable {
             schemeCardsToBeUpdated(result, name);
             setDiceAction(result);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else {
             return false;
@@ -647,6 +687,11 @@ public class MatchMultiplayer extends Match implements Runnable {
             tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else return false;
     }
@@ -679,6 +724,11 @@ public class MatchMultiplayer extends Match implements Runnable {
             tokensToBeUpdated(result, name);
             schemeCardsToBeUpdated(result, name);
             setToolAction(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
             return result;
         } else return false;
     }
@@ -787,5 +837,4 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         }
     }
-
 }

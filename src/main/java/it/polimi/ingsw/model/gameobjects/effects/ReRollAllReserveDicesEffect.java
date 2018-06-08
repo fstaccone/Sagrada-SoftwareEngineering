@@ -20,9 +20,6 @@ public class ReRollAllReserveDicesEffect implements Effect{
         PlayerMultiplayer p = (PlayerMultiplayer)player;
 
         if(p.getNumFavorTokens() >= price && player.getTurnsLeft() == 1) {
-
-            System.out.println("Numero di segnalini: " + p.getNumFavorTokens());
-
             Reserve reserve = match.getBoard().getReserve();
             reserve.throwDices(reserve.removeAllDices());
             p.setNumFavorTokens(p.getNumFavorTokens() - price);
