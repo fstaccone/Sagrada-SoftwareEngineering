@@ -230,7 +230,8 @@ public class Lobby {
                         multiplayerMatches.get(name).getRemoteObservers().get(player).onGameClosing();
                         multiplayerMatches.get(name).getRemoteObservers().remove(player);
 
-                        //multiplayerMatches.get(name).getSocketObservers().get(player).writeObject(new ClosingGameResponse());
+                        multiplayerMatches.get(name).getSocketObservers().get(player).writeObject(new ClosingGameResponse());
+                        multiplayerMatches.get(name).getSocketObservers().get(player).reset();
                         multiplayerMatches.get(name).getSocketObservers().remove(player);
                     }
                 }

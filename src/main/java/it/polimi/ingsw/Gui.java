@@ -31,7 +31,7 @@ public class Gui {
 
     private ChooseCardHandler chooseCardHandler;
     private GameBoardHandler gameBoardHandler;
-
+    private String track;
     private List<String> toolCardsList;
     private List<String> dicesList;
     private String privateCard;
@@ -122,7 +122,7 @@ public class Gui {
             }
         } else
             //Solo per verifica
-            if(gameBoardHandler!=null) {
+            if (gameBoardHandler != null) {
                 gameBoardHandler.setTextArea("Non è il tuo turno!");
             }
     }
@@ -147,15 +147,16 @@ public class Gui {
     public void onPlayerReconnection(String name) {
         if (gameBoardHandler != null) {
             gameBoardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
-        } else if(chooseCardHandler != null){
+        } else if (chooseCardHandler != null) {
             chooseCardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
         }
     }
 
-    public void onGameStarted(Boolean windowChosen, List<String> names){
+    public void onGameStarted(Boolean windowChosen, List<String> names) {
         players = names;
 
-        if(windowChosen){
+        if (windowChosen) {
+
             onAfterWindowChoice(); // todo: controllare
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -196,10 +197,16 @@ public class Gui {
     }
 
     public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
+        reconnection=true;
         parseToolcards(toolcards);
-        privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
-        this.privateCard = privateCard;
         parsePublicCards(publicCards);
+        this.privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
+        this.track=roundTrack;
+        onReserve(reserve);
+        otherFavorTokensMap=otherTokens;
+        otherSchemeCardsMap=otherSchemeCards;
+        String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+        playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
     }
 
     public void onRoundTrack(String track) {
@@ -285,6 +292,7 @@ public class Gui {
     }
 
     public void onWindowChoice(List<String> windows) {
+
         chooseCardHandler.setPrivateCard(privateCard);
         chooseCardHandler.setWindows(windows);
     }
@@ -292,7 +300,9 @@ public class Gui {
     public void onAfterWindowChoice() {
 
         // todo: trovare un'alternativa, genera eccezione quando il giocatore si riccnnette e non passa per chooseCardHandler
-        if(chooseCardHandler!=null) playerSchemeCardImageURL = chooseCardHandler.getImageUrl();
+        if (chooseCardHandler != null) {
+            playerSchemeCardImageURL = chooseCardHandler.getImageUrl();
+        }
 
         FXMLLoader fx = new FXMLLoader();
         try {
@@ -310,13 +320,19 @@ public class Gui {
         Scene scene = new Scene(root);
         gameBoardHandler = fx.getController();
         gameBoardHandler.init(scene, this);
+        gameBoardHandler.setToolCards(toolCardsList);//OK
+        gameBoardHandler.setPrivateCard(privateCard);//OK
+        gameBoardHandler.setPublicCards(publicCardsList);//OK
         gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
-        gameBoardHandler.setToolCards(toolCardsList);
-        gameBoardHandler.setReserve(dicesList);
+        if(reconnection){
+
+        }
+        gameBoardHandler.setReserve(dicesList);//OK
+        gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
+        gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
         gameBoardHandler.setTextArea("Now it's your turn!");
-        gameBoardHandler.setPrivateCard(privateCard);
-        gameBoardHandler.setPublicCards(publicCardsList);
         gameBoardHandler.createLabelsMap();
+        gameBoardHandler.onRoundTrack(track);
         gameBoardHandler.createOtherLabelsList();
         gameBoardHandler.initializeLabels(players);
         //FOR SOCKET CONNECTION
@@ -327,7 +343,6 @@ public class Gui {
                 e.printStackTrace();
             }
         }
-        gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
-        gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
+
     }
 }

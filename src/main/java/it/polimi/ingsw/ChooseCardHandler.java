@@ -102,7 +102,7 @@ public class ChooseCardHandler implements Initializable {
             alert.showAndWait();
         } else {
             Stage window = (Stage) play.getScene().getWindow();
-            //window.close();
+
             //Getting the image URL of the chosen window pattern card
             switch (choice) {
                 case 0:

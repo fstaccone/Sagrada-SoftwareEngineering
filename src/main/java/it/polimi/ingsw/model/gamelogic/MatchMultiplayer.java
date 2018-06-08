@@ -267,7 +267,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
         String privateCard = getPlayer(name).getPrivateObjectiveCard().toString();
-        String reserve = board.getReserve().toString();
+        String reserve = board.getReserve().getDices().toString();
         String roundTrack = board.getRoundTrack().toString();
         int myTokens = getPlayer(name).getNumFavorTokens();
         WindowPatternCard mySchemeCard = getPlayer(name).getSchemeCard();
@@ -288,15 +288,16 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         if (remoteObservers.get(getPlayer(name)) != null) {
             try {
-                remoteObservers.get(getPlayer(name)).onGameStarted(getPlayer(name).isSchemeCardSet(), names);
                 remoteObservers.get(getPlayer(name)).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
+                // todo: controllare dopo
+                remoteObservers.get(getPlayer(name)).onGameStarted(getPlayer(name).isSchemeCardSet(), names);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else if (socketObservers.get(getPlayer(name)) != null) {
             try {
-                socketObservers.get(getPlayer(name)).writeObject(new GameStartedResponse(getPlayer(name).isSchemeCardSet(), names));
                 socketObservers.get(getPlayer(name)).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen));
+                socketObservers.get(getPlayer(name)).writeObject(new GameStartedResponse(getPlayer(name).isSchemeCardSet(), names));
                 socketObservers.get(getPlayer(name)).reset();
             } catch (IOException e) {
                 e.printStackTrace();
