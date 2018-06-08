@@ -1506,6 +1506,7 @@ public class GameBoardHandler implements Initializable {
         int col = 0;
         int id = 0;
         for (String dice : dicesList) {
+            System.out.println("1509 "+dice);
             String url = DICE_IMAGES_PATH + dice + ".png";
             Image diceImg = new Image(url);
             ImageView diceView = new ImageView(diceImg);
@@ -1937,40 +1938,42 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void onRoundTrack(String track) {
-        GridPane grid = new GridPane();
-        grid.setGridLinesVisible(false);
-        grid.setPrefSize(320, 320);
-        grid.setHgap(1);
-        grid.setVgap(1);
-        final int numCols = 10;
-        for (int i = 0; i < numCols; i++) {
-            ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPercentWidth(100.0 / numCols);
-            grid.getColumnConstraints().add(colConst);
-        }
-        Platform.runLater(() -> roundTrack.getChildren().add(grid));
-        System.out.println(track);
-        Pattern p = Pattern.compile("\\[.*?\\]");
-        String[] parts = track.split("\n");
-        for (int i = 0; i < parts.length - 1; i = i + 2) {
-            //String round = (parts[i].substring(6));
-            Matcher m = p.matcher(parts[i + 1]);
-            int j = 0;
-            while (m.find()) {
-                String dice = (m.group(0).substring(1, m.group(0).length() - 1).toLowerCase().replaceAll(" ", "_"));
-                String url = DICE_IMAGES_PATH + dice + ".png";
-                Image img = new Image(url);
-                ImageView imgView = new ImageView(img);
-                imgView.setFitWidth(30);
-                imgView.setFitHeight(30);
-                //NB
-                int finalX = i / 2;
-                int finalY = j;
-                setupRoundTrackSource(imgView);
+        if (track!=null) {
+            GridPane grid = new GridPane();
+            grid.setGridLinesVisible(false);
+            grid.setPrefSize(320, 320);
+            grid.setHgap(1);
+            grid.setVgap(1);
+            final int numCols = 10;
+            for (int i = 0; i < numCols; i++) {
+                ColumnConstraints colConst = new ColumnConstraints();
+                colConst.setPercentWidth(100.0 / numCols);
+                grid.getColumnConstraints().add(colConst);
+            }
+            Platform.runLater(() -> roundTrack.getChildren().add(grid));
+            System.out.println(track);
+            Pattern p = Pattern.compile("\\[.*?\\]");
+            String[] parts = track.split("\n");
+            for (int i = 0; i < parts.length - 1; i = i + 2) {
+                //String round = (parts[i].substring(6));
+                Matcher m = p.matcher(parts[i + 1]);
+                int j = 0;
+                while (m.find()) {
+                    String dice = (m.group(0).substring(1, m.group(0).length() - 1).toLowerCase().replaceAll(" ", "_"));
+                    String url = DICE_IMAGES_PATH + dice + ".png";
+                    Image img = new Image(url);
+                    ImageView imgView = new ImageView(img);
+                    imgView.setFitWidth(30);
+                    imgView.setFitHeight(30);
+                    //NB
+                    int finalX = i / 2;
+                    int finalY = j;
+                    setupRoundTrackSource(imgView);
 
 
-                Platform.runLater(() -> grid.add(imgView, finalX, finalY));
-                j++;
+                    Platform.runLater(() -> grid.add(imgView, finalX, finalY));
+                    j++;
+                }
             }
         }
     }
