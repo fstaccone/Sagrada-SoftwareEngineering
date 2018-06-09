@@ -388,7 +388,7 @@ public class GameBoardHandler implements Initializable {
                     if (tempY == null) tempY = 0;
                     int coordinateX = tempX;
                     int coordinateY = tempY;
-                    textArea.appendText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
+                    textArea.appendText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY +"\n");
                     if (remoteController != null) {
                         try {
                             if (remoteController.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {

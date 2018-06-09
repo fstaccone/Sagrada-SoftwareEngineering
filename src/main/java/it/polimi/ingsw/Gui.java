@@ -340,7 +340,7 @@ public class Gui {
         gameBoardHandler.setReserve(dicesList);//OK
         gameBoardHandler.onRoundTrack(track);//OK
         if (!reconnection) {
-            gameBoardHandler.setTextArea("Ora è il tuo turno!\n");
+            gameBoardHandler.setTextArea("Ora è il tuo turno!");
         }
         gameBoardHandler.createLabelsMap();
         gameBoardHandler.createOtherLabelsList();
