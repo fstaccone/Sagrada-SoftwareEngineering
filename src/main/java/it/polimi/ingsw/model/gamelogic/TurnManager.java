@@ -47,12 +47,7 @@ public class TurnManager implements Runnable {
         }
     }
 
-    /**
-     * @param player
-     * @throws RemoteException
-     * @throws InterruptedException
-     */
-    private void drawWindowPatternCard(PlayerMultiplayer player) throws RemoteException, InterruptedException {
+    private void drawWindowPatternCard(PlayerMultiplayer player) throws InterruptedException {
         match.setWindowChosen(false);
 
         // initialize windows
@@ -63,7 +58,11 @@ public class TurnManager implements Runnable {
         //starting notification
         MatchObserver rmiObserver = getObserverRmi(player);
         if (rmiObserver != null) {
-            rmiObserver.onWindowChoise(windows);
+            try {
+                rmiObserver.onWindowChoise(windows);
+            } catch (RemoteException e) {
+                match.getLobby().disconnect(player.getName());
+            }
         } else if (match.getSocketObservers().get(player) != null) {
             getObserverSocket(player, new ProposeWindowResponse(windows));
         }
@@ -79,10 +78,8 @@ public class TurnManager implements Runnable {
         match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
     }
 
-    /**
-     * @throws RemoteException
-     */
-    private void initializeClients() throws RemoteException {
+
+    private void initializeClients() {
 
         String toolCards = match.getDecksContainer().getToolCardDeck().getPickedCards().toString();
         String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
@@ -92,7 +89,11 @@ public class TurnManager implements Runnable {
         // Notification RMI and Socket
         for (PlayerMultiplayer p : match.getPlayers()) {
             if (getObserverRmi(p) != null) {
-                getObserverRmi(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString(), names);
+                try {
+                    getObserverRmi(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString(), names);
+                } catch (RemoteException e) {
+                    match.getLobby().disconnect(p.getName());
+                }
             } else if (match.getSocketObservers().get(p) != null) {
                 getObserverSocket(p, new InitializationResponse(toolCards, publicCards, p.getPrivateObjectiveCard().toString(), names));
             }
