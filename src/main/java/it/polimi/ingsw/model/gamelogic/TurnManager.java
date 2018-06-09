@@ -6,12 +6,10 @@ import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.*;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Timer;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class TurnManager implements Runnable {
@@ -63,7 +61,6 @@ public class TurnManager implements Runnable {
     private void initializeRound() {
         match.getPlayers().forEach(player -> player.setTurnsLeft(2));
         match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
-
     }
 
     private void initializeClients() throws RemoteException {

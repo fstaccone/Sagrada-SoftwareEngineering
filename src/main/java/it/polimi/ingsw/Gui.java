@@ -1,11 +1,15 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.Square;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -39,6 +43,8 @@ public class Gui {
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private List<String> players;
+    private WindowPatternCard mySchemeCard;
+    private int myTokens;
     private boolean dicePlaced;
 
     private boolean windowChosen;
@@ -197,14 +203,16 @@ public class Gui {
     }
 
     public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
-        reconnection=true;
+        reconnection = true;
+        this.myTokens=myTokens;
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
-        this.track=roundTrack;
+        track = roundTrack;
         onReserve(reserve);
-        otherFavorTokensMap=otherTokens;
-        otherSchemeCardsMap=otherSchemeCards;
+        otherFavorTokensMap = otherTokens;
+        otherSchemeCardsMap = otherSchemeCards;
+        mySchemeCard=schemeCard;
         String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
         playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
     }
@@ -299,11 +307,6 @@ public class Gui {
 
     public void onAfterWindowChoice() {
 
-        // todo: trovare un'alternativa, genera eccezione quando il giocatore si riccnnette e non passa per chooseCardHandler
-        if (chooseCardHandler != null) {
-            playerSchemeCardImageURL = chooseCardHandler.getImageUrl();
-        }
-
         FXMLLoader fx = new FXMLLoader();
         try {
             fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board.fxml"));
@@ -316,25 +319,29 @@ public class Gui {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        if (chooseCardHandler != null) playerSchemeCardImageURL = chooseCardHandler.getImageUrl();
         Scene scene = new Scene(root);
         gameBoardHandler = fx.getController();
         gameBoardHandler.init(scene, this);
+        gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
+        if(mySchemeCard!=null) {
+            gameBoardHandler.setMyWindow(mySchemeCard);
+            gameBoardHandler.setFavourTokens(myTokens);
+        }
+
         gameBoardHandler.setToolCards(toolCardsList);//OK
         gameBoardHandler.setPrivateCard(privateCard);//OK
         gameBoardHandler.setPublicCards(publicCardsList);//OK
-        gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
-        if(reconnection){
-
-        }
         gameBoardHandler.setReserve(dicesList);//OK
-        gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
-        gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
-        gameBoardHandler.setTextArea("Now it's your turn!");
+        gameBoardHandler.onRoundTrack(track);//OK
+        if (!reconnection) {
+            gameBoardHandler.setTextArea("Now it's your turn!");
+        }
         gameBoardHandler.createLabelsMap();
-        gameBoardHandler.onRoundTrack(track);
         gameBoardHandler.createOtherLabelsList();
         gameBoardHandler.initializeLabels(players);
+
+
         //FOR SOCKET CONNECTION
         if (controllerRmi == null) {
             try {
@@ -343,6 +350,8 @@ public class Gui {
                 e.printStackTrace();
             }
         }
+        gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
+        gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
 
     }
 }
