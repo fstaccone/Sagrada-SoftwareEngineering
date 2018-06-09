@@ -21,13 +21,16 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
         Colors color = match.getBoard().getRoundTrack().getColorOfAChosenDice(player.getRound(),player.getDiceChosenFromRound());
 
         WindowPatternCard schema = player.getSchemeCard();
+        Dice dice2=null;
 
         int row1= player.getStartX1();
         int column1 = player.getStartY1();
         int row2 = player.getStartX2();
         int column2 = player.getStartY2();
         Dice dice1 = schema.getDice(row1, column1);
-        Dice dice2 = schema.getDice(row2, column2);
+        if(row2!=-1&&column2!=-1) {
+             dice2 = schema.getDice(row2, column2);
+        }
 
         if(p.getNumFavorTokens() >= price) {
             if (dice1 != null && dice2!=null && dice1.getColor().equals(color) && dice2.getColor().equals(color)) {
