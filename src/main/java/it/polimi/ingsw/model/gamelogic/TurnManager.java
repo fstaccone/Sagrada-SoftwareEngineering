@@ -250,8 +250,8 @@ public class TurnManager implements Runnable {
         notifyTurnEnd(player);
         if (!expired) {
             turnTimer.cancel();
-            expired = false;
         }
+        expired = false;
     }
 
     /**

@@ -1,16 +1,12 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.Square;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -205,7 +201,7 @@ public class Gui {
 
     public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
         reconnection = true;
-        this.myTokens=myTokens;
+        this.myTokens = myTokens;
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
@@ -213,7 +209,7 @@ public class Gui {
         onReserve(reserve);
         otherFavorTokensMap = otherTokens;
         otherSchemeCardsMap = otherSchemeCards;
-        mySchemeCard=schemeCard;
+        mySchemeCard = schemeCard;
         String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
         playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
     }
@@ -325,16 +321,16 @@ public class Gui {
         gameBoardHandler = fx.getController();
         gameBoardHandler.init(scene, this);
         gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
-        if(mySchemeCard!=null) {
+        if (mySchemeCard != null) {
             gameBoardHandler.setMyWindow(mySchemeCard);
             gameBoardHandler.setFavourTokens(myTokens);
         }
 
-        gameBoardHandler.setToolCards(toolCardsList);//OK
-        gameBoardHandler.setPrivateCard(privateCard);//OK
-        gameBoardHandler.setPublicCards(publicCardsList);//OK
-        gameBoardHandler.setReserve(dicesList);//OK
-        gameBoardHandler.onRoundTrack(track);//OK
+        gameBoardHandler.setToolCards(toolCardsList);
+        gameBoardHandler.setPrivateCard(privateCard);
+        gameBoardHandler.setPublicCards(publicCardsList);
+        gameBoardHandler.setReserve(dicesList);
+        gameBoardHandler.onRoundTrack(track);
         if (!reconnection) {
             gameBoardHandler.setTextArea("Ora è il tuo turno!\n");
         }
