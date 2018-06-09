@@ -26,19 +26,19 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     @Override
     public void onPlayerExit(String name) {
-        log.setText("Player " + name.toUpperCase() + " has left the room before the starting of the match!");
+        log.setText("Il giocatore " + name + " è uscito dalla sala di attesa prima dell'inizio della partita!");
     }
 
     @Override
     public void onLastPlayer(String name) {
-        log.setText(name.toUpperCase() + " has left the room, you are the only one remaining. Timer has been canceled!");
+        log.setText(name + "è uscito dalla sala di attesa, sei l'unico rimasto. Il timer è stato cancellato!");
     }
 
     @Override
     public void onWaitingPlayers(List<String> waitingPlayers) {
-        String wPlayers = waitingPlayers.toString().toUpperCase().replaceAll("\\[", "");
+        String wPlayers = waitingPlayers.toString().replaceAll("\\[", "");
         wPlayers = wPlayers.replaceAll("\\]", "");
-        text.setText("Ordered list of waiting players (including you):\n" + wPlayers);
+        text.setText("Lista ordinata dei giocatori nella sala di attesa (tu incluso):\n" + wPlayers);
     }
 
     @Override

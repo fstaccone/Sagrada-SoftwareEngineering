@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
@@ -126,11 +127,11 @@ public class Gui {
             } else if (chooseCardHandler != null) {
                 chooseCardHandler.setTextArea(s);
             }
-        } else
+        } /*else
             //Solo per verifica
             if (gameBoardHandler != null) {
                 gameBoardHandler.setTextArea("Non è il tuo turno!");
-            }
+            }*/
     }
 
     public void onReserve(String string) {
@@ -188,11 +189,11 @@ public class Gui {
     public void onGameClosing() {
         gameBoardHandler.onGameClosing();
         try {
-            Thread.sleep(5000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        windowStage.close();
+        Platform.runLater(() -> windowStage.close());
         System.exit(0);
     }
 
@@ -212,9 +213,12 @@ public class Gui {
         onReserve(reserve);
         otherFavorTokensMap = otherTokens;
         otherSchemeCardsMap = otherSchemeCards;
-        mySchemeCard=schemeCard;
-        String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-        playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
+
+        if(schemeCardChosen){
+            mySchemeCard=schemeCard;
+            String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+            playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
+        }
     }
 
     public void onRoundTrack(String track) {
@@ -335,7 +339,7 @@ public class Gui {
         gameBoardHandler.setReserve(dicesList);//OK
         gameBoardHandler.onRoundTrack(track);//OK
         if (!reconnection) {
-            gameBoardHandler.setTextArea("Now it's your turn!");
+            gameBoardHandler.setTextArea("Ora è il tuo turno!\n");
         }
         gameBoardHandler.createLabelsMap();
         gameBoardHandler.createOtherLabelsList();
