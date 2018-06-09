@@ -127,11 +127,11 @@ public class Gui {
             } else if (chooseCardHandler != null) {
                 chooseCardHandler.setTextArea(s);
             }
-        } else
+        } /*else
             //Solo per verifica
             if (gameBoardHandler != null) {
                 gameBoardHandler.setTextArea("Non è il tuo turno!");
-            }
+            }*/
     }
 
     public void onReserve(String string) {
@@ -336,7 +336,7 @@ public class Gui {
         gameBoardHandler.setReserve(dicesList);//OK
         gameBoardHandler.onRoundTrack(track);//OK
         if (!reconnection) {
-            gameBoardHandler.setTextArea("Now it's your turn!");
+            gameBoardHandler.setTextArea("Ora è il tuo turno!\n");
         }
         gameBoardHandler.createLabelsMap();
         gameBoardHandler.createOtherLabelsList();

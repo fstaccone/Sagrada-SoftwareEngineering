@@ -182,7 +182,7 @@ public class GameBoardHandler implements Initializable {
                 int i = Integer.parseInt(s);
                 s = gui.getDicesList().get(i);
                 diceChosen = i;
-                textArea.setText("Hai scelto il dado: " + s + " pos: " + i);
+                textArea.appendText("Hai scelto il dado: " + s + " pos: " + i+ "\n");
             }
         }
     };
@@ -193,13 +193,10 @@ public class GameBoardHandler implements Initializable {
         @Override
         public void handle(ActionEvent event) {
             if (gui.isMyTurn()) {
-
-                System.out.println("---------------- " + event.getSource());
                 String s = event.getSource().toString().substring(14, 15);
 
                 System.out.println("Valore della toolcard " + s);
 
-                textArea.setText("You currently chose the toolcard " + s);
                 int tool = Integer.parseInt(s);
                 String name = gui.getToolCardsList().get(tool);
                 name = name.replaceAll("tool", "");
@@ -391,14 +388,14 @@ public class GameBoardHandler implements Initializable {
                     if (tempY == null) tempY = 0;
                     int coordinateX = tempX;
                     int coordinateY = tempY;
-                    textArea.setText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
+                    textArea.appendText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
                     if (remoteController != null) {
                         try {
                             if (remoteController.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
-                                textArea.setText("Ben fatto! Il dado scelto è stato piazzato correttamente.");
+                                textArea.appendText("Ben fatto! Il dado scelto è stato piazzato correttamente!\n");
                                 diceChosen = 9; //FIRST VALUE NEVER PRESENT IN THE RESERVE
                             } else {
-                                textArea.setText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o non puoi più piazzare dadi in questo turno!");
+                                textArea.appendText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o non puoi più piazzare dadi in questo turno!\n");
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -412,10 +409,10 @@ public class GameBoardHandler implements Initializable {
                         }
                         if (clientController.isDicePlaced()) {
                             clientController.setDicePlaced(false);//to reset the value
-                            textArea.setText("Ben fatto! Il dado scelto è stato piazzato correttamente.");
+                            textArea.appendText("Ben fatto! Il dado scelto è stato piazzato correttamente!\n");
                             diceChosen = 9;
                         } else {
-                            textArea.setText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o non puoi più piazzare dadi in questo turno!");
+                            textArea.appendText("ATTENZIONE: Hai provato a piazzare un dado dove non dovresti, o non puoi più piazzare dadi in questo turno!\n");
                         }
                     }
                 }
@@ -447,7 +444,7 @@ public class GameBoardHandler implements Initializable {
             window.show();
         });
 
-        Platform.runLater(() -> label0.setText(username.toUpperCase()));
+        Platform.runLater(() -> label0.setText(username));
         label1.setText(" ");
         label2.setText(" ");
         label3.setText(" ");
@@ -1086,16 +1083,16 @@ public class GameBoardHandler implements Initializable {
         }
 
         if (winner.equals(username)) {
-            s.append("\nComplimenti! Sei il vincitore.");
-            Platform.runLater(() -> textArea.setText(s.toString()));
+            s.append("Complimenti! Sei il vincitore.\n");
+            Platform.runLater(() -> textArea.appendText(s.toString()));
         } else {
-            s.append("\n" + winner.toUpperCase() + " è il vincitore!");
-            Platform.runLater(() -> textArea.setText(s.toString()));
+            s.append( winner.toUpperCase() + " è il vincitore!\n");
+            Platform.runLater(() -> textArea.appendText(s.toString()));
         }
     }
 
     public void onGameClosing() {
-        textArea.setText("Congratulations! You are the winner. You were the only one still in game.");
+        textArea.appendText("Congratulations! You are the winner. You were the only one still in game.\n");
     }
 
     private void resetToolValues() {
@@ -1232,9 +1229,9 @@ public class GameBoardHandler implements Initializable {
                             try {
 
                                 if (remoteController.useToolCard1(targetReserveIndexForTools, incrOrDecr, username, false)) {
-                                    textArea.setText("Carta utensile 1 utilizzata correttamente!");
+                                    textArea.appendText("Carta utensile 1 utilizzata correttamente!\n");
                                 } else {
-                                    textArea.setText("Carta utensile 1 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 1 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1244,14 +1241,14 @@ public class GameBoardHandler implements Initializable {
                         else {
                             clientController.request(new UseToolCard1Request(targetReserveIndexForTools, incrOrDecr, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile 1 utilizzata correttamente!");
+                                textArea.appendText("Carta utensile 1 utilizzata correttamente!\n");
                             } else {
-                                textArea.setText("Carta utensile 1 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 1 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
 
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla riserva o non hai cliccato '+' o '-'!");
+                        textArea.appendText("Non hai scelto alcun dado dalla riserva o non hai cliccato '+' o '-'!\n");
                     }
                     resetToolValues();
                 }
@@ -1301,9 +1298,9 @@ public class GameBoardHandler implements Initializable {
                                 System.out.println(finalCoordinateY1);
 
                                 if (remoteController.useToolCard2or3(n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false)) {
-                                    textArea.setText("Carta utensile " + n + " utilizzata correttamente!");
+                                    textArea.appendText("Carta utensile " + n + " utilizzata correttamente!\n");
                                 } else {
-                                    textArea.setText("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
 
                                 }
                             } catch (RemoteException e) {
@@ -1312,14 +1309,14 @@ public class GameBoardHandler implements Initializable {
                         } else {
                             clientController.request(new UseToolCard2or3Request(n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile " + n + " utilizzata correttamente!");
+                                textArea.appendText("Carta utensile " + n + " utilizzata correttamente!\n");
                             } else {
-                                textArea.setText("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
 
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla carta schema o non hai settato correttamente le coordinate!");
+                        textArea.appendText("Non hai scelto alcun dado dalla carta schema o non hai settato correttamente le coordinate!\n");
                     }
                     resetToolValues();
                 }
@@ -1387,9 +1384,9 @@ public class GameBoardHandler implements Initializable {
 
 
                                 if (remoteController.useToolCard4(targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
-                                    textArea.setText("Carta utensile 4 utilizzata correttamente!");
+                                    textArea.appendText("Carta utensile 4 utilizzata correttamente!\n");
                                 } else {
-                                    textArea.setText("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
 
                                 }
                             } catch (RemoteException e) {
@@ -1398,14 +1395,14 @@ public class GameBoardHandler implements Initializable {
                         } else {
                             clientController.request(new UseToolCard4Request(targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile 4 utilizzata correttamente!");
+                                textArea.appendText("Carta utensile 4 utilizzata correttamente!\n");
                             } else {
-                                textArea.setText("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
 
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla carta schema o non hai settato correttamente le coordinate!");
+                        textArea.appendText("Non hai scelto alcun dado dalla carta schema o non hai settato correttamente le coordinate!\n");
                     }
                     resetToolValues();
                 }
@@ -1447,9 +1444,9 @@ public class GameBoardHandler implements Initializable {
                             try {
                                 if (remoteController.useToolCard5(targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false)) {
 
-                                    textArea.setText("Carta utensile 5 utilizzata correttamente!");
+                                    textArea.appendText("Carta utensile 5 utilizzata correttamente!\n");
                                 } else {
-                                    textArea.setText("Carta utensile 5 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 5 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1457,13 +1454,13 @@ public class GameBoardHandler implements Initializable {
                         } else {
                             clientController.request(new UseToolCard5Request(targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile 5 utilizzata correttamente!");
+                                textArea.appendText("Carta utensile 5 utilizzata correttamente!\n");
                             } else {
-                                textArea.setText("Carta utensile 5 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 5 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla riserva o dal tracciato dei round!");
+                        textArea.appendText("Non hai scelto alcun dado dalla riserva o dal tracciato dei round!\n");
                     }
 
                     resetToolValues();
@@ -1496,9 +1493,9 @@ public class GameBoardHandler implements Initializable {
                             try {
 
                                 if (remoteController.useToolCard6(targetReserveIndexForTools, username, false)) {
-                                    textArea.setText("Carta utensile 6 utilizzata correttamente!");
+                                    textArea.appendText("Carta utensile 6 utilizzata correttamente!\n");
                                 } else {
-                                    textArea.setText("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1508,14 +1505,14 @@ public class GameBoardHandler implements Initializable {
                         else {
                             clientController.request(new UseToolCard6Request(targetReserveIndexForTools, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile 6 utilizzata correttamente!");
+                                textArea.appendText("Carta utensile 6 utilizzata correttamente!\n");
                             } else {
-                                textArea.setText("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
 
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla riserva!");
+                        textArea.appendText("Non hai scelto alcun dado dalla riserva!\n");
                     }
                     resetToolValues();
                 }
@@ -1614,9 +1611,9 @@ public class GameBoardHandler implements Initializable {
                         if (remoteController != null) {
                             try {
                                 if (remoteController.useToolCard9(targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false)) {
-                                    textArea.setText("Carta utensile 9 utilizzata correttamente!");
+                                    textArea.appendText("Carta utensile 9 utilizzata correttamente!\n");
                                 } else {
-                                    textArea.setText("Carta utensile 9 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 9 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
 
                                 }
                             } catch (RemoteException e) {
@@ -1625,14 +1622,14 @@ public class GameBoardHandler implements Initializable {
                         } else {
                             clientController.request(new UseToolCard9Request(targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile 9 utilizzata correttamente!");
+                                textArea.appendText("Carta utensile 9 utilizzata correttamente!\n");
                             } else {
-                                textArea.setText("Carta utensile 9 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 9 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
 
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla riserva o non hai settato correttamente le coordinate!");
+                        textArea.appendText("Non hai scelto alcun dado dalla riserva o non hai settato correttamente le coordinate!\n");
                     }
                     resetToolValues();
                 }
@@ -1663,9 +1660,9 @@ public class GameBoardHandler implements Initializable {
                             try {
 
                                 if (remoteController.useToolCard10(targetReserveIndexForTools, username, false)) {
-                                    textArea.setText("Carta utensile 10 utilizzata correttamente!");
+                                    textArea.appendText("Carta utensile 10 utilizzata correttamente!\n");
                                 } else {
-                                    textArea.setText("Carta utensile 10 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 10 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1675,14 +1672,14 @@ public class GameBoardHandler implements Initializable {
                         else {
                             clientController.request(new UseToolCard10Request(targetReserveIndexForTools, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile 10 utilizzata correttamente!");
+                                textArea.appendText("Carta utensile 10 utilizzata correttamente!\n");
                             } else {
-                                textArea.setText("Carta utensile 10 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 10 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
 
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla riserva!");
+                        textArea.appendText("Non hai scelto alcun dado dalla riserva!\n");
                     }
                     resetToolValues();
                 }
@@ -1717,7 +1714,7 @@ public class GameBoardHandler implements Initializable {
                                     createContext11bis();
 
                                 } else {
-                                    textArea.setText("Carta utensile 11 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 11 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1730,11 +1727,11 @@ public class GameBoardHandler implements Initializable {
                                 resetToolValues();
                                 createContext11bis();
                             } else {
-                                textArea.setText("Carta utensile 11 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 11 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla riserva!");
+                        textArea.appendText("Non hai scelto alcun dado dalla riserva!\n");
                     }
 
                 }
@@ -1823,9 +1820,9 @@ public class GameBoardHandler implements Initializable {
 
 
                                 if (remoteController.useToolCard12(targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
-                                    textArea.setText("Carta utensile 12 utilizzata correttamente!");
+                                    textArea.appendText("Carta utensile 12 utilizzata correttamente!\n");
                                 } else {
-                                    textArea.setText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
 
                                 }
                             } catch (RemoteException e) {
@@ -1834,9 +1831,9 @@ public class GameBoardHandler implements Initializable {
                         } else {
                             clientController.request(new UseToolCard12Request(targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile 12 utilizzata correttamente per entrambi i dadi!");
+                                textArea.appendText("Carta utensile 12 utilizzata correttamente per entrambi i dadi!\n");
                             } else {
-                                textArea.setText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
 
@@ -1846,9 +1843,9 @@ public class GameBoardHandler implements Initializable {
 
 
                                 if (remoteController.useToolCard12(targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false)) {
-                                    textArea.setText("Carta utensile 12 utilizzata correttamente per un solo dado!");
+                                    textArea.appendText("Carta utensile 12 utilizzata correttamente per un solo dado!\n");
                                 } else {
-                                    textArea.setText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    textArea.appendText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
 
                                 }
                             } catch (RemoteException e) {
@@ -1857,13 +1854,13 @@ public class GameBoardHandler implements Initializable {
                         } else {
                             clientController.request(new UseToolCard12Request(targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false));
                             if (waitForToolEffectAppliedResponse()) {
-                                textArea.setText("Carta utensile 12 utilizzata correttamente per un solo dado!");
+                                textArea.appendText("Carta utensile 12 utilizzata correttamente per un solo dado!\n");
                             } else {
-                                textArea.setText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                textArea.appendText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
                             }
                         }
                     } else {
-                        textArea.setText("Non hai scelto alcun dado dalla carta schema, non hai scelto un dado dal round track o non hai settato correttamente le coordinate!");
+                        textArea.appendText("Non hai scelto alcun dado dalla carta schema, non hai scelto un dado dal round track o non hai settato correttamente le coordinate!\n");
                     }
                     resetToolValues();
                 }
@@ -1889,7 +1886,7 @@ public class GameBoardHandler implements Initializable {
                 }
                 color = clientController.getDiceColor();
             }
-            textArea.setText("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!");
+            textArea.appendText("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!\n");
             imageView1 = new ImageView();
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
@@ -1936,11 +1933,11 @@ public class GameBoardHandler implements Initializable {
                             }
                             try {
                                 if (remoteController.placeDiceTool11(finalCoordinateX1, finalCoordinateY1, username, false)) {
-                                    textArea.setText("Dado piazzato correttamente!");
+                                    textArea.appendText("Dado piazzato correttamente!\n");
                                     concludeButton.setVisible(false);
                                     resetToolValues();
                                 } else {
-                                    textArea.setText("Non puoi piazzare lì il tuo dado! Scegli altre coordinate!");
+                                    textArea.appendText("Non puoi piazzare lì il tuo dado! Scegli altre coordinate!\n");
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1955,14 +1952,14 @@ public class GameBoardHandler implements Initializable {
                             }
                             if (clientController.isDicePlaced()) {
                                 clientController.setDicePlaced(false);//to reset the value
-                                textArea.setText("Dado piazzato correttamente!");
+                                textArea.appendText("Dado piazzato correttamente!\n");
                             } else {
-                                textArea.setText("Non puoi piazzare lì il tuo dado! Scegli altre coordinate!");
+                                textArea.appendText("Non puoi piazzare lì il tuo dado! Scegli altre coordinate!\n");
                             }
                         }
 
                     } else {
-                        textArea.setText("Non hai inserito un valore corretto oppure non hai settato correttamente le coordinate!");
+                        textArea.appendText("Non hai inserito un valore corretto oppure non hai settato correttamente le coordinate!\n");
                     }
                 }
             });
@@ -1972,7 +1969,6 @@ public class GameBoardHandler implements Initializable {
                 Thread.sleep(1000); //DA VERIFICARE
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                System.out.println("Riga 1994 GBH");
             }
 
             if (clientController.isEffectApplied()) {

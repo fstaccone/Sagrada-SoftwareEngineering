@@ -29,18 +29,18 @@ public class WaitingRoomCli extends UnicastRemoteObject implements LobbyObserver
         this.rmi=rmi;
         this.loginHandler = loginHandler;
         this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
-        printer.println("WELCOME TO THE WAITING ROOM OF SAGRADA!                You can interrupt the process in any moment to quit the room!\nHere follows the updated list of players who join/leave the room\n");
+        printer.println("BENVENUTO NELLA SALA DI ATTESA DI SAGRADA!                Per uscire dalla sala di attesa puoi interrompere il processo in qualsiasi momento!\nDi seguito troverai la lista aggiornata dei giocatori che entrano o escono dalla sala di attesa.\n");
     }
 
     @Override
     public void onLastPlayer(String name) {
-        printer.println("\n"+name.toUpperCase() + " has left the room, you are the only one remaining. Timer has been canceled!");
+        printer.println(name + " è uscito dalla sala di attesa, sei l'unico rimasto. Il timer è stato cancellato!\n");
         printer.flush();
     }
 
     @Override
     public void onPlayerExit(String name) {
-        printer.println("\nPlayer " + name.toUpperCase() + " has left the room before the starting of the Match!");
+        printer.println("Il giocatore \" + name + \" è uscito dalla sala di attesa prima dell'inizio della partita!\n");
         printer.flush();
     }
 
@@ -48,7 +48,7 @@ public class WaitingRoomCli extends UnicastRemoteObject implements LobbyObserver
     public void onWaitingPlayers(List<String> waitingPlayers) {
         String wPlayers = waitingPlayers.toString().toUpperCase().replaceAll("\\[", "");
         wPlayers = wPlayers.replaceAll("\\]", "");
-        printer.println("Ordered list of waiting players (including you):\n" + wPlayers);
+        printer.println("Lista ordinata dei giocatori nella sala di attesa (tu incluso):\n" + wPlayers);
         printer.flush();
         Platform.runLater(() -> window.close());
 
