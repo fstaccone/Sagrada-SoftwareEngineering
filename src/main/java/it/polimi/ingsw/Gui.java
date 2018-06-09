@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
@@ -188,11 +189,11 @@ public class Gui {
     public void onGameClosing() {
         gameBoardHandler.onGameClosing();
         try {
-            Thread.sleep(5000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        windowStage.close();
+        Platform.runLater(() -> windowStage.close());
         System.exit(0);
     }
 
