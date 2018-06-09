@@ -281,7 +281,6 @@ public class Cli {
         printer.flush();
     }
 
-    // TODO: completare con altri parametri
     public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);

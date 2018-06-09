@@ -27,7 +27,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     private Thread localThread;
     private boolean started;
-    private int matchId;
+    private int matchId; // todo: controllare se serve
     private TurnManager turnManager;
     private List<PlayerMultiplayer> players;
     private List<WindowPatternCard> windowsProposed;
@@ -68,26 +68,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         System.out.println("New multiplayer matchId: " + matchId);
     }
 
-    /**
-     * Initializes the match players and links every socketsOut with the player name ina new map
-     *
-     * @param clients    is the list of players names
-     * @param socketsOut is a map with players names as keys as socketsOut as values
-     */
-    private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
-        clients.forEach(client -> {
-            PlayerMultiplayer player = new PlayerMultiplayer(client, this);
-            this.players.add(player);
-            if (socketsOut.size() != 0) { // ha senso questo controllo?
-                for (String name : socketsOut.keySet()) {
-                    if (name.equals(client)) {
-                        this.socketObservers.put(player, socketsOut.get(name));
-                    }
-                }
-            }
-        });
-    }
-
     // getters
     public List<WindowPatternCard> getWindowsProposed() {
         return windowsProposed;
@@ -114,7 +94,27 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     /**
-     * It checks if a player is CONNECTED and
+     * Initializes the match players and links every socketsOut with the player name ina new map
+     *
+     * @param clients    is the list of players names
+     * @param socketsOut is a map with players names as keys as socketsOut as values
+     */
+    private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
+        clients.forEach(client -> {
+            PlayerMultiplayer player = new PlayerMultiplayer(client, this);
+            this.players.add(player);
+            if (socketsOut.size() != 0) { // ha senso questo controllo?
+                for (String name : socketsOut.keySet()) {
+                    if (name.equals(client)) {
+                        this.socketObservers.put(player, socketsOut.get(name));
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * check if a player is CONNECTED and
      *
      * @return the number of CONNECTED players
      */
@@ -134,20 +134,26 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         // notification to remote observers
         for (PlayerMultiplayer p : remoteObservers.keySet()) {
-            try {
-                remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            if (remoteObservers.get(p) != null) {
+                try {
+                    remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames);
+                } catch (RemoteException e) {
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
+                }
             }
         }
 
         //notification to sockets
         for (PlayerMultiplayer p : socketObservers.keySet()) {
-            try {
-                socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), playersNames));
-                socketObservers.get(p).reset();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (socketObservers.get(p) != null) {
+                try {
+                    socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), playersNames));
+                    socketObservers.get(p).reset();
+                } catch (IOException e) {
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
+                }
             }
         }
 
@@ -180,7 +186,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         for (Player p : players) {
             index = rand.nextInt(colors.size());
-            p.setColor(colors.get(index));  // Da testare, non ne sono convinto
+            p.setColor(colors.get(index));
             colors.remove(index);
         }
     }
@@ -231,7 +237,8 @@ public class MatchMultiplayer extends Match implements Runnable {
                 try {
                     remoteObservers.get(p).onGameEnd(winner.getName(), rankingNames, rankingValues);
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
                 }
             }
             if (socketObservers.get(p) != null) {
@@ -239,7 +246,8 @@ public class MatchMultiplayer extends Match implements Runnable {
                     socketObservers.get(p).writeObject(new GameEndResponse(winner.getName(), rankingNames, rankingValues));
                     socketObservers.get(p).reset();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
                 }
             }
         }
@@ -263,17 +271,18 @@ public class MatchMultiplayer extends Match implements Runnable {
 
 
     public void afterReconnection(String name) {
+        PlayerMultiplayer p = getPlayer(name);
         List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
-        String privateCard = getPlayer(name).getPrivateObjectiveCard().toString();
+        String privateCard = p.getPrivateObjectiveCard().toString();
         String reserve = board.getReserve().getDices().toString();
         String roundTrack = board.getRoundTrack().toString();
-        int myTokens = getPlayer(name).getNumFavorTokens();
-        WindowPatternCard mySchemeCard = getPlayer(name).getSchemeCard();
+        int myTokens = p.getNumFavorTokens();
+        WindowPatternCard mySchemeCard = p.getSchemeCard();
         Map<String, Integer> otherTokens = new HashMap<>();
         Map<String, WindowPatternCard> otherSchemeCards = new HashMap<>();
-        boolean schemeCardChosen = getPlayer(name).isSchemeCardSet();
+        boolean schemeCardChosen = p.isSchemeCardSet();
 
         for (PlayerMultiplayer player : players) {
             if (!player.getName().equals(name)) {
@@ -286,21 +295,22 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         }
 
-        if (remoteObservers.get(getPlayer(name)) != null) {
+        if (remoteObservers.get(p) != null) {
             try {
-                remoteObservers.get(getPlayer(name)).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
-                // todo: controllare dopo
-                remoteObservers.get(getPlayer(name)).onGameStarted(getPlayer(name).isSchemeCardSet(), names);
+                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
+                remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), names);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                lobby.disconnect(p.getName());
+                System.out.println("Player " + p.getName() + " disconnected!");
             }
-        } else if (socketObservers.get(getPlayer(name)) != null) {
+        } else if (socketObservers.get(p) != null) {
             try {
-                socketObservers.get(getPlayer(name)).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen));
-                socketObservers.get(getPlayer(name)).writeObject(new GameStartedResponse(getPlayer(name).isSchemeCardSet(), names));
-                socketObservers.get(getPlayer(name)).reset();
+                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen));
+                socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), names));
+                socketObservers.get(p).reset();
             } catch (IOException e) {
-                e.printStackTrace();
+                lobby.disconnect(p.getName());
+                System.out.println("Player " + p.getName() + " disconnected!");
             }
         }
     }
@@ -438,33 +448,37 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void setWindowPatternCard(String name, int index) {
-        getPlayer(name).setSchemeCard(windowsProposed.get(index));
+        PlayerMultiplayer p = getPlayer(name);
+
+        p.setSchemeCard(windowsProposed.get(index));
         decksContainer.getWindowPatternCardDeck().getPickedCards().removeAll(windowsProposed);
-        getPlayer(name).setSchemeCardSet(true);
+        p.setSchemeCardSet(true);
         setWindowChosen(true);
 
 
         schemeCardsToBeUpdated(true, name);
 
-        if (remoteObservers.get(getPlayer(name)) != null) {
+        if (remoteObservers.get(p) != null) {
             try {
-                remoteObservers.get(getPlayer(name)).onAfterWindowChoise();
+                remoteObservers.get(p).onAfterWindowChoise();
             } catch (RemoteException e) {
-                e.printStackTrace();
+                lobby.disconnect(p.getName());
+                System.out.println("Player " + p.getName() + " disconnected!");
             }
         }
-        if (socketObservers.get(getPlayer(name)) != null) {
+        if (socketObservers.get(p) != null) {
             try {
-                socketObservers.get(getPlayer(name)).writeObject(new AfterWindowChoiseResponse());
-                socketObservers.get(getPlayer(name)).reset();
+                socketObservers.get(p).writeObject(new AfterWindowChoiseResponse());
+                socketObservers.get(p).reset();
             } catch (IOException e) {
-                e.printStackTrace();
+                lobby.disconnect(p.getName());
+                System.out.println("Player " + p.getName() + " disconnected!");
             }
         }
 
         tokensToBeUpdated(true, name);
 
-        synchronized (getLock()) { // è più giusto mettere lock protected?
+        synchronized (getLock()) {
             getLock().notifyAll();
         }
     }
@@ -588,16 +602,10 @@ public class MatchMultiplayer extends Match implements Runnable {
                         remoteObservers.get(player).onRoundTrack(board.getRoundTrack().toString());
                     } catch (RemoteException e) {
                         lobby.disconnect(player.getName());
+                        System.out.println("Player " + player.getName() + " disconnected!");
                     }
                 }
-                if (socketObservers.get(player) != null) {
-                    try {
-                        socketObservers.get(player).writeObject(response);
-                        socketObservers.get(player).reset();
-                    } catch (IOException e) {
-                        lobby.disconnect(player.getName());
-                    }
-                }
+                notifyToSocketClient(player, response);
             }
 
             synchronized (getLock()) {
@@ -609,6 +617,20 @@ public class MatchMultiplayer extends Match implements Runnable {
             return false;
         }
     }
+
+    private void notifyToSocketClient(PlayerMultiplayer player, Response response) {
+        if (socketObservers.get(player) != null) {
+            try {
+                socketObservers.get(player).writeObject(response);
+                socketObservers.get(player).reset();
+            } catch (IOException e) {
+                lobby.disconnect(player.getName());
+                System.out.println("Player " + player.getName() + " disconnected!");
+            }
+        }
+
+    }
+
 
     public boolean useToolCard6(int diceChosen, String name) {
         if (!isToolAction()) {
@@ -747,97 +769,84 @@ public class MatchMultiplayer extends Match implements Runnable {
                         remoteObservers.get(player).onReserve(board.getReserve().getDices().toString());
                     } catch (RemoteException e) {
                         lobby.disconnect(player.getName());
+                        System.out.println("Player " + player.getName() + " disconnected!");
                     }
                 }
-                if (socketObservers.get(player) != null) {
-                    try {
-                        socketObservers.get(player).writeObject(response);
-                        socketObservers.get(player).reset();
-                    } catch (IOException e) {
-                        lobby.disconnect(player.getName());
-                    }
-                }
+                notifyToSocketClient(player, response);
             }
         }
     }
 
     private void tokensToBeUpdated(boolean result, String name) {
+        PlayerMultiplayer p = getPlayer(name);
         if (result) {
-            if (remoteObservers.get(getPlayer(name)) != null) {
+            if (remoteObservers.get(p) != null) {
                 try {
-                    remoteObservers.get(getPlayer(name)).onMyFavorTokens(getPlayer(name).getNumFavorTokens());
+                    remoteObservers.get(p).onMyFavorTokens(p.getNumFavorTokens());
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
                 }
             }
-            if (socketObservers.get(getPlayer(name)) != null) {
+            if (socketObservers.get(p) != null) {
                 try {
-                    socketObservers.get(getPlayer(name)).writeObject(new MyFavorTokensResponse(getPlayer(name).getNumFavorTokens()));
-                    socketObservers.get(getPlayer(name)).reset();
+                    socketObservers.get(p).writeObject(new MyFavorTokensResponse(p.getNumFavorTokens()));
+                    socketObservers.get(p).reset();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
                 }
             }
-            Response response = new OtherFavorTokensResponse(getPlayer(name).getNumFavorTokens(), name);
+            Response response = new OtherFavorTokensResponse(p.getNumFavorTokens(), name);
             for (PlayerMultiplayer otherPlayer : players) {
                 if (!otherPlayer.getName().equals(name)) {
                     if (remoteObservers.get(otherPlayer) != null) {
                         try {
-                            remoteObservers.get(otherPlayer).onOtherFavorTokens(getPlayer(name).getNumFavorTokens(), name);
+                            remoteObservers.get(otherPlayer).onOtherFavorTokens(p.getNumFavorTokens(), name);
                         } catch (RemoteException e) {
                             lobby.disconnect(otherPlayer.getName());
+                            System.out.println("Player " + p.getName() + " disconnected!");
                         }
                     }
-                    if (socketObservers.get(otherPlayer) != null) {
-                        try {
-                            socketObservers.get(otherPlayer).writeObject(response);
-                            socketObservers.get(otherPlayer).reset();
-                        } catch (IOException e) {
-                            lobby.disconnect(otherPlayer.getName());
-                        }
-                    }
+                    notifyToSocketClient(otherPlayer, response);
                 }
             }
         }
     }
 
     private void schemeCardsToBeUpdated(boolean result, String name) {
+        PlayerMultiplayer p = getPlayer(name);
         if (result) {
-
-            if (remoteObservers.get(getPlayer(name)) != null) {
+            if (remoteObservers.get(p) != null) {
                 try {
-                    remoteObservers.get(getPlayer(name)).onMyWindow(getPlayer(name).getSchemeCard());
+                    remoteObservers.get(p).onMyWindow(p.getSchemeCard());
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
                 }
             }
-            if (socketObservers.get(getPlayer(name)) != null) {
+            if (socketObservers.get(p) != null) {
                 try {
-                    socketObservers.get(getPlayer(name)).writeObject(new MyWindowResponse(getPlayer(name).getSchemeCard()));
-                    socketObservers.get(getPlayer(name)).reset();
+                    socketObservers.get(p).writeObject(new MyWindowResponse(p.getSchemeCard()));
+                    socketObservers.get(p).reset();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
                 }
             }
 
-            Response response = new OtherSchemeCardsResponse(getPlayer(name).getSchemeCard(), name);
+            Response response = new OtherSchemeCardsResponse(p.getSchemeCard(), name);
             for (PlayerMultiplayer otherPlayer : players) {
                 if (!otherPlayer.getName().equals(name)) {
                     if (remoteObservers.get(otherPlayer) != null) {
                         try {
-                            remoteObservers.get(otherPlayer).onOtherSchemeCards(getPlayer(name).getSchemeCard(), name);
+                            remoteObservers.get(otherPlayer).onOtherSchemeCards(p.getSchemeCard(), name);
                         } catch (RemoteException e) {
                             lobby.disconnect(otherPlayer.getName());
+                            System.out.println("Player " + p.getName() + " disconnected!");
                         }
                     }
-                    if (socketObservers.get(otherPlayer) != null) {
-                        try {
-                            socketObservers.get(otherPlayer).writeObject(response);
-                            socketObservers.get(otherPlayer).reset();
-                        } catch (IOException e) {
-                            lobby.disconnect(otherPlayer.getName());
-                        }
-                    }
+                    notifyToSocketClient(otherPlayer, response);
                 }
             }
         }
