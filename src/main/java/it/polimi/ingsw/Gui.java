@@ -213,9 +213,12 @@ public class Gui {
         onReserve(reserve);
         otherFavorTokensMap = otherTokens;
         otherSchemeCardsMap = otherSchemeCards;
-        mySchemeCard=schemeCard;
-        String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-        playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
+
+        if(schemeCardChosen){
+            mySchemeCard=schemeCard;
+            String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+            playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
+        }
     }
 
     public void onRoundTrack(String track) {
