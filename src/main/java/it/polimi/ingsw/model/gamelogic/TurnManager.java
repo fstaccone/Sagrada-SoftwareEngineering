@@ -317,7 +317,7 @@ public class TurnManager implements Runnable {
                     try {
                         getObserverRmi(playerNotInTurn).onOtherTurn(player.getName());
                     } catch (RemoteException e) {
-                        match.getLobby().disconnect(player.getName());
+                        match.getLobby().disconnect(playerNotInTurn.getName());
                     }
                 if (match.getSocketObservers().get(playerNotInTurn) != null) {
                     getObserverSocket(playerNotInTurn, response);

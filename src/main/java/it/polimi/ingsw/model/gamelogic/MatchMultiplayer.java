@@ -490,6 +490,15 @@ public class MatchMultiplayer extends Match implements Runnable {
             result = getPlayer(name).getSchemeCard().putDice(board.getReserve().getDices().get(index), x, y);
             setDiceAction(result);
 
+            //SPECIAL NOTIFY FOR SOCKET
+            if (socketObservers.get(getPlayer(name)) != null) {
+                try {
+                    socketObservers.get(getPlayer(name)).writeObject(new DicePlacedResponse(result));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             if (result) {
                 board.getReserve().getDices().remove(index);
             }

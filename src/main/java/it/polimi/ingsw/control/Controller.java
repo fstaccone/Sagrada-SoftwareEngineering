@@ -283,8 +283,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(PlaceDiceRequest request) {
-        boolean placed = placeDice(request.diceChosen, request.coordinateX, request.coordinateY, request.username, request.single);
-        //return new DicePlacedResponse(placed);
+        placeDice(request.diceChosen, request.coordinateX, request.coordinateY, request.username, request.single);
         return null;
     }
 
