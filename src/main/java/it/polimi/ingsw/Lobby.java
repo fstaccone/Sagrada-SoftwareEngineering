@@ -227,17 +227,18 @@ public class Lobby {
                 for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
                     if (!player.getName().equals(p.getName()) && player.getStatus().equals(ConnectionStatus.CONNECTED)) {
                         // notifica ai giocatori che la partita è finita e poi li rimuove
-                        multiplayerMatches.get(name).getRemoteObservers().get(player).onGameClosing();
-                        multiplayerMatches.get(name).getRemoteObservers().remove(player);
+                        if (multiplayerMatches.get(name).getRemoteObservers().get(player) != null) {
+                            multiplayerMatches.get(name).getRemoteObservers().get(player).onGameClosing();
+                            multiplayerMatches.get(name).getRemoteObservers().remove(player);
+                        } else {
+                            multiplayerMatches.get(name).getSocketObservers().get(player).writeObject(new ClosingGameResponse());
+                            multiplayerMatches.get(name).getSocketObservers().get(player).reset();
+                            multiplayerMatches.get(name).getSocketObservers().remove(player);
 
-                        multiplayerMatches.get(name).getSocketObservers().get(player).writeObject(new ClosingGameResponse());
-                        multiplayerMatches.get(name).getSocketObservers().get(player).reset();
-                        multiplayerMatches.get(name).getSocketObservers().remove(player);
+                        }
                     }
                 }
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("From Lobby: problem in disconnecting player " + name + "!");
