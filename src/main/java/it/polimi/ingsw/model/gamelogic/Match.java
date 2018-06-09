@@ -86,7 +86,7 @@ public abstract class Match {
     public void goThrough(){
         setEndsTurn(true);
         synchronized (lock) {
-            lock.notify();
+            lock.notifyAll();
         }
     }
 }

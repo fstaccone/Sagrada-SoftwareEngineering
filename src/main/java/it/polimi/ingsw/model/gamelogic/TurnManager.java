@@ -44,6 +44,7 @@ public class TurnManager implements Runnable {
         } catch (RemoteException e) {
             e.printStackTrace();
             System.out.println("Remote exception from TurnManager");
+            Thread.currentThread().interrupt();
         }
     }
 

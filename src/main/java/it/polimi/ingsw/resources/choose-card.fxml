@@ -32,7 +32,7 @@
       </GridPane>
       <Button id="play" fx:id="play" layoutX="678.0" layoutY="549.0" mnemonicParsing="false" onMouseClicked="#onPlayClicked" prefHeight="37.0" prefWidth="108.0" text="GIOCA" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="15.0" />
+            <Font name="Courier New Bold" size="18.0" />
          </font></Button>
       <TextArea fx:id="opponents" layoutX="125.0" layoutY="38.0" prefHeight="37.0" prefWidth="554.0" />
       <ImageView fx:id="privateObjCard" fitHeight="364.0" fitWidth="239.0" layoutX="14.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true" />
@@ -43,7 +43,7 @@
       </Label>
       <Button id="quit" fx:id="quit" layoutX="539.0" layoutY="550.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="37.0" prefWidth="108.0" text="ESCI" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="15.0" />
+            <Font name="Courier New Bold" size="18.0" />
          </font></Button>
    </children>
     <stylesheets>

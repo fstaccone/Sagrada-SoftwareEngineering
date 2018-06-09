@@ -181,6 +181,7 @@ public class ChooseCardHandler implements Initializable {
             i++;
             //Now I get a substring with the name of the window pattern card
             String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
+            System.out.println(s);
             s = genericURL + s.substring(6).toLowerCase().replaceAll(" ", "_").replaceAll("'", "") + (".png");
             //Questo stampa l'url da cui prenderemo l'immagine, per ora serve a controllare se qualche è scritto male
             System.out.println(s);

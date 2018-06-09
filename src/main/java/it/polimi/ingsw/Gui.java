@@ -188,6 +188,7 @@ public class Gui {
             Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         Platform.runLater(() -> windowStage.close());
         System.exit(0);
@@ -209,9 +210,12 @@ public class Gui {
         onReserve(reserve);
         otherFavorTokensMap = otherTokens;
         otherSchemeCardsMap = otherSchemeCards;
-        mySchemeCard = schemeCard;
-        String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-        playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
+
+        if(schemeCardChosen){
+            mySchemeCard=schemeCard;
+            String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+            playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
+        }
     }
 
     public void onRoundTrack(String track) {
@@ -332,7 +336,7 @@ public class Gui {
         gameBoardHandler.setReserve(dicesList);
         gameBoardHandler.onRoundTrack(track);
         if (!reconnection) {
-            gameBoardHandler.setTextArea("Ora è il tuo turno!\n");
+            gameBoardHandler.setTextArea("Ora è il tuo turno!");
         }
         gameBoardHandler.createLabelsMap();
         gameBoardHandler.createOtherLabelsList();
@@ -345,6 +349,7 @@ public class Gui {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
         gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);

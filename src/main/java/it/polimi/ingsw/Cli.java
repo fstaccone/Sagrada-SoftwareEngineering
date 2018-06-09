@@ -252,6 +252,7 @@ public class Cli {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         System.exit(0);
     }
@@ -465,6 +466,7 @@ public class Cli {
                                                             Thread.sleep(500);
                                                         } catch (InterruptedException e) {
                                                             e.printStackTrace();
+                                                            Thread.currentThread().interrupt();
                                                         }
                                                         if (controllerSocket.isDicePlaced()) {
                                                             controllerSocket.setDicePlaced(false);//to reset the value
@@ -523,6 +525,7 @@ public class Cli {
                                                         Thread.sleep(500);
                                                     } catch (InterruptedException e) {
                                                         e.printStackTrace();
+                                                        Thread.currentThread().interrupt();
                                                     }
                                                     if (controllerSocket.isDicePlaced()) {
                                                         controllerSocket.setDicePlaced(false);//to reset the value

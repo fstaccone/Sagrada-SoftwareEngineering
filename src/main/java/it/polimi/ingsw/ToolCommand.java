@@ -264,6 +264,7 @@ public class ToolCommand {
             Thread.sleep(500); //DA VERIFICARE
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         if (clientController.isEffectApplied()) {
             clientController.setEffectApplied(false);//to reset the value
