@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,5 +25,19 @@ public class MatchMultiplayerTest {
         Lobby lobby = new Lobby(10, turnTime);
         MatchMultiplayer matchMultiplayer = new MatchMultiplayer(matchId, clients, turnTime, socketsOut, lobby);
         Assert.assertNotNull(matchMultiplayer);
+        Assert.assertEquals(lobby, matchMultiplayer.getLobby());
     }
+
+    @Test
+    public void windowsToBeProposed(){
+        List<String> clients = new ArrayList<>();
+        clients.add("client1");
+        clients.add("client2");
+        Map<String, ObjectOutputStream> socketsOut = new HashMap<>();
+        Lobby lobby = new Lobby(10, 10);
+        MatchMultiplayer matchMultiplayer = new MatchMultiplayer(0, clients, 10, socketsOut, lobby);
+        matchMultiplayer.windowsToBeProposed();
+        Assert.assertEquals(4, matchMultiplayer.getWindowsProposed().size());
+    }
+
 }
