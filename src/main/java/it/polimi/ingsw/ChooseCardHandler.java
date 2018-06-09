@@ -172,7 +172,6 @@ public class ChooseCardHandler implements Initializable {
         for (String s : windows) {
             BufferedReader reader = new BufferedReader(new StringReader(s));
             try {
-                reader.readLine();
                 s = reader.readLine();
             } catch (IOException e) {
                 e.printStackTrace();

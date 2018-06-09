@@ -406,6 +406,7 @@ public class GameBoardHandler implements Initializable {
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
+                            Thread.currentThread().interrupt();
                         }
                         if (clientController.isDicePlaced()) {
                             clientController.setDicePlaced(false);//to reset the value
@@ -1883,10 +1884,13 @@ public class GameBoardHandler implements Initializable {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
                 color = clientController.getDiceColor();
             }
-            textArea.appendText("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!\n");
+            if(color!=null) {
+                textArea.appendText("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!\n");
+            }
             imageView1 = new ImageView();
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
@@ -1949,6 +1953,7 @@ public class GameBoardHandler implements Initializable {
                                 Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
+                                Thread.currentThread().interrupt();
                             }
                             if (clientController.isDicePlaced()) {
                                 clientController.setDicePlaced(false);//to reset the value
@@ -1969,6 +1974,7 @@ public class GameBoardHandler implements Initializable {
                 Thread.sleep(1000); //DA VERIFICARE
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
 
             if (clientController.isEffectApplied()) {

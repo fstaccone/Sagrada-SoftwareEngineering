@@ -192,6 +192,7 @@ public class Gui {
             Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         Platform.runLater(() -> windowStage.close());
         System.exit(0);
@@ -352,6 +353,7 @@ public class Gui {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
         gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);

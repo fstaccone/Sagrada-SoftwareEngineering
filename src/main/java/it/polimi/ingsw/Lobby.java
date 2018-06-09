@@ -193,8 +193,9 @@ public class Lobby {
         try {
             PlayerMultiplayer p;
             p = getPlayer(name);
-
-            p.setStatus(ConnectionStatus.DISCONNECTED);
+            if(p!=null) {
+                p.setStatus(ConnectionStatus.DISCONNECTED);
+            }
             takenUsernames.put(name, ConnectionStatus.DISCONNECTED);
             multiplayerMatches.get(name).getRemoteObservers().remove(p);
             multiplayerMatches.get(name).getSocketObservers().remove(p);
