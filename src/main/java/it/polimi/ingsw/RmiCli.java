@@ -48,12 +48,12 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onWindowChoise(List<String> windows) {
-        cli.onWindowChoise(windows);
+        cli.onWindowChoice(windows);
     }
 
     @Override
     public void onAfterWindowChoise() {
-        cli.onAfterWindowChoise();
+        cli.onAfterWindowChoice();
     }
 
     @Override
@@ -119,4 +119,10 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
         cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
     }
+
+    @Override
+    public void onToolCardUsedByOthers(String name, int toolNumber) {
+        cli.onToolCardUsedByOthers(name,toolNumber);
+    }
+
 }

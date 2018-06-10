@@ -176,7 +176,7 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(AfterWindowChoiseResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onAfterWindowChoise();
+            socketCli.getCli().onAfterWindowChoice();
         } else
             socketGui.getGui().onAfterWindowChoice();
     }
@@ -284,7 +284,7 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(ProposeWindowResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onWindowChoise(response.list);
+            socketCli.getCli().onWindowChoice(response.list);
         } else socketGui.getGui().onWindowChoice(response.list);
     }
 
@@ -293,6 +293,13 @@ public class ClientController implements ResponseHandler {
             loginHandler.getWaitingRoomCli().onCheckConnection();
         else
             loginHandler.getWaitingScreenHandler().onCheckConnection();
+    }
+
+    @Override
+    public void handle(ToolCardUsedByOthersResponse response) {
+        if (socketCli != null) {
+            socketCli.getCli().onToolCardUsedByOthers(response.name,response.toolCardNumber);
+        } else socketGui.getGui().onToolCardUsedByOthers(response.name,response.toolCardNumber);
     }
 
     public ObjectInputStream getIn() {

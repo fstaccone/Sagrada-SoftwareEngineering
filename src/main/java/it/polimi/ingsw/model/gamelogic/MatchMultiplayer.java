@@ -627,18 +627,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    private void notifyToSocketClient(PlayerMultiplayer player, Response response) {
-        if (socketObservers.get(player) != null) {
-            try {
-                socketObservers.get(player).writeObject(response);
-                socketObservers.get(player).reset();
-            } catch (IOException e) {
-                lobby.disconnect(player.getName());
-                System.out.println("Player " + player.getName() + " disconnected!");
-            }
-        }
 
-    }
 
 
     public boolean useToolCard6(int diceChosen, String name) {
@@ -859,5 +848,18 @@ public class MatchMultiplayer extends Match implements Runnable {
                 }
             }
         }
+    }
+
+    public void notifyToSocketClient(PlayerMultiplayer player, Response response) {
+        if (socketObservers.get(player) != null) {
+            try {
+                socketObservers.get(player).writeObject(response);
+                //socketObservers.get(player).reset();
+            } catch (IOException e) {
+                lobby.disconnect(player.getName());
+                System.out.println("Player " + player.getName() + " disconnected!");
+            }
+        }
+
     }
 }

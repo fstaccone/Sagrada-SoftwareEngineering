@@ -1,9 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.AuroraSagradis;
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.FulgorDelCielo;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.Industria;
 import it.polimi.ingsw.socket.ClientController;
 import org.junit.Assert;
@@ -37,9 +35,9 @@ public class CliTest {
         List<String> windows = new ArrayList<>();
         windows.add(new AuroraSagradis().toString());
         windows.add(new Industria().toString());
-        cli.onWindowChoise(windows);
+        cli.onWindowChoice(windows);
         cli.onYourTurn(true, "[1_blue,2_blue]");
-        cli.onAfterWindowChoise();
+        cli.onAfterWindowChoice();
         cli.onMyWindow(new Industria());
         cli.onOtherTurn("player2");
         cli.onInitialization("[tool0:AAAA,tool1:BBBB,tool2:CCCC]", "[pc1,pc2,pc3]", "[priv1]", names);
