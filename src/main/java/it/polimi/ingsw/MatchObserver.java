@@ -43,4 +43,6 @@ public interface MatchObserver extends Serializable, Remote {
     void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens,WindowPatternCard schemeCard, Map<String,Integer> otherTokens, Map<String,WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) throws RemoteException;
 
     void onRoundTrack(String track) throws RemoteException;
+
+    void onToolCardUsedByOthers(String name, int toolNumber) throws RemoteException;
 }

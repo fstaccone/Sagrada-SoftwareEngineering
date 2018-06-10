@@ -62,6 +62,11 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
+    public void onToolCardUsedByOthers(String name, int toolNumber){
+        gui.onToolCardUsedByOthers(name,toolNumber);
+    }
+
+    @Override
     public void onMyWindow(WindowPatternCard window) {
         gui.onMyWindow(window);
     }

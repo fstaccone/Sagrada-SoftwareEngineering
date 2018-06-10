@@ -1,8 +1,12 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
+import it.polimi.ingsw.socket.responses.Response;
+import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
@@ -17,6 +21,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
     public boolean applyEffect(Player player, Match match) {
 
         PlayerMultiplayer p = (PlayerMultiplayer) player; //USEFUL JUST FOR TOKENS, TO BE FIXED
+        MatchMultiplayer m=(MatchMultiplayer) match;
 
         Colors color = match.getBoard().getRoundTrack().getColorOfAChosenDice(player.getRound(),player.getDiceChosenFromRound());
 
@@ -43,6 +48,21 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                 if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
                     price = 2;
+                    //NOTIFY TO OTHERS
+                    Response response = new ToolCardUsedByOthersResponse( p.getName(),12);
+                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                        if (!otherPlayer.getName().equals(p.getName())) {
+                            if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                try {
+                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),12);
+                                } catch (RemoteException e) {
+                                    m.getLobby().disconnect(otherPlayer.getName());
+                                    System.out.println("Player " + p.getName() + " disconnected!");
+                                }
+                            }
+                            m.notifyToSocketClient(otherPlayer, response);
+                        }
+                    }
                     return true;
                 } else {
                     if(dice1.equals(schema.getDice(newRow1, newColumn1))) {
@@ -63,6 +83,22 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                 if (schema.putDice(dice1, newRow1, newColumn1) ) {
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
                     price = 2;
+
+                    //NOTIFY TO OTHERS
+                    Response response = new ToolCardUsedByOthersResponse( p.getName(),12);
+                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                        if (!otherPlayer.getName().equals(p.getName())) {
+                            if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                try {
+                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),12);
+                                } catch (RemoteException e) {
+                                    m.getLobby().disconnect(otherPlayer.getName());
+                                    System.out.println("Player " + p.getName() + " disconnected!");
+                                }
+                            }
+                            m.notifyToSocketClient(otherPlayer, response);
+                        }
+                    }
                     return true;
                 } else {
                     schema.putDice(dice1, row1, column1);

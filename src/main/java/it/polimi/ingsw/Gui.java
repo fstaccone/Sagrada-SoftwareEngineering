@@ -306,6 +306,13 @@ public class Gui {
         chooseCardHandler.setWindows(windows);
     }
 
+    public void onToolCardUsedByOthers(String name, int toolNumber){
+        if(gameBoardHandler!=null){
+            gameBoardHandler.setTextArea("Il giocatore '"+name+"' ha utilizzato la carta utensile "+toolNumber+". Tienine conto per l'utilizzo dei tuoi segnalini!\n");
+        }
+        else chooseCardHandler.setTextArea("Il giocatore '"+name+"' ha utilizzato la carta utensile "+toolNumber+". Tienine conto per l'utilizzo dei tuoi segnalini!\n");
+    }
+
     public void onAfterWindowChoice() {
 
         FXMLLoader fx = new FXMLLoader();

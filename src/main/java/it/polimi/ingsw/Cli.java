@@ -181,7 +181,7 @@ public class Cli {
                 .collect(Collectors.toList());
     }
 
-    public void onWindowChoise(List<String> windows) {
+    public void onWindowChoice(List<String> windows) {
         int i = 0;
         printer.println("Choose your window among the following                                        ~ [cw] + [number]\n");
         printer.flush();
@@ -191,7 +191,7 @@ public class Cli {
         }
     }
 
-    public void onAfterWindowChoise() {
+    public void onAfterWindowChoice() {
         printer.println("You can now perform actions on your scheme card                               ~ [reserve] to check available dices\n");
         printer.flush();
     }
@@ -321,6 +321,11 @@ public class Cli {
         } else {
             printer.println(winner.toUpperCase() + " è il vincitore!");
         }
+        printer.flush();
+    }
+
+    public void onToolCardUsedByOthers(String name, int toolCardNumber){
+        printer.println("Il giocatore '"+name+"' ha utilizzato la carta utensile "+toolCardNumber+". Tienine conto per l'utilizzo dei tuoi segnalini!\n");
         printer.flush();
     }
 
