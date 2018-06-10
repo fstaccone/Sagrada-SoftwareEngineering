@@ -9,7 +9,6 @@ public class PlayerMultiplayer extends Player {
     private ConnectionStatus status;
     private boolean myTurn;
     private MatchMultiplayer match;
-    private boolean schemeCardSet;
 
     /**
      * Creates a new Player for multiplayer match
@@ -20,7 +19,6 @@ public class PlayerMultiplayer extends Player {
         super(name);
         status = ConnectionStatus.CONNECTED;
         myTurn = false;
-        schemeCardSet = false;
         this.match = match;
     }
 
@@ -30,9 +28,7 @@ public class PlayerMultiplayer extends Player {
     }
     public void setPrivateObjectiveCard(PrivateObjectiveCard privateObjectiveCard) { this.privateObjectiveCard = privateObjectiveCard; }
     public void setStatus(ConnectionStatus status) { this.status = status; }
-    public void setTurnsLeft(int turnsLeft) { this.turnsLeft = turnsLeft; }
     public void setMyTurn(boolean myTurn) { this.myTurn = myTurn; }
-    public void setSchemeCardSet(boolean schemeCardSet) { this.schemeCardSet = schemeCardSet; }
 
     // getters
     public int getNumFavorTokens() {
@@ -43,7 +39,6 @@ public class PlayerMultiplayer extends Player {
     }
     public ConnectionStatus getStatus() { return status; }
     public boolean isMyTurn() { return myTurn; }
-    public boolean isSchemeCardSet() { return schemeCardSet; }
 
     /**
      * Sets the new player's scheme card

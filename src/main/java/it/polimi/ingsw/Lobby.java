@@ -73,13 +73,13 @@ public class Lobby {
     }
 
     // to remove a username at the end of a match or when a player leaves a match before its creation
-    private synchronized void removeUsername(String name) {
+    public synchronized void removeUsername(String name) {
         this.takenUsernames.remove(name);
     }
 
     public synchronized void createSingleplayerMatch(String name) {
 
-        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name));
+        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, turnTime, this));
         matchCounter++;
 
         // debug
@@ -193,7 +193,7 @@ public class Lobby {
         try {
             PlayerMultiplayer p;
             p = getPlayer(name);
-            if(p!=null) {
+            if (p != null) {
                 p.setStatus(ConnectionStatus.DISCONNECTED);
             }
             takenUsernames.put(name, ConnectionStatus.DISCONNECTED);
@@ -434,5 +434,6 @@ public class Lobby {
             return takenUsernames.get(name);
         }
     }
+
 
 }

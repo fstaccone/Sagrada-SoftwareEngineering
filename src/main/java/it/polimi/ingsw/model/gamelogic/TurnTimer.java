@@ -27,7 +27,7 @@ public class TurnTimer extends TimerTask {
         // debug
         System.out.println("Timer is expired during the turn of the player: " + player.getName());
 
-        match.getTurnManager().setExpiredTrue();
+        match.getTurnManagerMultiplayer().setExpiredTrue();
         match.goThrough();
     }
 }

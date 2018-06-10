@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TurnManagerTest {
+public class TurnManagerMultiplayerTest {
 
     @Test
     public void TurnManager(){
@@ -22,7 +22,7 @@ public class TurnManagerTest {
         Map<String, ObjectOutputStream> socketsOut = new HashMap<>();
         Lobby lobby = new Lobby(10, turnTime);
         MatchMultiplayer matchMultiplayer = new MatchMultiplayer(matchId, clients, turnTime, socketsOut, lobby);
-        TurnManager turnManager = new TurnManager(matchMultiplayer, turnTime);
-        Assert.assertNotNull(turnManager);
+        TurnManagerMultiplayer turnManagerMultiplayer = new TurnManagerMultiplayer(matchMultiplayer, turnTime);
+        Assert.assertNotNull(turnManagerMultiplayer);
     }
 }

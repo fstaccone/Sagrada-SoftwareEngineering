@@ -8,12 +8,12 @@ public abstract class Player {
     protected Colors color;
     protected int turnsLeft;
     private int pointsByPrivateObjective;
+    private boolean schemeCardSet;
 
     private int dice;
     private String choise;
 
     private Dice diceFromBag;
-
 
 
     private int roundChosen;
@@ -60,9 +60,13 @@ public abstract class Player {
         return finalY2;
     }
 
-    public int getPointsByPrivateObjective() { return pointsByPrivateObjective; }
+    public int getPointsByPrivateObjective() {
+        return pointsByPrivateObjective;
+    }
 
-    public void setPointsByPrivateObjective(int pointsByPrivateObjective) { this.pointsByPrivateObjective = pointsByPrivateObjective; }
+    public void setPointsByPrivateObjective(int pointsByPrivateObjective) {
+        this.pointsByPrivateObjective = pointsByPrivateObjective;
+    }
 
     public void setStartX1(int startX1) {
         this.startX1 = startX1;
@@ -132,6 +136,7 @@ public abstract class Player {
         this.name = name;
         points = 0;
         pointsByPrivateObjective = 0;
+        schemeCardSet = false;
     }
 
     // getters
@@ -151,9 +156,17 @@ public abstract class Player {
         return points;
     }
 
-    public Colors getColor() { return color; }
+    public boolean isSchemeCardSet() {
+        return schemeCardSet;
+    }
 
-    public int getTurnsLeft() { return turnsLeft; }
+    public Colors getColor() {
+        return color;
+    }
+
+    public int getTurnsLeft() {
+        return turnsLeft;
+    }
     // end of getters
 
     // setters
@@ -163,11 +176,21 @@ public abstract class Player {
 
     public abstract void setSchemeCard(WindowPatternCard schemeCard);
 
+    public void setTurnsLeft(int turnsLeft) {
+        this.turnsLeft = turnsLeft;
+    }
+
+    public void setSchemeCardSet(boolean schemeCardSet) {
+        this.schemeCardSet = schemeCardSet;
+    }
+
     public void setPoints(int points) {
         this.points = points;
     }
 
-    public void setColor(Colors color) { this.color = color; }
+    public void setColor(Colors color) {
+        this.color = color;
+    }
     // end of setters
 
     public void setDiceFromBag(Dice diceFromBag) {

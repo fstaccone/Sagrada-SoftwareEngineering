@@ -14,12 +14,6 @@ import java.util.stream.Collectors;
 
 public class MatchMultiplayer extends Match implements Runnable {
 
-    private Lobby lobby;
-
-    public Lobby getLobby() {
-        return lobby;
-    }
-
     private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
     private Map<PlayerMultiplayer, ObjectOutputStream> socketObservers;
 
@@ -28,9 +22,8 @@ public class MatchMultiplayer extends Match implements Runnable {
     private Thread localThread;
     private boolean started;
     private int matchId; // todo: controllare se serve
-    private TurnManager turnManager;
+    private TurnManagerMultiplayer turnManagerMultiplayer;
     private List<PlayerMultiplayer> players;
-    private List<WindowPatternCard> windowsProposed;
     private PlayerMultiplayer winner;
 
     /**
@@ -44,15 +37,14 @@ public class MatchMultiplayer extends Match implements Runnable {
      */
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut, Lobby lobby) {
 
-        super();
-        this.lobby = lobby;
+        super(lobby);
         this.matchId = matchId;
         started = false;
 
         players = new ArrayList<>();
         remoteObservers = new HashMap<>();
         socketObservers = new HashMap<>();
-        turnManager = new TurnManager(this, turnTime);
+        turnManagerMultiplayer = new TurnManagerMultiplayer(this, turnTime);
         decksContainer = new DecksContainer(clients.size());
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
@@ -69,12 +61,8 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     // getters
-    public List<WindowPatternCard> getWindowsProposed() {
-        return windowsProposed;
-    }
-
-    public TurnManager getTurnManager() {
-        return turnManager;
+    public TurnManagerMultiplayer getTurnManagerMultiplayer() {
+        return turnManagerMultiplayer;
     }
 
     public Map<PlayerMultiplayer, MatchObserver> getRemoteObservers() {
@@ -87,10 +75,6 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     public List<PlayerMultiplayer> getPlayers() {
         return players;
-    }
-
-    public void windowsToBeProposed() {
-        windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(0, 4);
     }
 
     /**
@@ -166,7 +150,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         this.drawPrivateObjectiveCards();
 
-        this.turnManager.run();
+        this.turnManagerMultiplayer.run();
     }
 
     // Assegna il colore ai giocatori in modo casuale
@@ -859,5 +843,10 @@ public class MatchMultiplayer extends Match implements Runnable {
                 }
             }
         }
+    }
+
+    @Override
+    public void terminateMatch() {
+
     }
 }

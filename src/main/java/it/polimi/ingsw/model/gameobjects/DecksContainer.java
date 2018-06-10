@@ -2,18 +2,16 @@ package it.polimi.ingsw.model.gameobjects;
 
 public class DecksContainer {
 
-    private PrivateObjectiveCardDeck  privateObjectiveDeck;
+    private PrivateObjectiveCardDeck privateObjectiveDeck;
     private WindowPatternCardDeck windowPatternDeck;
-    //private WindowFramePlayerBoardDeck windowFrameDeck;
     private PublicObjectiveCardDeck publicObjectiveCardDeck;
     private ToolCardDeck toolCardDeck;
 
     public DecksContainer(int numOfPlayers) {
-        this.publicObjectiveCardDeck= new PublicObjectiveCardDeck(numOfPlayers);
-        this.toolCardDeck=new ToolCardDeck();
+        this.publicObjectiveCardDeck = new PublicObjectiveCardDeck(numOfPlayers);
+        this.toolCardDeck = new ToolCardDeck();
         this.privateObjectiveDeck = new PrivateObjectiveCardDeck(numOfPlayers);
         this.windowPatternDeck = new WindowPatternCardDeck(numOfPlayers);
-        //this.windowFrameDeck = new WindowFramePlayerBoardDeck();
     }
 
     public PrivateObjectiveCardDeck getPrivateObjectiveCardDeck() {
@@ -28,10 +26,6 @@ public class DecksContainer {
         return windowPatternDeck;
     }
 
-    //public WindowFramePlayerBoardDeck getWindowFramePlayerBoardDeck() {
-    //    return windowFrameDeck;
-    //}
-
     public ToolCardDeck getToolCardDeck() {
         return toolCardDeck;
     }
@@ -44,9 +38,4 @@ public class DecksContainer {
     public void setWindowPatternCardDeck(WindowPatternCardDeck windowPatternDeck) {
         this.windowPatternDeck = windowPatternDeck;
     }
-
-    //public void setWindowFramePlayerBoardDeck(WindowFramePlayerBoardDeck windowFrameDeck) {
-    //    this.windowFrameDeck = windowFrameDeck;
-    //}
-
 }
