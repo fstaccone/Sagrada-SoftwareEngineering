@@ -19,7 +19,7 @@ public interface RemoteController extends Remote {
 
     void observeLobby(String name, LobbyObserver lobbyObserver) throws RemoteException;
 
-    void observeMatch(String username, MatchObserver observer, boolean reconnection) throws RemoteException;
+    void observeMatch(String username, MatchObserver observer, boolean single, boolean reconnection) throws RemoteException;
 
     void removePlayer(String name) throws RemoteException;
 

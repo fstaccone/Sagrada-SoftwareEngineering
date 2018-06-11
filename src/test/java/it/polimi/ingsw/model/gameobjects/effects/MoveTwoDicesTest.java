@@ -15,13 +15,14 @@ public class MoveTwoDicesTest {
     private Player player;
     private MatchMultiplayer match;
     Reserve reserve;
+
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
         Board board = mock(Board.class);
         reserve = mock(Reserve.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new SymphonyOfLight();
         player.setSchemeCard(schemeCard);
 
@@ -53,13 +54,14 @@ public class MoveTwoDicesTest {
 
         toolCard = new ToolCard("Lathekin", "tool4");
     }
+
     @Test
     public void checkPoints() {
         toolCard.useCard(player, match);
         System.out.println(schemeCard.toString());
-        Assert.assertEquals(Colors.GREEN,player.getSchemeCard().getWindow()[3][1].getDice().getColor());
+        Assert.assertEquals(Colors.GREEN, player.getSchemeCard().getWindow()[3][1].getDice().getColor());
         Assert.assertEquals(3, player.getSchemeCard().getWindow()[3][1].getDice().getValue());
-        Assert.assertEquals(Colors.YELLOW,player.getSchemeCard().getWindow()[1][1].getDice().getColor());
+        Assert.assertEquals(Colors.YELLOW, player.getSchemeCard().getWindow()[1][1].getDice().getColor());
         Assert.assertEquals(6, player.getSchemeCard().getWindow()[1][1].getDice().getValue());
     }
 }

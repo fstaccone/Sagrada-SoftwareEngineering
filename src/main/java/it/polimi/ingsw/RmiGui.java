@@ -15,12 +15,14 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private RemoteController controller;
     /* it is useful to notify the client the state of the game after the reconnection */
     private boolean reconnection;
+    private boolean single;
 
     public RmiGui(Stage fromLogin, String username, RemoteController controller, boolean single) throws RemoteException {
         super();
         this.gui = new Gui(fromLogin, username, controller, null, single);
         this.controller = controller;
         reconnection = false;
+        this.single = single;
     }
 
     public List<String> getPlayers() {
@@ -29,7 +31,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     public void launch() {
         try {
-            controller.observeMatch(gui.getUsername(), this, reconnection);
+            controller.observeMatch(gui.getUsername(), this, single, reconnection);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

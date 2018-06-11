@@ -4,9 +4,7 @@ import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.MatchObserver;
-import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.*;
@@ -16,7 +14,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Controller extends UnicastRemoteObject implements RemoteController, RequestHandler {
 
@@ -28,10 +25,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         super();
         this.lobby = lobby;
         this.socketHandlers = new ArrayList<>();
-        // ...
     }
 
-    // da gestire il caso di riconnessione
     @Override
     public ConnectionStatus checkName(String name) {
         return lobby.checkName(name);
@@ -68,19 +63,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean placeDice(int index, int x, int y, String name, boolean isSingle) {
         if (isSingle) {
-            lobby.getSingleplayerMatches().get(name).setDiceAction(true);
-            // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
+            return lobby.getSingleplayerMatches().get(name).placeDice(name, index, x, y);
         } else {
             return lobby.getMultiplayerMatches().get(name).placeDice(name, index, x, y);
         }
-        return false;
     }
 
     @Override
     public boolean placeDiceTool11(int x, int y, String name, boolean isSingle) {
         if (isSingle) {
-            lobby.getSingleplayerMatches().get(name).setDiceAction(true);
-            // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
+            lobby.getSingleplayerMatches().get(name).setDiceAction(true); // perchè?
         } else {
             return lobby.getMultiplayerMatches().get(name).placeDiceTool11(name, x, y);
         }
@@ -99,7 +91,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void quitGame(String name, boolean isSingle) {
         if (isSingle) {
-            lobby.removeMatchSingleplayer(name);
+            lobby.getSingleplayerMatches().get(name).terminateMatch();
         } else {
             lobby.disconnect(name);
         }
@@ -388,8 +380,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeLobbyRemote(name, lobbyObserver);
     }
 
-    public void observeMatch(String username, MatchObserver observer, boolean reconnection) {
-        lobby.observeMatchRemote(username, observer);
+    public void observeMatch(String username, MatchObserver observer, boolean single, boolean reconnection) {
+        lobby.observeMatchRemote(username, observer, single);
 
         if (reconnection) {
             lobby.transferAllData(username);

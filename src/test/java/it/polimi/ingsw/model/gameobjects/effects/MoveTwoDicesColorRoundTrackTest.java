@@ -10,7 +10,6 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,13 +20,14 @@ public class MoveTwoDicesColorRoundTrackTest {
     private MatchMultiplayer match;
     private RoundTrack roundTrack;
     private Reserve reserve;
+
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
         Board board = mock(Board.class);
         reserve = mock(Reserve.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         toolCard = new ToolCard("Taglierina Manuale", "tool12");
@@ -44,7 +44,7 @@ public class MoveTwoDicesColorRoundTrackTest {
         Dice d11 = new Dice(Colors.BLUE);
         d11.setValue(2);
         list1.add(d11);
-        roundTrack.putDices(list0,0);
+        roundTrack.putDices(list0, 0);
         roundTrack.putDices(list1, 1);
         roundTrack.showRoundTrack();
         when(match.getBoard()).thenReturn(board);
@@ -68,12 +68,12 @@ public class MoveTwoDicesColorRoundTrackTest {
         Dice dv = new Dice(Colors.VIOLET);
         dv.setValue(2);
 
-        player.getSchemeCard().putDice(dy,0,0);
-        player.getSchemeCard().putDice(dg,1,0);
-        player.getSchemeCard().putDice(dr,2,0);
-        player.getSchemeCard().putDice(db,3,0);
-        player.getSchemeCard().putDice(dr2,3,1);
-        player.getSchemeCard().putDice(dy,1,1);
+        player.getSchemeCard().putDice(dy, 0, 0);
+        player.getSchemeCard().putDice(dg, 1, 0);
+        player.getSchemeCard().putDice(dr, 2, 0);
+        player.getSchemeCard().putDice(db, 3, 0);
+        player.getSchemeCard().putDice(dr2, 3, 1);
+        player.getSchemeCard().putDice(dy, 1, 1);
         System.out.println(player.getSchemeCard().toString());
         player.setRound(1);
         player.setDiceChosenFromRound(0);
@@ -95,9 +95,9 @@ public class MoveTwoDicesColorRoundTrackTest {
         System.out.println(player.getSchemeCard().toString());
         toolCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(Colors.RED,player.getSchemeCard().getWindow()[2][2].getDice().getColor());
+        Assert.assertEquals(Colors.RED, player.getSchemeCard().getWindow()[2][2].getDice().getColor());
         Assert.assertEquals(3, player.getSchemeCard().getWindow()[2][2].getDice().getValue());
-        Assert.assertEquals(Colors.RED,player.getSchemeCard().getWindow()[0][2].getDice().getColor());
+        Assert.assertEquals(Colors.RED, player.getSchemeCard().getWindow()[0][2].getDice().getColor());
         Assert.assertEquals(4, player.getSchemeCard().getWindow()[0][2].getDice().getValue());
     }
 }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
@@ -20,7 +19,7 @@ public class MediumShadesTest {
     public void Before() {
         match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 
@@ -48,6 +47,6 @@ public class MediumShadesTest {
     public void checkPoints() {
         publicCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(4,player.getPoints());
+        Assert.assertEquals(4, player.getPoints());
     }
 }

@@ -13,18 +13,20 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     private Cli cli;
     private transient RemoteController controller;
     private boolean reconnection;
+    private boolean single;
 
     public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
         super();
         cli = new Cli(username, controller, null, single);
         this.controller = controller;
         reconnection = false;
+        this.single = single;
         cli.printWelcome();
     }
 
     public void launch() {
         try {
-            controller.observeMatch(cli.getUsername(), this, reconnection);
+            controller.observeMatch(cli.getUsername(), this, single, reconnection);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
