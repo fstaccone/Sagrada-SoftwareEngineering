@@ -14,9 +14,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     private transient RemoteController controller;
     private boolean reconnection;
 
-    public RmiCli(String username, RemoteController controller, boolean single) throws RemoteException {
+    public RmiCli(String username, RemoteController controller, boolean singleplayer) throws RemoteException {
         super();
-        cli = new Cli(username, controller, null, single);
+        cli = new Cli(username, controller, null, singleplayer);
         this.controller = controller;
         reconnection = false;
         cli.printWelcome();

@@ -77,9 +77,9 @@ public class Lobby {
         this.takenUsernames.remove(name);
     }
 
-    public synchronized void createSingleplayerMatch(String name) {
+    public synchronized void createSingleplayerMatch(String name, int difficulty) {
 
-        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, turnTime, this));
+        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, turnTime, this,difficulty));
         matchCounter++;
 
         // debug

@@ -16,9 +16,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     /* it is useful to notify the client the state of the game after the reconnection */
     private boolean reconnection;
 
-    public RmiGui(Stage fromLogin, String username, RemoteController controller, boolean single) throws RemoteException {
+    public RmiGui(Stage fromLogin, String username, RemoteController controller, boolean singleplayer) throws RemoteException {
         super();
-        this.gui = new Gui(fromLogin, username, controller, null, single);
+        this.gui = new Gui(fromLogin, username, controller, null, singleplayer);
         this.controller = controller;
         reconnection = false;
     }

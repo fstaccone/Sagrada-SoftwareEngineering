@@ -39,9 +39,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
 
     @Override
-    public void createMatch(String name) {
+    public void createMatch(String name, int difficulty) {
         this.lobby.addUsername(name);
-        this.lobby.createSingleplayerMatch(name);
+        this.lobby.createSingleplayerMatch(name,difficulty);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard1(int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard1(diceChosen, IncrOrDecr, name);
         }
@@ -145,7 +145,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard2or3(n, startX, startY, finalX, finalY, name);
         }
@@ -155,7 +155,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard4(int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard4(startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
         }
@@ -165,7 +165,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard5(int diceChosen, int roundChosen, int diceChosenFromRound, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard5(diceChosen, roundChosen, diceChosenFromRound, name);
         }
@@ -176,7 +176,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard6(int diceChosen, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard6(diceChosen, name);
         }
@@ -186,7 +186,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard7(String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard7(name);
         }
@@ -196,7 +196,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard8(String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard8(name);
         }
@@ -206,7 +206,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard9(diceChosen, finalX1, finalY1, name);
         }
@@ -216,7 +216,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard10(int diceChosen, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard10(diceChosen, name);
         }
@@ -226,7 +226,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard11(int diceChosen, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard11(diceChosen, name);
         }
@@ -236,7 +236,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard12(int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard12(roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
         }
@@ -251,7 +251,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(CreateMatchRequest request) {
-        createMatch(request.username);
+        createMatch(request.username,request.difficulty);
         return null;
     }
 

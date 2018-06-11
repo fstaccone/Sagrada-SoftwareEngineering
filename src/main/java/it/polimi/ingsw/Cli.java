@@ -71,7 +71,7 @@ public class Cli {
 
     private static final String RULES = ("Da decidere se in italiano o in inglese");
 
-    private static final String HELP_IN_TURN = (
+    private static final String HELP_IN_TURN_MULTI = (
             "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
                     "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
                     "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
@@ -79,7 +79,7 @@ public class Cli {
                     "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
                     "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
 
-    private static final String HELP_GENERAL = (
+    private static final String HELP_GENERAL_MULTI = (
             "\n 'h'                                         to show game available commands" +
                     "\n 'q'                                         to quit the game" +
                     "\n 'r'                                         to show game rules" +
@@ -90,6 +90,21 @@ public class Cli {
                     "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
                     "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
                     "\n 'toolcards'                                 to show the list of available tool cards \n");
+
+    private static final String HELP_SINGLE = (
+            "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
+                    "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
+                    "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
+                    "\n 'pass'                                      to pass the turn" +
+                    "\n 'private'                                   to show your private objective cards" +
+                    "\n 'public'                                    to show public objective cards" +
+                    "\n 'q'                                         to quit the game" +
+                    "\n 'r'                                         to show game rules" +
+                    "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
+                    "\n 'track'                                     to show current state of the round track" +
+                    "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
+                    "\n 'toolcards'                                 to show the list of available tool cards \n" +
+                    "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
 
     private static final String SYNTAX_ERROR = (
             "\nWARNING: Invalid syntax request.\n");
@@ -141,8 +156,6 @@ public class Cli {
         playersNames = names;
 
         printer.println("Stai giocando contro:\n");
-        printer.flush();
-
         printNames();
     }
 
@@ -413,7 +426,11 @@ public class Cli {
                             break;
 
                             case "h": {
-                                printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN + HELP_GENERAL);
+                                if(single){
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
+                                }else {
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+                                }
                                 printer.flush();
                             }
                             break;
@@ -553,7 +570,7 @@ public class Cli {
                             break;
 
                             case "private": {
-                                showPrivateCard();
+                                showPrivateCard();//DA SISTEMARE CON SINGLEPLAYER CHE NE HA 2
                             }
                             break;
 
@@ -595,7 +612,6 @@ public class Cli {
 
                             case "sp": {
                                 printer.println("Stai giocando contro:");
-                                printer.flush();
                                 printNames();
                             }
                             break;
@@ -638,7 +654,6 @@ public class Cli {
 
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
-                                printer.flush();
                                 showToolCards();
                             }
                             break;
@@ -702,7 +717,7 @@ public class Cli {
                         switch (parts[0]) {
 
                             case "h": {
-                                printer.println("\nInsert a new valid option between: ('+' means SPACE)" + HELP_GENERAL);
+                                printer.println("\nInsert a new valid option between: ('+' means SPACE)" + HELP_GENERAL_MULTI);
                                 printer.flush();
                             }
                             break;
@@ -763,7 +778,6 @@ public class Cli {
 
                             case "sp": {
                                 printer.println("Stai giocando contro:");
-                                printer.flush();
                                 printNames();
                             }
                             break;
@@ -775,7 +789,6 @@ public class Cli {
 
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards list:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
-                                printer.flush();
                                 showToolCards();
                             }
                             break;

@@ -18,10 +18,10 @@ public class MatchSingleplayer extends Match implements Runnable {
     MatchObserver observerRmi;
     ObjectOutputStream observerSocket;
 
-    public MatchSingleplayer(int matchId, String name, int turnTime, Lobby lobby) {
+    public MatchSingleplayer(int matchId, String name, int turnTime, Lobby lobby, int difficulty) {
         super(lobby);
         this.matchId = matchId;
-        this.decksContainer = new DecksContainer(1);
+        this.decksContainer = new DecksContainer(1,difficulty);
         this.clientIdentifier = name;
         this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);

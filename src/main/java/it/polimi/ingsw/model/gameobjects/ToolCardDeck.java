@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class ToolCardDeck extends Deck<ToolCard> {
 
-    public ToolCardDeck(int numOfPlayers) {
+    public ToolCardDeck(int numOfPlayers,int difficulty) {
         super();
 
         for (int i = 1; i < 13; i++) {
@@ -22,7 +22,7 @@ public class ToolCardDeck extends Deck<ToolCard> {
             }
         }
         else{
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < difficulty; j++) {
                 randomGenerator = new Random();
                 int toolIndex = randomGenerator.nextInt(deck.size());
                 String toolName = deck.get(toolIndex);
