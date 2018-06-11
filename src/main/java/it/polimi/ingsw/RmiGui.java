@@ -17,9 +17,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private boolean reconnection;
     private boolean single;
 
-    public RmiGui(Stage fromLogin, String username, RemoteController controller, boolean single) throws RemoteException {
+    public RmiGui(Stage fromLogin, String username, RemoteController controller, boolean singleplayer) throws RemoteException {
         super();
-        this.gui = new Gui(fromLogin, username, controller, null, single);
+        this.gui = new Gui(fromLogin, username, controller, null, singleplayer);
         this.controller = controller;
         reconnection = false;
         this.single = single;

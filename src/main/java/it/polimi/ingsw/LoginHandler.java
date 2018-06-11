@@ -29,7 +29,6 @@ import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
@@ -47,9 +46,9 @@ public class LoginHandler implements Initializable {
     private transient boolean isGui = true;
     private transient boolean isCli = false;
 
-    private transient boolean isSingleplayer = false;
+    private transient boolean singleplayer = false;
     private transient boolean reconnection = false;
-    private transient int difficulty;
+    private transient Integer difficulty;
     private transient String serverAddress;
     private WaitingScreenHandler handler;
     private WaitingRoomCli waitingRoomCli;
@@ -62,9 +61,13 @@ public class LoginHandler implements Initializable {
     private transient RemoteController remoteController;
 
     @FXML
+    private transient TextField difficultyInput;
+    @FXML
     private transient TextField usernameInput;
     @FXML
     private transient TextField serverAddressInput;
+    @FXML
+    private transient CheckBox singlePlayerCheckmark;
     @FXML
     private transient CheckBox rmiCheckmark;
     @FXML
@@ -73,8 +76,6 @@ public class LoginHandler implements Initializable {
     private transient CheckBox cliCheckmark;
     @FXML
     private transient CheckBox guiCheckmark;
-    @FXML
-    private transient CheckBox modeCheckmark;
     @FXML
     private transient Button playButton;
 
@@ -99,7 +100,7 @@ public class LoginHandler implements Initializable {
 
     @FXML
     private void singleplayerMarked() {
-        modeCheckmark.setSelected(true);
+        singlePlayerCheckmark.setSelected(true);
     }
 
     @FXML
@@ -133,10 +134,10 @@ public class LoginHandler implements Initializable {
 
         window = (Stage) playButton.getScene().getWindow();
 
-        if (isCli) {
+        if (isCli&&!singleplayer) {
             waitingRoomCli = new WaitingRoomCli(this, window, username, isRmi);
             connectionSetup(null);
-        } else {
+        } else if(isGui&&!singleplayer) {
 
             FXMLLoader fx = new FXMLLoader();
             fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
@@ -156,6 +157,8 @@ public class LoginHandler implements Initializable {
                     e.printStackTrace();
                 }
             });
+        } else {
+            connectionSetup(null);
         }
     }
 
@@ -190,13 +193,26 @@ public class LoginHandler implements Initializable {
 
 
     private void readInput() {
-        this.username = this.usernameInput.getText();
+        this.username = usernameInput.getText();
         this.isRmi = rmiCheckmark.isSelected();
         this.isSocket = socketCheckmark.isSelected();
         this.isGui = guiCheckmark.isSelected();
         this.isCli = cliCheckmark.isSelected();
+        this.singleplayer=singlePlayerCheckmark.isSelected();
         this.serverAddress = serverAddressInput.getText();
-        this.isSingleplayer = modeCheckmark.isSelected();
+        this.singleplayer = singlePlayerCheckmark.isSelected();
+        this.difficulty=tryParse(difficultyInput.getText());
+    }
+
+    private Integer tryParse(String text) {
+        if(text!=null) {
+            try {
+                return Integer.parseInt(text);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        else return null;
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
@@ -236,21 +252,21 @@ public class LoginHandler implements Initializable {
             if (isRmi) {
                 if (isCli) {
                     Platform.runLater(() -> window.close());
-                    new RmiCli(username, remoteController, false).reconnect();
+                    new RmiCli(username, remoteController, singleplayer).reconnect();
                 } else {
-                    new RmiGui(window, username, remoteController, false).reconnect();
+                    new RmiGui(window, username, remoteController, singleplayer).reconnect();
                 }
             } else {
                 new Thread(new SocketListener(clientController)).start();
                 if (isCli) {
-                    new SocketCli(username, clientController, false).reconnect();
+                    new SocketCli(username, clientController, singleplayer).reconnect();
                 } else {
-                    new SocketGui(window, username, clientController, false).reconnect();
+                    new SocketGui(window, username, clientController, singleplayer).reconnect();
                 }
             }
         } else {
             // views' creation and input for the model to create the Player
-            if (isGui) {
+            if (isGui&&!singleplayer) {
                 window.setScene(waiting);
                 window.setTitle("Waiting room");
                 window.setResizable(false);
@@ -299,12 +315,13 @@ public class LoginHandler implements Initializable {
 
     private void createClientRmi() {
         // to create the link between this Client and the Player in the model
-        if (isSingleplayer) {
+        if (singleplayer) {
             try {
-                remoteController.createMatch(this.username);
+                remoteController.createMatch(this.username,difficulty);
                 if (isCli) {
-                    new RmiCli(username, remoteController, false).launch(); // false per il momento, per simulare match multiplayer
+                    new RmiCli(username, remoteController, singleplayer).launch();
                 } else {
+                    new RmiGui(window,username,remoteController,singleplayer).launch();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -330,9 +347,14 @@ public class LoginHandler implements Initializable {
     private void createClientSocket() {
 
         // to create the link between this Client and the Player in the model
-        if (isSingleplayer) {
+        if (singleplayer) {
             try {
-                clientController.request(new CreateMatchRequest(this.username));
+                clientController.request(new CreateMatchRequest(this.username,difficulty));
+                if (isCli) {
+                    new SocketCli(username, clientController, singleplayer);
+                } else {
+                    new SocketGui(window, username, clientController, singleplayer);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Singleplayer match can't be created!");
@@ -352,13 +374,13 @@ public class LoginHandler implements Initializable {
     public void onMatchStartedRmi() {
         if (isCli) {
             try {
-                new RmiCli(username, remoteController, false).launch();
+                new RmiCli(username, remoteController, singleplayer).launch();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                new RmiGui(window, username, remoteController, false).launch();
+                new RmiGui(window, username, remoteController, singleplayer).launch();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -367,9 +389,9 @@ public class LoginHandler implements Initializable {
 
     public void onMatchStartedSocket() {
         if (isCli) {
-            new SocketCli(username, clientController, false);
+            new SocketCli(username, clientController, singleplayer);
         } else {
-            new SocketGui(window, username, clientController, false);
+            new SocketGui(window, username, clientController, singleplayer);
         }
     }
 }

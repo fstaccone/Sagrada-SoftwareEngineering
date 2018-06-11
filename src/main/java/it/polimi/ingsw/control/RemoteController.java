@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 
 public interface RemoteController extends Remote {
 
-    void createMatch(String name) throws RemoteException;
+    void createMatch(String name, int difficulty) throws RemoteException;
 
     ConnectionStatus checkName(String name) throws RemoteException;
 

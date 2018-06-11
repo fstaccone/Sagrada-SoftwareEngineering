@@ -28,9 +28,9 @@ public class MatchSingleplayer extends Match implements Runnable {
         super(lobby);
         this.difficulty = difficulty;
         this.matchId = matchId;
-        decksContainer = new DecksContainer(1);
-        clientIdentifier = name;
-        player = new PlayerSingleplayer(name);
+        this.decksContainer = new DecksContainer(1,difficulty);
+        this.clientIdentifier = name;
+        this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
         // todo: occorre creare un mumero di toolcard compreso tra 1 e 5
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards()); // todo: controllare, servono le private

@@ -46,7 +46,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         remoteObservers = new HashMap<>();
         socketObservers = new HashMap<>();
         turnManager = new TurnManagerMultiplayer(this, turnTime);
-        decksContainer = new DecksContainer(clients.size());
+        decksContainer = new DecksContainer(clients.size(),-1);
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
         initializePlayers(clients, socketsOut);
