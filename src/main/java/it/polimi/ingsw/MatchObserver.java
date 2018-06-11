@@ -14,7 +14,7 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onReserve(String string) throws RemoteException;
 
-    void onWindowChoise(List<String> windows) throws RemoteException;
+    void onWindowChoice(List<String> windows) throws RemoteException;
 
     void onAfterWindowChoice() throws RemoteException;
 

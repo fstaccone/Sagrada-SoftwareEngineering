@@ -20,7 +20,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         cli = new Cli(username, controller, null, singleplayer);
         this.controller = controller;
         reconnection = false;
-        this.single = single;
+        this.single = singleplayer;
         cli.printWelcome();
     }
 
@@ -49,7 +49,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onWindowChoise(List<String> windows) {
+    public void onWindowChoice(List<String> windows) {
         cli.onWindowChoice(windows);
     }
 

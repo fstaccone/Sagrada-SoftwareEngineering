@@ -6,12 +6,13 @@ import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Colors;
 
+import java.io.ObjectOutputStream;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface RemoteController extends Remote {
 
-    void createMatch(String name, int difficulty) throws RemoteException;
+    void createMatch(String name, int difficulty, ObjectOutputStream socketOut) throws RemoteException;
 
     ConnectionStatus checkName(String name) throws RemoteException;
 

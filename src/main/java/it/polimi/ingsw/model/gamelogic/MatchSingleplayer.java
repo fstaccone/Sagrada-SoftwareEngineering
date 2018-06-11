@@ -23,16 +23,15 @@ public class MatchSingleplayer extends Match implements Runnable {
     private int selectedPrivateCard; // con questo attributo si seleziona quale carta utilizzare per il calcolo del punteggio
     private static final int MULTIPLIER_FOR_SINGLE = 3;
 
-    public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby) {
+    public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby,ObjectOutputStream socketOut) {
         super(lobby);
         this.matchId = matchId;
         this.decksContainer = new DecksContainer(1, difficulty);
         this.clientIdentifier = name;
         this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
-        // todo: occorre creare un mumero di toolcard compreso tra 1 e 5
-        board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards()); // todo: controllare, servono le private
-
+        board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
+        observerSocket=socketOut;
         System.out.println("New singleplayer matchId: " + this.matchId);
     }
 
@@ -56,10 +55,6 @@ public class MatchSingleplayer extends Match implements Runnable {
         return player;
     }
 
-    public void setObserverSocket(ObjectOutputStream observerSocket) {
-        this.observerSocket = observerSocket;
-    }
-
     public void setObserverRmi(MatchObserver observerRmi) {
         this.observerRmi = observerRmi;
     }
@@ -76,6 +71,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             }
         } else if (observerSocket != null) {
             try {
+                System.out.println("82 MS");
                 observerSocket.writeObject(new GameStartedResponse(player.isSchemeCardSet(), null));
                 observerSocket.reset();
             } catch (IOException e) {

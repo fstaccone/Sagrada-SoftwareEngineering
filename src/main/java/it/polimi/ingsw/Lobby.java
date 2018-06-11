@@ -81,9 +81,8 @@ public class Lobby {
         this.takenUsernames.remove(name);
     }
 
-    public synchronized void createSingleplayerMatch(String name, int difficulty) {
-
-        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, difficulty, turnTime, this));
+    public synchronized void createSingleplayerMatch(String name, int difficulty,  ObjectOutputStream socketOut) {
+        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, difficulty, turnTime, this,socketOut));
         matchCounter++;
 
         // debug

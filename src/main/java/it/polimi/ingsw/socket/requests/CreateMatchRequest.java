@@ -4,6 +4,7 @@ import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.responses.Response;
 
 public class CreateMatchRequest implements Request {
+
     public final String username;
     public final int difficulty;
 

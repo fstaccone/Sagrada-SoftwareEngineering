@@ -62,7 +62,7 @@ public class LobbyTest {
     @Test
     public void createSingleplayerMatch(){
         Lobby lobby = new Lobby(10, 10);
-        lobby.createSingleplayerMatch("Ancona",1);
+        lobby.createSingleplayerMatch("Ancona",1,null);
         Assert.assertEquals(0, lobby.getSingleplayerMatches().get("Ancona").getMatchId());
         Assert.assertEquals("Ancona", lobby.getSingleplayerMatches().get("Ancona").getPlayer().getName());
     }
@@ -116,8 +116,8 @@ public class LobbyTest {
     @Test
     public void removeMatchSingleplayer(){
         Lobby lobby = new Lobby(10, 10);
-        lobby.createSingleplayerMatch("Archi",1);
-        lobby.createSingleplayerMatch("Bovalino",1);
+        lobby.createSingleplayerMatch("Archi",1,null);
+        lobby.createSingleplayerMatch("Bovalino",1,null);
         Assert.assertEquals(0, lobby.getSingleplayerMatches().get("Archi").getMatchId());
         Assert.assertEquals(1, lobby.getSingleplayerMatches().get("Bovalino").getMatchId());
         lobby.removeMatchSingleplayer("Archi");

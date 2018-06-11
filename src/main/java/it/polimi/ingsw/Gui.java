@@ -190,7 +190,7 @@ public class Gui {
             Thread.currentThread().interrupt();
         }
         Platform.runLater(() -> windowStage.close());
-        System.exit(0);
+        //System.exit(0);
     }
 
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
