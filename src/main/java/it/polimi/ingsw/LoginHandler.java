@@ -48,7 +48,7 @@ public class LoginHandler implements Initializable {
 
     private transient boolean singleplayer = false;
     private transient boolean reconnection = false;
-    private transient int difficulty;
+    private transient Integer difficulty;
     private transient String serverAddress;
     private WaitingScreenHandler handler;
     private WaitingRoomCli waitingRoomCli;
@@ -77,8 +77,6 @@ public class LoginHandler implements Initializable {
     @FXML
     private transient CheckBox guiCheckmark;
     @FXML
-    private transient CheckBox modeCheckmark;
-    @FXML
     private transient Button playButton;
 
     // getters
@@ -102,7 +100,7 @@ public class LoginHandler implements Initializable {
 
     @FXML
     private void singleplayerMarked() {
-        modeCheckmark.setSelected(true);
+        singlePlayerCheckmark.setSelected(true);
     }
 
     @FXML
@@ -202,8 +200,19 @@ public class LoginHandler implements Initializable {
         this.isCli = cliCheckmark.isSelected();
         this.singleplayer=singlePlayerCheckmark.isSelected();
         this.serverAddress = serverAddressInput.getText();
-        this.singleplayer = modeCheckmark.isSelected();
-        this.difficulty=Integer.parseInt(difficultyInput.getText());
+        this.singleplayer = singlePlayerCheckmark.isSelected();
+        this.difficulty=tryParse(difficultyInput.getText());
+    }
+
+    private Integer tryParse(String text) {
+        if(text!=null) {
+            try {
+                return Integer.parseInt(text);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        else return null;
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {

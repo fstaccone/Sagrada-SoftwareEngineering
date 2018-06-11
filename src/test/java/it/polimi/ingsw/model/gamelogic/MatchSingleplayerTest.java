@@ -15,7 +15,7 @@ public class MatchSingleplayerTest {
     public void MatchSingleplayer(){
         int matchId = 0;
         String name ="CowboyBebop";
-        MatchSingleplayer matchSingleplayer = new MatchSingleplayer(matchId, name, turnTime, lobby);
+        MatchSingleplayer matchSingleplayer = new MatchSingleplayer(matchId, name, turnTime, lobby,1);
         Assert.assertNotNull(matchSingleplayer);
     }
 }
