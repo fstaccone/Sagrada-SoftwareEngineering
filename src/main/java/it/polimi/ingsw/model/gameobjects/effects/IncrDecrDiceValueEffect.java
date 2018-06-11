@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 
 public class IncrDecrDiceValueEffect implements Effect {
 
-    private int price;
+    private Integer price;
 
     public IncrDecrDiceValueEffect() {
         price = 1;
@@ -22,6 +22,7 @@ public class IncrDecrDiceValueEffect implements Effect {
     public boolean applyEffect(Player player, Match match) {
         PlayerMultiplayer p = (PlayerMultiplayer) player;
         MatchMultiplayer m = (MatchMultiplayer) match;
+
         String plusOrMinus = player.getChoise();
         if (p.getNumFavorTokens() >= price) {
             if (player.getDice() < match.getBoard().getReserve().getDices().size()) {
@@ -34,24 +35,25 @@ public class IncrDecrDiceValueEffect implements Effect {
                                 value = value + 1;
                                 match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
                                 p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                                price = 2;
-                                //NOTIFY TO OTHERS
-                                Response response = new ToolCardUsedByOthersResponse( p.getName(),1);
-                                for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                                    if (!otherPlayer.getName().equals(p.getName())) {
-                                        if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                            try {
-                                                m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),1);
-                                            } catch (RemoteException e) {
-                                                m.getLobby().disconnect(otherPlayer.getName());
-                                                System.out.println("Player " + p.getName() + " disconnected!");
+                                if(price.equals(1)) {
+                                    //NOTIFY TO OTHERS
+                                    Response response = new ToolCardUsedByOthersResponse(p.getName(), 1);
+                                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                                        if (!otherPlayer.getName().equals(p.getName())) {
+                                            if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                                try {
+                                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 1);
+                                                } catch (RemoteException e) {
+                                                    m.getLobby().disconnect(otherPlayer.getName());
+                                                    System.out.println("Player " + p.getName() + " disconnected!");
+                                                }
                                             }
+                                            m.notifyToSocketClient(otherPlayer, response);
                                         }
-                                        m.notifyToSocketClient(otherPlayer, response);
                                     }
+                                    price = 2;
+                                    m.getToolCardsPrices().put("Carta utensile 1: ",price);
                                 }
-
-
                                 return true;
                             } else return false;
 
@@ -60,21 +62,23 @@ public class IncrDecrDiceValueEffect implements Effect {
                                 value = value - 1;
                                 match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value);
                                 p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                                price = 2;
-                                //NOTIFY TO OTHERS
-                                Response response = new ToolCardUsedByOthersResponse( p.getName(),1);
-                                for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                                    if (!otherPlayer.getName().equals(p.getName())) {
-                                        if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                            try {
-                                                m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),1);
-                                            } catch (RemoteException e) {
-                                                m.getLobby().disconnect(otherPlayer.getName());
-                                                System.out.println("Player " + p.getName() + " disconnected!");
+                                if(price==1) {
+                                    //NOTIFY TO OTHERS
+                                    Response response = new ToolCardUsedByOthersResponse(p.getName(), 1);
+                                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                                        if (!otherPlayer.getName().equals(p.getName())) {
+                                            if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                                try {
+                                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 1);
+                                                } catch (RemoteException e) {
+                                                    m.getLobby().disconnect(otherPlayer.getName());
+                                                    System.out.println("Player " + p.getName() + " disconnected!");
+                                                }
                                             }
+                                            m.notifyToSocketClient(otherPlayer, response);
                                         }
-                                        m.notifyToSocketClient(otherPlayer, response);
                                     }
+                                    price = 2;
                                 }
                                 return true;
                             } else return false;

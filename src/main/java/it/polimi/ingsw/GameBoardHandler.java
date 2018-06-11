@@ -898,12 +898,14 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void setOtherSchemeCards(Pane pane, WindowPatternCard window) {
-        String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-        String imgURL = WINDOW_PATTERN_CARDS_PATH + s + ".png";
-        BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
-                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
-        pane.setBackground(new Background(myBI));
+        if(window!=null) {//DA CONTROLLARE
+            String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+            String imgURL = WINDOW_PATTERN_CARDS_PATH + s + ".png";
+            BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
+                    BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                    BackgroundSize.DEFAULT);
+            pane.setBackground(new Background(myBI));
+        }
         if (pane.getChildren() != null) {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
@@ -1971,7 +1973,7 @@ public class GameBoardHandler implements Initializable {
         }
         private boolean waitForToolEffectAppliedResponse() {
             try {
-                Thread.sleep(1000); //DA VERIFICARE
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();

@@ -67,7 +67,7 @@ public class Cli {
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
-            "\nWelcome to this fantastic game, ";
+            "\nBenvenuto in questo fantastico gioco, ";
 
     private static final String RULES = ("Da decidere se in italiano o in inglese");
 
@@ -118,8 +118,7 @@ public class Cli {
     }
 
     public void printWelcome() {
-        printer.println(WELCOME + username.toUpperCase() + "!\n");
-        printer.flush();
+        printer.println(WELCOME + username + "!\n");
     }
 
     public String getUsername() {
@@ -141,7 +140,7 @@ public class Cli {
     public void onGameStarted(List<String> names){
         playersNames = names;
 
-        printer.println("Your match starts now! You are playing SAGRADA against:");
+        printer.println("Stai giocando contro:\n");
         printer.flush();
 
         printNames();
@@ -150,7 +149,7 @@ public class Cli {
     private void printNames(){
         for (String name : playersNames) {
             if (!name.equals(username)) {
-                printer.println("-" + name.toUpperCase());
+                printer.println("-" + name);
             }
         }
         printer.println();
@@ -166,11 +165,11 @@ public class Cli {
             onReserve(string);
         this.myTurn = yourTurn;
         if (myTurn) {
-            printer.println("\nNow it's your turn! Please insert a command:                            ~ ['h' for help]\n");
+            printer.println("\nOra è il tuo turno! Inserisci un comando:                            ~ ['h' for help]\n");
             tool11DiceToBePlaced = false;
             diceValueToBeSet = false;
         } else
-            printer.println("\nIt's no more your turn! (h for help)");
+            printer.println("\nNon è più il tuo turno! (h for help)");
         printer.flush();
     }
 
@@ -201,7 +200,7 @@ public class Cli {
     }
 
     public void onOtherTurn(String name) {
-        printer.println("Now it's " + name + "'s turn");
+        printer.println("Ora è il turno di " + name + "!");
         printer.flush();
     }
 
@@ -282,7 +281,7 @@ public class Cli {
         printer.flush();
     }
 
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String,Integer> toolcardsPrices) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
@@ -296,6 +295,11 @@ public class Cli {
         this.otherSchemeCardsMap = otherSchemeCards;
         this.otherFavorTokensMap = otherTokens;
         this.windowChosen = schemeCardChosen;
+        printer.println("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
+        for (String toolcard:toolcardsPrices.keySet()) {
+            printer.println("-"+toolcard+" "+toolcardsPrices.get(toolcard));
+        }
+        printer.flush();
     }
 
 
@@ -325,7 +329,7 @@ public class Cli {
     }
 
     public void onToolCardUsedByOthers(String name, int toolCardNumber){
-        printer.println("Il giocatore '"+name+"' ha utilizzato la carta utensile "+toolCardNumber+". Tienine conto per l'utilizzo dei tuoi segnalini!\n");
+        printer.println("Il giocatore '"+name+"' è stato il primo ad utilizzare la carta utensile "+toolCardNumber+", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         printer.flush();
     }
 

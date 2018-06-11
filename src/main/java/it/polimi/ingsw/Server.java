@@ -19,7 +19,6 @@ import java.util.concurrent.Executors;
 public class Server {
 
     private static final String serverConfig = "./src/main/java/it/polimi/ingsw/server.config";
-    private static int rmiPort;
     private static int socketPort;
     private static String lobbyName;
     private static int waitingTime;
@@ -38,11 +37,11 @@ public class Server {
 
         //start RMI registry
         try {
-            //Registry registry = LocateRegistry.createRegistry(rmiPort);
+            //Registry registry = LocateRegistry.createRegistry(1099);
             //registry.rebind(lobbyName,controller);
             Naming.rebind("//localhost/" + lobbyName, controller);
 
-            System.out.println("RMI server online on port " + rmiPort);
+            System.out.println("RMI server online on port 1099");
         } catch (RemoteException e) {
             System.out.println("Cannot start RMI registry");
         }
@@ -124,10 +123,6 @@ public class Server {
 
                 case "socketPort":
                     Server.socketPort = Integer.parseInt(value.getValue());
-                    break;
-
-                case "rmiPort":
-                    Server.rmiPort = Integer.parseInt(value.getValue());
                     break;
 
                 case "rmiLobbyName":

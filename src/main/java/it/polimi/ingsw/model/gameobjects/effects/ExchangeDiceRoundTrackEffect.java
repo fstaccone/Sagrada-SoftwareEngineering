@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 
 public class ExchangeDiceRoundTrackEffect implements Effect{
 
-    private int price;
+    private Integer price;
 
     public ExchangeDiceRoundTrackEffect() {
         price = 1;
@@ -32,22 +32,24 @@ public class ExchangeDiceRoundTrackEffect implements Effect{
                 if (dice != null) {
                     match.getBoard().getReserve().getDices().add(player.getDice(), dice);
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                    price = 2;
-
-                    //NOTIFY TO OTHERS
-                    Response response = new ToolCardUsedByOthersResponse( p.getName(),5);
-                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                        if (!otherPlayer.getName().equals(p.getName())) {
-                            if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                try {
-                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),5);
-                                } catch (RemoteException e) {
-                                    m.getLobby().disconnect(otherPlayer.getName());
-                                    System.out.println("Player " + p.getName() + " disconnected!");
+                    if(price.equals(1)) {
+                        //NOTIFY TO OTHERS
+                        Response response = new ToolCardUsedByOthersResponse(p.getName(), 5);
+                        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                            if (!otherPlayer.getName().equals(p.getName())) {
+                                if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                    try {
+                                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 5);
+                                    } catch (RemoteException e) {
+                                        m.getLobby().disconnect(otherPlayer.getName());
+                                        System.out.println("Player " + p.getName() + " disconnected!");
+                                    }
                                 }
+                                m.notifyToSocketClient(otherPlayer, response);
                             }
-                            m.notifyToSocketClient(otherPlayer, response);
                         }
+                        price = 2;
+                        m.getToolCardsPrices().put("Carta utensile 5: ",price);
                     }
                     return true;
                 } else

@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 
 public class ChooseAnotherDiceEffect implements Effect {
 
-    private int price;
+    private Integer price;
 
     public ChooseAnotherDiceEffect() {
         price = 1;
@@ -26,22 +26,24 @@ public class ChooseAnotherDiceEffect implements Effect {
             match.setDiceAction(false);
             p.setTurnsLeft(0);
             p.setNumFavorTokens(p.getNumFavorTokens() - price);
-            price = 2;
-
-            //NOTIFY TO OTHERS
-            Response response = new ToolCardUsedByOthersResponse( p.getName(),8);
-            for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                if (!otherPlayer.getName().equals(p.getName())) {
-                    if (m.getRemoteObservers().get(otherPlayer) != null) {
-                        try {
-                            m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),8);
-                        } catch (RemoteException e) {
-                            m.getLobby().disconnect(otherPlayer.getName());
-                            System.out.println("Player " + p.getName() + " disconnected!");
+            if(price.equals(1)) {
+                //NOTIFY TO OTHERS
+                Response response = new ToolCardUsedByOthersResponse(p.getName(), 8);
+                for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                    if (!otherPlayer.getName().equals(p.getName())) {
+                        if (m.getRemoteObservers().get(otherPlayer) != null) {
+                            try {
+                                m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 8);
+                            } catch (RemoteException e) {
+                                m.getLobby().disconnect(otherPlayer.getName());
+                                System.out.println("Player " + p.getName() + " disconnected!");
+                            }
                         }
+                        m.notifyToSocketClient(otherPlayer, response);
                     }
-                    m.notifyToSocketClient(otherPlayer, response);
                 }
+                price = 2;
+                m.getToolCardsPrices().put("Carta utensile 8: ",price);
             }
             return true;
         }

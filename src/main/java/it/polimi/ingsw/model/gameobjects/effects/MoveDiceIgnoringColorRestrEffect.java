@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class MoveDiceIgnoringColorRestrEffect implements Effect {
 
-    private int price;
+    private Integer price;
 
     public MoveDiceIgnoringColorRestrEffect() {
 
@@ -49,22 +49,25 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                     player.setStartY1(4);//UNREACHABLE VALUE, USED TO RESET
                     player.setFinalY1(4);
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                    price = 2;
 
-                    //NOTIFY TO OTHERS
-                    Response response = new ToolCardUsedByOthersResponse( p.getName(),2);
-                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                        if (!otherPlayer.getName().equals(p.getName())) {
-                            if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                try {
-                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),2);
-                                } catch (RemoteException e) {
-                                    m.getLobby().disconnect(otherPlayer.getName());
-                                    System.out.println("Player " + p.getName() + " disconnected!");
+                    if(price.equals(1)) {
+                        //NOTIFY TO OTHERS
+                        Response response = new ToolCardUsedByOthersResponse(p.getName(), 2);
+                        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                            if (!otherPlayer.getName().equals(p.getName())) {
+                                if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                    try {
+                                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 2);
+                                    } catch (RemoteException e) {
+                                        m.getLobby().disconnect(otherPlayer.getName());
+                                        System.out.println("Player " + p.getName() + " disconnected!");
+                                    }
                                 }
+                                m.notifyToSocketClient(otherPlayer, response);
                             }
-                            m.notifyToSocketClient(otherPlayer, response);
                         }
+                        price = 2;
+                        m.getToolCardsPrices().put("Carta utensile 2: ",price);
                     }
                     return true;
                 } else {

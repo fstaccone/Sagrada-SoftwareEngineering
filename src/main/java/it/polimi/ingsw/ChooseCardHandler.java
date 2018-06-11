@@ -229,7 +229,7 @@ public class ChooseCardHandler implements Initializable {
                 otherPlayers.append(s);
             }
         }
-        opponents.setText("Your match starts now! You are playing SAGRADA against:" + otherPlayers.toString());
+        opponents.setText("Stai giocando contro:\n" + otherPlayers.toString());
     }
 
     public void setTextArea(String s) {

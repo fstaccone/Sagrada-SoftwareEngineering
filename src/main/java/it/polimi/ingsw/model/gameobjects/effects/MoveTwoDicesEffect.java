@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class MoveTwoDicesEffect implements Effect{
 
-    private int price;
+    private Integer price;
 
     public MoveTwoDicesEffect() {
         price = 1;
@@ -43,22 +43,25 @@ public class MoveTwoDicesEffect implements Effect{
                 int newColumn2 = player.getFinalY2();
                 if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                    price = 2;
 
-                    //NOTIFY TO OTHERS
-                    Response response = new ToolCardUsedByOthersResponse( p.getName(),4);
-                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                        if (!otherPlayer.getName().equals(p.getName())) {
-                            if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                try {
-                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),4);
-                                } catch (RemoteException e) {
-                                    m.getLobby().disconnect(otherPlayer.getName());
-                                    System.out.println("Player " + p.getName() + " disconnected!");
+                    if(price.equals(1)) {
+                        //NOTIFY TO OTHERS
+                        Response response = new ToolCardUsedByOthersResponse(p.getName(), 4);
+                        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                            if (!otherPlayer.getName().equals(p.getName())) {
+                                if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                    try {
+                                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 4);
+                                    } catch (RemoteException e) {
+                                        m.getLobby().disconnect(otherPlayer.getName());
+                                        System.out.println("Player " + p.getName() + " disconnected!");
+                                    }
                                 }
+                                m.notifyToSocketClient(otherPlayer, response);
                             }
-                            m.notifyToSocketClient(otherPlayer, response);
                         }
+                        price = 2;
+                        m.getToolCardsPrices().put("Carta utensile 4: ",price);
                     }
                     return true;
                 } else{

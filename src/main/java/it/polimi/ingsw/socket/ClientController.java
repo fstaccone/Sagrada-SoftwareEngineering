@@ -276,9 +276,9 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(AfterReconnectionResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen);
+            socketCli.getCli().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen,response.toolcardsPrices);
         } else
-            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen);
+            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen,response.toolcardsPrices);
     }
 
     @Override
@@ -288,6 +288,7 @@ public class ClientController implements ResponseHandler {
         } else socketGui.getGui().onWindowChoice(response.list);
     }
 
+    @Override
     public void handle(CheckConnectionResponse response) { //DA SISTEMARE ANCHE CON GUI
         if (loginHandler.isCli())
             loginHandler.getWaitingRoomCli().onCheckConnection();

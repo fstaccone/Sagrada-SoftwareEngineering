@@ -58,7 +58,7 @@ public class ToolCard{
                 color = Colors.NONE;
                 break;
             case "Riga in Sughero":
-                effect = new MoveDiceNotAdjacentToAnotherEffect();
+                effect = new PlaceDiceNotAdjacentToAnotherEffect();
                 description = "";
                 color = Colors.NONE;
                 break;

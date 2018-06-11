@@ -43,6 +43,7 @@ public class Gui {
     private WindowPatternCard mySchemeCard;
     private int myTokens;
     private boolean dicePlaced;
+    private Map <String,Integer> toolcardsPrices;
 
     private boolean windowChosen;
     private boolean single;
@@ -159,7 +160,6 @@ public class Gui {
         players = names;
 
         if (windowChosen) {
-
             onAfterWindowChoice(); // todo: controllare
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -174,7 +174,6 @@ public class Gui {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             chooseCardHandler = fxmlLoader.getController();
             Scene scene = new Scene(root);
             chooseCardHandler.init(windowStage, scene, controllerRmi, controllerSocket, username);
@@ -200,7 +199,7 @@ public class Gui {
         }
     }
 
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map <String,Integer> toolcardsPrices) {
         reconnection = true;
         this.myTokens = myTokens;
         parseToolcards(toolcards);
@@ -210,7 +209,7 @@ public class Gui {
         onReserve(reserve);
         otherFavorTokensMap = otherTokens;
         otherSchemeCardsMap = otherSchemeCards;
-
+        this.toolcardsPrices=toolcardsPrices;
         if(schemeCardChosen){
             mySchemeCard=schemeCard;
             String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
@@ -251,7 +250,7 @@ public class Gui {
     }
 
     public void onOtherTurn(String name) {
-        String s = "Ora è il turno di " + name;
+        String s = "Ora è il turno di " + name +"!";
         if (gameBoardHandler != null) {
             gameBoardHandler.setTextArea(s);
         } else if (chooseCardHandler != null) {
@@ -294,9 +293,9 @@ public class Gui {
     public void onPlayerExit(String name) {
         System.out.println("On player exit");
         if (gameBoardHandler != null) {
-            gameBoardHandler.setTextArea("Player " + name + " has left the game!");
+            gameBoardHandler.setTextArea("Il giocatore " + name + " è uscito dalla partita!");
         } else {
-            chooseCardHandler.setTextArea("Player " + name + " has left the game!");
+            chooseCardHandler.setTextArea("Il giocatore " + name + " è uscito dalla partita!");
         }
     }
 
@@ -308,9 +307,9 @@ public class Gui {
 
     public void onToolCardUsedByOthers(String name, int toolNumber){
         if(gameBoardHandler!=null){
-            gameBoardHandler.setTextArea("Il giocatore '"+name+"' ha utilizzato la carta utensile "+toolNumber+". Tienine conto per l'utilizzo dei tuoi segnalini!\n");
+            gameBoardHandler.setTextArea("Il giocatore '"+name+"' è stato il primo ad utilizzare la carta utensile "+toolNumber+", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         }
-        else chooseCardHandler.setTextArea("Il giocatore '"+name+"' ha utilizzato la carta utensile "+toolNumber+". Tienine conto per l'utilizzo dei tuoi segnalini!\n");
+        else chooseCardHandler.setTextArea("Il giocatore '"+name+"' è stato il primo ad utilizzare la carta utensile "+toolNumber+", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
     }
 
     public void onAfterWindowChoice() {
@@ -327,7 +326,9 @@ public class Gui {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (chooseCardHandler != null) playerSchemeCardImageURL = chooseCardHandler.getImageUrl();
+        if (chooseCardHandler != null) {
+            playerSchemeCardImageURL = chooseCardHandler.getImageUrl();
+        }
         Scene scene = new Scene(root);
         gameBoardHandler = fx.getController();
         gameBoardHandler.init(scene, this);
@@ -345,6 +346,12 @@ public class Gui {
         if (!reconnection) {
             gameBoardHandler.setTextArea("Ora è il tuo turno!");
         }
+        else{
+            gameBoardHandler.setTextArea("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
+            for (String toolcard:toolcardsPrices.keySet()) {
+                gameBoardHandler.setTextArea("-"+toolcard+" "+toolcardsPrices.get(toolcard));
+            }
+        }
         gameBoardHandler.createLabelsMap();
         gameBoardHandler.createOtherLabelsList();
         gameBoardHandler.initializeLabels(players);
@@ -353,7 +360,7 @@ public class Gui {
         //FOR SOCKET CONNECTION
         if (controllerRmi == null) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();

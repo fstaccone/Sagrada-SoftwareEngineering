@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
 
-    private int price;
+    private Integer price;
 
     public MoveTwoDicesColorRoundTrackEffect() {
         price = 1;
@@ -47,21 +47,24 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                 schema.removeDice(row2, column2);
                 if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                    price = 2;
                     //NOTIFY TO OTHERS
-                    Response response = new ToolCardUsedByOthersResponse( p.getName(),12);
-                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                        if (!otherPlayer.getName().equals(p.getName())) {
-                            if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                try {
-                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),12);
-                                } catch (RemoteException e) {
-                                    m.getLobby().disconnect(otherPlayer.getName());
-                                    System.out.println("Player " + p.getName() + " disconnected!");
+                    if(price.equals(1)) {
+                        Response response = new ToolCardUsedByOthersResponse(p.getName(), 12);
+                        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                            if (!otherPlayer.getName().equals(p.getName())) {
+                                if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                    try {
+                                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 12);
+                                    } catch (RemoteException e) {
+                                        m.getLobby().disconnect(otherPlayer.getName());
+                                        System.out.println("Player " + p.getName() + " disconnected!");
+                                    }
                                 }
+                                m.notifyToSocketClient(otherPlayer, response);
                             }
-                            m.notifyToSocketClient(otherPlayer, response);
                         }
+                        price=2;
+                        m.getToolCardsPrices().put("Carta utensile 12: ",price);
                     }
                     return true;
                 } else {
@@ -82,22 +85,24 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                 schema.removeDice(row1, column1);
                 if (schema.putDice(dice1, newRow1, newColumn1) ) {
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                    price = 2;
 
-                    //NOTIFY TO OTHERS
-                    Response response = new ToolCardUsedByOthersResponse( p.getName(),12);
-                    for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                        if (!otherPlayer.getName().equals(p.getName())) {
-                            if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                try {
-                                    m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers( p.getName(),12);
-                                } catch (RemoteException e) {
-                                    m.getLobby().disconnect(otherPlayer.getName());
-                                    System.out.println("Player " + p.getName() + " disconnected!");
+                    if(price==1) {
+                        //NOTIFY TO OTHERS
+                        Response response = new ToolCardUsedByOthersResponse(p.getName(), 12);
+                        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                            if (!otherPlayer.getName().equals(p.getName())) {
+                                if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                    try {
+                                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 12);
+                                    } catch (RemoteException e) {
+                                        m.getLobby().disconnect(otherPlayer.getName());
+                                        System.out.println("Player " + p.getName() + " disconnected!");
+                                    }
                                 }
+                                m.notifyToSocketClient(otherPlayer, response);
                             }
-                            m.notifyToSocketClient(otherPlayer, response);
                         }
+                        price = 2;
                     }
                     return true;
                 } else {
