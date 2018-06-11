@@ -20,6 +20,7 @@ public class ReRollDiceTest {
     private MatchMultiplayer match;
     private Reserve reserve;
     private Board board;
+
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
@@ -32,7 +33,7 @@ public class ReRollDiceTest {
         list.add(dice);
         reserve.throwDices(list);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
@@ -42,9 +43,10 @@ public class ReRollDiceTest {
         when(board.getReserve()).thenReturn(reserve);
         when(match.getBoard().getReserve()).thenReturn(reserve);
     }
+
     @Test
-    public void checkDice(){
+    public void checkDice() {
         toolCard.useCard(player, match);
-        Assert.assertEquals(Colors.BLUE, reserve.chooseDice(player.getDice()).getColor() );
+        Assert.assertEquals(Colors.BLUE, reserve.chooseDice(player.getDice()).getColor());
     }
 }

@@ -20,6 +20,7 @@ public class UpsideDownDiceTest {
     private MatchMultiplayer match;
     private Reserve reserve;
     private Board board;
+
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
@@ -49,7 +50,7 @@ public class UpsideDownDiceTest {
         dices.add(d7);
 
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         toolCard = new ToolCard("Tampone Diamantato", "tool10");
@@ -59,8 +60,9 @@ public class UpsideDownDiceTest {
         when(board.getReserve()).thenReturn(reserve);
         when(match.getBoard().getReserve()).thenReturn(reserve);
     }
+
     @Test
-    public void checkDice(){
+    public void checkDice() {
         player.setDice(0);
         toolCard.useCard(player, match);
         Assert.assertEquals(6, reserve.getDices().get(player.getDice()).getValue());

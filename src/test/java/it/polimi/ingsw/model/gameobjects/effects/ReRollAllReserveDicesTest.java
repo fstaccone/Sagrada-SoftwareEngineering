@@ -19,6 +19,7 @@ public class ReRollAllReserveDicesTest {
     private Player player;
     private MatchMultiplayer match;
     private Board board;
+
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
@@ -41,21 +42,22 @@ public class ReRollAllReserveDicesTest {
         when(board.getReserve()).thenReturn(reserve);
         when(match.getBoard().getReserve()).thenReturn(reserve);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         toolCard = new ToolCard("Martelletto", "tool7");
     }
+
     @Test
-    public void checkReserve(){
+    public void checkReserve() {
         //match.getBoard().getReserve().showReserve();
         toolCard.useCard(player, match);
         //match.getBoard().getReserve().showReserve();
-        Assert.assertNotNull( match.getBoard().getReserve());
-        Assert.assertEquals(Colors.RED,match.getBoard().getReserve().chooseDice(0).getColor());
-        Assert.assertEquals(Colors.YELLOW,match.getBoard().getReserve().chooseDice(0).getColor());
-        Assert.assertEquals(Colors.VIOLET,match.getBoard().getReserve().chooseDice(0).getColor());
-        Assert.assertEquals(Colors.GREEN,match.getBoard().getReserve().chooseDice(0).getColor());
-        Assert.assertEquals(Colors.BLUE,match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertNotNull(match.getBoard().getReserve());
+        Assert.assertEquals(Colors.RED, match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.YELLOW, match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.VIOLET, match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.GREEN, match.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.BLUE, match.getBoard().getReserve().chooseDice(0).getColor());
     }
 }

@@ -402,8 +402,12 @@ public class Lobby {
     }
 
 
-    public void observeMatchRemote(String username, MatchObserver observer) {
-        multiplayerMatches.get(username).observeMatchRemote(observer, username);
+    public void observeMatchRemote(String username, MatchObserver observer, boolean single) {
+        if (single) {
+
+        } else {
+            multiplayerMatches.get(username).observeMatchRemote(observer, username);
+        }
     }
 
     public Map<String, ObjectOutputStream> getSocketObservers() {

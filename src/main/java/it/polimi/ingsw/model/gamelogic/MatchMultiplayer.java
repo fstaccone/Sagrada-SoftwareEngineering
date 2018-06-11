@@ -91,7 +91,7 @@ public class MatchMultiplayer extends Match implements Runnable {
      */
     private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
         clients.forEach(client -> {
-            PlayerMultiplayer player = new PlayerMultiplayer(client, this);
+            PlayerMultiplayer player = new PlayerMultiplayer(client);
             this.players.add(player);
             if (socketsOut.size() != 0) { // ha senso questo controllo?
                 for (String name : socketsOut.keySet()) {

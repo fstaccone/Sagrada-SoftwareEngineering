@@ -13,11 +13,12 @@ public class PrivateObjectiveCardTest {
     private PrivateObjectiveCard privateObjectiveCard;
     private Player player;
     private MatchMultiplayer match;
+
     @Before
-    public void Before(){
+    public void Before() {
         match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 
@@ -45,6 +46,6 @@ public class PrivateObjectiveCardTest {
     public void checkPoints() {
         privateObjectiveCard.useCard(player);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(10,player.getPoints());
+        Assert.assertEquals(10, player.getPoints());
     }
 }

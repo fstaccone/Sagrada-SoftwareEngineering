@@ -20,6 +20,7 @@ public class ChooseAnotherDiceTest {
     private PlayerMultiplayer player2;
     private MatchMultiplayer match;
     private Board board;
+
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
@@ -42,21 +43,22 @@ public class ChooseAnotherDiceTest {
         when(board.getReserve()).thenReturn(reserve);
         when(match.getBoard().getReserve()).thenReturn(reserve);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
-        player2 = new PlayerMultiplayer("player2", match);
+        player = new PlayerMultiplayer("player");
+        player2 = new PlayerMultiplayer("player2");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setNumFavorTokens(4);
         player2.setNumFavorTokens(0);
         toolCard = new ToolCard("Tenaglia a Rotelle", "tool8");
     }
+
     @Test
-    public void checkReserve(){
+    public void checkReserve() {
         Assert.assertEquals(null, player.getPickedDice());
         toolCard.useCard(player, match);
         toolCard.useCard(player2, match);
         //match.getBoard().getReserve().showReserve();
-        Assert.assertNotNull( match.getBoard().getReserve());
+        Assert.assertNotNull(match.getBoard().getReserve());
         player.setPickedDice(new Dice(Colors.YELLOW));
         Assert.assertEquals(Colors.YELLOW, player.getPickedDice().getColor());
     }

@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import static org.mockito.Mockito.mock;
 
 public class DarkShadesTest {
@@ -15,11 +14,12 @@ public class DarkShadesTest {
     private PublicObjectiveCard publicCard;
     private Player player;
     private MatchMultiplayer match;
+
     @Before
     public void Before() {
         match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 
@@ -47,6 +47,6 @@ public class DarkShadesTest {
     public void checkPoints() {
         publicCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(4,player.getPoints());
+        Assert.assertEquals(4, player.getPoints());
     }
 }
