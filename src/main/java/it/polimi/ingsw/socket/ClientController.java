@@ -92,11 +92,13 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(WaitingPlayersResponse response) {
-        if (loginHandler.isCli())
-            loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-        else
-            loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+        if (loginHandler.isCli()) {
+            loginHandler.getWaitingRoomCli().onWaitingPlayers(response.getWaitingPlayers());
+        } else {
+            loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.getWaitingPlayers());
+        }
 
+        // todo: cancellare se non serve e rimuovere anche unique dalla risposta
         //if (response.name != null) {
         //if (!response.unique) {
         //   if (loginHandler.isCli())

@@ -8,14 +8,14 @@ import static org.mockito.Mockito.mock;
 
 public class MatchSingleplayerTest {
 
-    Lobby lobby = mock(Lobby.class);
-    int turnTime = 300000;
+    private Lobby lobby = mock(Lobby.class);
 
     @Test
     public void MatchSingleplayer(){
+        int turnTime = 300000;
         int matchId = 0;
         String name ="CowboyBebop";
-        MatchSingleplayer matchSingleplayer = new MatchSingleplayer(matchId, name, turnTime, lobby,1);
+        MatchSingleplayer matchSingleplayer = new MatchSingleplayer(matchId, name,3, turnTime, lobby);
         Assert.assertNotNull(matchSingleplayer);
     }
 }

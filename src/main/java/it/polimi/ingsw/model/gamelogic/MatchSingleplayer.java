@@ -15,20 +15,18 @@ import java.rmi.RemoteException;
 public class MatchSingleplayer extends Match implements Runnable {
 
     private int matchId;
-    private int difficulty;
     private String clientIdentifier;
     private PlayerSingleplayer player;
     private TurnManagerSingleplayer turnManager;
     private MatchObserver observerRmi;
     private ObjectOutputStream observerSocket;
-    private int targetPoints;
     private int selectedPrivateCard; // con questo attributo si seleziona quale carta utilizzare per il calcolo del punteggio
+    private static final int MULTIPLIER_FOR_SINGLE = 3;
 
     public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby) {
         super(lobby);
-        this.difficulty = difficulty;
         this.matchId = matchId;
-        this.decksContainer = new DecksContainer(1,difficulty);
+        this.decksContainer = new DecksContainer(1, difficulty);
         this.clientIdentifier = name;
         this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
@@ -36,13 +34,11 @@ public class MatchSingleplayer extends Match implements Runnable {
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards()); // todo: controllare, servono le private
 
         System.out.println("New singleplayer matchId: " + this.matchId);
-
     }
 
     public MatchObserver getObserverRmi() {
         return observerRmi;
     }
-
 
     public ObjectOutputStream getObserverSocket() {
         return observerSocket;
@@ -50,10 +46,6 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     public int getMatchId() {
         return matchId;
-    }
-
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
     }
 
     public TurnManagerSingleplayer getTurnManager() {
@@ -107,6 +99,8 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     @Override
     public void calculateFinalScore() {
+        int targetPoints;
+
         // points from roundtrack, score to beat
         targetPoints = board.getRoundTrack().sumForSinglePlayer();
 
@@ -119,7 +113,7 @@ public class MatchSingleplayer extends Match implements Runnable {
         }
 
         // points due to free cells
-        player.setPoints(player.getPoints() - 3 * player.getSchemeCard().countFreeSquares());
+        player.setPoints(player.getPoints() - MULTIPLIER_FOR_SINGLE * player.getSchemeCard().countFreeSquares());
 
         if (observerRmi != null) {
             try {
@@ -155,8 +149,6 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     @Override
     public void terminateMatch() {
-        // todo: completare
-        lobby.removeUsername(player.getName());
         lobby.removeMatchSingleplayer(player.getName());
     }
 

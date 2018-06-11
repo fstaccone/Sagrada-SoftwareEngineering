@@ -7,9 +7,9 @@ public class DecksContainer {
     private PublicObjectiveCardDeck publicObjectiveCardDeck;
     private ToolCardDeck toolCardDeck;
 
-    public DecksContainer(int numOfPlayers,int difficulty) {
+    public DecksContainer(int numOfPlayers, int difficulty) {
         this.publicObjectiveCardDeck = new PublicObjectiveCardDeck(numOfPlayers);
-        this.toolCardDeck = new ToolCardDeck(numOfPlayers,difficulty);
+        this.toolCardDeck = new ToolCardDeck(numOfPlayers, difficulty);
         this.privateObjectiveDeck = new PrivateObjectiveCardDeck(numOfPlayers);
         this.windowPatternDeck = new WindowPatternCardDeck(numOfPlayers);
     }
@@ -28,14 +28,5 @@ public class DecksContainer {
 
     public ToolCardDeck getToolCardDeck() {
         return toolCardDeck;
-    }
-
-    //may not be useful
-    public void setPrivateObjectiveCardDeck(PrivateObjectiveCardDeck privateObjectiveDeck) {
-        this.privateObjectiveDeck = privateObjectiveDeck;
-    }
-
-    public void setWindowPatternCardDeck(WindowPatternCardDeck windowPatternDeck) {
-        this.windowPatternDeck = windowPatternDeck;
     }
 }
