@@ -83,7 +83,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     /**
-     * Initializes the match players and links every socketsOut with the player name ina new map
+     * Initializes the match players and links every socketsOut with the player name in a new map
      *
      * @param clients    is the list of players names
      * @param socketsOut is a map with players names as keys as socketsOut as values

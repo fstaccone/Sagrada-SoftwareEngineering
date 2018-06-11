@@ -60,7 +60,7 @@ public class TurnManagerMultiplayer implements Runnable {
         MatchObserver rmiObserver = getObserverRmi(player);
         if (rmiObserver != null) {
             try {
-                rmiObserver.onWindowChoise(windows);
+                rmiObserver.onWindowChoice(windows);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
             }

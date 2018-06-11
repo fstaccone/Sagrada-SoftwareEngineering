@@ -54,8 +54,7 @@ public class LoginHandler implements Initializable {
     private WaitingRoomCli waitingRoomCli;
 
     // Values to be set by file on server, how can we set these here?
-    private transient int rmiRegistryPort = 1100;
-    private transient int socketPort = 1101;
+    private transient int socketPort = 1100;
 
     private transient Registry registry;
     private transient RemoteController remoteController;
@@ -288,7 +287,7 @@ public class LoginHandler implements Initializable {
 
             remoteController=(RemoteController) Naming.lookup(("//"+serverAddress+"/Lobby"));
 
-            if (isCli)
+            if (isCli&&!singleplayer)
                 waitingRoomCli.setController(remoteController);
         } catch (NotBoundException e) {
             System.out.println("A client can't get the remoteController's reference");
@@ -305,7 +304,7 @@ public class LoginHandler implements Initializable {
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
             clientController = new ClientController(in, out, this);
-            if (isCli) {
+            if (isCli&&!singleplayer) {
                 waitingRoomCli.setClientController(clientController);
             }
         } catch (SocketException e) {
@@ -317,7 +316,7 @@ public class LoginHandler implements Initializable {
         // to create the link between this Client and the Player in the model
         if (singleplayer) {
             try {
-                remoteController.createMatch(this.username,difficulty);
+                remoteController.createMatch(this.username,difficulty,null);
                 if (isCli) {
                     new RmiCli(username, remoteController, singleplayer).launch();
                 } else {
@@ -349,6 +348,7 @@ public class LoginHandler implements Initializable {
         // to create the link between this Client and the Player in the model
         if (singleplayer) {
             try {
+                new Thread(new SocketListener(clientController)).start();
                 clientController.request(new CreateMatchRequest(this.username,difficulty));
                 if (isCli) {
                     new SocketCli(username, clientController, singleplayer);

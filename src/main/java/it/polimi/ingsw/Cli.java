@@ -153,10 +153,12 @@ public class Cli {
     }
 
     public void onGameStarted(List<String> names) {
-        playersNames = names;
 
-        printer.println("Stai giocando contro:\n");
-        printNames();
+        if(names!=null) {
+            playersNames = names;
+            printer.println("Stai giocando contro:\n");
+            printNames();
+        }
     }
 
     private void printNames() {
@@ -266,7 +268,7 @@ public class Cli {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }
-        System.exit(0);
+        //System.exit(0);
     }
 
     public void showPrivateCard() {

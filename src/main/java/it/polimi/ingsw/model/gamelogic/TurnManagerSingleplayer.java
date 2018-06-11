@@ -120,13 +120,14 @@ public class TurnManagerSingleplayer implements Runnable {
         //starting notification
         if (match.getObserverRmi() != null) {
             try {
-                match.getObserverRmi().onWindowChoise(windows);
+                match.getObserverRmi().onWindowChoice(windows);
             } catch (RemoteException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrotto");
             }
         } else if (match.getObserverSocket() != null) {
             try {
+                System.out.println("130 TMSP");
                 match.getObserverSocket().writeObject(new ProposeWindowResponse(windows));
                 match.getObserverSocket().reset();
             } catch (IOException e) {
