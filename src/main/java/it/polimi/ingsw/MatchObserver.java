@@ -28,7 +28,7 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onOtherTurn(String name) throws RemoteException;
 
-    void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) throws RemoteException;
+    void onInitialization(String toolcards, String publicCards, List<String> privateCard, List<String> players) throws RemoteException;
 
     void onPlayerExit(String name) throws RemoteException;
 
@@ -40,7 +40,7 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) throws RemoteException;
 
-    void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) throws RemoteException;
+    void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) throws RemoteException;
 
     void onRoundTrack(String track) throws RemoteException;
 

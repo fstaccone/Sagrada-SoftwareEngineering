@@ -35,7 +35,7 @@ public class Gui {
     private String track;
     private List<String> toolCardsList;
     private List<String> dicesList;
-    private String privateCard;
+    private List<String> privateCard;
     private List<String> publicCardsList;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
@@ -43,7 +43,7 @@ public class Gui {
     private WindowPatternCard mySchemeCard;
     private int myTokens;
     private boolean dicePlaced;
-    private Map <String,Integer> toolcardsPrices;
+    private Map<String, Integer> toolcardsPrices;
 
     private boolean windowChosen;
     private boolean single;
@@ -54,7 +54,7 @@ public class Gui {
         this.username = username;
         this.controllerRmi = controllerRmi;
         this.controllerSocket = controllerSocket;
-
+        privateCard = new ArrayList<>();
         myTurn = false;
         windowChosen = false;
         this.single = single;
@@ -199,19 +199,25 @@ public class Gui {
         }
     }
 
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map <String,Integer> toolcardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+        String temp;
+
         reconnection = true;
         this.myTokens = myTokens;
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
-        this.privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
+
+        for (String c : privateCards) {
+            this.privateCard.add(c.substring(7, c.length() - 1).toLowerCase());
+        }
+
         track = roundTrack;
         onReserve(reserve);
         otherFavorTokensMap = otherTokens;
         otherSchemeCardsMap = otherSchemeCards;
-        this.toolcardsPrices=toolcardsPrices;
-        if(schemeCardChosen){
-            mySchemeCard=schemeCard;
+        this.toolcardsPrices = toolcardsPrices;
+        if (schemeCardChosen) {
+            mySchemeCard = schemeCard;
             String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
             playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
         }
@@ -250,7 +256,7 @@ public class Gui {
     }
 
     public void onOtherTurn(String name) {
-        String s = "Ora è il turno di " + name +"!";
+        String s = "Ora è il turno di " + name + "!";
         if (gameBoardHandler != null) {
             gameBoardHandler.setTextArea(s);
         } else if (chooseCardHandler != null) {
@@ -258,11 +264,15 @@ public class Gui {
         }
     }
 
-
-    public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
+    public void onInitialization(String toolcards, String publicCards, List<String> privateCards, List<String> players) {
         parseToolcards(toolcards);
-        privateCard = privateCard.substring(7, privateCard.length() - 1).toLowerCase();
-        this.privateCard = privateCard;
+
+        for (String c : privateCards) {
+            if (c != null) {
+                this.privateCard.add(c.substring(7, c.length() - 1).toLowerCase());
+            }
+        }
+
         parsePublicCards(publicCards);
         this.players = players;
     }
@@ -300,16 +310,15 @@ public class Gui {
     }
 
     public void onWindowChoice(List<String> windows) {
-
-        chooseCardHandler.setPrivateCard(privateCard);
+        chooseCardHandler.setPrivateCard(privateCard.get(0));
         chooseCardHandler.setWindows(windows);
     }
 
-    public void onToolCardUsedByOthers(String name, int toolNumber){
-        if(gameBoardHandler!=null){
-            gameBoardHandler.setTextArea("Il giocatore '"+name+"' è stato il primo ad utilizzare la carta utensile "+toolNumber+", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
-        }
-        else chooseCardHandler.setTextArea("Il giocatore '"+name+"' è stato il primo ad utilizzare la carta utensile "+toolNumber+", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+    public void onToolCardUsedByOthers(String name, int toolNumber) {
+        if (gameBoardHandler != null) {
+            gameBoardHandler.setTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+        } else
+            chooseCardHandler.setTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
     }
 
     public void onAfterWindowChoice() {
@@ -339,17 +348,16 @@ public class Gui {
         }
 
         gameBoardHandler.setToolCards(toolCardsList);
-        gameBoardHandler.setPrivateCard(privateCard);
+        gameBoardHandler.setPrivateCard(privateCard.get(0)); // todo: se single player?
         gameBoardHandler.setPublicCards(publicCardsList);
         gameBoardHandler.setReserve(dicesList);
         gameBoardHandler.onRoundTrack(track);
         if (!reconnection) {
             gameBoardHandler.setTextArea("Ora è il tuo turno!");
-        }
-        else{
+        } else {
             gameBoardHandler.setTextArea("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
-            for (String toolcard:toolcardsPrices.keySet()) {
-                gameBoardHandler.setTextArea("-"+toolcard+" "+toolcardsPrices.get(toolcard));
+            for (String toolcard : toolcardsPrices.keySet()) {
+                gameBoardHandler.setTextArea("-" + toolcard + " " + toolcardsPrices.get(toolcard));
             }
         }
         gameBoardHandler.createLabelsMap();

@@ -23,7 +23,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     private int selectedPrivateCard; // con questo attributo si seleziona quale carta utilizzare per il calcolo del punteggio
     private static final int MULTIPLIER_FOR_SINGLE = 3;
 
-    public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby,ObjectOutputStream socketOut) {
+    public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby, ObjectOutputStream socketOut) {
         super(lobby);
         this.matchId = matchId;
         this.decksContainer = new DecksContainer(1, difficulty);
@@ -31,8 +31,11 @@ public class MatchSingleplayer extends Match implements Runnable {
         this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
-        observerSocket=socketOut;
         System.out.println("New singleplayer matchId: " + this.matchId);
+        observerSocket = socketOut;
+        if(observerSocket != null){
+            startMatch();
+        }
     }
 
     public MatchObserver getObserverRmi() {
@@ -55,30 +58,8 @@ public class MatchSingleplayer extends Match implements Runnable {
         return player;
     }
 
-    public void setObserverRmi(MatchObserver observerRmi) {
-        this.observerRmi = observerRmi;
-    }
-
     @Override
     public void gameInit() {
-
-        if (observerRmi != null) {
-            try {
-                observerRmi.onGameStarted(player.isSchemeCardSet(), null);
-            } catch (RemoteException e) {
-                terminateMatch();
-                System.out.println("Match singleplayer interrotto");
-            }
-        } else if (observerSocket != null) {
-            try {
-                System.out.println("82 MS");
-                observerSocket.writeObject(new GameStartedResponse(player.isSchemeCardSet(), null));
-                observerSocket.reset();
-            } catch (IOException e) {
-                terminateMatch();
-                System.out.println("Match singleplayer interrotto");
-            }
-        }
 
         // actions to be performed once only
         roundCounter = 0;
@@ -150,6 +131,10 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     public void observeMatchRemote(MatchObserver observer) {
         observerRmi = observer;
+        startMatch();
+    }
+
+    private void startMatch(){
         localThread = new Thread(this);
         localThread.start();
     }

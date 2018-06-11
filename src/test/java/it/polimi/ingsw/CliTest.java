@@ -40,7 +40,11 @@ public class CliTest {
         cli.onAfterWindowChoice();
         cli.onMyWindow(new Industria());
         cli.onOtherTurn("player2");
-        cli.onInitialization("[tool0:AAAA,tool1:BBBB,tool2:CCCC]", "[pc1,pc2,pc3]", "[priv1]", names);
+
+        List<String> cards = new ArrayList<>();
+        cards.add("[priv1]");
+
+        cli.onInitialization("[tool0:AAAA,tool1:BBBB,tool2:CCCC]", "[pc1,pc2,pc3]", cards, names);
         cli.onPlayerReconnection("player2");
         cli.showFavorTokens();
         cli.showMySchemeCard();

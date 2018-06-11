@@ -11,7 +11,6 @@ import it.polimi.ingsw.socket.requests.*;
 import it.polimi.ingsw.socket.responses.*;
 
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void createMatch(String name, int difficulty, ObjectOutputStream outputStream) {
         this.lobby.addUsername(name);
-        this.lobby.createSingleplayerMatch(name,difficulty,outputStream);
+        this.lobby.createSingleplayerMatch(name, difficulty, outputStream);
     }
 
     @Override
@@ -245,7 +244,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(CreateMatchRequest request) {
-        createMatch(request.username,request.difficulty,socketHandlers.remove(0).getOut());
+        createMatch(request.username, request.difficulty, socketHandlers.remove(0).getOut());
         return null;
     }
 

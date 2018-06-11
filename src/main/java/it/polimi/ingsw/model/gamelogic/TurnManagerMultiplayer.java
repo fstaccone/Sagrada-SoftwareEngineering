@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.gamelogic;
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
+import it.polimi.ingsw.model.gameobjects.PrivateObjectiveCard;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.*;
 
@@ -82,18 +83,19 @@ public class TurnManagerMultiplayer implements Runnable {
         String toolCards = match.getDecksContainer().getToolCardDeck().getPickedCards().toString();
         String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
         List<String> names = match.getPlayers().stream().map(PlayerMultiplayer::getName).collect(Collectors.toList());
+        List<String> privateCards = match.getDecksContainer().getPrivateObjectiveCardDeck().getPickedCards().stream().map(PrivateObjectiveCard::toString).collect(Collectors.toList());
 
 
         // Notification RMI and Socket
         for (PlayerMultiplayer p : match.getPlayers()) {
             if (getObserverRmi(p) != null) {
                 try {
-                    getObserverRmi(p).onInitialization(toolCards, publicCards, p.getPrivateObjectiveCard().toString(), names);
+                    getObserverRmi(p).onInitialization(toolCards, publicCards, privateCards, names);
                 } catch (RemoteException e) {
                     match.getLobby().disconnect(p.getName());
                 }
             } else if (match.getSocketObservers().get(p) != null) {
-                getObserverSocket(p, new InitializationResponse(toolCards, publicCards, p.getPrivateObjectiveCard().toString(), names));
+                getObserverSocket(p, new InitializationResponse(toolCards, publicCards, privateCards, names));
             }
         }
     }

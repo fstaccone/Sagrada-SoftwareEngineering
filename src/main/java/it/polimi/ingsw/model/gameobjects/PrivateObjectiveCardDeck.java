@@ -1,18 +1,19 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.*;
+import java.util.Random;
 
-public  class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
+public class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard> {
 
     private Random randomGenerator;
 
     /**
-     *Initializes the deck with the names of all possible private objective cards
+     * Initializes the deck with the names of all possible private objective cards
+     *
      * @param numOfPlayers is the match number of players
      */
     public PrivateObjectiveCardDeck(int numOfPlayers) {
         super();
-        for (Colors c: Colors.values()) {
+        for (Colors c : Colors.values()) {
             if (c != Colors.NONE) {
                 deck.add(c.toString());
             }
@@ -20,19 +21,19 @@ public  class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard>{
         randomGenerator = new Random();
         setReallyCreatedCards(numOfPlayers);
 
-
     }
 
     /**
      * Creates the necessary number of private objective cards, one for each player
+     *
      * @param numOfPlayers is the match number of players
      */
-    public void setReallyCreatedCards(int numOfPlayers){
+    public void setReallyCreatedCards(int numOfPlayers) {
         int n;
-        if(numOfPlayers == 1)
+        if (numOfPlayers == 1)
             n = 2;
         else n = numOfPlayers;
-        for(int i=0;i<n;i++){
+        for (int i = 0; i < n; i++) {
 
             int privateIndex = randomGenerator.nextInt(deck.size());
             String privateName = deck.get(privateIndex);

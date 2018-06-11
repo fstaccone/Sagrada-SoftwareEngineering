@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.model.gameobjects.PrivateObjectiveCard;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.InitializationResponse;
 import it.polimi.ingsw.socket.responses.ProposeWindowResponse;
@@ -49,17 +50,18 @@ public class TurnManagerSingleplayer implements Runnable {
 
         String toolCards = match.getDecksContainer().getToolCardDeck().getPickedCards().toString();
         String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
+        List<String> privateCards = match.getDecksContainer().getPrivateObjectiveCardDeck().getPickedCards().stream().map(PrivateObjectiveCard::toString).collect(Collectors.toList());
 
         if (match.getObserverRmi() != null) {
-            try { // todo: può andare così? board può contenere le private cards
-                match.getObserverRmi().onInitialization(toolCards, publicCards, null, null);
+            try {
+                match.getObserverRmi().onInitialization(toolCards, publicCards, privateCards, null);
             } catch (RemoteException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrotto");
             }
         } else if (match.getObserverSocket() != null) {
             try {
-                match.getObserverSocket().writeObject(new InitializationResponse(toolCards, publicCards, null, null));
+                match.getObserverSocket().writeObject(new InitializationResponse(toolCards, publicCards, privateCards, null));
                 match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
@@ -127,7 +129,6 @@ public class TurnManagerSingleplayer implements Runnable {
             }
         } else if (match.getObserverSocket() != null) {
             try {
-                System.out.println("130 TMSP");
                 match.getObserverSocket().writeObject(new ProposeWindowResponse(windows));
                 match.getObserverSocket().reset();
             } catch (IOException e) {

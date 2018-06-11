@@ -83,7 +83,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
+    public void onInitialization(String toolcards, String publicCards, List<String> privateCard, List<String> players) {
         cli.onInitialization(toolcards, publicCards, privateCard, players);
     }
 
@@ -118,7 +118,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolCardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens,
+                                    WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards,
+                                    boolean schemeCardChosen, Map<String, Integer> toolCardsPrices) {
         cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices);
     }
 

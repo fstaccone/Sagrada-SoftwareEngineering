@@ -28,7 +28,7 @@ public class Cli {
     private List<String> toolCardsList;
     private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
-    private String privateCard;
+    private List<String> privateCard;
     private WindowPatternCard mySchemeCard;
 
     private int myFavorTokens;
@@ -124,6 +124,7 @@ public class Cli {
         myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
+        privateCard = new ArrayList<>();
         toolCommands = new ArrayList<>();
         toolCardsList = new ArrayList<>();
         publicCardsList = new ArrayList<>();
@@ -154,7 +155,7 @@ public class Cli {
 
     public void onGameStarted(List<String> names) {
 
-        if(names!=null) {
+        if (names != null) {
             playersNames = names;
             printer.println("Stai giocando contro:\n");
             printNames();
@@ -219,7 +220,7 @@ public class Cli {
         printer.flush();
     }
 
-    public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
+    public void onInitialization(String toolcards, String publicCards, List<String> privateCard, List<String> players) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
@@ -296,7 +297,9 @@ public class Cli {
         printer.flush();
     }
 
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens,
+                                    WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards,
+                                    boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
@@ -383,7 +386,7 @@ public class Cli {
                 try {
                     String command = keyboard.readLine();
                     parts = command.split(" +");
-                    if (myTurn) {
+                    if (myTurn || single) {
                         switch (parts[0]) {
 
                             case "cd": {
@@ -441,9 +444,9 @@ public class Cli {
                             break;
 
                             case "h": {
-                                if(single){
+                                if (single) {
                                     printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
-                                }else {
+                                } else {
                                     printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
                                 }
                                 printer.flush();
@@ -732,7 +735,11 @@ public class Cli {
                         switch (parts[0]) {
 
                             case "h": {
-                                printer.println("\nInsert a new valid option between: ('+' means SPACE)" + HELP_GENERAL_MULTI);
+                                if (single) {
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
+                                } else {
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+                                }
                                 printer.flush();
                             }
                             break;
