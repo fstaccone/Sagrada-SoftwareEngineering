@@ -118,13 +118,18 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map <String,Integer> toolCardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolCardsPrices) {
         cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices);
     }
 
     @Override
     public void onToolCardUsedByOthers(String name, int toolNumber) {
-        cli.onToolCardUsedByOthers(name,toolNumber);
+        cli.onToolCardUsedByOthers(name, toolNumber);
+    }
+
+    @Override
+    public void onGameEndSingle(int goal, int points) {
+        cli.onGameEndSingle(goal, points);
     }
 
 }

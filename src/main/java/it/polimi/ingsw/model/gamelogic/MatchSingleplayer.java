@@ -5,29 +5,35 @@ import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
 import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
+import it.polimi.ingsw.socket.responses.GameEndSingleResponse;
+import it.polimi.ingsw.socket.responses.GameStartedResponse;
 
+import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.rmi.RemoteException;
 
 public class MatchSingleplayer extends Match implements Runnable {
 
     private int matchId;
     private int difficulty;
-    String clientIdentifier;
-    PlayerSingleplayer player;
-    TurnManagerSingleplayer turnManager;
-    MatchObserver observerRmi;
-    ObjectOutputStream observerSocket;
+    private String clientIdentifier;
+    private PlayerSingleplayer player;
+    private TurnManagerSingleplayer turnManager;
+    private MatchObserver observerRmi;
+    private ObjectOutputStream observerSocket;
+    private int targetPoints;
+    private int selectedPrivateCard; // con questo attributo si seleziona quale carta utilizzare per il calcolo del punteggio
 
-    public MatchSingleplayer(int matchId, String name, int turnTime, Lobby lobby) {
+    public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby) {
         super(lobby);
+        this.difficulty = difficulty;
         this.matchId = matchId;
-        this.decksContainer = new DecksContainer(1);
-        this.clientIdentifier = name;
-        this.player = new PlayerSingleplayer(name);
+        decksContainer = new DecksContainer(1);
+        clientIdentifier = name;
+        player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
         // todo: occorre creare un mumero di toolcard compreso tra 1 e 5
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards()); // todo: controllare, servono le private
-
 
         System.out.println("New singleplayer matchId: " + this.matchId);
 
@@ -62,7 +68,6 @@ public class MatchSingleplayer extends Match implements Runnable {
         this.observerSocket = observerSocket;
     }
 
-
     public void setObserverRmi(MatchObserver observerRmi) {
         this.observerRmi = observerRmi;
     }
@@ -70,21 +75,72 @@ public class MatchSingleplayer extends Match implements Runnable {
     @Override
     public void gameInit() {
 
+        if (observerRmi != null) {
+            try {
+                observerRmi.onGameStarted(player.isSchemeCardSet(), null);
+            } catch (RemoteException e) {
+                terminateMatch();
+                System.out.println("Match singleplayer interrotto");
+            }
+        } else if (observerSocket != null) {
+            try {
+                observerSocket.writeObject(new GameStartedResponse(player.isSchemeCardSet(), null));
+                observerSocket.reset();
+            } catch (IOException e) {
+                terminateMatch();
+                System.out.println("Match singleplayer interrotto");
+            }
+        }
+
+        // actions to be performed once only
+        roundCounter = 0;
+        drawPrivateObjectiveCards();
+
+        turnManager.run();
     }
 
     @Override
     public void drawPrivateObjectiveCards() {
-
+        player.setPrivateObjectiveCards(decksContainer.getPrivateObjectiveCardDeck().getPickedCards());
+        decksContainer.getPrivateObjectiveCardDeck().getPickedCards().clear();
     }
 
     @Override
     public void calculateFinalScore() {
+        // points from roundtrack, score to beat
+        targetPoints = board.getRoundTrack().sumForSinglePlayer();
 
+        // points assigned by the private objective card
+        player.getPrivateObjectiveCards().get(selectedPrivateCard).useCard(player);
+
+        // points assigned by public objective cards
+        for (int i = 0; i < board.getPickedPublicObjectiveCards().size(); i++) {
+            board.getPickedPublicObjectiveCards().get(i).useCard(player, this);
+        }
+
+        // points due to free cells
+        player.setPoints(player.getPoints() - 3 * player.getSchemeCard().countFreeSquares());
+
+        if (observerRmi != null) {
+            try {
+                observerRmi.onGameEndSingle(targetPoints, player.getPoints());
+            } catch (RemoteException e) {
+                terminateMatch();
+                System.out.println("Match singleplayer interrotto");
+            }
+        } else if (observerSocket != null) {
+            try {
+                observerSocket.writeObject(new GameEndSingleResponse(targetPoints, player.getPoints()));
+            } catch (IOException e) {
+                terminateMatch();
+                System.out.println("Match singleplayer interrotto");
+            }
+        }
     }
 
     @Override
     public void run() {
-
+        gameInit();
     }
 
     @Override
@@ -99,8 +155,14 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     @Override
     public void terminateMatch() {
-        // todo: complatare
+        // todo: completare
         lobby.removeUsername(player.getName());
         lobby.removeMatchSingleplayer(player.getName());
+    }
+
+    public void observeMatchRemote(MatchObserver observer) {
+        observerRmi = observer;
+        localThread = new Thread(this);
+        localThread.start();
     }
 }

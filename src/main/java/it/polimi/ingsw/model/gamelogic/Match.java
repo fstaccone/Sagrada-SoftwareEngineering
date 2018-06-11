@@ -18,6 +18,7 @@ public abstract class Match {
     protected Board board;
     private static final int numberOfRounds = 10;
     protected int roundCounter;
+    protected Thread localThread;
 
     private boolean diceAction;
     private boolean toolAction;

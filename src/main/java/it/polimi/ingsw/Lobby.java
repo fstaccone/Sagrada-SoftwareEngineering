@@ -79,7 +79,8 @@ public class Lobby {
 
     public synchronized void createSingleplayerMatch(String name) {
 
-        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, turnTime, this));
+        //todo: aggiungere la difficoltà
+        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name , turnTime, this));
         matchCounter++;
 
         // debug
@@ -404,7 +405,7 @@ public class Lobby {
 
     public void observeMatchRemote(String username, MatchObserver observer, boolean single) {
         if (single) {
-
+            singleplayerMatches.get(username).observeMatchRemote(observer);
         } else {
             multiplayerMatches.get(username).observeMatchRemote(observer, username);
         }

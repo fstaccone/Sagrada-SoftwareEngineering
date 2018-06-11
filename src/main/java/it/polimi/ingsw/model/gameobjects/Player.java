@@ -6,16 +6,12 @@ public abstract class Player {
     private Dice pickedDice;
     private int points;
     protected Colors color;
-    protected int turnsLeft;
+    private int turnsLeft;
     private int pointsByPrivateObjective;
     private boolean schemeCardSet;
-
     private int dice;
     private String choise;
-
     private Dice diceFromBag;
-
-
     private int roundChosen;
     private int diceChosenFromRound;
 
@@ -64,7 +60,7 @@ public abstract class Player {
         return pointsByPrivateObjective;
     }
 
-    public void setPointsByPrivateObjective(int pointsByPrivateObjective) {
+    void setPointsByPrivateObjective(int pointsByPrivateObjective) {
         this.pointsByPrivateObjective = pointsByPrivateObjective;
     }
 

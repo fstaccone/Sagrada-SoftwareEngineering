@@ -98,18 +98,18 @@ public class ClientController implements ResponseHandler {
             loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
 
         //if (response.name != null) {
-            //if (!response.unique) {
-             //   if (loginHandler.isCli())
-             //       loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-             //   else
-              //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-            //} else {
-              //  if (loginHandler.isCli())
-              //      loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-              //  else
-              //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-          //  }
-       // }
+        //if (!response.unique) {
+        //   if (loginHandler.isCli())
+        //       loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+        //   else
+        //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+        //} else {
+        //  if (loginHandler.isCli())
+        //      loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+        //  else
+        //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+        //  }
+        // }
     }
 
     @Override
@@ -143,7 +143,7 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(GameStartedResponse response) {
-        if(socketCli != null){
+        if (socketCli != null) {
             socketCli.getCli().onGameStarted(response.getNames());
         } else {
             socketGui.getGui().onGameStarted(response.isWindowChosen(), response.getNames());
@@ -276,9 +276,9 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(AfterReconnectionResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen,response.toolcardsPrices);
+            socketCli.getCli().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen, response.toolcardsPrices);
         } else
-            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen,response.toolcardsPrices);
+            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen, response.toolcardsPrices);
     }
 
     @Override
@@ -292,15 +292,27 @@ public class ClientController implements ResponseHandler {
     public void handle(CheckConnectionResponse response) { //DA SISTEMARE ANCHE CON GUI
         if (loginHandler.isCli())
             loginHandler.getWaitingRoomCli().onCheckConnection();
-        else
+        else {
             loginHandler.getWaitingScreenHandler().onCheckConnection();
+        }
     }
 
     @Override
     public void handle(ToolCardUsedByOthersResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onToolCardUsedByOthers(response.name,response.toolCardNumber);
-        } else socketGui.getGui().onToolCardUsedByOthers(response.name,response.toolCardNumber);
+            socketCli.getCli().onToolCardUsedByOthers(response.name, response.toolCardNumber);
+        } else {
+            socketGui.getGui().onToolCardUsedByOthers(response.name, response.toolCardNumber);
+        }
+    }
+
+    @Override
+    public void handle(GameEndSingleResponse response) {
+        if (socketCli != null) {
+            socketCli.getCli().onGameEndSingle(response.getTarget(), response.getPoints());
+        } else {
+            //socketGui.getGui().onGameEndSingle(response.getTarget(), response.getPoints());
+        }
     }
 
     public ObjectInputStream getIn() {

@@ -22,8 +22,9 @@ public class RoundTrack {
     /**
      * At the end of each round, the remaining dices in the reserve are put in the round track, in the position
      * corresponding to the round
+     *
      * @param dicesToPut is the list of dices to place in the round track
-     * @param position is the position corresponding to the round that has just ended
+     * @param position   is the position corresponding to the round that has just ended
      */
     public void putDices(List<Dice> dicesToPut, int position) {
         rounds.set(position, dicesToPut);
@@ -61,10 +62,9 @@ public class RoundTrack {
     }
 
     /**
-     *
      * @return the dice from the round track chosen by the player
      */
-   // todo: va modificata?
+    // todo: va modificata?
     public Dice getDice() {
         showRoundTrack();
         System.out.println("Choose the number of the list from which you want to get a dice");
@@ -98,8 +98,9 @@ public class RoundTrack {
 
     /**
      * Switches a dice of the round track with the player's picked dice
-     * @param diceToSwitch is the player's picked dice to place in the round track
-     * @param chosenRound is the round slot in the round track from which the player wants to take a dice
+     *
+     * @param diceToSwitch        is the player's picked dice to place in the round track
+     * @param chosenRound         is the round slot in the round track from which the player wants to take a dice
      * @param chosenDiceFromRound is the position of the dice in the eventual pile of dices in the round track slot
      * @return the dice chosen from the round track
      */
@@ -109,5 +110,9 @@ public class RoundTrack {
             rounds.get(chosenRound - 1).add(chosenDiceFromRound, diceToSwitch);
             return returnValue;
         } else return null;
+    }
+
+    public int sumForSinglePlayer() {
+        return rounds.stream().flatMap(Collection::stream).filter(Objects::nonNull).mapToInt(Dice::getValue).sum();
     }
 }

@@ -60,6 +60,7 @@ public class TurnManagerSingleplayer implements Runnable {
         } else if (match.getObserverSocket() != null) {
             try {
                 match.getObserverSocket().writeObject(new InitializationResponse(toolCards, publicCards, null, null));
+                match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrotto");
@@ -127,6 +128,7 @@ public class TurnManagerSingleplayer implements Runnable {
         } else if (match.getObserverSocket() != null) {
             try {
                 match.getObserverSocket().writeObject(new ProposeWindowResponse(windows));
+                match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrotto");
@@ -189,6 +191,7 @@ public class TurnManagerSingleplayer implements Runnable {
         } else if (match.getObserverSocket() != null) {
             try {
                 match.getObserverSocket().writeObject(new RoundTrackResponse(match.getBoard().getRoundTrack().toString()));
+                match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrotto");
@@ -205,6 +208,7 @@ public class TurnManagerSingleplayer implements Runnable {
         } else if (match.getObserverSocket() != null) {
             try {
                 match.getObserverSocket().writeObject(new ReserveResponse(match.getBoard().getReserve().toString()));
+                match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrotto");

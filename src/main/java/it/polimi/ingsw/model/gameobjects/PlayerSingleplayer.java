@@ -1,6 +1,11 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerSingleplayer extends Player {
+
+    private List<PrivateObjectiveCard> privateObjectiveCards;
     /**
      * Creates a new Player for a single player match.
      *
@@ -9,7 +14,7 @@ public class PlayerSingleplayer extends Player {
     public PlayerSingleplayer(String name) {
         super(name);
         this.setColor(Colors.NONE);
-        System.out.println("Player creato: " + name);
+        privateObjectiveCards = new ArrayList<>();
     }
 
     /**
@@ -22,4 +27,11 @@ public class PlayerSingleplayer extends Player {
         this.schemeCard = schemeCard;
     }
 
+    public List<PrivateObjectiveCard> getPrivateObjectiveCards() {
+        return privateObjectiveCards;
+    }
+
+    public void setPrivateObjectiveCards(List<PrivateObjectiveCard> privateObjectiveCards) {
+        this.privateObjectiveCards = privateObjectiveCards;
+    }
 }

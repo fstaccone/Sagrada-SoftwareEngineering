@@ -64,8 +64,13 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onToolCardUsedByOthers(String name, int toolNumber){
-        gui.onToolCardUsedByOthers(name,toolNumber);
+    public void onToolCardUsedByOthers(String name, int toolNumber) {
+        gui.onToolCardUsedByOthers(name, toolNumber);
+    }
+
+    @Override
+    public void onGameEndSingle(int goal, int points) {
+
     }
 
     @Override
@@ -124,8 +129,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String,Integer> toolcardsPrices) {
-        gui.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, otherTokens, otherSchemeCards, schemeCardChosen,toolcardsPrices);
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+        gui.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolcardsPrices);
     }
 
     @Override

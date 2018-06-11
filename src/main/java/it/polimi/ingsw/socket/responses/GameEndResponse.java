@@ -16,12 +16,20 @@ public class GameEndResponse implements Response {
         this.values = values;
     }
 
-    public String getWinner() { return winner; }
+    public String getWinner() {
+        return winner;
+    }
 
-    public List<String> getNames() { return names; }
+    public List<String> getNames() {
+        return names;
+    }
 
-    public List<Integer> getValues() { return values; }
+    public List<Integer> getValues() {
+        return values;
+    }
 
     @Override
-    public void handleResponse(ResponseHandler handler) { handler.handle(this); }
+    public void handleResponse(ResponseHandler handler) {
+        handler.handle(this);
+    }
 }

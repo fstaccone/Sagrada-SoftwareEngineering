@@ -19,10 +19,9 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     private List<PlayerMultiplayer> ranking;
 
-    private Thread localThread;
     private boolean started;
     private int matchId; // todo: controllare se serve
-    private TurnManagerMultiplayer turnManagerMultiplayer;
+    private TurnManagerMultiplayer turnManager;
     private List<PlayerMultiplayer> players;
     private PlayerMultiplayer winner;
     private Map<String, Integer> toolCardsPrices;
@@ -46,7 +45,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         players = new ArrayList<>();
         remoteObservers = new HashMap<>();
         socketObservers = new HashMap<>();
-        turnManagerMultiplayer = new TurnManagerMultiplayer(this, turnTime);
+        turnManager = new TurnManagerMultiplayer(this, turnTime);
         decksContainer = new DecksContainer(clients.size());
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
@@ -64,7 +63,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     // getters
     public TurnManagerMultiplayer getTurnManagerMultiplayer() {
-        return turnManagerMultiplayer;
+        return turnManager;
     }
 
     public Map<PlayerMultiplayer, MatchObserver> getRemoteObservers() {
@@ -156,7 +155,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         this.drawPrivateObjectiveCards();
 
-        this.turnManagerMultiplayer.run();
+        this.turnManager.run();
     }
 
     // Assegna il colore ai giocatori in modo casuale
@@ -230,8 +229,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     lobby.disconnect(p.getName());
                     System.out.println("Player " + p.getName() + " disconnected!");
                 }
-            }
-            if (socketObservers.get(p) != null) {
+            } else if (socketObservers.get(p) != null) {
                 try {
                     socketObservers.get(p).writeObject(new GameEndResponse(winner.getName(), rankingNames, rankingValues));
                     socketObservers.get(p).reset();

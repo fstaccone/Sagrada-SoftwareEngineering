@@ -58,4 +58,6 @@ public interface ResponseHandler {
     void handle(GameStartedResponse response);
 
     void handle(ToolCardUsedByOthersResponse response);
+
+    void handle(GameEndSingleResponse response);
 }

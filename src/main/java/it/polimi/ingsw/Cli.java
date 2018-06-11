@@ -137,7 +137,7 @@ public class Cli {
         this.otherSchemeCardsMap.put(name, scheme);
     }
 
-    public void onGameStarted(List<String> names){
+    public void onGameStarted(List<String> names) {
         playersNames = names;
 
         printer.println("Stai giocando contro:\n");
@@ -146,7 +146,7 @@ public class Cli {
         printNames();
     }
 
-    private void printNames(){
+    private void printNames() {
         for (String name : playersNames) {
             if (!name.equals(username)) {
                 printer.println("-" + name);
@@ -281,7 +281,7 @@ public class Cli {
         printer.flush();
     }
 
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String,Integer> toolcardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
@@ -296,8 +296,8 @@ public class Cli {
         this.otherFavorTokensMap = otherTokens;
         this.windowChosen = schemeCardChosen;
         printer.println("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
-        for (String toolcard:toolcardsPrices.keySet()) {
-            printer.println("-"+toolcard+" "+toolcardsPrices.get(toolcard));
+        for (String toolcard : toolcardsPrices.keySet()) {
+            printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
         }
         printer.flush();
     }
@@ -328,8 +328,21 @@ public class Cli {
         printer.flush();
     }
 
-    public void onToolCardUsedByOthers(String name, int toolCardNumber){
-        printer.println("Il giocatore '"+name+"' è stato il primo ad utilizzare la carta utensile "+toolCardNumber+", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+    public void onToolCardUsedByOthers(String name, int toolCardNumber) {
+        printer.println("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolCardNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+        printer.flush();
+    }
+
+    public void onGameEndSingle(int goal, int points) {
+        printer.println("Obiettivo da battere: \t" + goal);
+        printer.println("Punteggio ottenuto: \t" + points);
+
+        if (points > goal) {
+            printer.println("Complimenti, hai vinto!");
+        } else {
+            printer.println("Non hai vinto!");
+        }
+
         printer.flush();
     }
 
@@ -671,7 +684,7 @@ public class Cli {
 
                                     if (parts.length == 2) {
                                         toolNumber1 = tryParse(parts[1]);
-                                        if (toolNumber1 != null&&toolNumber1>0 &&toolNumber1<7) {
+                                        if (toolNumber1 != null && toolNumber1 > 0 && toolNumber1 < 7) {
                                             //RMI
                                             if (controllerRmi != null)
                                                 controllerRmi.setDiceValue(toolNumber1, username, single);
