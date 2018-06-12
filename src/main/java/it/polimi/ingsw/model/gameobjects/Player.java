@@ -14,6 +14,15 @@ public abstract class Player {
     private Dice diceFromBag;
     private int roundChosen;
     private int diceChosenFromRound;
+    private int diceToBeSacrificed=9;
+
+    public int getDiceToBeSacrificed() {
+        return diceToBeSacrificed;
+    }
+
+    public void setDiceToBeSacrificed(int diceToBeSacrificed) {
+        this.diceToBeSacrificed = diceToBeSacrificed;
+    }
 
     private int startX1;
     private int startY1;
@@ -104,11 +113,11 @@ public abstract class Player {
         dice = diceChosen;
     }
 
-    public String getChoise() {
+    public String getChoice() {
         return choise;
     }
 
-    public void setChoise(String choise) {
+    public void setChoice(String choise) {
         this.choise = choise;
     }
 

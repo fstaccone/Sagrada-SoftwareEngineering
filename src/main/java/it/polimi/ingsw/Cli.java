@@ -35,7 +35,7 @@ public class Cli {
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private String roundTrack;
-
+    private int diceChosenToBeSacrificed=9;
     private int diceChosen = 9;
     private int coordinateX;
     private int coordinateY;
@@ -72,7 +72,7 @@ public class Cli {
     private static final String RULES = ("Da decidere se in italiano o in inglese");
 
     private static final String HELP_IN_TURN_MULTI = (
-            "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
+                    "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
                     "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
                     "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
                     "\n 'pass'                                      to pass the turn to the next player " +
@@ -80,7 +80,7 @@ public class Cli {
                     "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
 
     private static final String HELP_GENERAL_MULTI = (
-            "\n 'h'                                         to show game available commands" +
+                    "\n 'h'                                         to show game available commands" +
                     "\n 'q'                                         to quit the game" +
                     "\n 'r'                                         to show game rules" +
                     "\n 'sp'                                        to show all opponents' names" +
@@ -92,7 +92,8 @@ public class Cli {
                     "\n 'toolcards'                                 to show the list of available tool cards \n");
 
     private static final String HELP_SINGLE = (
-            "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
+                    "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
+                    "\n 'cdr' + 'number'                            to choose the dice from the Reserve that you want to place on the ToolCard" +
                     "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
                     "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
                     "\n 'pass'                                      to pass the turn" +
@@ -398,6 +399,29 @@ public class Cli {
                                             if (Integer.parseInt(parts[1]) < dicesList.size()) {
                                                 diceChosen = Integer.parseInt(parts[1]);
                                                 printer.println("\nYou have chosen the dice: " + dicesList.toArray()[diceChosen].toString() + "\n");
+                                                printer.flush();
+                                            } else {
+                                                printer.println("\nThe dice you are trying to use does not exist, please retry ");
+                                                printer.flush();
+                                            }
+                                        } else {
+                                            syntaxErrorPrint();
+                                        }
+                                        toolNumber1 = null;
+                                    }
+                                }
+                            }
+                            break;
+
+                            case "cdr": {
+
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
+                                    if (parametersCardinalityCheck(2)) {
+                                        toolNumber1 = tryParse(parts[1]);
+                                        if (toolNumber1 != null) {
+                                            if (Integer.parseInt(parts[1]) < dicesList.size()) {
+                                                diceChosenToBeSacrificed = Integer.parseInt(parts[1]);
+                                                printer.println("\nYou have chosen to sacrifice the dice: " + dicesList.toArray()[diceChosen].toString() + "\n");
                                                 printer.flush();
                                             } else {
                                                 printer.println("\nThe dice you are trying to use does not exist, please retry ");
@@ -890,11 +914,28 @@ public class Cli {
                             if (parametersCardinalityCheck(4)) {
                                 toolNumber1 = tryParse(parts[2]);
                                 toolString1 = parts[3];
+                                boolean done=false;
                                 if (toolNumber1 != null && (toolString1.equals("+") || toolString1.equals("-"))) {
-                                    if (toolCommand.command1(toolNumber1, toolString1)) {
+                                    if(single){
+                                        if(diceChosenToBeSacrificed!=9&&diceChosenToBeSacrificed!=diceChosen) {
+                                            if (toolCommand.command1(diceChosenToBeSacrificed, toolNumber1, toolString1)) {
+                                                 done = true;
+                                            }
+                                        }else{
+                                            printer.println("\nATTENZIONE:Non hai scelto un dado da sacrificare o non lo hai scelto correttamente!\n");
+                                            printer.flush();
+                                        }
+                                    }
+                                    else {
+                                        if (toolCommand.command1(-1, toolNumber1, toolString1)) {
+                                             done =true;
+                                        }
+                                    }
+                                    if(done==true){
                                         printer.println("\nBen fatto! Il dado da te selezionato è stato modificato correttamente!\n");
                                         printer.flush();
-                                    } else {
+                                    }
+                                    else{
                                         gameErrorPrint();
                                     }
                                 } else {

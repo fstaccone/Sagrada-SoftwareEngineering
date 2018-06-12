@@ -40,7 +40,7 @@ public interface RemoteController extends Remote {
 
     void setDiceValue(int value, String name, boolean isSingle) throws RemoteException;
 
-    boolean useToolCard1(int diceChosen, String incrOrDecr, String username, boolean isSingle) throws RemoteException;
+    boolean useToolCard1(int diceToBeSacrificed,int diceChosen, String incrOrDecr, String username, boolean isSingle) throws RemoteException;
 
     boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String username, boolean isSingle) throws RemoteException;
 

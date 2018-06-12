@@ -126,13 +126,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public boolean useToolCard1(int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
+    public boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
         if (isSingle) {
-            //return lobby.getSingleplayerMatches().get(name).useToolCard
+            return lobby.getSingleplayerMatches().get(name).useToolCard1(diceToBeSacrificed,diceChosen, IncrOrDecr, name);
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard1(diceChosen, IncrOrDecr, name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard1(diceToBeSacrificed,diceChosen, IncrOrDecr, name);
         }
-        return false;
     }
 
     @Override
@@ -288,7 +287,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(UseToolCard1Request request) {
-        boolean effectApplied = useToolCard1(request.diceChosen, request.IncrOrDecr, request.username, request.isSingle);
+        boolean effectApplied = useToolCard1(request.diceToBeSacrificed,request.diceChosen, request.IncrOrDecr, request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 

@@ -47,21 +47,21 @@ public class IncrDecrDiceValueTest {
 
     @Test
     public void checkDice() {
-        player.setChoise("+");
+        player.setChoice("+");
         toolCard.useCard(player, match);
         Assert.assertEquals(false, toolCard.useCard(player, match));
-        player.setChoise("-");
+        player.setChoice("-");
         toolCard.useCard(player, match);
         Assert.assertEquals(5, reserve.getDices().get(0).getValue());
-        player.setChoise("+");
+        player.setChoice("+");
         toolCard.useCard(player, match);
         Assert.assertEquals(6, reserve.getDices().get(0).getValue());
-        player.setChoise("a");
+        player.setChoice("a");
         Assert.assertEquals(false, toolCard.useCard(player, match));
-        player.setChoise("-");
+        player.setChoice("-");
         toolCard.useCard(player, match);
         Assert.assertEquals(1, reserve.getDices().get(1).getValue());
-        player.setChoise("+");
+        player.setChoice("+");
         Assert.assertEquals(false, toolCard.useCard(player, match));
     }
 }

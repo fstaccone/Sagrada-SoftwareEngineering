@@ -82,19 +82,19 @@ public class ToolCommand {
         return i;
     }
 
-    public boolean command1(int diceFromReserve, String incrOrDecr){
+    public boolean command1(int diceToBeSacrificed, int diceFromReserve, String incrOrDecr){
 
         //RMI
         if(controller!=null) {
             try {
-                return controller.useToolCard1(diceFromReserve, incrOrDecr, name, single);
+                return controller.useToolCard1(diceToBeSacrificed,diceFromReserve, incrOrDecr, name, single);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard1Request(diceFromReserve, incrOrDecr, name, single));
+            clientController.request(new UseToolCard1Request(diceToBeSacrificed,diceFromReserve, incrOrDecr, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;

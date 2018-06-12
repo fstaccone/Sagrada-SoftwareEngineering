@@ -161,5 +161,7 @@ public abstract class Match {
 
 
     public abstract void terminateMatch();
+
+    public abstract boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String name);
 }
 

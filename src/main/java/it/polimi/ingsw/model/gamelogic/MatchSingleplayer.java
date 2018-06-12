@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
 import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
 import it.polimi.ingsw.socket.responses.GameEndSingleResponse;
-import it.polimi.ingsw.socket.responses.GameStartedResponse;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -127,6 +126,26 @@ public class MatchSingleplayer extends Match implements Runnable {
     @Override
     public void terminateMatch() {
         lobby.removeMatchSingleplayer(player.getName());
+    }
+
+    @Override
+    public boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String name) {
+        if (!isToolAction()) {
+            getPlayer().setDice(diceChosen);
+            getPlayer().setChoice(incrOrDecr);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(1, getPlayer(), this);
+            //reserveToBeUpdated(result);
+            setToolAction(result);
+            //DEVO RESETTARE DICETOBESACRIFICED?
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
+            return result;
+        } else {
+            return false;
+        }
     }
 
     public void observeMatchRemote(MatchObserver observer) {
