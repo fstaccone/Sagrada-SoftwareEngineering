@@ -4,6 +4,7 @@ import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
+import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
 import it.polimi.ingsw.socket.responses.GameEndSingleResponse;
 import it.polimi.ingsw.socket.responses.*;
@@ -225,13 +226,91 @@ public class MatchSingleplayer extends Match implements Runnable {
             getPlayer().setChoice(incrOrDecr);
             getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
             boolean result = getBoard().findAndUseToolCard(1, getPlayer(), this);
-            //reserveToBeUpdated(result);
+            if(result) getPlayer().setDiceToBeSacrificed(9);
+            reserveToBeUpdated(result);
             setToolAction(result);
-            //DEVO RESETTARE DICETOBESACRIFICED?
             synchronized (getLock()) {
                 getLock().notifyAll();
             }
 
+            return result;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean useToolCard2or3(int diceToBeSacrificed, int n, int startX, int startY, int finalX, int finalY, String name) {
+        if (!isToolAction()) {
+            getPlayer().setStartX1(startX);
+            getPlayer().setStartY1(startY);
+            getPlayer().setFinalX1(finalX);
+            getPlayer().setFinalY1(finalY);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(n, getPlayer(), this);
+            if(result) getPlayer().setDiceToBeSacrificed(9);
+            setToolAction(result);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        } else {
+            return false;
+        }    }
+
+    @Override
+    public boolean useToolCard4(int diceToBeSacrificed, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
+        if (!isToolAction()) {
+            getPlayer().setStartX1(startX1);
+            getPlayer().setStartY1(startY1);
+            getPlayer().setFinalX1(finalX1);
+            getPlayer().setFinalY1(finalY1);
+            getPlayer().setStartX2(startX2);
+            getPlayer().setStartY2(startY2);
+            getPlayer().setFinalX2(finalX2);
+            getPlayer().setFinalY2(finalY2);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(4, getPlayer(), this);
+            setToolAction(result);
+            if(result) getPlayer().setDiceToBeSacrificed(9);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean useToolCard5(int diceToBeSacrificed, int diceChosen, int roundChosen, int diceChosenFromRound, String name) {
+        if (!isToolAction()) {
+            getPlayer().setDice(diceChosen);
+            getPlayer().setRound(roundChosen);
+            getPlayer().setDiceChosenFromRound(diceChosenFromRound);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(5, getPlayer(), this);
+            if(result) getPlayer().setDiceToBeSacrificed(9);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            if(observerRmi!=null){
+                try {
+                    observerRmi.onRoundTrack(board.getRoundTrack().toString());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                Response response = new RoundTrackResponse(board.getRoundTrack().toString());
+                try {
+                    observerSocket.writeObject(response);
+                    observerSocket.reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
             return result;
         } else {
             return false;

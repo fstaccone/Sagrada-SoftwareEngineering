@@ -11,8 +11,9 @@ public class UseToolCard2or3Request implements Request{
     public int finalY;
     public String username;
     public boolean isSingle;
+    public int diceToBeSacrificed;
 
-    public UseToolCard2or3Request(int n,int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
+    public UseToolCard2or3Request(int diceToBeSacrificed,int n,int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
         this.n=n;
         this.startX = startX;
         this.startY = startY;
@@ -20,6 +21,7 @@ public class UseToolCard2or3Request implements Request{
         this.finalY = finalY;
         this.username = name;
         this.isSingle = isSingle;
+        this.diceToBeSacrificed=diceToBeSacrificed;
     }
 
 
