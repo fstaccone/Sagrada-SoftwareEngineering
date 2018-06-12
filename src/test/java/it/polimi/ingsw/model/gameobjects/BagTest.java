@@ -15,8 +15,7 @@ public class BagTest {
         int greeen = 0;
         int violet = 0;
         int blue = 0;
-        List<Dice> allDices = bag.pickDices(4);
-        allDices.add(bag.pickSingleDice());
+        List<Dice> allDices = bag.pickDices(10);
         for(Dice d : allDices){
             switch (d.getColor()){
                 case YELLOW:
@@ -62,7 +61,7 @@ public class BagTest {
     public void pickDices(){
         Bag bag = new Bag(5);
         Assert.assertEquals(25, bag.getSize());
-        List<Dice> dices = bag.pickDices(2);
+        List<Dice> dices = bag.pickDices(5);
         Assert.assertEquals(20, bag.getSize());
     }
 
