@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import org.junit.Assert;
@@ -16,8 +17,10 @@ import static org.mockito.Mockito.when;
 public class ReRollAllReserveDicesTest {
     private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
-    private Player player;
+    private PlayerMultiplayer player;
+    private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
+    private MatchSingleplayer matchSingleplayer;
     private Board board;
 
     @Before
@@ -45,19 +48,36 @@ public class ReRollAllReserveDicesTest {
         player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
+        player.setNumFavorTokens(4);
+        player.setTurnsLeft(1);
         toolCard = new ToolCard("Martelletto", "tool7");
+        singleplayer = new PlayerSingleplayer("Archi");
+        matchSingleplayer = mock(MatchSingleplayer.class);
+        when(matchSingleplayer.getBoard()).thenReturn(board);
+        when(board.getReserve()).thenReturn(reserve);
+        when(matchSingleplayer.getBoard().getReserve()).thenReturn(reserve);
+        singleplayer.setTurnsLeft(1);
+        singleplayer.setDiceToBeSacrificed(4);
     }
 
     @Test
     public void checkReserve() {
-        //match.getBoard().getReserve().showReserve();
         toolCard.useCard(player, match);
-        //match.getBoard().getReserve().showReserve();
         Assert.assertNotNull(match.getBoard().getReserve());
         Assert.assertEquals(Colors.RED, match.getBoard().getReserve().chooseDice(0).getColor());
         Assert.assertEquals(Colors.YELLOW, match.getBoard().getReserve().chooseDice(0).getColor());
         Assert.assertEquals(Colors.VIOLET, match.getBoard().getReserve().chooseDice(0).getColor());
         Assert.assertEquals(Colors.GREEN, match.getBoard().getReserve().chooseDice(0).getColor());
         Assert.assertEquals(Colors.BLUE, match.getBoard().getReserve().chooseDice(0).getColor());
+    }
+
+    @Test
+    public void singlePlayer(){
+        toolCard.useCard(singleplayer, matchSingleplayer);
+        Assert.assertNotNull(matchSingleplayer.getBoard().getReserve());
+        Assert.assertEquals(Colors.RED, matchSingleplayer.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.YELLOW, matchSingleplayer.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.VIOLET, matchSingleplayer.getBoard().getReserve().chooseDice(0).getColor());
+        Assert.assertEquals(Colors.GREEN, matchSingleplayer.getBoard().getReserve().chooseDice(0).getColor());
     }
 }

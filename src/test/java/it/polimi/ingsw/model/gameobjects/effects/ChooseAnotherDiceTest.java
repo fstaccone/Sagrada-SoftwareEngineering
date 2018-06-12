@@ -64,4 +64,12 @@ public class ChooseAnotherDiceTest {
         player.setPickedDice(new Dice(Colors.YELLOW));
         Assert.assertEquals(Colors.YELLOW, player.getPickedDice().getColor());
     }
+
+    @Test
+    public void applyEffect(){
+        PlayerSingleplayer singleplayer = new PlayerSingleplayer("Archi");
+        singleplayer.setDiceToBeSacrificed(0);
+        toolCard.useCard(singleplayer, match);
+        Assert.assertEquals(0, player.getTurnsLeft());
+    }
 }
