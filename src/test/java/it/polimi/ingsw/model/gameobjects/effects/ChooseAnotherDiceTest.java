@@ -54,6 +54,8 @@ public class ChooseAnotherDiceTest {
 
     @Test
     public void checkReserve() {
+        Assert.assertEquals("Tenaglia a Rotelle", toolCard.getName());
+        Assert.assertEquals("tool8", toolCard.getToolID());
         Assert.assertEquals(null, player.getPickedDice());
         toolCard.useCard(player, match);
         toolCard.useCard(player2, match);

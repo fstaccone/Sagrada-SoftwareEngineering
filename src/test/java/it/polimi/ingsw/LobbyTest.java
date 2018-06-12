@@ -1,16 +1,21 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
+import it.polimi.ingsw.socket.ClientController;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.mockito.Mockito.mock;
 
 public class LobbyTest {
 
@@ -122,6 +127,28 @@ public class LobbyTest {
         Assert.assertEquals(1, lobby.getSingleplayerMatches().get("Bovalino").getMatchId());
         lobby.removeMatchSingleplayer("Archi");
         Assert.assertNull(lobby.getSingleplayerMatches().get("Archi"));
+    }
+
+    @Test
+    public void observeMatchRemote() throws RemoteException {
+        Lobby lobby = new Lobby(10, 10);
+        lobby.createSingleplayerMatch("Archi",1,null);
+        Controller controller = new Controller(lobby);
+        MatchObserver m = mock(MatchObserver.class);
+        lobby.observeMatchRemote("Archi", m, true);
+        lobby.addToWaitingPlayers("Bagaladi");
+        lobby.addToWaitingPlayers("Condofuri");
+        lobby.startMatch();
+        MatchObserver m2 = mock(MatchObserver.class);
+        lobby.observeMatchRemote("Bagaladi", m2, false);
+    }
+
+    @Test
+    public void observeLobbyRemote(){
+        Lobby lobby = new Lobby(10, 10);
+        LobbyObserver observer = mock(LobbyObserver.class);
+        lobby.observeLobbyRemote("Archi", observer);
+        Assert.assertTrue(lobby.getRemoteObservers().keySet().contains("Archi"));
     }
 
 }

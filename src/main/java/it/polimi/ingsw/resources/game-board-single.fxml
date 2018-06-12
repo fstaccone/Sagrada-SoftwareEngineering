@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
+
 <AnchorPane id="gameBoard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.resources.GameBoardSingleHandler">
     <children>
         <Pane fx:id="playerWindowPatternCard" layoutX="740.0" layoutY="559.0" prefHeight="300.0" prefWidth="340.0" />
@@ -82,7 +86,7 @@
             <Button fx:id="toolCard4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" GridPane.columnIndex="2" />
          </children>
       </GridPane>
-      <GridPane hgap="8.0" layoutY="218.0" prefHeight="322.0" prefWidth="469.0">
+      <GridPane hgap="8.0" layoutX="280.0" layoutY="216.0" prefHeight="322.0" prefWidth="469.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -95,7 +99,7 @@
             <Button fx:id="toolCard1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <Label layoutX="4.0" layoutY="176.0" prefHeight="40.0" prefWidth="159.0" text="CARTE UTENSILI" textFill="#251494">
+      <Label layoutX="486.0" layoutY="166.0" prefHeight="40.0" prefWidth="159.0" text="CARTE UTENSILI" textFill="#251494">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font>

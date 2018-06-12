@@ -100,7 +100,7 @@ public class ToolCard {
         return name;
     }
 
-    String getToolID() {
+    public String getToolID() {
         return toolID;
     }
 
