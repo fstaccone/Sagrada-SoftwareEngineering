@@ -2,10 +2,7 @@ package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.model.gameobjects.PrivateObjectiveCard;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
-import it.polimi.ingsw.socket.responses.InitializationResponse;
-import it.polimi.ingsw.socket.responses.ProposeWindowResponse;
-import it.polimi.ingsw.socket.responses.ReserveResponse;
-import it.polimi.ingsw.socket.responses.RoundTrackResponse;
+import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -21,6 +18,7 @@ public class TurnManagerSingleplayer implements Runnable {
     private MatchSingleplayer match;
     private Timer turnTimer;
     private boolean expired; // it's used to avoid double canceling of timer
+    private int currentTurn;
 
     TurnManagerSingleplayer(MatchSingleplayer match, int turnTime) {
         this.turnTime = turnTime;
@@ -65,7 +63,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                System.out.println("Match singleplayer interrupted");
             }
         }
     }
@@ -74,9 +72,11 @@ public class TurnManagerSingleplayer implements Runnable {
 
         initializeRound();
 
+        currentTurn = 1;
         // turn one
         playTurn();
 
+        currentTurn = 2;
         // turn two
         playTurn();
 
@@ -97,6 +97,8 @@ public class TurnManagerSingleplayer implements Runnable {
     private void playTurn() throws InterruptedException {
         initializeTurn();
 
+        notifyTurnBeginning();
+
         if (!match.getPlayer().isSchemeCardSet()) {
             drawWindowPatternCard();
         }
@@ -109,6 +111,25 @@ public class TurnManagerSingleplayer implements Runnable {
         expired = false;
 
         match.getPlayer().setTurnsLeft(match.getPlayer().getTurnsLeft() - 1);
+    }
+
+    private void notifyTurnBeginning() {
+        if (match.getObserverRmi() != null) {
+            try {
+                match.getObserverRmi().onYourTurn(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn);
+            } catch (RemoteException e) {
+                match.terminateMatch();
+                System.out.println("Match singleplayer interrupted");
+            }
+        } else if (match.getObserverSocket() != null) {
+            try {
+                match.getObserverSocket().writeObject(new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn));
+                match.getObserverSocket().reset();
+            } catch (IOException e) {
+                match.terminateMatch();
+                System.out.println("Match singleplayer interrupted");
+            }
+        }
     }
 
     private void drawWindowPatternCard() throws InterruptedException {
@@ -186,6 +207,7 @@ public class TurnManagerSingleplayer implements Runnable {
         if (match.getObserverRmi() != null) {
             try {
                 match.getObserverRmi().onRoundTrack(match.getBoard().getRoundTrack().toString());
+                match.getObserverRmi().onReserve(match.getBoard().getReserve().toString());
             } catch (RemoteException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrotto");
@@ -194,21 +216,6 @@ public class TurnManagerSingleplayer implements Runnable {
             try {
                 match.getObserverSocket().writeObject(new RoundTrackResponse(match.getBoard().getRoundTrack().toString()));
                 match.getObserverSocket().reset();
-            } catch (IOException e) {
-                match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
-            }
-        }
-
-        if (match.getObserverRmi() != null) {
-            try {
-                match.getObserverRmi().onReserve(match.getBoard().getReserve().toString());
-            } catch (RemoteException e) {
-                match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
-            }
-        } else if (match.getObserverSocket() != null) {
-            try {
                 match.getObserverSocket().writeObject(new ReserveResponse(match.getBoard().getReserve().toString()));
                 match.getObserverSocket().reset();
             } catch (IOException e) {

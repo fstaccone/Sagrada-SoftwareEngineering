@@ -29,6 +29,7 @@ import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
@@ -286,20 +287,20 @@ public class LoginHandler implements Initializable {
     // the connection is established between client and lobby
     private void setupRmiConnection() throws RemoteException {
 
-        //registry = LocateRegistry.getRegistry(rmiRegistryPort);
+        registry = LocateRegistry.getRegistry();
 
         try {
-            //this.remoteController = (RemoteController) registry.lookup("Lobby");
+            this.remoteController = (RemoteController) registry.lookup("Lobby");
 
-            remoteController = (RemoteController) Naming.lookup(("//" + serverAddress + "/Lobby"));
+            //remoteController = (RemoteController) Naming.lookup(("//" + serverAddress + "/Lobby"));
 
             if (isCli && !singleplayer)
                 waitingRoomCli.setController(remoteController);
         } catch (NotBoundException e) {
             System.out.println("A client can't get the remoteController's reference");
             e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        //} catch (MalformedURLException e) {
+        //    e.printStackTrace();
         }
     }
 

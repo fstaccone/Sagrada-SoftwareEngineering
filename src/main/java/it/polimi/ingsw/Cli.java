@@ -176,7 +176,7 @@ public class Cli {
         this.roundTrack = roundTrack;
     }
 
-    public void onYourTurn(boolean yourTurn, String string) {
+    public void onYourTurn(boolean yourTurn, String string, int round, int turn) {
         if (string != null)
             onReserve(string);
         this.myTurn = yourTurn;
@@ -207,7 +207,7 @@ public class Cli {
     }
 
     public void onAfterWindowChoice() {
-        printer.println("You can now perform actions on your scheme card                               ~ [reserve] to check available dices\n");
+        printer.println("Adesso puoi utilizzare la tua carta schema                              ~ [reserve] per vedere i dadi disponibili\n");
         printer.flush();
     }
 

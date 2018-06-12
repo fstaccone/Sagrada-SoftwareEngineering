@@ -110,7 +110,7 @@ public class Gui {
         this.dicePlaced = dicePlaced;
     }
 
-    public void onYourTurn(boolean isMyTurn, String string) {
+    public void onYourTurn(boolean isMyTurn, String string, int round, int turn) {
         if (string != null) {
             onReserve(string);
         }

@@ -36,7 +36,7 @@ public class CliTest {
         windows.add(new AuroraSagradis().toString());
         windows.add(new Industria().toString());
         cli.onWindowChoice(windows);
-        cli.onYourTurn(true, "[1_blue,2_blue]");
+        cli.onYourTurn(true, "[1_blue,2_blue]", 1, 2);
         cli.onAfterWindowChoice();
         cli.onMyWindow(new Industria());
         cli.onOtherTurn("player2");
