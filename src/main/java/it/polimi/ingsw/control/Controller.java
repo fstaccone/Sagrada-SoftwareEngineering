@@ -73,11 +73,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean placeDiceTool11(int x, int y, String name, boolean isSingle) {
         if (isSingle) {
-            lobby.getSingleplayerMatches().get(name).setDiceAction(true); // perchè?
+            return lobby.getSingleplayerMatches().get(name).placeDiceTool11(name,x,y);
         } else {
             return lobby.getMultiplayerMatches().get(name).placeDiceTool11(name, x, y);
         }
-        return false;
     }
 
     @Override
@@ -106,22 +105,18 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public Colors askForDiceColor(String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            return lobby.getSingleplayerMatches().get(name).getPlayer().getDiceFromBag().getColor();
         } else {
             return lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag().getColor();
         }
-        return null;
     }
 
     @Override
     public void setDiceValue(int value, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            lobby.getSingleplayerMatches().get(name).getPlayer().getDiceFromBag().setValue(value);
         } else {
-            System.out.println("OH");
-            System.out.println(lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag());
             lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag().setValue(value);
-            System.out.println(lobby.getMultiplayerMatches().get(name).getPlayer(name).getDiceFromBag());
         }
     }
 
@@ -172,63 +167,57 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public boolean useToolCard7(String name, boolean isSingle) {
+    public boolean useToolCard7(int diceToBeSacrificed,String name, boolean isSingle) {
         if (isSingle) {
-            //return lobby.getSingleplayerMatches().get(name).useToolCard
+            return lobby.getSingleplayerMatches().get(name).useToolCard7(diceToBeSacrificed,name);
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard7(name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard7(diceToBeSacrificed,name);
         }
-        return false;
     }
 
     @Override
-    public boolean useToolCard8(String name, boolean isSingle) {
+    public boolean useToolCard8(int diceToBeSacrificed,String name, boolean isSingle) {
         if (isSingle) {
-            //return lobby.getSingleplayerMatches().get(name).useToolCard
+            return lobby.getSingleplayerMatches().get(name).useToolCard8(diceToBeSacrificed,name);
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard8(name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard8(diceToBeSacrificed,name);
         }
-        return false;
     }
 
     @Override
-    public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name, boolean isSingle) {
+    public boolean useToolCard9(int diceToBeSacrificed,int diceChosen, int finalX1, int finalY1, String name, boolean isSingle) {
         if (isSingle) {
-            //return lobby.getSingleplayerMatches().get(name).useToolCard
+            return lobby.getSingleplayerMatches().get(name).useToolCard9(diceToBeSacrificed,diceChosen, finalX1, finalY1, name);
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard9(diceChosen, finalX1, finalY1, name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard9(diceToBeSacrificed,diceChosen, finalX1, finalY1, name);
         }
-        return false;
     }
 
     @Override
-    public boolean useToolCard10(int diceChosen, String name, boolean isSingle) {
+    public boolean useToolCard10(int diceToBeSacrificed,int diceChosen, String name, boolean isSingle) {
         if (isSingle) {
-            //return lobby.getSingleplayerMatches().get(name).useToolCard
+            return lobby.getSingleplayerMatches().get(name).useToolCard10(diceToBeSacrificed,diceChosen, name);
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard10(diceChosen, name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard10(diceToBeSacrificed,diceChosen, name);
         }
-        return false;
     }
 
     @Override
-    public boolean useToolCard11(int diceChosen, String name, boolean isSingle) {
+    public boolean useToolCard11(int diceToBeSacrificed,int diceChosen, String name, boolean isSingle) {
         if (isSingle) {
-            //return lobby.getSingleplayerMatches().get(name).useToolCard
+            return lobby.getSingleplayerMatches().get(name).useToolCard11(diceToBeSacrificed,diceChosen, name);
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard11(diceChosen, name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard11(diceToBeSacrificed,diceChosen, name);
         }
-        return false;
     }
 
     @Override
-    public boolean useToolCard12(int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
+    public boolean useToolCard12(int diceToBeSacrificed,int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
         if (isSingle) {
-            //return lobby.getSingleplayerMatches().get(name).useToolCard
+            return lobby.getSingleplayerMatches().get(name).useToolCard12(diceToBeSacrificed,roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard12(roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard12(diceToBeSacrificed,roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
         }
-        return false;
     }
 
 
@@ -312,37 +301,37 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(UseToolCard7Request request) {
-        boolean effectApplied = useToolCard7(request.username, request.isSingle);
+        boolean effectApplied = useToolCard7(request.diceToBeSacrificed,request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard8Request request) {
-        boolean effectApplied = useToolCard8(request.name, request.single);
+        boolean effectApplied = useToolCard8(request.diceToBeSacrificed,request.name, request.single);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard9Request request) {
-        boolean effectApplied = useToolCard9(request.diceChosen, request.finalX, request.finalY, request.username, request.isSingle);
+        boolean effectApplied = useToolCard9(request.diceToBeSacrificed,request.diceChosen, request.finalX, request.finalY, request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard10Request request) {
-        boolean effectApplied = useToolCard10(request.diceChosen, request.username, request.isSingle);
+        boolean effectApplied = useToolCard10(request.diceToBeSacrificed,request.diceChosen, request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard11Request request) {
-        boolean effectApplied = useToolCard11(request.diceChosen, request.username, request.isSingle);
+        boolean effectApplied = useToolCard11(request.diceToBeSacrificed,request.diceChosen, request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard12Request request) {
-        boolean effectApplied = useToolCard12(request.roundFromTrack, request.diceInRound, request.startX1, request.startY1, request.finalX1, request.finalY1, request.startX2, request.startY2, request.finalX2, request.finalY2, request.name, request.isSingle);
+        boolean effectApplied = useToolCard12(request.diceToBeSacrificed,request.roundFromTrack, request.diceInRound, request.startX1, request.startY1, request.finalX1, request.finalY1, request.startX2, request.startY2, request.finalX2, request.finalY2, request.name, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 

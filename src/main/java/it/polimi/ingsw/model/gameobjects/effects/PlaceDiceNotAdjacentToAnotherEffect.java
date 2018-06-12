@@ -2,10 +2,7 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
-import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 
@@ -21,19 +18,35 @@ public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
 
     @Override
     public boolean applyEffect(Player player, Match match) {
-
-        PlayerMultiplayer p = (PlayerMultiplayer) player;
-        MatchMultiplayer m = (MatchMultiplayer) match;
-
         WindowPatternCard schema = player.getSchemeCard();
-
         int newRow = player.getFinalX1();
         int newColumn = player.getFinalY1();
-
-        if (p.getNumFavorTokens() >= price) {
-            if (player.getDice() < match.getBoard().getReserve().getDices().size()) {
-                Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
-                if (dice != null) { //PROBABILMENTE INUTILE
+        Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
+        //SINGLEPLAYER
+        if (player.getDiceToBeSacrificed() != 9) {
+            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+            if (sacrificeDice.getColor().equals(Colors.YELLOW) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
+                if (!(schema.existsAdjacentDice(newRow, newColumn))) {
+                    schema.putDiceWithoutCheckPos(dice, newRow, newColumn);
+                    if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
+                        match.getBoard().getReserve().getDices().remove(player.getDice());
+                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            //MULTIPLAYER
+            PlayerMultiplayer p = (PlayerMultiplayer) player;
+            MatchMultiplayer m = (MatchMultiplayer) match;
+            if (p.getNumFavorTokens() >= price) {
+                if (player.getDice() < match.getBoard().getReserve().getDices().size()) {
                     if (!(schema.existsAdjacentDice(newRow, newColumn))) {
                         schema.putDiceWithoutCheckPos(dice, newRow, newColumn);
                         if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
@@ -56,7 +69,7 @@ public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
                                     }
                                 }
                                 price = 2;
-                                m.getToolCardsPrices().put("Carta utensile 9: ",price);
+                                m.getToolCardsPrices().put("Carta utensile 9: ", price);
 
                             }
                             return true;
@@ -67,7 +80,6 @@ public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
                     return false;
             } else
                 return false;
-        } else
-            return false;
+        }
     }
 }

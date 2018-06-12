@@ -50,15 +50,15 @@ public interface RemoteController extends Remote {
 
     boolean useToolCard6(int diceToBeSacrificed, int diceChosen, String username, boolean isSingle) throws RemoteException;
 
-    boolean useToolCard7(String username, boolean isSingle) throws RemoteException;
+    boolean useToolCard7(int diceToBeSacrificed,String username, boolean isSingle) throws RemoteException;
 
-    boolean useToolCard8(String name, boolean single) throws RemoteException;
+    boolean useToolCard8(int diceToBeSacrificed,String name, boolean single) throws RemoteException;
 
-    boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String username, boolean isSingle) throws RemoteException;
+    boolean useToolCard9(int diceToBeSacrificed,int diceChosen, int finalX1, int finalY1, String username, boolean isSingle) throws RemoteException;
 
-    boolean useToolCard10(int diceChosen, String username, boolean isSingle) throws RemoteException;
+    boolean useToolCard10(int diceToBeSacrificed,int diceChosen, String username, boolean isSingle) throws RemoteException;
 
-    boolean useToolCard11(int diceChosen, String username, boolean isSingle) throws RemoteException;
+    boolean useToolCard11(int diceToBeSacrificed,int diceChosen, String username, boolean isSingle) throws RemoteException;
 
-    boolean useToolCard12(int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) throws RemoteException;
+    boolean useToolCard12(int diceToBeSacrificed,int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) throws RemoteException;
 }

@@ -4,9 +4,7 @@ import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
-import it.polimi.ingsw.socket.responses.GameEndSingleResponse;
 import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
@@ -212,6 +210,20 @@ public class MatchSingleplayer extends Match implements Runnable {
         }
         return false;
     }
+    @Override
+    public boolean placeDiceTool11(String name, int x, int y){
+        if (!isDiceAction()) {
+            boolean result;
+            result = getPlayer().getSchemeCard().putDice(getPlayer().getDiceFromBag(), x, y);
+            setDiceAction(result);
+            schemeCardToBeUpdated(result);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        }
+        return false;
+    }
 
     @Override
     public void terminateMatch() {
@@ -225,7 +237,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             getPlayer().setChoice(incrOrDecr);
             getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
             boolean result = getBoard().findAndUseToolCard(1, getPlayer(), this);
-            if(result) getPlayer().setDiceToBeSacrificed(9);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
             reserveToBeUpdated(result);
             setToolAction(result);
             synchronized (getLock()) {
@@ -247,7 +259,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             getPlayer().setFinalY1(finalY);
             getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
             boolean result = getBoard().findAndUseToolCard(n, getPlayer(), this);
-            if(result) getPlayer().setDiceToBeSacrificed(9);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
             reserveToBeUpdated(result);
             schemeCardToBeUpdated(result);
             setToolAction(result);
@@ -257,7 +269,8 @@ public class MatchSingleplayer extends Match implements Runnable {
             return result;
         } else {
             return false;
-        }    }
+        }
+    }
 
     @Override
     public boolean useToolCard4(int diceToBeSacrificed, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
@@ -273,7 +286,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
             boolean result = getBoard().findAndUseToolCard(4, getPlayer(), this);
             setToolAction(result);
-            if(result) getPlayer().setDiceToBeSacrificed(9);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
             reserveToBeUpdated(result);
             schemeCardToBeUpdated(result);
             synchronized (getLock()) {
@@ -293,16 +306,16 @@ public class MatchSingleplayer extends Match implements Runnable {
             getPlayer().setDiceChosenFromRound(diceChosenFromRound);
             getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
             boolean result = getBoard().findAndUseToolCard(5, getPlayer(), this);
-            if(result) getPlayer().setDiceToBeSacrificed(9);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
             reserveToBeUpdated(result);
             setToolAction(result);
-            if(observerRmi!=null){
+            if (observerRmi != null) {
                 try {
                     observerRmi.onRoundTrack(board.getRoundTrack().toString());
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 Response response = new RoundTrackResponse(board.getRoundTrack().toString());
                 try {
                     observerSocket.writeObject(response);
@@ -326,7 +339,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             getPlayer().setDice(diceChosen);
             getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
             boolean result = getBoard().findAndUseToolCard(6, getPlayer(), this);
-            if(result) getPlayer().setDiceToBeSacrificed(9);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
             reserveToBeUpdated(result);
             setToolAction(result);
             synchronized (getLock()) {
@@ -336,7 +349,121 @@ public class MatchSingleplayer extends Match implements Runnable {
             return result;
         } else {
             return false;
-        }    }
+        }
+    }
+
+    @Override
+    public boolean useToolCard7(int diceToBeSacrificed, String name) {
+        if (!isToolAction()) {
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(7, getPlayer(), this);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean useToolCard8(int diceToBeSacrificed, String name) {
+        if (!isToolAction()) {
+            boolean result;
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            result = getBoard().findAndUseToolCard(8, getPlayer(), this);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean useToolCard9(int diceToBeSacrificed, int diceChosen, int finalX1, int finalY1, String name) {
+        if (!isToolAction() && !isDiceAction()) {
+            getPlayer().setDice(diceChosen);
+            getPlayer().setFinalX1(finalX1);
+            getPlayer().setFinalY1(finalY1);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(9, getPlayer(), this);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
+            reserveToBeUpdated(result);
+            schemeCardToBeUpdated(result);
+            setDiceAction(result);
+            setToolAction(result);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean useToolCard10(int diceToBeSacrificed, int diceChosen, String name) {
+        if (!isToolAction()) {
+            getPlayer().setDice(diceChosen);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(10, getPlayer(), this);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        } else return false;
+    }
+
+    @Override
+    public boolean useToolCard11(int diceToBeSacrificed, int diceChosen, String name) {
+        if (!(isToolAction() || isDiceAction())) {
+            getPlayer().setDice(diceChosen);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(11, getPlayer(), this);
+            reserveToBeUpdated(result);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
+            setToolAction(result);
+            return result;
+        } else return false;
+    }
+
+    @Override
+    public boolean useToolCard12(int diceToBeSacrificed, int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
+        if (!isToolAction()) {
+            getPlayer().setRound(roundFromTrack);
+            getPlayer().setDiceChosenFromRound(diceInRound);
+            getPlayer().setStartX1(startX1);
+            getPlayer().setStartY1(startY1);
+            getPlayer().setFinalX1(finalX1);
+            getPlayer().setFinalY1(finalY1);
+            getPlayer().setStartX2(startX2);
+            getPlayer().setStartY2(startY2);
+            getPlayer().setFinalX2(finalX2);
+            getPlayer().setFinalY2(finalY2);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(12, getPlayer(), this);
+            reserveToBeUpdated(result);
+            if (result) getPlayer().setDiceToBeSacrificed(9);
+            schemeCardToBeUpdated(result);
+            setToolAction(result);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
+            return result;
+        } else return false;
+    }
 
     public void observeMatchRemote(MatchObserver observer) {
         observerRmi = observer;

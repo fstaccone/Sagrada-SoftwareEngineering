@@ -7,10 +7,11 @@ public class UseToolCard8Request implements Request {
 
     public String name;
     public boolean single;
-
-    public UseToolCard8Request(String name, boolean single) {
+    public int diceToBeSacrificed;
+    public UseToolCard8Request(int diceToBeSacrificed, String name, boolean single) {
         this.name = name;
         this.single = single;
+        this.diceToBeSacrificed=diceToBeSacrificed;
     }
 
     @Override

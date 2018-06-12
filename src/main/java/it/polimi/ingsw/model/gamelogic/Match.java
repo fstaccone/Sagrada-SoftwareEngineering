@@ -154,6 +154,8 @@ public abstract class Match {
 
     public abstract void terminateMatch();
 
+    public abstract boolean placeDiceTool11(String name, int x, int y);
+
     public abstract boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String name);
 
     public abstract boolean useToolCard2or3(int diceToBeSacrificed, int n, int startX, int startY, int finalX, int finalY, String name);
@@ -163,5 +165,17 @@ public abstract class Match {
     public abstract boolean useToolCard5(int diceToBeSacrificed,int diceChosen, int roundChosen, int diceChosenFromRound, String name);
 
     public abstract boolean useToolCard6(int diceToBeSacrificed,int diceChosen, String name);
+
+    public abstract boolean useToolCard7(int diceToBeSacrificed,String name);
+
+    public abstract boolean useToolCard8(int diceToBeSacrificed,String name);
+
+    public abstract boolean useToolCard9(int diceToBeSacrificed,int diceChosen, int finalX1, int finalY1, String name);
+
+    public abstract boolean useToolCard10(int diceToBeSacrificed,int diceChosen, String name);
+
+    public abstract boolean useToolCard11(int diceToBeSacrificed,int diceChosen, String name);
+
+    public abstract boolean useToolCard12(int diceToBeSacrificed,int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name);
 }
 

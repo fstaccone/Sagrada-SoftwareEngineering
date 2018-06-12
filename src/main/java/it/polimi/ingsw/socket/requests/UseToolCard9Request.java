@@ -10,13 +10,15 @@ public class UseToolCard9Request implements Request {
     public int finalY;
     public String username;
     public boolean isSingle;
+    public int diceToBeSacrificed;
 
-    public UseToolCard9Request(int diceChosen, int finalX, int finalY, String username, boolean isSingle) {
+    public UseToolCard9Request(int diceToBeSacrificed,int diceChosen, int finalX, int finalY, String username, boolean isSingle) {
         this.diceChosen = diceChosen;
         this.finalX = finalX;
         this.finalY = finalY;
         this.username = username;
         this.isSingle = isSingle;
+        this.diceToBeSacrificed=diceToBeSacrificed;
     }
 
     @Override

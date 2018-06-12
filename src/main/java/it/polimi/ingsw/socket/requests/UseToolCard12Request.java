@@ -18,8 +18,9 @@ public class UseToolCard12Request implements Request {
     public int finalY2;
     public String name;
     public boolean isSingle;
+    public int diceToBeSacrificed;
 
-    public UseToolCard12Request(int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
+    public UseToolCard12Request(int diceToBeSacrificed,int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
         this.roundFromTrack = roundFromTrack;
         this.diceInRound = diceInRound;
         this.startX1 = startX1;
@@ -32,6 +33,7 @@ public class UseToolCard12Request implements Request {
         this.finalY2 = finalY2;
         this.name = name;
         this.isSingle = isSingle;
+        this.diceToBeSacrificed=diceToBeSacrificed;
     }
 
     @Override

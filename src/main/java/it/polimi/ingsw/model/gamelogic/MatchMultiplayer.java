@@ -492,7 +492,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         return false;
     }
 
-
+    @Override
     public boolean placeDiceTool11(String name, int x, int y) {
         if (!isDiceAction()) {
             boolean result;
@@ -508,7 +508,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         return false;
     }
 
-
+    @Override
     public boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
@@ -528,7 +528,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-
+    @Override
     public boolean useToolCard2or3(int diceToBeSacrificed,int n, int startX, int startY, int finalX, int finalY, String name) {
         if (!isToolAction()) {
             getPlayer(name).setStartX1(startX);
@@ -550,6 +550,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    @Override
     public boolean useToolCard4(int diceToBeSacrificedd,int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
         if (!isToolAction()) {
             getPlayer(name).setStartX1(startX1);
@@ -575,6 +576,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    @Override
     public boolean useToolCard5(int diceToBeSacrificed,int diceChosen, int roundChosen, int diceChosenFromRound, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
@@ -607,7 +609,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-
+    @Override
     public boolean useToolCard6(int diceToBeSacrificed,int diceChosen, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
@@ -626,10 +628,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public boolean useToolCard7(String name) {
+    @Override
+    public boolean useToolCard7(int diceToBeSacrificed,String name) {
         if (!isToolAction()) {
-            boolean result;
-            result = getBoard().findAndUseToolCard(7, getPlayer(name), this);
+            boolean result = getBoard().findAndUseToolCard(7, getPlayer(name), this);
             reserveToBeUpdated(result);
             tokensToBeUpdated(result, name);
             setToolAction(result);
@@ -644,13 +646,12 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public boolean useToolCard8(String name) {
+    @Override
+    public boolean useToolCard8(int diceToBeSacrificed,String name) {
         if (!isToolAction()) {
-            boolean result;
-            result = getBoard().findAndUseToolCard(8, getPlayer(name), this);
+            boolean result = getBoard().findAndUseToolCard(8, getPlayer(name), this);
             tokensToBeUpdated(result, name);
             setToolAction(result);
-
             synchronized (getLock()) {
                 getLock().notifyAll();
             }
@@ -660,8 +661,8 @@ public class MatchMultiplayer extends Match implements Runnable {
             return false;
         }
     }
-
-    public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name) {
+    @Override
+    public boolean useToolCard9(int diceToBeSacrificed,int diceChosen, int finalX1, int finalY1, String name) {
         if (!isToolAction() && !isDiceAction()) {
             getPlayer(name).setDice(diceChosen);
             getPlayer(name).setFinalX1(finalX1);
@@ -683,7 +684,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public boolean useToolCard10(int diceChosen, String name) {
+    @Override
+    public boolean useToolCard10(int diceToBeSacrificed,int diceChosen, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(10, getPlayer(name), this);
@@ -699,8 +701,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         } else return false;
     }
 
-
-    public boolean useToolCard11(int diceChosen, String name) {
+    @Override
+    public boolean useToolCard11(int diceToBeSacrificed,int diceChosen, String name) {
         if (!(isToolAction() || isDiceAction())) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(11, getPlayer(name), this);
@@ -711,7 +713,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         } else return false;
     }
 
-    public boolean useToolCard12(int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
+    @Override
+    public boolean useToolCard12(int diceToBeSacrificed,int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
         if (!isToolAction()) {
             getPlayer(name).setRound(roundFromTrack);
             getPlayer(name).setDiceChosenFromRound(diceInRound);

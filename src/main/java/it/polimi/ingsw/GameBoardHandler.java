@@ -1534,7 +1534,7 @@ public class GameBoardHandler implements Initializable {
                         if (remoteController != null) {
                             try {
                                 if (diceChosen == 9) {
-                                    if (remoteController.useToolCard7(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+                                    if (remoteController.useToolCard7(-1,username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
                                         textArea.appendText("Carta utensile 7 utilizzata correttamente!\n");
                                     } else {
                                         textArea.appendText("Carta utensile 7 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1546,7 +1546,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard7Request(username, false));
+                            clientController.request(new UseToolCard7Request(-1,username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 7 utilizzata correttamente!\n");
                             } else {
@@ -1556,7 +1556,7 @@ public class GameBoardHandler implements Initializable {
                     } else {
                         if (remoteController != null) {
                             try {
-                                if (remoteController.useToolCard8(username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
+                                if (remoteController.useToolCard8(-1,username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
                                     textArea.appendText("Carta utensile 8 utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 8 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1565,7 +1565,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard8Request(username, false));
+                            clientController.request(new UseToolCard8Request(-1,username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 8 utilizzata correttamente!\n");
                             } else {
@@ -1613,7 +1613,7 @@ public class GameBoardHandler implements Initializable {
                     if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetReserveIndexForTools != 9) {
                         if (remoteController != null) {
                             try {
-                                if (remoteController.useToolCard9(targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false)) {
+                                if (remoteController.useToolCard9(-1,targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false)) {
                                     textArea.appendText("Carta utensile 9 utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 9 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1623,7 +1623,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard9Request(targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false));
+                            clientController.request(new UseToolCard9Request(-1,targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 9 utilizzata correttamente!\n");
                             } else {
@@ -1662,7 +1662,7 @@ public class GameBoardHandler implements Initializable {
                         if (remoteController != null) {
                             try {
 
-                                if (remoteController.useToolCard10(targetReserveIndexForTools, username, false)) {
+                                if (remoteController.useToolCard10(-1,targetReserveIndexForTools, username, false)) {
                                     textArea.appendText("Carta utensile 10 utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 10 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1673,7 +1673,7 @@ public class GameBoardHandler implements Initializable {
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard10Request(targetReserveIndexForTools, username, false));
+                            clientController.request(new UseToolCard10Request(-1,targetReserveIndexForTools, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 10 utilizzata correttamente!\n");
                             } else {
@@ -1712,7 +1712,7 @@ public class GameBoardHandler implements Initializable {
                         if (remoteController != null) {
                             try {
 
-                                if (remoteController.useToolCard11(targetReserveIndexForTools, username, false)) {
+                                if (remoteController.useToolCard11(-1,targetReserveIndexForTools, username, false)) {
                                     resetToolValues();
                                     createContext11bis();
 
@@ -1725,7 +1725,7 @@ public class GameBoardHandler implements Initializable {
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard11Request(targetReserveIndexForTools, username, false));
+                            clientController.request(new UseToolCard11Request(-1,targetReserveIndexForTools, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 resetToolValues();
                                 createContext11bis();
@@ -1822,7 +1822,7 @@ public class GameBoardHandler implements Initializable {
                             try {
 
 
-                                if (remoteController.useToolCard12(targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
+                                if (remoteController.useToolCard12(-1,targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
                                     textArea.appendText("Carta utensile 12 utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1832,7 +1832,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard12Request(targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
+                            clientController.request(new UseToolCard12Request(-1,targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 12 utilizzata correttamente per entrambi i dadi!\n");
                             } else {
@@ -1845,7 +1845,7 @@ public class GameBoardHandler implements Initializable {
                             try {
 
 
-                                if (remoteController.useToolCard12(targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false)) {
+                                if (remoteController.useToolCard12(-1,targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false)) {
                                     textArea.appendText("Carta utensile 12 utilizzata correttamente per un solo dado!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1855,7 +1855,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard12Request(targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false));
+                            clientController.request(new UseToolCard12Request(-1,targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 12 utilizzata correttamente per un solo dado!\n");
                             } else {

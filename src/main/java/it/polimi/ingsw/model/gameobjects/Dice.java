@@ -24,6 +24,7 @@ public class Dice implements Serializable{
 
     public void setValue(int value) {
         this.value = value;
+        System.out.println(value);
     }
 
     @Override
