@@ -585,7 +585,7 @@ public class GameBoardHandler implements Initializable {
         grid.setPrefSize(276, 261);
         grid.setHgap(15);
         grid.setVgap(15);
-        Insets insets = new Insets(4, 4, 4, 4);
+        Insets insets = new Insets(4, 0, 4, 14);
         grid.setPadding(insets);
         final int numCols = 3;
         final int numRows = 3;
