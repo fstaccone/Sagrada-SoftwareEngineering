@@ -447,7 +447,7 @@ public class Cli {
                                                     controllerRmi.chooseWindow(username, toolNumber1, single);
                                                     //SOCKET
                                                 else
-                                                    controllerSocket.request(new ChooseWindowRequest(username, toolNumber1, false));
+                                                    controllerSocket.request(new ChooseWindowRequest(username, toolNumber1, single));
                                                 printer.println("Carta scelta correttamente!");
                                                 printer.flush();
                                                 windowChosen = true;

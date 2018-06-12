@@ -23,7 +23,6 @@ public class MatchMultiplayer extends Match implements Runnable {
     private int matchId; // todo: controllare se serve
     private TurnManagerMultiplayer turnManager;
     private List<PlayerMultiplayer> players;
-    private PlayerMultiplayer winner;
     private Map<String, Integer> toolCardsPrices;
 
 
@@ -41,12 +40,12 @@ public class MatchMultiplayer extends Match implements Runnable {
         super(lobby);
         this.matchId = matchId;
         started = false;
-        toolCardsPrices=new HashMap<>();
+        toolCardsPrices = new HashMap<>();
         players = new ArrayList<>();
         remoteObservers = new HashMap<>();
         socketObservers = new HashMap<>();
         turnManager = new TurnManagerMultiplayer(this, turnTime);
-        decksContainer = new DecksContainer(clients.size(),-1);
+        decksContainer = new DecksContainer(clients.size(), -1);
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
         initializePlayers(clients, socketsOut);
@@ -139,6 +138,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     @Override
     public void calculateFinalScore() {
 
+        PlayerMultiplayer winner;
         List<String> rankingNames;
         List<Integer> rankingValues;
 
@@ -508,7 +508,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
 
-    public boolean useToolCard1(int diceToBeSacrificed,int diceChosen, String incrOrDecr, String name) {
+    public boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             getPlayer(name).setChoice(incrOrDecr);
@@ -607,8 +607,6 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
 
-
-
     public boolean useToolCard6(int diceChosen, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
@@ -702,7 +700,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
 
     public boolean useToolCard11(int diceChosen, String name) {
-        if (!(isToolAction()||isDiceAction())) {
+        if (!(isToolAction() || isDiceAction())) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(11, getPlayer(name), this);
             tokensToBeUpdated(result, name);

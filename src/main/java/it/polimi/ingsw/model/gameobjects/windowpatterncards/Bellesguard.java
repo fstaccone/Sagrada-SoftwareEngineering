@@ -10,7 +10,7 @@ public class Bellesguard extends WindowPatternCard{
         this.setDifficulty(3);
         this.getWindow()[0][0].setColorConstraint(Colors.BLUE);
         this.getWindow()[0][1].setValueConstraint(6);
-        this.getWindow()[0][3].setColorConstraint(Colors.YELLOW);
+        this.getWindow()[0][4].setColorConstraint(Colors.YELLOW);
         this.getWindow()[1][1].setValueConstraint(3);
         this.getWindow()[1][2].setColorConstraint(Colors.BLUE);;
         this.getWindow()[2][1].setValueConstraint(5);
