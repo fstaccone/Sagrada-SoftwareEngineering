@@ -81,8 +81,8 @@ public class Lobby {
         this.takenUsernames.remove(name);
     }
 
-    public synchronized void createSingleplayerMatch(String name, int difficulty,  ObjectOutputStream socketOut) {
-        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, difficulty, turnTime, this,socketOut));
+    public synchronized void createSingleplayerMatch(String name, int difficulty, ObjectOutputStream socketOut) {
+        singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, difficulty, turnTime, this, socketOut));
         matchCounter++;
 
         // debug
@@ -216,6 +216,7 @@ public class Lobby {
                 }
             }
 
+            assert p != null;
             if (p.isMyTurn()) {
                 p.setMyTurn(false);
                 multiplayerMatches.get(name).goThrough();
@@ -408,17 +409,17 @@ public class Lobby {
         return remoteObservers;
     }
 
-    // check if there is a still alive match in which the player must be put
+    // check if there is a still alive match in which the player must be put todo: potrebbe non servire più
     public void addPlayer(String name) {
-        if (multiplayerMatches.get(name) != null) {
+        /*if (multiplayerMatches.get(name) != null) {
             for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
                 if (p.getName().equals(name)) {
                     p.setStatus(ConnectionStatus.CONNECTED);
                 }
             }
-        } else {
+        } else {*/
             addToWaitingPlayers(name);
-        }
+       // }
     }
 
     public ConnectionStatus checkName(String name) {
