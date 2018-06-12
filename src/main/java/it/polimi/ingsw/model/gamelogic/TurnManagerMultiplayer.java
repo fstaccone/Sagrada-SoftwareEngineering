@@ -9,6 +9,7 @@ import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.stream.Collectors;
@@ -83,19 +84,18 @@ public class TurnManagerMultiplayer implements Runnable {
         String toolCards = match.getDecksContainer().getToolCardDeck().getPickedCards().toString();
         String publicCards = match.getDecksContainer().getPublicObjectiveCardDeck().getPickedCards().toString();
         List<String> names = match.getPlayers().stream().map(PlayerMultiplayer::getName).collect(Collectors.toList());
-        List<String> privateCards = match.getDecksContainer().getPrivateObjectiveCardDeck().getPickedCards().stream().map(PrivateObjectiveCard::toString).collect(Collectors.toList());
-
-
         // Notification RMI and Socket
         for (PlayerMultiplayer p : match.getPlayers()) {
+            List<String> privateCard= new ArrayList<>();
+            privateCard.add(p.getPrivateObjectiveCard().toString());
             if (getObserverRmi(p) != null) {
                 try {
-                    getObserverRmi(p).onInitialization(toolCards, publicCards, privateCards, names);
+                    getObserverRmi(p).onInitialization(toolCards, publicCards, privateCard, names);
                 } catch (RemoteException e) {
                     match.getLobby().disconnect(p.getName());
                 }
             } else if (match.getSocketObservers().get(p) != null) {
-                getObserverSocket(p, new InitializationResponse(toolCards, publicCards, privateCards, names));
+                getObserverSocket(p, new InitializationResponse(toolCards, publicCards, privateCard, names));
             }
         }
     }

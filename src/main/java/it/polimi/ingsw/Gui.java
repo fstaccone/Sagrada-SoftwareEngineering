@@ -35,7 +35,7 @@ public class Gui {
     private String track;
     private List<String> toolCardsList;
     private List<String> dicesList;
-    private List<String> privateCard;
+    private List<String> privateCards;
     private List<String> publicCardsList;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
@@ -54,7 +54,7 @@ public class Gui {
         this.username = username;
         this.controllerRmi = controllerRmi;
         this.controllerSocket = controllerSocket;
-        privateCard = new ArrayList<>();
+        privateCards = new ArrayList<>();
         myTurn = false;
         windowChosen = false;
         this.single = single;
@@ -200,17 +200,14 @@ public class Gui {
     }
 
     public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
-        String temp;
-
         reconnection = true;
         this.myTokens = myTokens;
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
 
         for (String c : privateCards) {
-            this.privateCard.add(c.substring(7, c.length() - 1).toLowerCase());
+            this.privateCards.add(c.substring(7, c.length() - 1).toLowerCase());
         }
-
         track = roundTrack;
         onReserve(reserve);
         otherFavorTokensMap = otherTokens;
@@ -269,7 +266,7 @@ public class Gui {
 
         for (String c : privateCards) {
             if (c != null) {
-                this.privateCard.add(c.substring(7, c.length() - 1).toLowerCase());
+                this.privateCards.add(c.substring(7, c.length() - 1).toLowerCase());
             }
         }
 
@@ -310,7 +307,7 @@ public class Gui {
     }
 
     public void onWindowChoice(List<String> windows) {
-        chooseCardHandler.setPrivateCard(privateCard.get(0));
+        chooseCardHandler.setPrivateCard(privateCards.get(0));
         chooseCardHandler.setWindows(windows);
     }
 
@@ -348,7 +345,7 @@ public class Gui {
         }
 
         gameBoardHandler.setToolCards(toolCardsList);
-        gameBoardHandler.setPrivateCard(privateCard.get(0)); // todo: se single player?
+        gameBoardHandler.setPrivateCard(privateCards.get(0)); // todo: se single player?
         gameBoardHandler.setPublicCards(publicCardsList);
         gameBoardHandler.setReserve(dicesList);
         gameBoardHandler.onRoundTrack(track);

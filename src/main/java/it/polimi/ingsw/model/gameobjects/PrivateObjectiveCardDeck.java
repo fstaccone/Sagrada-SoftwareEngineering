@@ -37,7 +37,6 @@ public class PrivateObjectiveCardDeck extends Deck<PrivateObjectiveCard> {
 
             int privateIndex = randomGenerator.nextInt(deck.size());
             String privateName = deck.get(privateIndex);
-
             switch (privateName) {
 
                 case "RED":
