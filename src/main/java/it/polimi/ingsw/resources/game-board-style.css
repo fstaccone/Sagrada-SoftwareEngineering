@@ -3,6 +3,12 @@
     -fx-background-size: cover;
 }
 
+/* Per prova in game-board-single */
+.sampleCard{
+    -fx-background-image: url("private_objective_cards/blue.png");
+    -fx-background-size: cover;
+}
+
 .schemeCardChoice:hover{
         -fx-scale-x: 1.10;
         -fx-scale-y: 1.10;
