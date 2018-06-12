@@ -185,6 +185,8 @@ public class Cli {
             printer.println("\nOra è il tuo turno! Inserisci un comando:                            ~ ['h' for help]\n");
             tool11DiceToBePlaced = false;
             diceValueToBeSet = false;
+            diceChosenToBeSacrificed=9;
+            diceChosen=9;
         } else
             printer.println("\nNon è più il tuo turno! (h for help)");
         printer.flush();

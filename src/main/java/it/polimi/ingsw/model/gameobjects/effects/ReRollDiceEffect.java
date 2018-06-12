@@ -30,6 +30,7 @@ public class ReRollDiceEffect implements Effect {
             if (sacrificeDice.getColor().equals(Colors.VIOLET)&&player.getDice() < match.getBoard().getReserve().getDices().size()) {
                 Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
                 dice.setValue(newValue);
+                match.getBoard().getReserve().getDices().remove(sacrificeDice);
                 return true;
             } else return false;
         }

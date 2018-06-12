@@ -249,6 +249,8 @@ public class MatchSingleplayer extends Match implements Runnable {
             getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
             boolean result = getBoard().findAndUseToolCard(n, getPlayer(), this);
             if(result) getPlayer().setDiceToBeSacrificed(9);
+            reserveToBeUpdated(result);
+            schemeCardToBeUpdated(result);
             setToolAction(result);
             synchronized (getLock()) {
                 getLock().notifyAll();
@@ -273,6 +275,8 @@ public class MatchSingleplayer extends Match implements Runnable {
             boolean result = getBoard().findAndUseToolCard(4, getPlayer(), this);
             setToolAction(result);
             if(result) getPlayer().setDiceToBeSacrificed(9);
+            reserveToBeUpdated(result);
+            schemeCardToBeUpdated(result);
             synchronized (getLock()) {
                 getLock().notifyAll();
             }
