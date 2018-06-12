@@ -12,7 +12,7 @@ public class SocketCli implements Serializable {
     private transient ClientController clientController;
 
     public SocketCli(String username, ClientController clientController, boolean single) {
-        this.cli = new Cli(username, null, clientController, single);
+        cli = new Cli(username, null, clientController, single);
         clientController.setSocketCli(this);
         this.clientController = clientController;
         cli.printWelcome();

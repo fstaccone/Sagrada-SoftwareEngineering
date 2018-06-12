@@ -1300,7 +1300,7 @@ public class GameBoardHandler implements Initializable {
                                 System.out.println(finalCoordinateX1);
                                 System.out.println(finalCoordinateY1);
 
-                                if (remoteController.useToolCard2or3(n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false)) {
+                                if (remoteController.useToolCard2or3(-1,n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false)) {
                                     textArea.appendText("Carta utensile " + n + " utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1310,7 +1310,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard2or3Request(n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
+                            clientController.request(new UseToolCard2or3Request(-1,n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile " + n + " utilizzata correttamente!\n");
                             } else {

@@ -101,49 +101,49 @@ public class ToolCommand {
 
     }
 
-    public boolean command2or3(int n,int startX, int startY, int finalX, int finalY){
+    public boolean command2or3(int diceToBeSacrificed,int n,int startX, int startY, int finalX, int finalY){
         //RMI
         if(controller!=null) {
             try {
-                return controller.useToolCard2or3(n,startX, startY, finalX, finalY, name, single);
+                return controller.useToolCard2or3(diceToBeSacrificed,n,startX, startY, finalX, finalY, name, single);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard2or3Request(n,startX, startY, finalX, finalY, name, single));
+            clientController.request(new UseToolCard2or3Request(diceToBeSacrificed,n,startX, startY, finalX, finalY, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
     }
 
-    public boolean command4(int startX1, int startY1, int finalX1, int finalY1,int startX2, int startY2, int finalX2, int finalY2){
+    public boolean command4(int diceToBeSacrificed,int startX1, int startY1, int finalX1, int finalY1,int startX2, int startY2, int finalX2, int finalY2){
         if(controller!=null) {
             try {
-                return controller.useToolCard4(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single);
+                return controller.useToolCard4(diceToBeSacrificed,startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard4Request(startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single));
+            clientController.request(new UseToolCard4Request(diceToBeSacrificed,startX1, startY1, finalX1, finalY1,startX2, startY2, finalX2, finalY2, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
     }
-    public boolean command5(int diceFromReserve, int roundFromTrack, int diceInRound){
+    public boolean command5(int diceToBeSacrificed,int diceFromReserve, int roundFromTrack, int diceInRound){
         if(controller!=null) {
             try {
-                return controller.useToolCard5(diceFromReserve,roundFromTrack,diceInRound, name, single);
+                return controller.useToolCard5( diceToBeSacrificed,diceFromReserve,roundFromTrack,diceInRound, name, single);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard5Request(diceFromReserve,roundFromTrack,diceInRound, name, single));
+            clientController.request(new UseToolCard5Request(diceToBeSacrificed,diceFromReserve,roundFromTrack,diceInRound, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;

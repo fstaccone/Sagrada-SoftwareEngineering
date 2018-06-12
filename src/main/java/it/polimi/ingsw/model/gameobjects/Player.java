@@ -10,7 +10,7 @@ public abstract class Player {
     private int pointsByPrivateObjective;
     private boolean schemeCardSet;
     private int dice;
-    private String choise;
+    private String choice;
     private Dice diceFromBag;
     private int roundChosen;
     private int diceChosenFromRound;
@@ -114,11 +114,11 @@ public abstract class Player {
     }
 
     public String getChoice() {
-        return choise;
+        return choice;
     }
 
     public void setChoice(String choise) {
-        this.choise = choise;
+        this.choice = choise;
     }
 
     public int getRound() {
