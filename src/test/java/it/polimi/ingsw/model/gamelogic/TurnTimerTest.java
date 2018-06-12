@@ -14,7 +14,7 @@ import java.util.Map;
 public class TurnTimerTest {
 
     @Test
-    public void TurnTimer(){
+    public void TurnTimer() {
         int matchId = 0;
         List<String> clients = new ArrayList<>();
         clients.add("client1");
@@ -23,7 +23,7 @@ public class TurnTimerTest {
         Map<String, ObjectOutputStream> socketsOut = new HashMap<>();
         Lobby lobby = new Lobby(10, turnTime);
         MatchMultiplayer matchMultiplayer = new MatchMultiplayer(matchId, clients, turnTime, socketsOut, lobby);
-        PlayerMultiplayer playerMultiplayer = new PlayerMultiplayer("CowboyBebop", matchMultiplayer);
+        PlayerMultiplayer playerMultiplayer = new PlayerMultiplayer("CowboyBebop");
         TurnTimer turnTimer = new TurnTimer(matchMultiplayer, playerMultiplayer);
         Assert.assertNotNull(turnTimer);
     }

@@ -1,15 +1,19 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
+import it.polimi.ingsw.socket.responses.Response;
+import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 
+import java.rmi.RemoteException;
 import java.util.Random;
 
 public class ReRollDiceEffect implements Effect {
 
-    private int price;
+    private Integer price;
 
     public ReRollDiceEffect() {
         price = 1;
@@ -19,6 +23,7 @@ public class ReRollDiceEffect implements Effect {
     public boolean applyEffect(Player player, Match match) {
 
         PlayerMultiplayer p = (PlayerMultiplayer) player;
+        MatchMultiplayer m=(MatchMultiplayer) match;
 
         Random rand = new Random();
         int newValue = rand.nextInt(6)+1;
@@ -28,7 +33,26 @@ public class ReRollDiceEffect implements Effect {
                 if (dice != null) {//PROBABILMENTE INUTILE
                     dice.setValue(newValue);
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                    price = 2;
+
+                    if(price.equals(1)) {
+                        //NOTIFY TO OTHERS
+                        Response response = new ToolCardUsedByOthersResponse(p.getName(), 6);
+                        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                            if (!otherPlayer.getName().equals(p.getName())) {
+                                if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                    try {
+                                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 6);
+                                    } catch (RemoteException e) {
+                                        m.getLobby().disconnect(otherPlayer.getName());
+                                        System.out.println("Player " + p.getName() + " disconnected!");
+                                    }
+                                }
+                                m.notifyToSocketClient(otherPlayer, response);
+                            }
+                        }
+                        price = 2;
+                        m.getToolCardsPrices().put("Carta utensile 6: ",price);
+                    }
                     return true;
                 } else return false;
             } else return false;

@@ -92,24 +92,26 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(WaitingPlayersResponse response) {
-        if (loginHandler.isCli())
-            loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-        else
-            loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+        if (loginHandler.isCli()) {
+            loginHandler.getWaitingRoomCli().onWaitingPlayers(response.getWaitingPlayers());
+        } else {
+            loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.getWaitingPlayers());
+        }
 
+        // todo: cancellare se non serve e rimuovere anche unique dalla risposta
         //if (response.name != null) {
-            //if (!response.unique) {
-             //   if (loginHandler.isCli())
-             //       loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-             //   else
-              //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-            //} else {
-              //  if (loginHandler.isCli())
-              //      loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-              //  else
-              //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-          //  }
-       // }
+        //if (!response.unique) {
+        //   if (loginHandler.isCli())
+        //       loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+        //   else
+        //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+        //} else {
+        //  if (loginHandler.isCli())
+        //      loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
+        //  else
+        //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
+        //  }
+        // }
     }
 
     @Override
@@ -143,7 +145,7 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(GameStartedResponse response) {
-        if(socketCli != null){
+        if (socketCli != null) {
             socketCli.getCli().onGameStarted(response.getNames());
         } else {
             socketGui.getGui().onGameStarted(response.isWindowChosen(), response.getNames());
@@ -153,8 +155,8 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(YourTurnResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onYourTurn(response.myTurn, response.string);
-        } else socketGui.getGui().onYourTurn(response.myTurn, response.string);
+            socketCli.getCli().onYourTurn(response.isMyTurn(), response.getName(), response.getRound(), response.getTurn());
+        } else socketGui.getGui().onYourTurn(response.isMyTurn(), response.getName(), response.getRound(), response.getTurn());
     }
 
     @Override
@@ -176,7 +178,7 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(AfterWindowChoiseResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onAfterWindowChoise();
+            socketCli.getCli().onAfterWindowChoice();
         } else
             socketGui.getGui().onAfterWindowChoice();
     }
@@ -276,23 +278,43 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(AfterReconnectionResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen);
+            socketCli.getCli().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen, response.toolcardsPrices);
         } else
-            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen);
+            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen, response.toolcardsPrices);
     }
 
     @Override
     public void handle(ProposeWindowResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onWindowChoise(response.list);
+            socketCli.getCli().onWindowChoice(response.list);
         } else socketGui.getGui().onWindowChoice(response.list);
     }
 
+    @Override
     public void handle(CheckConnectionResponse response) { //DA SISTEMARE ANCHE CON GUI
         if (loginHandler.isCli())
             loginHandler.getWaitingRoomCli().onCheckConnection();
-        else
+        else {
             loginHandler.getWaitingScreenHandler().onCheckConnection();
+        }
+    }
+
+    @Override
+    public void handle(ToolCardUsedByOthersResponse response) {
+        if (socketCli != null) {
+            socketCli.getCli().onToolCardUsedByOthers(response.name, response.toolCardNumber);
+        } else {
+            socketGui.getGui().onToolCardUsedByOthers(response.name, response.toolCardNumber);
+        }
+    }
+
+    @Override
+    public void handle(GameEndSingleResponse response) {
+        if (socketCli != null) {
+            socketCli.getCli().onGameEndSingle(response.getTarget(), response.getPoints());
+        } else {
+            //socketGui.getGui().onGameEndSingle(response.getTarget(), response.getPoints());
+        }
     }
 
     public ObjectInputStream getIn() {

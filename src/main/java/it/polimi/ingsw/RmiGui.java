@@ -15,12 +15,14 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private RemoteController controller;
     /* it is useful to notify the client the state of the game after the reconnection */
     private boolean reconnection;
+    private boolean single;
 
-    public RmiGui(Stage fromLogin, String username, RemoteController controller, boolean single) throws RemoteException {
+    public RmiGui(Stage fromLogin, String username, RemoteController controller, boolean singleplayer) throws RemoteException {
         super();
-        this.gui = new Gui(fromLogin, username, controller, null, single);
+        this.gui = new Gui(fromLogin, username, controller, null, singleplayer);
         this.controller = controller;
         reconnection = false;
+        this.single = single;
     }
 
     public List<String> getPlayers() {
@@ -29,7 +31,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     public void launch() {
         try {
-            controller.observeMatch(gui.getUsername(), this, reconnection);
+            controller.observeMatch(gui.getUsername(), this, single, reconnection);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -42,8 +44,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onYourTurn(boolean isMyTurn, String string) {
-        gui.onYourTurn(isMyTurn, string);
+    public void onYourTurn(boolean isMyTurn, String string, int round, int turn) {
+        gui.onYourTurn(isMyTurn, string, round, turn);
     }
 
     @Override
@@ -52,13 +54,23 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onWindowChoise(List<String> windows) {
+    public void onWindowChoice(List<String> windows) {
         gui.onWindowChoice(windows);
     }
 
     @Override
-    public void onAfterWindowChoise() {
+    public void onAfterWindowChoice() {
         gui.onAfterWindowChoice();
+    }
+
+    @Override
+    public void onToolCardUsedByOthers(String name, int toolNumber) {
+        gui.onToolCardUsedByOthers(name, toolNumber);
+    }
+
+    @Override
+    public void onGameEndSingle(int goal, int points) {
+
     }
 
     @Override
@@ -87,8 +99,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
-        gui.onInitialization(toolcards, publicCards, privateCard, players);
+    public void onInitialization(String toolcards, String publicCards, List<String> privateCards, List<String> players) {
+        gui.onInitialization(toolcards, publicCards, privateCards, players);
     }
 
     @Override
@@ -117,8 +129,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
-        gui.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+        gui.onAfterReconnection(toolcards, publicCards, privateCards, reserve, roundTrack, myTokens, schemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolcardsPrices);
     }
 
     @Override

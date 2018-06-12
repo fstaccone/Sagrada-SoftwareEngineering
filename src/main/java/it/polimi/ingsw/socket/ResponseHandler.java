@@ -56,4 +56,8 @@ public interface ResponseHandler {
     void handle(RoundTrackResponse response);
 
     void handle(GameStartedResponse response);
+
+    void handle(ToolCardUsedByOthersResponse response);
+
+    void handle(GameEndSingleResponse response);
 }

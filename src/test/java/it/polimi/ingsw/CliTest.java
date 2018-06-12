@@ -1,9 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.AuroraSagradis;
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.FulgorDelCielo;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.Industria;
 import it.polimi.ingsw.socket.ClientController;
 import org.junit.Assert;
@@ -19,10 +17,10 @@ public class CliTest {
 
     @Test
     public void Cli() throws IOException {
-        Lobby lobby = new Lobby(10,10);
+        Lobby lobby = new Lobby(10, 10);
         Controller controller = new Controller(lobby);
         ClientController clientController = mock(ClientController.class);
-        Cli cli = new Cli("username", controller, clientController,false);
+        Cli cli = new Cli("username", controller, clientController, false);
         Assert.assertNotNull(cli);
         cli.printWelcome();
         List<String> names = new ArrayList<>();
@@ -37,12 +35,16 @@ public class CliTest {
         List<String> windows = new ArrayList<>();
         windows.add(new AuroraSagradis().toString());
         windows.add(new Industria().toString());
-        cli.onWindowChoise(windows);
-        cli.onYourTurn(true, "[1_blue,2_blue]");
-        cli.onAfterWindowChoise();
+        cli.onWindowChoice(windows);
+        cli.onYourTurn(true, "[1_blue,2_blue]", 1, 2);
+        cli.onAfterWindowChoice();
         cli.onMyWindow(new Industria());
         cli.onOtherTurn("player2");
-        cli.onInitialization("[tool0:AAAA,tool1:BBBB,tool2:CCCC]", "[pc1,pc2,pc3]", "[priv1]", names);
+
+        List<String> cards = new ArrayList<>();
+        cards.add("[priv1]");
+
+        cli.onInitialization("[tool0:AAAA,tool1:BBBB,tool2:CCCC]", "[pc1,pc2,pc3]", cards, names);
         cli.onPlayerReconnection("player2");
         cli.showFavorTokens();
         cli.showMySchemeCard();

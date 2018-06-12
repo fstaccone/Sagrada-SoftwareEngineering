@@ -4,19 +4,17 @@ import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.MatchObserver;
-import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.*;
 import it.polimi.ingsw.socket.responses.*;
 
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Controller extends UnicastRemoteObject implements RemoteController, RequestHandler {
 
@@ -28,10 +26,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         super();
         this.lobby = lobby;
         this.socketHandlers = new ArrayList<>();
-        // ...
     }
 
-    // da gestire il caso di riconnessione
     @Override
     public ConnectionStatus checkName(String name) {
         return lobby.checkName(name);
@@ -39,9 +35,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
 
     @Override
-    public void createMatch(String name) {
+    public void createMatch(String name, int difficulty, ObjectOutputStream outputStream) {
         this.lobby.addUsername(name);
-        this.lobby.createSingleplayerMatch(name);
+        this.lobby.createSingleplayerMatch(name, difficulty, outputStream);
     }
 
     @Override
@@ -68,19 +64,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean placeDice(int index, int x, int y, String name, boolean isSingle) {
         if (isSingle) {
-            lobby.getSingleplayerMatches().get(name).setDiceAction(true);
-            // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
+            return lobby.getSingleplayerMatches().get(name).placeDice(name, index, x, y);
         } else {
             return lobby.getMultiplayerMatches().get(name).placeDice(name, index, x, y);
         }
-        return false;
     }
 
     @Override
     public boolean placeDiceTool11(int x, int y, String name, boolean isSingle) {
         if (isSingle) {
-            lobby.getSingleplayerMatches().get(name).setDiceAction(true);
-            // todo: gestire la chiamata all'interno del match singleplayer con TurnManagerSingleplayer
+            lobby.getSingleplayerMatches().get(name).setDiceAction(true); // perchè?
         } else {
             return lobby.getMultiplayerMatches().get(name).placeDiceTool11(name, x, y);
         }
@@ -99,7 +92,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void quitGame(String name, boolean isSingle) {
         if (isSingle) {
-            lobby.removeMatchSingleplayer(name);
+            lobby.getSingleplayerMatches().get(name).terminateMatch();
         } else {
             lobby.disconnect(name);
         }
@@ -133,19 +126,18 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     }
 
     @Override
-    public boolean useToolCard1(int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
+    public boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String IncrOrDecr, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            return lobby.getSingleplayerMatches().get(name).useToolCard1(diceToBeSacrificed,diceChosen, IncrOrDecr, name);
         } else {
-            return lobby.getMultiplayerMatches().get(name).useToolCard1(diceChosen, IncrOrDecr, name);
+            return lobby.getMultiplayerMatches().get(name).useToolCard1(diceToBeSacrificed,diceChosen, IncrOrDecr, name);
         }
-        return false;
     }
 
     @Override
     public boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard2or3(n, startX, startY, finalX, finalY, name);
         }
@@ -155,7 +147,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard4(int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard4(startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
         }
@@ -165,7 +157,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard5(int diceChosen, int roundChosen, int diceChosenFromRound, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard5(diceChosen, roundChosen, diceChosenFromRound, name);
         }
@@ -176,7 +168,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard6(int diceChosen, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard6(diceChosen, name);
         }
@@ -186,7 +178,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard7(String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard7(name);
         }
@@ -196,7 +188,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard8(String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard8(name);
         }
@@ -206,7 +198,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard9(int diceChosen, int finalX1, int finalY1, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard9(diceChosen, finalX1, finalY1, name);
         }
@@ -216,7 +208,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard10(int diceChosen, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard10(diceChosen, name);
         }
@@ -226,7 +218,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard11(int diceChosen, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard11(diceChosen, name);
         }
@@ -236,7 +228,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public boolean useToolCard12(int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) {
         if (isSingle) {
-            //DA FARE
+            //return lobby.getSingleplayerMatches().get(name).useToolCard
         } else {
             return lobby.getMultiplayerMatches().get(name).useToolCard12(roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name);
         }
@@ -251,7 +243,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(CreateMatchRequest request) {
-        createMatch(request.username);
+        createMatch(request.username, request.difficulty, socketHandlers.remove(0).getOut());
         return null;
     }
 
@@ -295,7 +287,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(UseToolCard1Request request) {
-        boolean effectApplied = useToolCard1(request.diceChosen, request.IncrOrDecr, request.username, request.isSingle);
+        boolean effectApplied = useToolCard1(request.diceToBeSacrificed,request.diceChosen, request.IncrOrDecr, request.username, request.isSingle);
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
@@ -388,8 +380,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.observeLobbyRemote(name, lobbyObserver);
     }
 
-    public void observeMatch(String username, MatchObserver observer, boolean reconnection) {
-        lobby.observeMatchRemote(username, observer);
+    public void observeMatch(String username, MatchObserver observer, boolean single, boolean reconnection) {
+        lobby.observeMatchRemote(username, observer, single);
 
         if (reconnection) {
             lobby.transferAllData(username);

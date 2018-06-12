@@ -14,11 +14,12 @@ public class ColoredDiagonalsTest {
     private PublicObjectiveCard publicCard;
     private Player player;
     private MatchMultiplayer match;
+
     @Before
     public void Before() {
         match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 
@@ -52,7 +53,7 @@ public class ColoredDiagonalsTest {
         player.getSchemeCard().putDice(player.getPickedDice(), 3, 2);
         player.getSchemeCard().putDice(player.getPickedDice(), 2, 3);
         player.setPickedDice(dice3);
-        player.getSchemeCard().putDice(player.getPickedDice(),2,2);
+        player.getSchemeCard().putDice(player.getPickedDice(), 2, 2);
         player.setPickedDice(dice1);
         player.getSchemeCard().putDice(player.getPickedDice(), 2, 4);
         player.getSchemeCard().putDice(player.getPickedDice(), 3, 3);
@@ -67,6 +68,6 @@ public class ColoredDiagonalsTest {
     public void checkPoints() {
         publicCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(11,player.getPoints());
+        Assert.assertEquals(11, player.getPoints());
     }
 }

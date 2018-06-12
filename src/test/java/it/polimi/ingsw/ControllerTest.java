@@ -42,7 +42,7 @@ public class ControllerTest {
     public void createMatch() throws RemoteException {
         Lobby lobby = new Lobby(10, 10);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona");
+        controller.createMatch("Ancona",1,null);
         Assert.assertEquals(0, lobby.getSingleplayerMatches().get("Ancona").getMatchId());
     }
 
@@ -50,7 +50,7 @@ public class ControllerTest {
     public void goThrough() throws RemoteException {
         Lobby lobby = new Lobby(10, 10);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona");
+        controller.createMatch("Ancona",1,null);
         controller.goThrough("Ancona", true);
         Assert.assertEquals(true, lobby.getSingleplayerMatches().get("Ancona").isEndsTurn());
         controller.addPlayer("Bovalino");

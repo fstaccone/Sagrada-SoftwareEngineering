@@ -388,7 +388,7 @@ public class GameBoardHandler implements Initializable {
                     if (tempY == null) tempY = 0;
                     int coordinateX = tempX;
                     int coordinateY = tempY;
-                    textArea.appendText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
+                    textArea.appendText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY +"\n");
                     if (remoteController != null) {
                         try {
                             if (remoteController.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
@@ -406,6 +406,7 @@ public class GameBoardHandler implements Initializable {
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
+                            Thread.currentThread().interrupt();
                         }
                         if (clientController.isDicePlaced()) {
                             clientController.setDicePlaced(false);//to reset the value
@@ -897,12 +898,14 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void setOtherSchemeCards(Pane pane, WindowPatternCard window) {
-        String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-        String imgURL = WINDOW_PATTERN_CARDS_PATH + s + ".png";
-        BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
-                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
-        pane.setBackground(new Background(myBI));
+        if(window!=null) {//DA CONTROLLARE
+            String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+            String imgURL = WINDOW_PATTERN_CARDS_PATH + s + ".png";
+            BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
+                    BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                    BackgroundSize.DEFAULT);
+            pane.setBackground(new Background(myBI));
+        }
         if (pane.getChildren() != null) {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
@@ -1228,7 +1231,7 @@ public class GameBoardHandler implements Initializable {
                         if (remoteController != null) {
                             try {
 
-                                if (remoteController.useToolCard1(targetReserveIndexForTools, incrOrDecr, username, false)) {
+                                if (remoteController.useToolCard1(-1,targetReserveIndexForTools, incrOrDecr, username, false)) {
                                     textArea.appendText("Carta utensile 1 utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 1 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1239,7 +1242,7 @@ public class GameBoardHandler implements Initializable {
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard1Request(targetReserveIndexForTools, incrOrDecr, username, false));
+                            clientController.request(new UseToolCard1Request(-1,targetReserveIndexForTools, incrOrDecr, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 1 utilizzata correttamente!\n");
                             } else {
@@ -1883,10 +1886,13 @@ public class GameBoardHandler implements Initializable {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
                 color = clientController.getDiceColor();
             }
-            textArea.appendText("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!\n");
+            if(color!=null) {
+                textArea.appendText("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!\n");
+            }
             imageView1 = new ImageView();
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
@@ -1949,6 +1955,7 @@ public class GameBoardHandler implements Initializable {
                                 Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
+                                Thread.currentThread().interrupt();
                             }
                             if (clientController.isDicePlaced()) {
                                 clientController.setDicePlaced(false);//to reset the value
@@ -1966,9 +1973,10 @@ public class GameBoardHandler implements Initializable {
         }
         private boolean waitForToolEffectAppliedResponse() {
             try {
-                Thread.sleep(1000); //DA VERIFICARE
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
 
             if (clientController.isEffectApplied()) {

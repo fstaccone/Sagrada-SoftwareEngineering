@@ -22,6 +22,7 @@ public class ExchangeDiceRoundTrackTest {
     private MatchMultiplayer match;
     private RoundTrack roundTrack;
     private Reserve reserve;
+
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
@@ -35,7 +36,7 @@ public class ExchangeDiceRoundTrackTest {
         d.setValue(4);
         list.add(d);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new AuroraSagradis();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
@@ -55,7 +56,7 @@ public class ExchangeDiceRoundTrackTest {
         Dice d11 = new Dice(Colors.BLUE);
         d11.setValue(2);
         list1.add(d11);
-        roundTrack.putDices(list0,0);
+        roundTrack.putDices(list0, 0);
         roundTrack.putDices(list1, 1);
         roundTrack.showRoundTrack();
         when(match.getBoard()).thenReturn(board);
@@ -66,15 +67,16 @@ public class ExchangeDiceRoundTrackTest {
         ByteArrayInputStream in = new ByteArrayInputStream("2 0".getBytes());
         System.setIn(in);
     }
+
     @Test
-    public void checkDice(){
+    public void checkDice() {
         System.out.println(player.getPickedDice().toString());
         player.setNumFavorTokens(4);
         toolCard.useCard(player, match);
         roundTrack.showRoundTrack();
         player.setPickedDice(reserve.getDices().get(player.getDice()));
         System.out.println(player.getPickedDice().toString());
-        Assert.assertEquals(5,player.getPickedDice().getValue());
+        Assert.assertEquals(5, player.getPickedDice().getValue());
         Assert.assertEquals(Colors.YELLOW, player.getPickedDice().getColor());
     }
 }

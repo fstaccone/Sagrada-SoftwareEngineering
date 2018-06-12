@@ -28,14 +28,14 @@ public class Cli {
     private List<String> toolCardsList;
     private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
-    private String privateCard;
+    private List<String> privateCard;
     private WindowPatternCard mySchemeCard;
 
     private int myFavorTokens;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private String roundTrack;
-
+    private int diceChosenToBeSacrificed=9;
     private int diceChosen = 9;
     private int coordinateX;
     private int coordinateY;
@@ -67,20 +67,20 @@ public class Cli {
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ , .&.*.%&.@ @ .&.., @@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.&..#.%.@@,@/&..#..&.@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
-            "\nWelcome to this fantastic game, ";
+            "\nBenvenuto in questo fantastico gioco, ";
 
     private static final String RULES = ("Da decidere se in italiano o in inglese");
 
-    private static final String HELP_IN_TURN = (
-            "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
+    private static final String HELP_IN_TURN_MULTI = (
+                    "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
                     "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
                     "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
                     "\n 'pass'                                      to pass the turn to the next player " +
                     "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
                     "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
 
-    private static final String HELP_GENERAL = (
-            "\n 'h'                                         to show game available commands" +
+    private static final String HELP_GENERAL_MULTI = (
+                    "\n 'h'                                         to show game available commands" +
                     "\n 'q'                                         to quit the game" +
                     "\n 'r'                                         to show game rules" +
                     "\n 'sp'                                        to show all opponents' names" +
@@ -90,6 +90,22 @@ public class Cli {
                     "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
                     "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
                     "\n 'toolcards'                                 to show the list of available tool cards \n");
+
+    private static final String HELP_SINGLE = (
+                    "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
+                    "\n 'cdr' + 'number'                            to choose the dice from the Reserve that you want to place on the ToolCard" +
+                    "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
+                    "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
+                    "\n 'pass'                                      to pass the turn" +
+                    "\n 'private'                                   to show your private objective cards" +
+                    "\n 'public'                                    to show public objective cards" +
+                    "\n 'q'                                         to quit the game" +
+                    "\n 'r'                                         to show game rules" +
+                    "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
+                    "\n 'track'                                     to show current state of the round track" +
+                    "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
+                    "\n 'toolcards'                                 to show the list of available tool cards \n" +
+                    "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
 
     private static final String SYNTAX_ERROR = (
             "\nWARNING: Invalid syntax request.\n");
@@ -109,6 +125,7 @@ public class Cli {
         myTurn = false;
         new KeyboardHandler().start();
         this.single = single;
+        privateCard = new ArrayList<>();
         toolCommands = new ArrayList<>();
         toolCardsList = new ArrayList<>();
         publicCardsList = new ArrayList<>();
@@ -118,8 +135,7 @@ public class Cli {
     }
 
     public void printWelcome() {
-        printer.println(WELCOME + username.toUpperCase() + "!\n");
-        printer.flush();
+        printer.println(WELCOME + username + "!\n");
     }
 
     public String getUsername() {
@@ -138,19 +154,19 @@ public class Cli {
         this.otherSchemeCardsMap.put(name, scheme);
     }
 
-    public void onGameStarted(List<String> names){
-        playersNames = names;
+    public void onGameStarted(List<String> names) {
 
-        printer.println("Your match starts now! You are playing SAGRADA against:");
-        printer.flush();
-
-        printNames();
+        if (names != null) {
+            playersNames = names;
+            printer.println("Stai giocando contro:\n");
+            printNames();
+        }
     }
 
-    private void printNames(){
+    private void printNames() {
         for (String name : playersNames) {
             if (!name.equals(username)) {
-                printer.println("-" + name.toUpperCase());
+                printer.println("-" + name);
             }
         }
         printer.println();
@@ -161,16 +177,16 @@ public class Cli {
         this.roundTrack = roundTrack;
     }
 
-    public void onYourTurn(boolean yourTurn, String string) {
+    public void onYourTurn(boolean yourTurn, String string, int round, int turn) {
         if (string != null)
             onReserve(string);
         this.myTurn = yourTurn;
         if (myTurn) {
-            printer.println("\nNow it's your turn! Please insert a command:                            ~ ['h' for help]\n");
+            printer.println("\nOra è il tuo turno! Inserisci un comando:                            ~ ['h' for help]\n");
             tool11DiceToBePlaced = false;
             diceValueToBeSet = false;
         } else
-            printer.println("\nIt's no more your turn! (h for help)");
+            printer.println("\nNon è più il tuo turno! (h for help)");
         printer.flush();
     }
 
@@ -181,7 +197,7 @@ public class Cli {
                 .collect(Collectors.toList());
     }
 
-    public void onWindowChoise(List<String> windows) {
+    public void onWindowChoice(List<String> windows) {
         int i = 0;
         printer.println("Choose your window among the following                                        ~ [cw] + [number]\n");
         printer.flush();
@@ -191,8 +207,8 @@ public class Cli {
         }
     }
 
-    public void onAfterWindowChoise() {
-        printer.println("You can now perform actions on your scheme card                               ~ [reserve] to check available dices\n");
+    public void onAfterWindowChoice() {
+        printer.println("Adesso puoi utilizzare la tua carta schema                              ~ [reserve] per vedere i dadi disponibili\n");
         printer.flush();
     }
 
@@ -201,11 +217,11 @@ public class Cli {
     }
 
     public void onOtherTurn(String name) {
-        printer.println("Now it's " + name + "'s turn");
+        printer.println("Ora è il turno di " + name + "!");
         printer.flush();
     }
 
-    public void onInitialization(String toolcards, String publicCards, String privateCard, List<String> players) {
+    public void onInitialization(String toolcards, String publicCards, List<String> privateCard, List<String> players) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
@@ -252,8 +268,9 @@ public class Cli {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
-        System.exit(0);
+        //System.exit(0);
     }
 
     public void showPrivateCard() {
@@ -281,7 +298,9 @@ public class Cli {
         printer.flush();
     }
 
-    public void onAfterReconnection(String toolcards, String publicCards, String privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens,
+                                    WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards,
+                                    boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
@@ -295,6 +314,11 @@ public class Cli {
         this.otherSchemeCardsMap = otherSchemeCards;
         this.otherFavorTokensMap = otherTokens;
         this.windowChosen = schemeCardChosen;
+        printer.println("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
+        for (String toolcard : toolcardsPrices.keySet()) {
+            printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
+        }
+        printer.flush();
     }
 
 
@@ -323,6 +347,24 @@ public class Cli {
         printer.flush();
     }
 
+    public void onToolCardUsedByOthers(String name, int toolCardNumber) {
+        printer.println("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolCardNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+        printer.flush();
+    }
+
+    public void onGameEndSingle(int goal, int points) {
+        printer.println("Obiettivo da battere: \t" + goal);
+        printer.println("Punteggio ottenuto: \t" + points);
+
+        if (points > goal) {
+            printer.println("Complimenti, hai vinto!");
+        } else {
+            printer.println("Non hai vinto!");
+        }
+
+        printer.flush();
+    }
+
     private class KeyboardHandler extends Thread {
         String parts[];
         Integer toolNumber1;
@@ -345,7 +387,7 @@ public class Cli {
                 try {
                     String command = keyboard.readLine();
                     parts = command.split(" +");
-                    if (myTurn) {
+                    if (myTurn || single) {
                         switch (parts[0]) {
 
                             case "cd": {
@@ -357,6 +399,29 @@ public class Cli {
                                             if (Integer.parseInt(parts[1]) < dicesList.size()) {
                                                 diceChosen = Integer.parseInt(parts[1]);
                                                 printer.println("\nYou have chosen the dice: " + dicesList.toArray()[diceChosen].toString() + "\n");
+                                                printer.flush();
+                                            } else {
+                                                printer.println("\nThe dice you are trying to use does not exist, please retry ");
+                                                printer.flush();
+                                            }
+                                        } else {
+                                            syntaxErrorPrint();
+                                        }
+                                        toolNumber1 = null;
+                                    }
+                                }
+                            }
+                            break;
+
+                            case "cdr": {
+
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
+                                    if (parametersCardinalityCheck(2)) {
+                                        toolNumber1 = tryParse(parts[1]);
+                                        if (toolNumber1 != null) {
+                                            if (Integer.parseInt(parts[1]) < dicesList.size()) {
+                                                diceChosenToBeSacrificed = Integer.parseInt(parts[1]);
+                                                printer.println("\nYou have chosen to sacrifice the dice: " + dicesList.toArray()[diceChosenToBeSacrificed].toString() + "\n");
                                                 printer.flush();
                                             } else {
                                                 printer.println("\nThe dice you are trying to use does not exist, please retry ");
@@ -403,7 +468,11 @@ public class Cli {
                             break;
 
                             case "h": {
-                                printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN + HELP_GENERAL);
+                                if (single) {
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
+                                } else {
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+                                }
                                 printer.flush();
                             }
                             break;
@@ -465,6 +534,7 @@ public class Cli {
                                                             Thread.sleep(500);
                                                         } catch (InterruptedException e) {
                                                             e.printStackTrace();
+                                                            Thread.currentThread().interrupt();
                                                         }
                                                         if (controllerSocket.isDicePlaced()) {
                                                             controllerSocket.setDicePlaced(false);//to reset the value
@@ -523,6 +593,7 @@ public class Cli {
                                                         Thread.sleep(500);
                                                     } catch (InterruptedException e) {
                                                         e.printStackTrace();
+                                                        Thread.currentThread().interrupt();
                                                     }
                                                     if (controllerSocket.isDicePlaced()) {
                                                         controllerSocket.setDicePlaced(false);//to reset the value
@@ -541,7 +612,7 @@ public class Cli {
                             break;
 
                             case "private": {
-                                showPrivateCard();
+                                showPrivateCard();//DA SISTEMARE CON SINGLEPLAYER CHE NE HA 2
                             }
                             break;
 
@@ -583,7 +654,6 @@ public class Cli {
 
                             case "sp": {
                                 printer.println("Stai giocando contro:");
-                                printer.flush();
                                 printNames();
                             }
                             break;
@@ -626,7 +696,6 @@ public class Cli {
 
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
-                                printer.flush();
                                 showToolCards();
                             }
                             break;
@@ -659,7 +728,7 @@ public class Cli {
 
                                     if (parts.length == 2) {
                                         toolNumber1 = tryParse(parts[1]);
-                                        if (toolNumber1 != null&&toolNumber1>0 &&toolNumber1<7) {
+                                        if (toolNumber1 != null && toolNumber1 > 0 && toolNumber1 < 7) {
                                             //RMI
                                             if (controllerRmi != null)
                                                 controllerRmi.setDiceValue(toolNumber1, username, single);
@@ -690,7 +759,11 @@ public class Cli {
                         switch (parts[0]) {
 
                             case "h": {
-                                printer.println("\nInsert a new valid option between: ('+' means SPACE)" + HELP_GENERAL);
+                                if (single) {
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
+                                } else {
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+                                }
                                 printer.flush();
                             }
                             break;
@@ -751,7 +824,6 @@ public class Cli {
 
                             case "sp": {
                                 printer.println("Stai giocando contro:");
-                                printer.flush();
                                 printNames();
                             }
                             break;
@@ -763,7 +835,6 @@ public class Cli {
 
                             case "toolcards": {
                                 printer.println("\nHere follows the ToolCards list:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
-                                printer.flush();
                                 showToolCards();
                             }
                             break;
@@ -843,11 +914,28 @@ public class Cli {
                             if (parametersCardinalityCheck(4)) {
                                 toolNumber1 = tryParse(parts[2]);
                                 toolString1 = parts[3];
+                                boolean done=false;
                                 if (toolNumber1 != null && (toolString1.equals("+") || toolString1.equals("-"))) {
-                                    if (toolCommand.command1(toolNumber1, toolString1)) {
+                                    if(single){
+                                        if(diceChosenToBeSacrificed!=9&&diceChosenToBeSacrificed!=diceChosen) {
+                                            if (toolCommand.command1(diceChosenToBeSacrificed, toolNumber1, toolString1)) {
+                                                 done = true;
+                                            }
+                                        }else{
+                                            printer.println("\nATTENZIONE:Non hai scelto un dado da sacrificare o non lo hai scelto correttamente!\n");
+                                            printer.flush();
+                                        }
+                                    }
+                                    else {
+                                        if (toolCommand.command1(-1, toolNumber1, toolString1)) {
+                                             done =true;
+                                        }
+                                    }
+                                    if(done==true){
                                         printer.println("\nBen fatto! Il dado da te selezionato è stato modificato correttamente!\n");
                                         printer.flush();
-                                    } else {
+                                    }
+                                    else{
                                         gameErrorPrint();
                                     }
                                 } else {

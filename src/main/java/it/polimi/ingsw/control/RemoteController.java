@@ -6,12 +6,13 @@ import it.polimi.ingsw.LobbyObserver;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Colors;
 
+import java.io.ObjectOutputStream;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface RemoteController extends Remote {
 
-    void createMatch(String name) throws RemoteException;
+    void createMatch(String name, int difficulty, ObjectOutputStream socketOut) throws RemoteException;
 
     ConnectionStatus checkName(String name) throws RemoteException;
 
@@ -19,7 +20,7 @@ public interface RemoteController extends Remote {
 
     void observeLobby(String name, LobbyObserver lobbyObserver) throws RemoteException;
 
-    void observeMatch(String username, MatchObserver observer, boolean reconnection) throws RemoteException;
+    void observeMatch(String username, MatchObserver observer, boolean single, boolean reconnection) throws RemoteException;
 
     void removePlayer(String name) throws RemoteException;
 
@@ -39,7 +40,7 @@ public interface RemoteController extends Remote {
 
     void setDiceValue(int value, String name, boolean isSingle) throws RemoteException;
 
-    boolean useToolCard1(int diceChosen, String incrOrDecr, String username, boolean isSingle) throws RemoteException;
+    boolean useToolCard1(int diceToBeSacrificed,int diceChosen, String incrOrDecr, String username, boolean isSingle) throws RemoteException;
 
     boolean useToolCard2or3(int n, int startX, int startY, int finalX, int finalY, String username, boolean isSingle) throws RemoteException;
 

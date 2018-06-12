@@ -14,24 +14,18 @@ import java.util.stream.Collectors;
 
 public class MatchMultiplayer extends Match implements Runnable {
 
-    private Lobby lobby;
-
-    public Lobby getLobby() {
-        return lobby;
-    }
-
     private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
     private Map<PlayerMultiplayer, ObjectOutputStream> socketObservers;
 
     private List<PlayerMultiplayer> ranking;
 
-    private Thread localThread;
     private boolean started;
     private int matchId; // todo: controllare se serve
-    private TurnManager turnManager;
+    private TurnManagerMultiplayer turnManager;
     private List<PlayerMultiplayer> players;
-    private List<WindowPatternCard> windowsProposed;
     private PlayerMultiplayer winner;
+    private Map<String, Integer> toolCardsPrices;
+
 
     /**
      * Initializes the multiplayer match
@@ -44,16 +38,15 @@ public class MatchMultiplayer extends Match implements Runnable {
      */
     public MatchMultiplayer(int matchId, List<String> clients, int turnTime, Map<String, ObjectOutputStream> socketsOut, Lobby lobby) {
 
-        super();
-        this.lobby = lobby;
+        super(lobby);
         this.matchId = matchId;
         started = false;
-
+        toolCardsPrices=new HashMap<>();
         players = new ArrayList<>();
         remoteObservers = new HashMap<>();
         socketObservers = new HashMap<>();
-        turnManager = new TurnManager(this, turnTime);
-        decksContainer = new DecksContainer(clients.size());
+        turnManager = new TurnManagerMultiplayer(this, turnTime);
+        decksContainer = new DecksContainer(clients.size(),-1);
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
         initializePlayers(clients, socketsOut);
@@ -69,11 +62,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     // getters
-    public List<WindowPatternCard> getWindowsProposed() {
-        return windowsProposed;
-    }
-
-    public TurnManager getTurnManager() {
+    public TurnManagerMultiplayer getTurnManagerMultiplayer() {
         return turnManager;
     }
 
@@ -89,19 +78,19 @@ public class MatchMultiplayer extends Match implements Runnable {
         return players;
     }
 
-    public void windowsToBeProposed() {
-        windowsProposed = decksContainer.getWindowPatternCardDeck().getPickedCards().subList(0, 4);
+    public Map<String, Integer> getToolCardsPrices() {
+        return toolCardsPrices;
     }
 
     /**
-     * Initializes the match players and links every socketsOut with the player name ina new map
+     * Initializes the match players and links every socketsOut with the player name in a new map
      *
      * @param clients    is the list of players names
      * @param socketsOut is a map with players names as keys as socketsOut as values
      */
     private void initializePlayers(List<String> clients, Map<String, ObjectOutputStream> socketsOut) {
         clients.forEach(client -> {
-            PlayerMultiplayer player = new PlayerMultiplayer(client, this);
+            PlayerMultiplayer player = new PlayerMultiplayer(client);
             this.players.add(player);
             if (socketsOut.size() != 0) { // ha senso questo controllo?
                 for (String name : socketsOut.keySet()) {
@@ -120,53 +109,6 @@ public class MatchMultiplayer extends Match implements Runnable {
      */
     public int checkConnection() {
         return (int) players.stream().filter(p -> p.getStatus().equals(ConnectionStatus.CONNECTED)).count();
-    }
-
-
-    /**
-     * Game initialization
-     */
-    @Override
-    public void gameInit() {
-
-        List<String> playersNames = new ArrayList<>();
-        players.forEach(p -> playersNames.add(p.getName()));
-
-        // notification to remote observers
-        for (PlayerMultiplayer p : remoteObservers.keySet()) {
-            if (remoteObservers.get(p) != null) {
-                try {
-                    remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames);
-                } catch (RemoteException e) {
-                    lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
-                }
-            }
-        }
-
-        //notification to sockets
-        for (PlayerMultiplayer p : socketObservers.keySet()) {
-            if (socketObservers.get(p) != null) {
-                try {
-                    socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), playersNames));
-                    socketObservers.get(p).reset();
-                } catch (IOException e) {
-                    lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
-                }
-            }
-        }
-
-        // actions to be performed once only
-        this.roundCounter = 0;
-        this.assignColors();
-
-        // it shuffles players to determine the sequence flow of rounds. Furthermore the first player is always in the first position.
-        Collections.shuffle(this.players);
-
-        this.drawPrivateObjectiveCards();
-
-        this.turnManager.run();
     }
 
     // Assegna il colore ai giocatori in modo casuale
@@ -240,8 +182,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     lobby.disconnect(p.getName());
                     System.out.println("Player " + p.getName() + " disconnected!");
                 }
-            }
-            if (socketObservers.get(p) != null) {
+            } else if (socketObservers.get(p) != null) {
                 try {
                     socketObservers.get(p).writeObject(new GameEndResponse(winner.getName(), rankingNames, rankingValues));
                     socketObservers.get(p).reset();
@@ -269,13 +210,12 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-
     public void afterReconnection(String name) {
         PlayerMultiplayer p = getPlayer(name);
         List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
-        String privateCard = p.getPrivateObjectiveCard().toString();
+        List<String> privateCards = decksContainer.getPrivateObjectiveCardDeck().getPickedCards().stream().map(PrivateObjectiveCard::toString).collect(Collectors.toList());
         String reserve = board.getReserve().getDices().toString();
         String roundTrack = board.getRoundTrack().toString();
         int myTokens = p.getNumFavorTokens();
@@ -297,7 +237,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         if (remoteObservers.get(p) != null) {
             try {
-                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen);
+                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCards, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices);
                 remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), names);
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
@@ -305,7 +245,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         } else if (socketObservers.get(p) != null) {
             try {
-                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen));
+                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCards, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices));
                 socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), names));
                 socketObservers.get(p).reset();
             } catch (IOException e) {
@@ -420,7 +360,45 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void run() {
-        gameInit();
+
+        List<String> playersNames = new ArrayList<>();
+        players.forEach(p -> playersNames.add(p.getName()));
+
+        // notification to remote observers
+        for (PlayerMultiplayer p : remoteObservers.keySet()) {
+            if (remoteObservers.get(p) != null) {
+                try {
+                    remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames);
+                } catch (RemoteException e) {
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
+                }
+            }
+        }
+
+        //notification to sockets
+        for (PlayerMultiplayer p : socketObservers.keySet()) {
+            if (socketObservers.get(p) != null) {
+                try {
+                    socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), playersNames));
+                    socketObservers.get(p).reset();
+                } catch (IOException e) {
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
+                }
+            }
+        }
+
+        // actions to be performed once only
+        roundCounter = 0;
+        assignColors();
+
+        // it shuffles players to determine the sequence flow of rounds. Furthermore the first player is always in the first position.
+        Collections.shuffle(this.players);
+
+        drawPrivateObjectiveCards();
+
+        turnManager.run();
     }
 
     public void observeMatchRemote(MatchObserver observer, String username) {
@@ -460,7 +438,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         if (remoteObservers.get(p) != null) {
             try {
-                remoteObservers.get(p).onAfterWindowChoise();
+                remoteObservers.get(p).onAfterWindowChoice();
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
                 System.out.println("Player " + p.getName() + " disconnected!");
@@ -530,10 +508,10 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
 
-    public boolean useToolCard1(int diceChosen, String incrOrDecr, String name) {
+    public boolean useToolCard1(int diceToBeSacrificed,int diceChosen, String incrOrDecr, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
-            getPlayer(name).setChoise(incrOrDecr);
+            getPlayer(name).setChoice(incrOrDecr);
             boolean result = getBoard().findAndUseToolCard(1, getPlayer(name), this);
             tokensToBeUpdated(result, name);
             reserveToBeUpdated(result);
@@ -627,18 +605,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    private void notifyToSocketClient(PlayerMultiplayer player, Response response) {
-        if (socketObservers.get(player) != null) {
-            try {
-                socketObservers.get(player).writeObject(response);
-                socketObservers.get(player).reset();
-            } catch (IOException e) {
-                lobby.disconnect(player.getName());
-                System.out.println("Player " + player.getName() + " disconnected!");
-            }
-        }
 
-    }
 
 
     public boolean useToolCard6(int diceChosen, String name) {
@@ -734,7 +701,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
 
     public boolean useToolCard11(int diceChosen, String name) {
-        if (!isToolAction()) {
+        if (!(isToolAction()||isDiceAction())) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(11, getPlayer(name), this);
             tokensToBeUpdated(result, name);
@@ -859,5 +826,23 @@ public class MatchMultiplayer extends Match implements Runnable {
                 }
             }
         }
+    }
+
+    public void notifyToSocketClient(PlayerMultiplayer player, Response response) {
+        if (socketObservers.get(player) != null) {
+            try {
+                socketObservers.get(player).writeObject(response);
+                //socketObservers.get(player).reset();
+            } catch (IOException e) {
+                lobby.disconnect(player.getName());
+                System.out.println("Player " + player.getName() + " disconnected!");
+            }
+        }
+
+    }
+
+    @Override
+    public void terminateMatch() {
+
     }
 }

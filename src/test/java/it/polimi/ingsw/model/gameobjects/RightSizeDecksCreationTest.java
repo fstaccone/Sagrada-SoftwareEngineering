@@ -8,7 +8,7 @@ public class RightSizeDecksCreationTest {
     DecksContainer decks;
     @Before
     public void before(){
-        this.decks = new DecksContainer(3);
+        this.decks = new DecksContainer(3,1);
 
     }
     @Test

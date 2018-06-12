@@ -1,44 +1,68 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
+import it.polimi.ingsw.socket.responses.Response;
+import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class MoveTwoDicesEffect implements Effect{
 
-    private int price;
+    private Integer price;
 
     public MoveTwoDicesEffect() {
         price = 1;
     }
 
     @Override
-    public boolean applyEffect(Player caller, Match match) {
+    public boolean applyEffect(Player player, Match match) {
 
-        PlayerMultiplayer p = (PlayerMultiplayer) caller;
+        PlayerMultiplayer p = (PlayerMultiplayer) player;
+        MatchMultiplayer m= (MatchMultiplayer) match;
 
-        WindowPatternCard schema = caller.getSchemeCard();
+        WindowPatternCard schema = player.getSchemeCard();
 
-        int row1 = caller.getStartX1();
-        int column1 = caller.getStartY1();
-        int row2 = caller.getStartX2();
-        int column2 = caller.getStartY2();
+        int row1 = player.getStartX1();
+        int column1 = player.getStartY1();
+        int row2 = player.getStartX2();
+        int column2 = player.getStartY2();
 
         Dice dice1 = schema.removeDice(row1, column1);
         Dice dice2 = schema.removeDice(row2, column2);
         if(p.getNumFavorTokens() >= price) {
             if (dice1 != null && dice2!=null) {
-                int newRow1 = caller.getFinalX1();
-                int newColumn1 = caller.getFinalY1();
-                int newRow2 = caller.getFinalX2();
-                int newColumn2 = caller.getFinalY2();
+                int newRow1 = player.getFinalX1();
+                int newColumn1 = player.getFinalY1();
+                int newRow2 = player.getFinalX2();
+                int newColumn2 = player.getFinalY2();
                 if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
                     p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                    price = 2;
+
+                    if(price.equals(1)) {
+                        //NOTIFY TO OTHERS
+                        Response response = new ToolCardUsedByOthersResponse(p.getName(), 4);
+                        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                            if (!otherPlayer.getName().equals(p.getName())) {
+                                if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                    try {
+                                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 4);
+                                    } catch (RemoteException e) {
+                                        m.getLobby().disconnect(otherPlayer.getName());
+                                        System.out.println("Player " + p.getName() + " disconnected!");
+                                    }
+                                }
+                                m.notifyToSocketClient(otherPlayer, response);
+                            }
+                        }
+                        price = 2;
+                        m.getToolCardsPrices().put("Carta utensile 4: ",price);
+                    }
                     return true;
                 } else{
                     if(dice1.equals(schema.getDice(newRow1, newColumn1))) {

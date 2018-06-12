@@ -20,29 +20,30 @@ public class MoveDiceNotAdjacentToAnotherTest {
     private MatchMultiplayer match;
     private Board board;
     private Reserve reserve;
+
     @Before
     public void before() {
         board = mock(Board.class);
         match = mock(MatchMultiplayer.class);
         reserve = mock(Reserve.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
 
-        Dice dy= new Dice(Colors.YELLOW);
+        Dice dy = new Dice(Colors.YELLOW);
         dy.setValue(1);
 
-        Dice dg= new Dice(Colors.GREEN);
+        Dice dg = new Dice(Colors.GREEN);
         dg.setValue(5);
 
-        Dice dr= new Dice(Colors.RED);
+        Dice dr = new Dice(Colors.RED);
         dr.setValue(3);
 
-        Dice db= new Dice(Colors.BLUE);
+        Dice db = new Dice(Colors.BLUE);
         db.setValue(2);
 
-        Dice dplayer= new Dice(Colors.GREEN);
+        Dice dplayer = new Dice(Colors.GREEN);
         dplayer.setValue(4);
         List<Dice> list = new ArrayList<>();
         list.add(dplayer);
@@ -50,10 +51,10 @@ public class MoveDiceNotAdjacentToAnotherTest {
         player.setPickedDice(dplayer);
         player.setDice(0);
 
-        player.getSchemeCard().putFirstDice(dy,0,0);
-        player.getSchemeCard().putDice(dg,1,0);
-        player.getSchemeCard().putDice(dr,2,0);
-        player.getSchemeCard().putDice(db,3,0);
+        player.getSchemeCard().putFirstDice(dy, 0, 0);
+        player.getSchemeCard().putDice(dg, 1, 0);
+        player.getSchemeCard().putDice(dr, 2, 0);
+        player.getSchemeCard().putDice(db, 3, 0);
 
         toolCard = new ToolCard("Riga in Sughero", "tool9");
         player.setFinalX1(2);
@@ -69,7 +70,7 @@ public class MoveDiceNotAdjacentToAnotherTest {
     public void checkPoints() {
         toolCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
-        Assert.assertEquals(Colors.GREEN,player.getSchemeCard().getWindow()[2][4].getDice().getColor());
+        Assert.assertEquals(Colors.GREEN, player.getSchemeCard().getWindow()[2][4].getDice().getColor());
         Assert.assertEquals(4, player.getSchemeCard().getWindow()[2][4].getDice().getValue());
     }
 }

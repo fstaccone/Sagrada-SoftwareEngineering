@@ -8,10 +8,10 @@ public class InitializationResponse implements Response {
 
     private String toolcards;
     private String publicCards;
-    private String privateCard;
+    private List<String> privateCard;
     private List<String> players;
 
-    public InitializationResponse(String toolcards, String publicCards, String privateCard, List<String> players) {
+    public InitializationResponse(String toolcards, String publicCards, List<String> privateCard, List<String> players) {
         this.toolcards = toolcards;
         this.publicCards = publicCards;
         this.privateCard = privateCard;
@@ -26,7 +26,7 @@ public class InitializationResponse implements Response {
         return publicCards;
     }
 
-    public String getPrivateCard() {
+    public List<String> getPrivateCard() {
         return privateCard;
     }
 

@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.socket.SocketHandler;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,14 +12,15 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
 
     private static final String serverConfig = "./src/main/java/it/polimi/ingsw/server.config";
-    private static int rmiPort;
     private static int socketPort;
     private static String lobbyName;
     private static int waitingTime;
@@ -38,43 +39,43 @@ public class Server {
 
         //start RMI registry
         try {
-            //Registry registry = LocateRegistry.createRegistry(rmiPort);
+            //Registry registry = LocateRegistry.createRegistry(1099);
             //registry.rebind(lobbyName,controller);
-            Naming.rebind("//localhost/"+lobbyName,controller);
+            Naming.rebind("//localhost/" + lobbyName, controller);
 
-            System.out.println("RMI server online on port " + rmiPort);
+            System.out.println("RMI server online on port 1099");
         } catch (RemoteException e) {
             System.out.println("Cannot start RMI registry");
         }
 
         //start Socket connection
-        serverSocket=new ServerSocket(socketPort);
+        serverSocket = new ServerSocket(socketPort);
         threadPool = Executors.newCachedThreadPool();
         System.out.println("Socket server online on port " + socketPort);
 
-        while (serverSocket!=null) {
+        while (serverSocket != null) {
             Socket Socket = serverSocket.accept();
             System.out.println("New socket connection: " + Socket.getRemoteSocketAddress());
-            threadPool.submit( new SocketHandler(Socket, controller));
+            threadPool.submit(new SocketHandler(Socket, controller));
         }
         serverSocket.close();
         threadPool.shutdown();
     }
 
 
-    private static void readServerConfig(String serverConfig){
+    private static void readServerConfig(String serverConfig) {
 
-        FileReader fileReader=null;
+        FileReader fileReader = null;
         Scanner scanner = null;
-        Scanner lineParser=null;
+        Scanner lineParser = null;
         String line;
         HashMap<String, String> valuesMap = new HashMap<>();
 
         //try-catch-finally to guarantee rightness of fileReader's closure after use
         try {
-             fileReader = new FileReader(serverConfig);
+            fileReader = new FileReader(serverConfig);
 
-             //try-finally to guarantee rightness of scanner's closure after use
+            //try-finally to guarantee rightness of scanner's closure after use
             try {
                 scanner = new Scanner(fileReader);
 
@@ -85,11 +86,10 @@ public class Server {
                         continue;
                     }
                     //try-finally to guarantee rightness of lineParser's closure
-                    try{
+                    try {
                         lineParser = new Scanner(line);
                         valuesMap.put(lineParser.next(), lineParser.next());
-                    }
-                    finally {
+                    } finally {
                         if (lineParser != null) {
                             lineParser.close();
                         }
@@ -97,22 +97,18 @@ public class Server {
 
                 }
 
-            }
-            finally {
+            } finally {
                 if (scanner != null) {
                     scanner.close();
                 }
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (fileReader != null) {
                 try {
                     fileReader.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -129,10 +125,6 @@ public class Server {
 
                 case "socketPort":
                     Server.socketPort = Integer.parseInt(value.getValue());
-                    break;
-
-                case "rmiPort":
-                    Server.rmiPort = Integer.parseInt(value.getValue());
                     break;
 
                 case "rmiLobbyName":

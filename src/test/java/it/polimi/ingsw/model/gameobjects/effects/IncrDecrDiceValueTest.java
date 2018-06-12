@@ -26,7 +26,7 @@ public class IncrDecrDiceValueTest {
         board = mock(Board.class);
         match = mock(MatchMultiplayer.class);
         // modificato in seguito all'introduzione di Lobby
-        player = new PlayerMultiplayer("player", match);
+        player = new PlayerMultiplayer("player");
         schemeCard = new Firmitas();
         player.setSchemeCard(schemeCard);
         Dice dice = new Dice(Colors.BLUE);
@@ -44,23 +44,24 @@ public class IncrDecrDiceValueTest {
         when(match.getBoard().getReserve()).thenReturn(reserve);
         when(match.getBoard().getReserve().getDices()).thenReturn(diceList);
     }
+
     @Test
-    public void checkDice(){
-        player.setChoise("+");
+    public void checkDice() {
+        player.setChoice("+");
         toolCard.useCard(player, match);
         Assert.assertEquals(false, toolCard.useCard(player, match));
-        player.setChoise("-");
+        player.setChoice("-");
         toolCard.useCard(player, match);
         Assert.assertEquals(5, reserve.getDices().get(0).getValue());
-        player.setChoise("+");
+        player.setChoice("+");
         toolCard.useCard(player, match);
         Assert.assertEquals(6, reserve.getDices().get(0).getValue());
-        player.setChoise("a");
+        player.setChoice("a");
         Assert.assertEquals(false, toolCard.useCard(player, match));
-        player.setChoise("-");
+        player.setChoice("-");
         toolCard.useCard(player, match);
         Assert.assertEquals(1, reserve.getDices().get(1).getValue());
-        player.setChoise("+");
+        player.setChoice("+");
         Assert.assertEquals(false, toolCard.useCard(player, match));
     }
 }
