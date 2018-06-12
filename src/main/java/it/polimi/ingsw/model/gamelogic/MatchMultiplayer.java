@@ -216,7 +216,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
         List<String> privateCards = decksContainer.getPrivateObjectiveCardDeck().getPickedCards().stream().map(PrivateObjectiveCard::toString).collect(Collectors.toList());
-        String privateCard = p.getPrivateObjectiveCard().toString();
         String reserve = board.getReserve().getDices().toString();
         String roundTrack = board.getRoundTrack().toString();
         int myTokens = p.getNumFavorTokens();
