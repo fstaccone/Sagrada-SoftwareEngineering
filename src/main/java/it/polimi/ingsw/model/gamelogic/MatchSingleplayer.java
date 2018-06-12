@@ -62,7 +62,6 @@ public class MatchSingleplayer extends Match implements Runnable {
     @Override
     public void drawPrivateObjectiveCards() {
         player.setPrivateObjectiveCards(decksContainer.getPrivateObjectiveCardDeck().getPickedCards());
-        decksContainer.getPrivateObjectiveCardDeck().getPickedCards().clear();
     }
 
     @Override

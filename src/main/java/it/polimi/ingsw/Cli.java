@@ -18,10 +18,11 @@ import java.util.stream.Collectors;
 public class Cli {
 
     private String username;
-    private transient ClientController controllerSocket;
-    private transient RemoteController controllerRmi;
+    private  ClientController controllerSocket;
+    private  RemoteController controllerRmi;
     private boolean myTurn;
-    private final transient PrintWriter printer;
+    private final PrintWriter printer;
+    private boolean stillPlaying;
 
     private List<String> players;
     private List<String> dicesList;
@@ -132,6 +133,7 @@ public class Cli {
         players = new ArrayList<>();
         diceValueToBeSet = false;
         tool11DiceToBePlaced = false;
+        stillPlaying = true;
     }
 
     public void printWelcome() {
@@ -274,7 +276,8 @@ public class Cli {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }
-        //System.exit(0);
+
+        stillPlaying = false;
     }
 
     public void showPrivateCard() {
@@ -349,6 +352,8 @@ public class Cli {
             printer.println(winner.toUpperCase() + " è il vincitore!");
         }
         printer.flush();
+
+        stillPlaying = false;
     }
 
     public void onToolCardUsedByOthers(String name, int toolCardNumber) {
@@ -367,6 +372,8 @@ public class Cli {
         }
 
         printer.flush();
+
+        stillPlaying = false;
     }
 
     private class KeyboardHandler extends Thread {
@@ -386,7 +393,7 @@ public class Cli {
         @Override
         public void run() {
             BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-            while (true) {
+            while (stillPlaying) {
 
                 try {
                     String command = keyboard.readLine();
@@ -865,9 +872,21 @@ public class Cli {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
             }
+
+            String s = null;
+
+            do {
+                try{
+                    printer.println("La partita è terminata, scrivi 'esci' per uscire");
+                    printer.flush();
+                    s = keyboard.readLine();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            } while (!s.equals("esci"));
+
+            System.exit(0);
         }
 
         private void showWindow() {

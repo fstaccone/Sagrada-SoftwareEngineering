@@ -22,7 +22,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         this.gui = new Gui(fromLogin, username, controller, null, singleplayer);
         this.controller = controller;
         reconnection = false;
-        this.single = single;
+        single = singleplayer;
     }
 
     public List<String> getPlayers() {
