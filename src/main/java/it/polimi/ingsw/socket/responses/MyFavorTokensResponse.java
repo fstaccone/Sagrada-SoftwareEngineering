@@ -13,6 +13,6 @@ public class MyFavorTokensResponse implements Response {
 
     @Override
     public void handleResponse(ResponseHandler handler) {
-         handler.handle(this);
+        handler.handle(this);
     }
 }

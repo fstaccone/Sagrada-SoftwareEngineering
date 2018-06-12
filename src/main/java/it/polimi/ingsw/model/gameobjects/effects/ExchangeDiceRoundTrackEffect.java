@@ -27,6 +27,7 @@ public class ExchangeDiceRoundTrackEffect implements Effect {
                 dice = track.switchDice(dice, player.getRound(), player.getDiceChosenFromRound());
                 if (dice != null) {
                     match.getBoard().getReserve().getDices().add(player.getDice(), dice);
+                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
                     return true;
                 } else
                     return false;

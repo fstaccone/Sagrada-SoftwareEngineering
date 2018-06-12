@@ -2,17 +2,19 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.socket.ClientController;
-import it.polimi.ingsw.socket.requests.RemoveFromWaitingPlayersRequest;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 public class WaitingRoomCli extends UnicastRemoteObject implements LobbyObserver {
-    private final String  username;//USEFUL ONLY IF WE DECIDE TO LET A PLAYER PRESS 'q' COMMAND WHILE IN WAITING ROOM
+    private final String username;//USEFUL ONLY IF WE DECIDE TO LET A PLAYER PRESS 'q' COMMAND WHILE IN WAITING ROOM
     private PrintWriter printer;
     private LoginHandler loginHandler;
     private Stage window;
@@ -21,12 +23,11 @@ public class WaitingRoomCli extends UnicastRemoteObject implements LobbyObserver
     private ClientController clientController;//USEFUL ONLY IF WE DECIDE TO LET A PLAYER PRESS 'q' COMMAND WHILE IN WAITING ROOM
 
 
-
     public WaitingRoomCli(LoginHandler loginHandler, Stage window, String username, boolean rmi) throws RemoteException {
         super();
         this.window = window;
-        this.username=username;
-        this.rmi=rmi;
+        this.username = username;
+        this.rmi = rmi;
         this.loginHandler = loginHandler;
         this.printer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(FileDescriptor.out)));
         printer.println("BENVENUTO NELLA SALA DI ATTESA DI SAGRADA!                Per uscire dalla sala di attesa puoi interrompere il processo in qualsiasi momento!\nDi seguito troverai la lista aggiornata dei giocatori che entrano o escono dalla sala di attesa.\n");

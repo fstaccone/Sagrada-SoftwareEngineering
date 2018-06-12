@@ -35,7 +35,7 @@ public class UseToolCard12Request implements Request {
     }
 
     @Override
-    public Response handleRequest(RequestHandler handler)  {
+    public Response handleRequest(RequestHandler handler) {
         return handler.handle(this);
     }
 }

@@ -10,7 +10,7 @@ public class PlaceDiceTool11Request implements Request {
     public String username;
     public boolean single;
 
-    public PlaceDiceTool11Request( int coordinateX, int coordinateY, String username, boolean single) {
+    public PlaceDiceTool11Request(int coordinateX, int coordinateY, String username, boolean single) {
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.username = username;

@@ -34,6 +34,7 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                 schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn); //DA RIVEDERE
                 if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
                     //resetPlayerValues();
+                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
                     return true;
                 } else {
                     schema.putDice(dice, row, column);

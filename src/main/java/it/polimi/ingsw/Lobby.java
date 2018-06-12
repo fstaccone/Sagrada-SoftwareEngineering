@@ -418,8 +418,8 @@ public class Lobby {
                 }
             }
         } else {*/
-            addToWaitingPlayers(name);
-       // }
+        addToWaitingPlayers(name);
+        // }
     }
 
     public ConnectionStatus checkName(String name) {

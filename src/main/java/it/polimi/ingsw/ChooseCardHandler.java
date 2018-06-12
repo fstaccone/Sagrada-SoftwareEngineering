@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 
 public class ChooseCardHandler implements Initializable {
 
+    private boolean myTurn = false;
+
     @FXML
     Button card0;
 
@@ -93,37 +95,41 @@ public class ChooseCardHandler implements Initializable {
 
     @FXML
     public void onPlayClicked() throws Exception {
-        if (choice == 5) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have to choose a card", ButtonType.OK);
-            alert.setTitle("CHOOSE A CARD");
-            alert.setHeaderText(null);
-            alert.setResizable(false);
-            alert.setGraphic(null);
-            alert.showAndWait();
-        } else {
-            Stage window = (Stage) play.getScene().getWindow();
+        if (myTurn) {
+            if (choice == 5) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have to choose a card", ButtonType.OK);
+                alert.setTitle("CHOOSE A CARD");
+                alert.setHeaderText(null);
+                alert.setResizable(false);
+                alert.setGraphic(null);
+                alert.showAndWait();
+            } else {
+                Stage window = (Stage) play.getScene().getWindow();
 
-            //Getting the image URL of the chosen window pattern card
-            switch (choice) {
-                case 0:
-                    imgURL = url0;
-                    break;
-                case 1:
-                    imgURL = url1;
-                    break;
-                case 2:
-                    imgURL = url2;
-                    break;
-                case 3:
-                    imgURL = url3;
-                    break;
-                default:
-                    imgURL = null;
+                //Getting the image URL of the chosen window pattern card
+                switch (choice) {
+                    case 0:
+                        imgURL = url0;
+                        break;
+                    case 1:
+                        imgURL = url1;
+                        break;
+                    case 2:
+                        imgURL = url2;
+                        break;
+                    case 3:
+                        imgURL = url3;
+                        break;
+                    default:
+                        imgURL = null;
+                }
+                if (remoteController != null)
+                    remoteController.chooseWindow(username, choice, false);
+                else
+                    clientController.request(new ChooseWindowRequest(username, choice, false));
             }
-            if (remoteController != null)
-                remoteController.chooseWindow(username, choice, false);
-            else
-                clientController.request(new ChooseWindowRequest(username, choice, false));
+        } else {
+            setTextArea("Aspetta il tuo turno per scegliere la carta!");
         }
     }
 
@@ -242,4 +248,7 @@ public class ChooseCardHandler implements Initializable {
         privateObjCard.setImage(privateObjCardImg);
     }
 
+    public void setTurn(boolean myTurn) {
+        this.myTurn = myTurn;
+    }
 }

@@ -215,7 +215,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
-        List<String> privateCards = decksContainer.getPrivateObjectiveCardDeck().getPickedCards().stream().map(PrivateObjectiveCard::toString).collect(Collectors.toList());
+        List<String> privateCard= new ArrayList<>();
+        privateCard.add(p.getPrivateObjectiveCard().toString());
         String reserve = board.getReserve().getDices().toString();
         String roundTrack = board.getRoundTrack().toString();
         int myTokens = p.getNumFavorTokens();
@@ -237,7 +238,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         if (remoteObservers.get(p) != null) {
             try {
-                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCards, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices);
+                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices);
                 remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), names);
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
@@ -245,7 +246,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         } else if (socketObservers.get(p) != null) {
             try {
-                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCards, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices));
+                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices));
                 socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), names));
                 socketObservers.get(p).reset();
             } catch (IOException e) {

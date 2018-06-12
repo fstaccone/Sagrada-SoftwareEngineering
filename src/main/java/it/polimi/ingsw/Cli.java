@@ -182,7 +182,11 @@ public class Cli {
             onReserve(string);
         this.myTurn = yourTurn;
         if (myTurn) {
-            printer.println("\nOra è il tuo turno! Inserisci un comando:                            ~ ['h' for help]\n");
+            if (single) {
+                printer.println("\nRound: " + round + "\tTurno: " + turn + "\tInserisci un comando:     ~ ['h' for help]\n");
+            } else {
+                printer.println("\nOra è il tuo turno! Round: " + round + "\tTurno: " + turn + "\tInserisci un comando:     ~ ['h' for help]\n");
+            }
             tool11DiceToBePlaced = false;
             diceValueToBeSet = false;
         } else
@@ -931,7 +935,7 @@ public class Cli {
                                             done = true;
                                         }
                                     }
-                                    if (done == true) {
+                                    if (done) {
                                         diceChosenToBeSacrificed = 9;
                                         printer.println("\nBen fatto! Il dado da te selezionato è stato modificato correttamente!\n");
                                         printer.flush();
@@ -969,7 +973,7 @@ public class Cli {
                                             done = true;
                                         }
                                     }
-                                    if (done == true) {
+                                    if (done) {
                                         diceChosenToBeSacrificed = 9;
                                         printer.println("\nBen fatto! Il dado da te selezionato è stato spostato correttamente!\n");
                                         printer.flush();
@@ -1009,7 +1013,7 @@ public class Cli {
                                             done = true;
                                         }
                                     }
-                                    if (done == true) {
+                                    if (done) {
                                         diceChosenToBeSacrificed = 9;
                                         printer.println("\nBen fatto! Il dado da te selezionato è stato spostato correttamente!\n");
                                         printer.flush();
@@ -1053,7 +1057,7 @@ public class Cli {
                                             done = true;
                                         }
                                     }
-                                    if (done == true) {
+                                    if (done) {
                                         diceChosenToBeSacrificed = 9;
                                         printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
                                         printer.flush();
@@ -1095,7 +1099,7 @@ public class Cli {
                                             done = true;
                                         }
                                     }
-                                    if (done == true) {
+                                    if (done) {
                                         diceChosenToBeSacrificed = 9;
                                         printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
                                         printer.flush();
@@ -1117,19 +1121,19 @@ public class Cli {
                                 if (toolNumber1 != null && toolNumber1 >= 0 && toolNumber1 < dicesList.size()) {
                                     if (single) {
                                         if (diceChosenToBeSacrificed != 9 && diceChosenToBeSacrificed != toolNumber1) {
-                                            if (toolCommand.command6(diceChosenToBeSacrificed,toolNumber1)) {
+                                            if (toolCommand.command6(diceChosenToBeSacrificed, toolNumber1)) {
                                                 done = true;
                                             }
-                                        }else {
+                                        } else {
                                             printer.println("\nATTENZIONE:Non hai scelto un dado da sacrificare o non lo hai scelto correttamente!\n");
                                             printer.flush();
                                         }
                                     } else {
-                                        if (toolCommand.command6(-1,toolNumber1)) {
+                                        if (toolCommand.command6(-1, toolNumber1)) {
                                             done = true;
                                         }
                                     }
-                                    if (done == true) {
+                                    if (done) {
                                         diceChosenToBeSacrificed = 9;
                                         printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
                                         printer.flush();

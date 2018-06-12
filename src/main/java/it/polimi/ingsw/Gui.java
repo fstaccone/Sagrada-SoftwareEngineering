@@ -117,18 +117,19 @@ public class Gui {
         this.myTurn = isMyTurn;
         if (myTurn) {
             //Solo per verifica
-            String s = "Ora è il tuo turno!";
+            String s = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
             if (gameBoardHandler != null) {
                 gameBoardHandler.setTextArea(s);
                 gameBoardHandler.initializeActions();
             } else if (chooseCardHandler != null) {
                 chooseCardHandler.setTextArea(s);
+                chooseCardHandler.setTurn(true);
             }
-        } /*else
-            //Solo per verifica
-            if (gameBoardHandler != null) {
-                gameBoardHandler.setTextArea("Non è il tuo turno!");
-            }*/
+        } else {
+            if (chooseCardHandler != null) {
+                chooseCardHandler.setTurn(false);
+            }
+        }
     }
 
     public void onReserve(String string) {
@@ -350,7 +351,7 @@ public class Gui {
         gameBoardHandler.setReserve(dicesList);
         gameBoardHandler.onRoundTrack(track);
         if (!reconnection) {
-            gameBoardHandler.setTextArea("Ora è il tuo turno!");
+            gameBoardHandler.setTextArea("Fai la tua prima mossa!");
         } else {
             gameBoardHandler.setTextArea("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
             for (String toolcard : toolcardsPrices.keySet()) {

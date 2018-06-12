@@ -3,7 +3,7 @@ package it.polimi.ingsw.socket.responses;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ResponseHandler;
 
-public class OtherSchemeCardsResponse implements Response{
+public class OtherSchemeCardsResponse implements Response {
 
     public WindowPatternCard scheme;
     public String name;

@@ -12,13 +12,13 @@ public class UseToolCard5Request implements Request {
     public boolean isSingle;
     public int diceToBeSacrificed;
 
-    public UseToolCard5Request(int diceToBeSacrificed,int diceChosen, int roundChosen, int diceChosenFromRound, String name, boolean isSingle) {
+    public UseToolCard5Request(int diceToBeSacrificed, int diceChosen, int roundChosen, int diceChosenFromRound, String name, boolean isSingle) {
         this.diceChosen = diceChosen;
         this.roundChosen = roundChosen;
         this.diceChosenFromRound = diceChosenFromRound;
-        this.name=name;
-        this.isSingle=isSingle;
-        this.diceToBeSacrificed=diceToBeSacrificed;
+        this.name = name;
+        this.isSingle = isSingle;
+        this.diceToBeSacrificed = diceToBeSacrificed;
     }
 
 

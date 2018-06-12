@@ -34,6 +34,7 @@ public class MoveTwoDicesEffect implements Effect {
                 int newRow2 = player.getFinalX2();
                 int newColumn2 = player.getFinalY2();
                 if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
+                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
                     return true;
                 } else {
                     if (dice1.equals(schema.getDice(newRow1, newColumn1))) {

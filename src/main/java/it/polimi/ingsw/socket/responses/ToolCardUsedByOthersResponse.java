@@ -9,7 +9,7 @@ public class ToolCardUsedByOthersResponse implements Response {
 
     public ToolCardUsedByOthersResponse(String name, int toolCardNumber) {
         this.name = name;
-        this.toolCardNumber=toolCardNumber;
+        this.toolCardNumber = toolCardNumber;
     }
 
     @Override
