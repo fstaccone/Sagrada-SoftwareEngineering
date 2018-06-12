@@ -4,14 +4,33 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class YourTurnResponse implements Response {
 
-    public boolean myTurn;
-    public String string;
+    private boolean myTurn;
+    private String name;
+    private int round;
+    private int turn;
 
-    public YourTurnResponse( boolean yourTurn, String string) {
-        this.myTurn=yourTurn;
-        this.string=string;
+    public YourTurnResponse(boolean myTurn, String name, int round, int turn) {
+        this.myTurn = myTurn;
+        this.name = name;
+        this.round = round;
+        this.turn = turn;
     }
 
+    public boolean isMyTurn() {
+        return myTurn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
 
     @Override
     public void handleResponse(ResponseHandler handler) {

@@ -155,8 +155,8 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(YourTurnResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onYourTurn(response.myTurn, response.string);
-        } else socketGui.getGui().onYourTurn(response.myTurn, response.string);
+            socketCli.getCli().onYourTurn(response.isMyTurn(), response.getName(), response.getRound(), response.getTurn());
+        } else socketGui.getGui().onYourTurn(response.isMyTurn(), response.getName(), response.getRound(), response.getTurn());
     }
 
     @Override

@@ -111,53 +111,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         return (int) players.stream().filter(p -> p.getStatus().equals(ConnectionStatus.CONNECTED)).count();
     }
 
-
-    /**
-     * Game initialization
-     */
-    @Override
-    public void gameInit() {
-
-        List<String> playersNames = new ArrayList<>();
-        players.forEach(p -> playersNames.add(p.getName()));
-
-        // notification to remote observers
-        for (PlayerMultiplayer p : remoteObservers.keySet()) {
-            if (remoteObservers.get(p) != null) {
-                try {
-                    remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames);
-                } catch (RemoteException e) {
-                    lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
-                }
-            }
-        }
-
-        //notification to sockets
-        for (PlayerMultiplayer p : socketObservers.keySet()) {
-            if (socketObservers.get(p) != null) {
-                try {
-                    socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), playersNames));
-                    socketObservers.get(p).reset();
-                } catch (IOException e) {
-                    lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
-                }
-            }
-        }
-
-        // actions to be performed once only
-        roundCounter = 0;
-        assignColors();
-
-        // it shuffles players to determine the sequence flow of rounds. Furthermore the first player is always in the first position.
-        Collections.shuffle(this.players);
-
-        drawPrivateObjectiveCards();
-
-        turnManager.run();
-    }
-
     // Assegna il colore ai giocatori in modo casuale
     private void assignColors() {
 
@@ -256,7 +209,6 @@ public class MatchMultiplayer extends Match implements Runnable {
             ranking.add(i, p);
         }
     }
-
 
     public void afterReconnection(String name) {
         PlayerMultiplayer p = getPlayer(name);
@@ -408,7 +360,45 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void run() {
-        gameInit();
+
+        List<String> playersNames = new ArrayList<>();
+        players.forEach(p -> playersNames.add(p.getName()));
+
+        // notification to remote observers
+        for (PlayerMultiplayer p : remoteObservers.keySet()) {
+            if (remoteObservers.get(p) != null) {
+                try {
+                    remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames);
+                } catch (RemoteException e) {
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
+                }
+            }
+        }
+
+        //notification to sockets
+        for (PlayerMultiplayer p : socketObservers.keySet()) {
+            if (socketObservers.get(p) != null) {
+                try {
+                    socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), playersNames));
+                    socketObservers.get(p).reset();
+                } catch (IOException e) {
+                    lobby.disconnect(p.getName());
+                    System.out.println("Player " + p.getName() + " disconnected!");
+                }
+            }
+        }
+
+        // actions to be performed once only
+        roundCounter = 0;
+        assignColors();
+
+        // it shuffles players to determine the sequence flow of rounds. Furthermore the first player is always in the first position.
+        Collections.shuffle(this.players);
+
+        drawPrivateObjectiveCards();
+
+        turnManager.run();
     }
 
     public void observeMatchRemote(MatchObserver observer, String username) {

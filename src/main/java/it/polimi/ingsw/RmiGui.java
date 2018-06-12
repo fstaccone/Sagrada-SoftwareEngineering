@@ -44,8 +44,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onYourTurn(boolean isMyTurn, String string) {
-        gui.onYourTurn(isMyTurn, string);
+    public void onYourTurn(boolean isMyTurn, String string, int round, int turn) {
+        gui.onYourTurn(isMyTurn, string, round, turn);
     }
 
     @Override

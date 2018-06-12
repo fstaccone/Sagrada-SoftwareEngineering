@@ -21,6 +21,7 @@ public class TurnManagerMultiplayer implements Runnable {
     private int turnTime;
     private MatchMultiplayer match;
     private boolean expired; // it's used to avoid double canceling of timer
+    private int currentTurn;
 
     TurnManagerMultiplayer(MatchMultiplayer match, int turnTime) {
         this.turnTime = turnTime;
@@ -75,7 +76,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
     private void initializeRound() {
         match.getPlayers().forEach(player -> player.setTurnsLeft(2));
-        match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
+        match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size() * 2 + 1));
     }
 
 
@@ -200,7 +201,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
         if (rmiObserver != null) {
             try {
-                rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString());
+                rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
             }
@@ -208,7 +209,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
         if (match.getSocketObservers().get(player) != null) {
 
-            getObserverSocket(player, new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString()));
+            getObserverSocket(player, new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn));
         }
         notifyOthers(player);
     }
@@ -222,13 +223,13 @@ public class TurnManagerMultiplayer implements Runnable {
         MatchObserver rmiObserver = getObserverRmi(player);
         if (rmiObserver != null) {
             try {
-                rmiObserver.onYourTurn(false, null);
+                rmiObserver.onYourTurn(false, null, match.getCurrentRound() + 1, currentTurn);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
             }
         }
         if (match.getSocketObservers().get(player) != null) {
-            getObserverSocket(player, new YourTurnResponse(false, null));
+            getObserverSocket(player, new YourTurnResponse(false, null, match.getCurrentRound() + 1, currentTurn));
         }
 
     }
@@ -274,8 +275,10 @@ public class TurnManagerMultiplayer implements Runnable {
     private void turnManager() throws InterruptedException, RemoteException {
         initializeRound();
 
+        currentTurn = 1; // todo: controllare, potrebbe essere ancora 0
         playFirstTurn();
 
+        currentTurn = 2;
         playSecondTurn();
 
         terminateRound();

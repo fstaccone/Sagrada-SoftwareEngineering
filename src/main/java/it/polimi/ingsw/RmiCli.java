@@ -39,8 +39,8 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onYourTurn(boolean yourTurn, String string) {
-        cli.onYourTurn(yourTurn, string);
+    public void onYourTurn(boolean yourTurn, String string, int round, int turn) {
+        cli.onYourTurn(yourTurn, string, round, turn);
     }
 
     @Override

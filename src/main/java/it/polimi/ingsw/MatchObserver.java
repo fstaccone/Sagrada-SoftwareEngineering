@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface MatchObserver extends Serializable, Remote {
 
-    void onYourTurn(boolean isMyTurn, String string) throws RemoteException;
+    void onYourTurn(boolean isMyTurn, String string, int Round, int Turn) throws RemoteException;
 
     void onReserve(String string) throws RemoteException;
 

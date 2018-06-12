@@ -118,14 +118,6 @@ public abstract class Match {
     }
 
     /**
-     * game's initialization
-     *
-     * @throws InterruptedException
-     * @throws RemoteException
-     */
-    public abstract void gameInit() throws InterruptedException, RemoteException;
-
-    /**
      * to assign the private objective cards
      */
     public abstract void drawPrivateObjectiveCards();

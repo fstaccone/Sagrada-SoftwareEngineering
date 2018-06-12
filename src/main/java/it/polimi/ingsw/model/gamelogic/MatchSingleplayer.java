@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
 import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
 import it.polimi.ingsw.socket.responses.GameEndSingleResponse;
+import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -32,7 +33,7 @@ public class MatchSingleplayer extends Match implements Runnable {
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
         System.out.println("New singleplayer matchId: " + this.matchId);
         observerSocket = socketOut;
-        if(observerSocket != null){
+        if (observerSocket != null) {
             startMatch();
         }
     }
@@ -55,16 +56,6 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     public PlayerSingleplayer getPlayer() {
         return player;
-    }
-
-    @Override
-    public void gameInit() {
-
-        // actions to be performed once only
-        roundCounter = 0;
-        drawPrivateObjectiveCards();
-
-        turnManager.run();
     }
 
     @Override
@@ -96,30 +87,129 @@ public class MatchSingleplayer extends Match implements Runnable {
                 observerRmi.onGameEndSingle(targetPoints, player.getPoints());
             } catch (RemoteException e) {
                 terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                System.out.println("Match singleplayer interrupted");
             }
         } else if (observerSocket != null) {
             try {
                 observerSocket.writeObject(new GameEndSingleResponse(targetPoints, player.getPoints()));
             } catch (IOException e) {
                 terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                System.out.println("Match singleplayer interrupted");
             }
         }
     }
 
     @Override
     public void run() {
-        gameInit();
+        roundCounter = 0;
+        drawPrivateObjectiveCards();
+
+        turnManager.run();
     }
 
     @Override
     public void setWindowPatternCard(String name, int index) {
 
+        player.setSchemeCard(windowsProposed.get(index));
+        decksContainer.getWindowPatternCardDeck().getPickedCards().removeAll(windowsProposed);
+        player.setSchemeCardSet(true);
+        setWindowChosen(true);
+
+        schemeCardToBeUpdated(true);
+
+        if (observerRmi != null) {
+            try {
+                observerRmi.onAfterWindowChoice();
+            } catch (RemoteException e) {
+                terminateMatch();
+                System.out.println("Match terminato per disconnessione!");
+            }
+        } else if (observerSocket != null) {
+            try {
+                observerSocket.writeObject(new AfterWindowChoiseResponse());
+                observerSocket.reset();
+            } catch (IOException e) {
+                terminateMatch();
+                System.out.println("Match ended due to disconnection!");
+            }
+        }
+
+        synchronized (getLock()) {
+            getLock().notifyAll();
+        }
+    }
+
+    private void schemeCardToBeUpdated(boolean result) {
+        if (result) {
+            if (observerRmi != null) {
+                try {
+                    observerRmi.onMyWindow(player.getSchemeCard());
+                } catch (RemoteException e) {
+                    terminateMatch();
+                    System.out.println("Match ended due to disconnection!");
+                }
+            } else if (observerSocket != null) {
+                try {
+                    observerSocket.writeObject(new MyWindowResponse(player.getSchemeCard()));
+                    observerSocket.reset();
+                } catch (IOException e) {
+                    terminateMatch();
+                    System.out.println("Match ended due to disconnection!");
+                }
+            }
+        }
+    }
+
+    private void reserveToBeUpdated(boolean reserveToBeUpdated) {
+        if (reserveToBeUpdated) {
+            if (observerRmi != null) {
+                try {
+                    observerRmi.onReserve(board.getReserve().getDices().toString());
+                } catch (RemoteException e) {
+                    terminateMatch();
+                    System.out.println("Match ended due to disconnection!");
+                }
+            } else if (observerSocket != null) {
+                try {
+                    observerSocket.writeObject(new UpdateReserveResponse(board.getReserve().getDices().toString()));
+                    observerSocket.reset();
+                } catch (IOException e) {
+                    terminateMatch();
+                    System.out.println("Match ended due to disconnection!");
+                }
+            }
+        }
     }
 
     @Override
     public boolean placeDice(String name, int index, int x, int y) {
+        if (!isDiceAction()) {
+            boolean result;
+            result = player.getSchemeCard().putDice(board.getReserve().getDices().get(index), x, y);
+            setDiceAction(result);
+
+            // special notification for socket connection
+            if (observerSocket != null) {
+                try {
+                    observerSocket.writeObject(new DicePlacedResponse(result));
+                    observerSocket.reset();
+                } catch (IOException e) {
+                    terminateMatch();
+                    System.out.println("Match ended due to disconnection!");
+                }
+            }
+
+            if (result) {
+                board.getReserve().getDices().remove(index);
+            }
+            reserveToBeUpdated(result);
+            schemeCardToBeUpdated(result);
+
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+            return result;
+        }
         return false;
     }
 
@@ -153,7 +243,7 @@ public class MatchSingleplayer extends Match implements Runnable {
         startMatch();
     }
 
-    private void startMatch(){
+    private void startMatch() {
         localThread = new Thread(this);
         localThread.start();
     }
