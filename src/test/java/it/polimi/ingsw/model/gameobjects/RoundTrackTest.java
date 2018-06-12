@@ -20,6 +20,7 @@ public class RoundTrackTest {
         dicesToPut.add(blueDice);
         dicesToPut.add(yellowDice);
         roundTrack.putDices(dicesToPut, 3);
+        System.out.println(roundTrack.toString());
         ByteArrayInputStream in = new ByteArrayInputStream("3 0".getBytes());
         System.setIn(in);
         Dice d3 = roundTrack.getDice();
@@ -44,5 +45,19 @@ public class RoundTrackTest {
         ByteArrayInputStream in = new ByteArrayInputStream("3 0".getBytes());
         System.setIn(in);
         Assert.assertEquals(diceToSwitch, roundTrack.getDice());
+    }
+
+    @Test
+    public void sumForSingleplayer (){
+        RoundTrack roundTrack = new RoundTrack();
+        List<Dice> dicesToPut = new ArrayList<>();
+        Dice blueDice = new Dice(Colors.BLUE);
+        blueDice.setValue(3);
+        Dice yellowDice = new Dice(Colors.YELLOW);
+        yellowDice.setValue(5);
+        dicesToPut.add(blueDice);
+        dicesToPut.add(yellowDice);
+        roundTrack.putDices(dicesToPut, 3);
+        Assert.assertEquals(8, roundTrack.sumForSinglePlayer());
     }
 }

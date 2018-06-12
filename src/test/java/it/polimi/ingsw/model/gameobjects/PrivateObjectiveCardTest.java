@@ -44,6 +44,7 @@ public class PrivateObjectiveCardTest {
 
     @Test
     public void checkPoints() {
+        Assert.assertEquals(Colors.YELLOW, privateObjectiveCard.getColor());
         privateObjectiveCard.useCard(player);
         System.out.println(player.getSchemeCard().toString());
         Assert.assertEquals(10, player.getPoints());

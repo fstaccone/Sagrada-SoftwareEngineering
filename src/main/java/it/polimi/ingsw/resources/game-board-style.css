@@ -20,6 +20,11 @@
     -fx-background-size: cover;
 }
 
+.labels{
+    -fx-background-color:  #251494;
+    -fx-background-radius: 4;
+}
+
 .button {
     -fx-border-color: transparent;
     -fx-border-width: 0;

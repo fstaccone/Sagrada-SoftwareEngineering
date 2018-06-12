@@ -251,7 +251,7 @@ public class LoginHandler implements Initializable {
         } else if (status.equals(ConnectionStatus.DISCONNECTED)) {
             if (isRmi) {
                 if (isCli) {
-                    Platform.runLater(() -> window.close());
+                    window.close();
                     new RmiCli(username, controllerRmi, singleplayer).reconnect();
                 } else {
                     new RmiGui(window, username, controllerRmi, singleplayer).reconnect();
@@ -259,6 +259,7 @@ public class LoginHandler implements Initializable {
             } else {
                 new Thread(new SocketListener(controllerSocket)).start();
                 if (isCli) {
+                    window.close();
                     new SocketCli(username, controllerSocket, singleplayer).reconnect();
                 } else {
                     new SocketGui(window, username, controllerSocket, singleplayer).reconnect();
@@ -324,6 +325,7 @@ public class LoginHandler implements Initializable {
             try {
                 controllerRmi.createMatch(this.username, difficulty, null);
                 if (isCli) {
+                    window.close();
                     new RmiCli(username, controllerRmi, singleplayer).launch();
                 } else {
                     new RmiGui(window, username, controllerRmi, singleplayer).launch();
@@ -335,6 +337,7 @@ public class LoginHandler implements Initializable {
         } else {
             try {
                 if (isCli) {
+                    window.close();
                     controllerRmi.observeLobby(this.username, waitingRoomCli);
                 } else {
                     controllerRmi.observeLobby(this.username, handler);
@@ -357,6 +360,7 @@ public class LoginHandler implements Initializable {
                 new Thread(new SocketListener(controllerSocket)).start();
                 controllerSocket.request(new CreateMatchRequest(this.username, difficulty));
                 if (isCli) {
+                    window.close();
                     new SocketCli(username, controllerSocket, singleplayer);
                 } else {
                     new SocketGui(window, username, controllerSocket, singleplayer);

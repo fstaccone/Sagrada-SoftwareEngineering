@@ -27,5 +27,9 @@ public class PlayerMultiplayerTest {
         WindowPatternCard schemeCard = new Comitas();
         playerMultiplayer.setSchemeCard(schemeCard);
         Assert.assertEquals(schemeCard, playerMultiplayer.getSchemeCard());
+        playerMultiplayer.setMyTurn(true);
+        PrivateObjectiveCard card = new PrivateObjectiveCard(Colors.BLUE);
+        playerMultiplayer.setPrivateObjectiveCard(card);
+        Assert.assertEquals(card, playerMultiplayer.getPrivateObjectiveCard());
     }
 }

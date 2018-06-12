@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
@@ -27,7 +30,7 @@
                         <ImageView fx:id="pubObjCard3" fitHeight="160.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" styleClass="card" GridPane.columnIndex="2" />
                     </children>
                 </GridPane>
-                <Label fx:id="pubObjLabel" layoutX="107.0" layoutY="193.0" prefHeight="23.0" prefWidth="200.0" text="OBIETTIVI PUBBLICI" textFill="#251494">
+                <Label fx:id="pubObjLabel" layoutX="107.0" layoutY="193.0" prefHeight="23.0" prefWidth="200.0" styleClass="labels" text="OBIETTIVI PUBBLICI" textFill="WHITE">
                <font>
                   <Font name="Courier New Bold" size="18.0" />
                </font>
@@ -40,7 +43,7 @@
             </Label>
             </children>
         </Pane>
-        <Button id="passButton" fx:id="passButton" layoutX="1130.0" layoutY="234.0" mnemonicParsing="false" onAction="#onPassButtonClicked" prefHeight="40.0" prefWidth="92.0" text="PASSA" textFill="WHITE">
+        <Button id="passButton" fx:id="passButton" layoutX="995.0" layoutY="186.0" mnemonicParsing="false" onAction="#onPassButtonClicked" prefHeight="40.0" prefWidth="92.0" text="PASSA" textFill="WHITE">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Button>
@@ -58,8 +61,8 @@
                     </font></Label>
             </children></Pane>
 
-        <TextArea fx:id="textArea" layoutX="962.0" layoutY="83.0" prefHeight="144.0" prefWidth="427.0" wrapText="true" />
-        <Button id="gameBoardQuit" fx:id="quit" layoutX="1130.0" layoutY="25.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="40.0" prefWidth="92.0" text="ESCI" textFill="WHITE">
+        <TextArea fx:id="textArea" layoutX="956.0" layoutY="27.0" prefHeight="144.0" prefWidth="427.0" wrapText="true" />
+        <Button id="gameBoardQuit" fx:id="quit" layoutX="1258.0" layoutY="186.0" mnemonicParsing="false" onAction="#onQuitClicked" prefHeight="40.0" prefWidth="92.0" text="ESCI" textFill="WHITE">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Button>
@@ -89,7 +92,7 @@
          </font></Label>
         <Pane fx:id="pane1" layoutX="344.0" layoutY="310.0" prefHeight="192.0" prefWidth="220.0" />
 
-      <Label fx:id="toolCardsLabel" layoutX="185.0" layoutY="561.0" prefHeight="31.0" prefWidth="159.0" text="CARTE UTENSILI" textFill="#251494">
+      <Label styleClass="labels" fx:id="toolCardsLabel" layoutX="185.0" layoutY="561.0" prefHeight="31.0" prefWidth="159.0" text="CARTE UTENSILI" textFill="WHITE">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font></Label>
@@ -98,7 +101,7 @@
             <Font name="Courier New Bold" size="18.0" />
          </font>
       </Label>
-          <Label fx:id="privObjLabel" layoutX="1239.0" layoutY="416.0" prefHeight="55.0" prefWidth="104.0" text="OBIETTIVO&#10; PRIVATO" textFill="#251494">
+          <Label fx:id="privObjLabel" layoutX="1239.0" layoutY="416.0" prefHeight="55.0" prefWidth="104.0" styleClass="labels" text="OBIETTIVO&#10; PRIVATO" textFill="WHITE">
               <font>
                   <Font name="Courier New Bold" size="18.0" />
               </font>

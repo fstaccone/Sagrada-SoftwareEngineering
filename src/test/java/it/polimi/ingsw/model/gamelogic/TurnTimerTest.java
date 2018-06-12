@@ -25,6 +25,7 @@ public class TurnTimerTest {
         MatchMultiplayer matchMultiplayer = new MatchMultiplayer(matchId, clients, turnTime, socketsOut, lobby);
         PlayerMultiplayer playerMultiplayer = new PlayerMultiplayer("CowboyBebop");
         TurnTimer turnTimer = new TurnTimer(matchMultiplayer, playerMultiplayer);
+        turnTimer.run();
         Assert.assertNotNull(turnTimer);
     }
 }

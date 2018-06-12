@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.gameobjects.windowpatterncards.SymphonyOfLight;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerSingleplayerTest {
 
     @Test
@@ -12,6 +15,7 @@ public class PlayerSingleplayerTest {
         PlayerSingleplayer playerSingleplayer = new PlayerSingleplayer("CowboyBebop");
         Assert.assertEquals("CowboyBebop", playerSingleplayer.getName());
         Assert.assertEquals(Colors.NONE, playerSingleplayer.getColor());
+
     }
 
     @Test
@@ -20,5 +24,10 @@ public class PlayerSingleplayerTest {
         PlayerSingleplayer playerSingleplayer = new PlayerSingleplayer("CowboyBebop");
         playerSingleplayer.setSchemeCard(schemeCard);
         Assert.assertEquals(schemeCard, playerSingleplayer.getSchemeCard());
+        List<PrivateObjectiveCard> cards = new ArrayList<>();
+        cards.add(new PrivateObjectiveCard(Colors.RED));
+        cards.add(new PrivateObjectiveCard(Colors.BLUE));
+        playerSingleplayer.setPrivateObjectiveCards(cards);
+        Assert.assertEquals(cards, playerSingleplayer.getPrivateObjectiveCards());
     }
 }
