@@ -148,17 +148,17 @@ public class ToolCommand {
         }
         return false;
     }
-    public boolean command6(int diceChosen){
+    public boolean command6(int diceToBeSacrificed,int diceChosen){
         if(controller!=null) {
             try {
-                return controller.useToolCard6(diceChosen, name, single);
+                return controller.useToolCard6( diceToBeSacrificed,diceChosen, name, single);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard6Request(diceChosen, name, single));
+            clientController.request(new UseToolCard6Request( diceToBeSacrificed,diceChosen, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;

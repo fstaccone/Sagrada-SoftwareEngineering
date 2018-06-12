@@ -48,7 +48,7 @@ public interface RemoteController extends Remote {
 
     boolean useToolCard5(int diceToBeSacrificed,int diceChosen, int roundChosen, int diceChosenFromRound, String username, boolean isSingle) throws RemoteException;
 
-    boolean useToolCard6(int diceChosen, String username, boolean isSingle) throws RemoteException;
+    boolean useToolCard6(int diceToBeSacrificed,int diceChosen, String username, boolean isSingle) throws RemoteException;
 
     boolean useToolCard7(String username, boolean isSingle) throws RemoteException;
 

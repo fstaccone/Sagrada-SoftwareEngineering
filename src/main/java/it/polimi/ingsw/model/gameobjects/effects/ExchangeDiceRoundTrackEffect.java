@@ -2,10 +2,7 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
-import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.RoundTrack;
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 
@@ -24,7 +21,8 @@ public class ExchangeDiceRoundTrackEffect implements Effect {
         RoundTrack track = match.getBoard().getRoundTrack();
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if (player.getDice() >= 0 && player.getDice() < match.getBoard().getReserve().getDices().size()) {
+            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+            if (sacrificeDice.getColor().equals(Colors.GREEN)&&player.getDice() >= 0 && player.getDice() < match.getBoard().getReserve().getDices().size()) {
                 Dice dice = match.getBoard().getReserve().getDices().remove(player.getDice());
                 dice = track.switchDice(dice, player.getRound(), player.getDiceChosenFromRound());
                 if (dice != null) {

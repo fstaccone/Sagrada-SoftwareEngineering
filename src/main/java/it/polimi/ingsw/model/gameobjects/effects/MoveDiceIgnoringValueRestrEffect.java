@@ -2,10 +2,7 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
-import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 
@@ -29,7 +26,8 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
         Dice dice = schema.getDice(row, column);
 
         if (player.getDiceToBeSacrificed() != 9) {
-            if (dice != null) {
+            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+            if (sacrificeDice.getColor().equals(Colors.RED)&&dice != null) {
                 int newRow = player.getFinalX1();
                 int newColumn = player.getFinalY1();
                 schema.removeDice(row, column);

@@ -2,10 +2,7 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
-import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.Player;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 
@@ -30,7 +27,8 @@ public class MoveTwoDicesEffect implements Effect {
         Dice dice2 = schema.removeDice(row2, column2);
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if (dice1 != null && dice2 != null) {
+            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+            if (sacrificeDice.getColor().equals(Colors.YELLOW)&&dice1 != null && dice2 != null) {
                 int newRow1 = player.getFinalX1();
                 int newColumn1 = player.getFinalY1();
                 int newRow2 = player.getFinalX2();

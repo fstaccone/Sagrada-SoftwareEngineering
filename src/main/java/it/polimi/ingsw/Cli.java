@@ -1082,8 +1082,8 @@ public class Cli {
                                 boolean done = false;
                                 if (toolNumber1 != null && toolNumber1 >= 0 && toolNumber1 < dicesList.size() && toolNumber2 != null && toolNumber2 > 0 && toolNumber3 != null && toolNumber3 >= 1) {
                                     if (single) {
-                                        if (diceChosenToBeSacrificed != 9&&diceChosenToBeSacrificed!=toolNumber1) {
-                                            if (toolCommand.command5(diceChosenToBeSacrificed,toolNumber1, toolNumber2, toolNumber3)) {
+                                        if (diceChosenToBeSacrificed != 9 && diceChosenToBeSacrificed != toolNumber1) {
+                                            if (toolCommand.command5(diceChosenToBeSacrificed, toolNumber1, toolNumber2, toolNumber3)) {
                                                 done = true;
                                             }
                                         } else {
@@ -1091,7 +1091,7 @@ public class Cli {
                                             printer.flush();
                                         }
                                     } else {
-                                        if (toolCommand.command5(-1,toolNumber1, toolNumber2, toolNumber3)) {
+                                        if (toolCommand.command5(-1, toolNumber1, toolNumber2, toolNumber3)) {
                                             done = true;
                                         }
                                     }
@@ -1113,12 +1113,26 @@ public class Cli {
                         case 6: {
                             if (parametersCardinalityCheck(3)) {
                                 toolNumber1 = tryParse(parts[2]);
-                                if (toolNumber1 != null) {
-                                    if (toolCommand.command6(toolNumber1)) {
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato modificato correttamente!\n");
-                                        printer.flush();
+                                boolean done = false;
+                                if (toolNumber1 != null && toolNumber1 >= 0 && toolNumber1 < dicesList.size()) {
+                                    if (single) {
+                                        if (diceChosenToBeSacrificed != 9 && diceChosenToBeSacrificed != toolNumber1) {
+                                            if (toolCommand.command6(diceChosenToBeSacrificed,toolNumber1)) {
+                                                done = true;
+                                            }
+                                        }else {
+                                            printer.println("\nATTENZIONE:Non hai scelto un dado da sacrificare o non lo hai scelto correttamente!\n");
+                                            printer.flush();
+                                        }
                                     } else {
-                                        gameErrorPrint();
+                                        if (toolCommand.command6(-1,toolNumber1)) {
+                                            done = true;
+                                        }
+                                    }
+                                    if (done == true) {
+                                        diceChosenToBeSacrificed = 9;
+                                        printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
+                                        printer.flush();
                                     }
                                 } else {
                                     syntaxErrorPrint();

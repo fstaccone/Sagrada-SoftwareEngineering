@@ -607,7 +607,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
 
-    public boolean useToolCard6(int diceChosen, String name) {
+    public boolean useToolCard6(int diceToBeSacrificed,int diceChosen, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(6, getPlayer(name), this);

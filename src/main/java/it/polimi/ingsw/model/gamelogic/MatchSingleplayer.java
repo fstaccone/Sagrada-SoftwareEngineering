@@ -317,6 +317,24 @@ public class MatchSingleplayer extends Match implements Runnable {
         }
     }
 
+    @Override
+    public boolean useToolCard6(int diceToBeSacrificed, int diceChosen, String name) {
+        if (!isToolAction()) {
+            getPlayer().setDice(diceChosen);
+            getPlayer().setDiceToBeSacrificed(diceToBeSacrificed);
+            boolean result = getBoard().findAndUseToolCard(6, getPlayer(), this);
+            if(result) getPlayer().setDiceToBeSacrificed(9);
+            reserveToBeUpdated(result);
+            setToolAction(result);
+            synchronized (getLock()) {
+                getLock().notifyAll();
+            }
+
+            return result;
+        } else {
+            return false;
+        }    }
+
     public void observeMatchRemote(MatchObserver observer) {
         observerRmi = observer;
         startMatch();
