@@ -21,5 +21,7 @@ public class SocketGui implements Serializable {
         clientController.request(new ReconnectionRequest(gui.getUsername()));
     }
 
-    public Gui getGui() { return gui; }
+    public Gui getGui() {
+        return gui;
+    }
 }

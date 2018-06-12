@@ -2,7 +2,7 @@ package it.polimi.ingsw.socket.responses;
 
 import it.polimi.ingsw.socket.ResponseHandler;
 
-public class GameEndSingleResponse implements Response{
+public class GameEndSingleResponse implements Response {
 
     private int target;
     private int points;

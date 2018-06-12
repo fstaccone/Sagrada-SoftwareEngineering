@@ -9,8 +9,8 @@ public class UseToolCard8Request implements Request {
     public boolean single;
 
     public UseToolCard8Request(String name, boolean single) {
-    this.name = name;
-    this.single = single;
+        this.name = name;
+        this.single = single;
     }
 
     @Override

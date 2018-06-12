@@ -16,12 +16,12 @@ public class AfterReconnectionResponse implements Response {
     public String roundTrack;
     public int myTokens;
     public WindowPatternCard schemeCard;
-    public Map<String,Integer> otherTokens;
-    public Map<String,WindowPatternCard> otherSchemeCards;
+    public Map<String, Integer> otherTokens;
+    public Map<String, WindowPatternCard> otherSchemeCards;
     public boolean schemeCardChosen;
-    public Map<String,Integer> toolcardsPrices;
+    public Map<String, Integer> toolcardsPrices;
 
-    public AfterReconnectionResponse(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String,Integer> toolcardsPrices) {
+    public AfterReconnectionResponse(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         this.toolcards = toolcards;
         this.publicCards = publicCards;
         this.privateCard = privateCard;
@@ -31,8 +31,8 @@ public class AfterReconnectionResponse implements Response {
         this.schemeCard = schemeCard;
         this.otherTokens = otherTokens;
         this.otherSchemeCards = otherSchemeCards;
-        this.schemeCardChosen=schemeCardChosen;
-        this.toolcardsPrices=toolcardsPrices;
+        this.schemeCardChosen = schemeCardChosen;
+        this.toolcardsPrices = toolcardsPrices;
     }
 
     @Override

@@ -30,7 +30,9 @@ public class InitializationResponse implements Response {
         return privateCard;
     }
 
-    public List<String> getPlayers() { return players; }
+    public List<String> getPlayers() {
+        return players;
+    }
 
     @Override
     public void handleResponse(ResponseHandler handler) {

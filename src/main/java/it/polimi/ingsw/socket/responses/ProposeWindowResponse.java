@@ -7,6 +7,7 @@ import java.util.List;
 public class ProposeWindowResponse implements Response {
 
     public List<String> list;
+
     public ProposeWindowResponse(List<String> list) {
         this.list = list;
     }

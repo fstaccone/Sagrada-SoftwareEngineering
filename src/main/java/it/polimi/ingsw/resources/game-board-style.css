@@ -1,25 +1,26 @@
-#gameBoard{
+#gameBoard {
     -fx-background-image: url("sagrada-background.jpg");
     -fx-background-size: cover;
 }
 
 /* Per prova in game-board-single */
-.sampleCard{
+.sampleCard {
     -fx-background-image: url("private_objective_cards/blue.png");
     -fx-background-size: cover;
 }
 
-.schemeCardChoice:hover{
-        -fx-scale-x: 1.10;
-        -fx-scale-y: 1.10;
-        -fx-scale-y: 1.10;
+.schemeCardChoice:hover {
+    -fx-scale-x: 1.10;
+    -fx-scale-y: 1.10;
+    -fx-scale-y: 1.10;
 }
-.schemeCardChoice:focused{
+
+.schemeCardChoice:focused {
     -fx-background-color: pink;
     -fx-background-size: cover;
 }
 
-.button{
+.button {
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
@@ -31,17 +32,17 @@
     -fx-background-size: cover;
 }
 
-#reserve{
+#reserve {
     -fx-background-image: url("reserve.png");
     -fx-background-size: cover;
 }
 
-#choose-card-window{
+#choose-card-window {
     -fx-background-image: url("other/wood.png");
     -fx-background-size: cover;
 }
 
-#play{
+#play {
     -fx-background-color: linear-gradient(firebrick, burlywood);
     -fx-background-radius: 10;
     -fx-background-size: cover;
@@ -50,12 +51,13 @@
 #play:hover {
     -fx-background-color: firebrick;
 }
+
 #play:pressed {
     -fx-scale-y: 0.9;
     -fx-scale-x: 0.9;
 }
 
-#passButton{
+#passButton {
     -fx-background-color: linear-gradient(lightgreen, lightseagreen);
     -fx-background-radius: 10;
     -fx-background-size: cover;
@@ -87,29 +89,29 @@
 }
 
 #quit:hover {
-         -fx-background-color: grey;
+    -fx-background-color: grey;
 }
 
 #quit:pressed {
-     -fx-scale-y: 0.9;
-     -fx-scale-x: 0.9;
- }
+    -fx-scale-y: 0.9;
+    -fx-scale-x: 0.9;
+}
 
- #gameBoardQuit {
-     -fx-background-color: linear-gradient(red, crimson);
-     -fx-background-radius: 10;
-     -fx-background-size: cover;
- }
+#gameBoardQuit {
+    -fx-background-color: linear-gradient(red, crimson);
+    -fx-background-radius: 10;
+    -fx-background-size: cover;
+}
 
- #gameBoardQuit:hover {
-          -fx-background-color: red;
- }
+#gameBoardQuit:hover {
+    -fx-background-color: red;
+}
 
- #gameBoardQuit:pressed {
-      -fx-scale-y: 0.9;
-      -fx-scale-x: 0.9;
-  }
+#gameBoardQuit:pressed {
+    -fx-scale-y: 0.9;
+    -fx-scale-x: 0.9;
+}
 
-  #toolpane{
-  -fx-background-radius: 10;
-  }
+#toolpane {
+    -fx-background-radius: 10;
+}

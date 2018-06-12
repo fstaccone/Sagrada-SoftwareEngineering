@@ -4,7 +4,6 @@ import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.responses.Response;
 
 
-
 public class DiceColorRequest implements Request {
 
     public String name;

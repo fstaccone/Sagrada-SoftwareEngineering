@@ -9,8 +9,8 @@ public class GoThroughRequest implements Request {
     public boolean singlePlayer;
 
     public GoThroughRequest(String username, boolean singlePlayer) {
-        this.username=username;
-        this.singlePlayer=singlePlayer;
+        this.username = username;
+        this.singlePlayer = singlePlayer;
     }
 
     @Override

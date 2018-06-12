@@ -182,7 +182,7 @@ public class GameBoardHandler implements Initializable {
                 int i = Integer.parseInt(s);
                 s = gui.getDicesList().get(i);
                 diceChosen = i;
-                textArea.appendText("Hai scelto il dado: " + s + " pos: " + i+ "\n");
+                textArea.appendText("Hai scelto il dado: " + s + " pos: " + i + "\n");
             }
         }
     };
@@ -388,7 +388,7 @@ public class GameBoardHandler implements Initializable {
                     if (tempY == null) tempY = 0;
                     int coordinateX = tempX;
                     int coordinateY = tempY;
-                    textArea.appendText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY +"\n");
+                    textArea.appendText("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY + "\n");
                     if (remoteController != null) {
                         try {
                             if (remoteController.placeDice(diceChosen, coordinateX, coordinateY, username, false)) {
@@ -898,7 +898,7 @@ public class GameBoardHandler implements Initializable {
     }
 
     public void setOtherSchemeCards(Pane pane, WindowPatternCard window) {
-        if(window!=null) {//DA CONTROLLARE
+        if (window != null) {//DA CONTROLLARE
             String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
             String imgURL = WINDOW_PATTERN_CARDS_PATH + s + ".png";
             BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
@@ -1089,7 +1089,7 @@ public class GameBoardHandler implements Initializable {
             s.append("Complimenti! Sei il vincitore.\n");
             Platform.runLater(() -> textArea.appendText(s.toString()));
         } else {
-            s.append( winner.toUpperCase() + " è il vincitore!\n");
+            s.append(winner.toUpperCase() + " è il vincitore!\n");
             Platform.runLater(() -> textArea.appendText(s.toString()));
         }
     }
@@ -1231,7 +1231,7 @@ public class GameBoardHandler implements Initializable {
                         if (remoteController != null) {
                             try {
 
-                                if (remoteController.useToolCard1(-1,targetReserveIndexForTools, incrOrDecr, username, false)) {
+                                if (remoteController.useToolCard1(-1, targetReserveIndexForTools, incrOrDecr, username, false)) {
                                     textArea.appendText("Carta utensile 1 utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 1 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1242,7 +1242,7 @@ public class GameBoardHandler implements Initializable {
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard1Request(-1,targetReserveIndexForTools, incrOrDecr, username, false));
+                            clientController.request(new UseToolCard1Request(-1, targetReserveIndexForTools, incrOrDecr, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 1 utilizzata correttamente!\n");
                             } else {
@@ -1300,7 +1300,7 @@ public class GameBoardHandler implements Initializable {
                                 System.out.println(finalCoordinateX1);
                                 System.out.println(finalCoordinateY1);
 
-                                if (remoteController.useToolCard2or3(-1,n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false)) {
+                                if (remoteController.useToolCard2or3(-1, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false)) {
                                     textArea.appendText("Carta utensile " + n + " utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1310,7 +1310,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard2or3Request(-1,n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
+                            clientController.request(new UseToolCard2or3Request(-1, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile " + n + " utilizzata correttamente!\n");
                             } else {
@@ -1386,7 +1386,7 @@ public class GameBoardHandler implements Initializable {
                             try {
 
 
-                                if (remoteController.useToolCard4(-1,targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
+                                if (remoteController.useToolCard4(-1, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
                                     textArea.appendText("Carta utensile 4 utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1396,7 +1396,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard4Request(-1,targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
+                            clientController.request(new UseToolCard4Request(-1, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 4 utilizzata correttamente!\n");
                             } else {
@@ -1445,7 +1445,7 @@ public class GameBoardHandler implements Initializable {
                     if (targetReserveIndexForTools != 9 && targetRoundForTools != 0 && targetDiceFromRoundForTools != 9) {
                         if (remoteController != null) {
                             try {
-                                if (remoteController.useToolCard5(-1,targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false)) {
+                                if (remoteController.useToolCard5(-1, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false)) {
 
                                     textArea.appendText("Carta utensile 5 utilizzata correttamente!\n");
                                 } else {
@@ -1455,7 +1455,7 @@ public class GameBoardHandler implements Initializable {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard5Request(-1,targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false));
+                            clientController.request(new UseToolCard5Request(-1, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 5 utilizzata correttamente!\n");
                             } else {
@@ -1495,7 +1495,7 @@ public class GameBoardHandler implements Initializable {
                         if (remoteController != null) {
                             try {
 
-                                if (remoteController.useToolCard6(-1,targetReserveIndexForTools, username, false)) {
+                                if (remoteController.useToolCard6(-1, targetReserveIndexForTools, username, false)) {
                                     textArea.appendText("Carta utensile 6 utilizzata correttamente!\n");
                                 } else {
                                     textArea.appendText("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
@@ -1506,7 +1506,7 @@ public class GameBoardHandler implements Initializable {
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard6Request(-1,targetReserveIndexForTools, username, false));
+                            clientController.request(new UseToolCard6Request(-1, targetReserveIndexForTools, username, false));
                             if (waitForToolEffectAppliedResponse()) {
                                 textArea.appendText("Carta utensile 6 utilizzata correttamente!\n");
                             } else {
@@ -1890,7 +1890,7 @@ public class GameBoardHandler implements Initializable {
                 }
                 color = clientController.getDiceColor();
             }
-            if(color!=null) {
+            if (color != null) {
                 textArea.appendText("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!\n");
             }
             imageView1 = new ImageView();
@@ -1971,6 +1971,7 @@ public class GameBoardHandler implements Initializable {
                 }
             });
         }
+
         private boolean waitForToolEffectAppliedResponse() {
             try {
                 Thread.sleep(1000);
