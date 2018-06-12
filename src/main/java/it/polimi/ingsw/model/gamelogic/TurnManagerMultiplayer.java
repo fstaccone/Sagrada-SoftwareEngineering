@@ -76,7 +76,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
     private void initializeRound() {
         match.getPlayers().forEach(player -> player.setTurnsLeft(2));
-        match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size()));
+        match.getBoard().getReserve().throwDices(match.getBag().pickDices(match.getPlayers().size() * 2 + 1));
     }
 
 
