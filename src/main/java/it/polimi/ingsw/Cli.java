@@ -421,7 +421,7 @@ public class Cli {
                                         if (toolNumber1 != null) {
                                             if (Integer.parseInt(parts[1]) < dicesList.size()) {
                                                 diceChosenToBeSacrificed = Integer.parseInt(parts[1]);
-                                                printer.println("\nYou have chosen to sacrifice the dice: " + dicesList.toArray()[diceChosen].toString() + "\n");
+                                                printer.println("\nYou have chosen to sacrifice the dice: " + dicesList.toArray()[diceChosenToBeSacrificed].toString() + "\n");
                                                 printer.flush();
                                             } else {
                                                 printer.println("\nThe dice you are trying to use does not exist, please retry ");

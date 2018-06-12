@@ -287,12 +287,12 @@ public class LoginHandler implements Initializable {
     // the connection is established between client and lobby
     private void setupRmiConnection() throws RemoteException {
 
-        registry = LocateRegistry.getRegistry();
+        //registry = LocateRegistry.getRegistry();
 
         try {
-            this.remoteController = (RemoteController) registry.lookup("Lobby");
+            //this.remoteController = (RemoteController) registry.lookup("Lobby");
 
-            //remoteController = (RemoteController) Naming.lookup(("//" + serverAddress + "/Lobby"));
+            remoteController = (RemoteController) Naming.lookup(("//" + serverAddress + "/Lobby"));
 
             if (isCli && !singleplayer)
                 waitingRoomCli.setController(remoteController);
@@ -301,6 +301,8 @@ public class LoginHandler implements Initializable {
             e.printStackTrace();
         //} catch (MalformedURLException e) {
         //    e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 

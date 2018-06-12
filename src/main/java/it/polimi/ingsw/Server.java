@@ -39,9 +39,9 @@ public class Server {
 
         //start RMI registry
         try {
-            Registry registry = LocateRegistry.createRegistry(1099);
-            registry.rebind(lobbyName,controller);
-            //Naming.rebind("//localhost/" + lobbyName, controller);
+            //Registry registry = LocateRegistry.createRegistry(1099);
+            //registry.rebind(lobbyName,controller);
+            Naming.rebind("//localhost/" + lobbyName, controller);
 
             System.out.println("RMI server online on port 1099");
         } catch (RemoteException e) {

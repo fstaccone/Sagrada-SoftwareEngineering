@@ -36,12 +36,14 @@ public class IncrDecrDiceValueEffect implements Effect {
                         if (value != 6) {
                             value = value + 1;
                             match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
                             return true;
                         } else return false;
                     case "-":
                         if (value != 1) {
                             value = value - 1;
                             match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value);
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
                             return true;
                         } else return false;
                     default:
