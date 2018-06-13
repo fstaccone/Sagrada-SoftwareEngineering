@@ -24,10 +24,10 @@ public class Server {
     private static String lobbyName;
     private static int waitingTime;
     private static int turnTime;
+    private static ServerSocket serverSocket;
+    private static ExecutorService threadPool;
 
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket;
-        ExecutorService threadPool;
 
         //read configuration file
         readServerConfig(serverConfig);
