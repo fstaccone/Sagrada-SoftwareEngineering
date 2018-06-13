@@ -190,25 +190,29 @@ public class Lobby {
     public void disconnect(String name) {
         try {
             PlayerMultiplayer p;
+            MatchMultiplayer match;
+
             p = getPlayer(name);
+            match = multiplayerMatches.get(name);
+
             if (p != null) {
                 p.setStatus(ConnectionStatus.DISCONNECTED);
             }
             takenUsernames.put(name, ConnectionStatus.DISCONNECTED);
-            multiplayerMatches.get(name).getRemoteObservers().remove(p);
-            multiplayerMatches.get(name).getSocketObservers().remove(p);
+            match.getRemoteObservers().remove(p);
+            match.getSocketObservers().remove(p);
 
-            for (MatchObserver mo : multiplayerMatches.get(name).getRemoteObservers().values()) {
+            for (MatchObserver mo : match.getRemoteObservers().values()) {
                 mo.onPlayerExit(name);
             }
 
             Response response = new PlayerExitGameResponse(name);
-            for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
+            for (PlayerMultiplayer player : match.getPlayers()) {
                 if (player.getStatus().equals(ConnectionStatus.CONNECTED)) {
                     try {
-                        if (multiplayerMatches.get(player.getName()).getSocketObservers().get(player) != null) {
-                            multiplayerMatches.get(player.getName()).getSocketObservers().get(player).writeObject(response);
-                            multiplayerMatches.get(player.getName()).getSocketObservers().get(player).reset();
+                        if (match.getSocketObservers().get(player) != null) {
+                            match.getSocketObservers().get(player).writeObject(response);
+                            match.getSocketObservers().get(player).reset();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -219,25 +223,29 @@ public class Lobby {
             assert p != null;
             if (p.isMyTurn()) {
                 p.setMyTurn(false);
-                multiplayerMatches.get(name).goThrough();
+                match.goThrough();
             }
 
             // to check if the game must be closed
-            if (multiplayerMatches.get(name).checkConnection() < 2) {
-                for (PlayerMultiplayer player : multiplayerMatches.get(name).getPlayers()) {
+            if (match.checkConnection() < 2) {
+                for (PlayerMultiplayer player : match.getPlayers()) {
                     if (!player.getName().equals(name) && player.getStatus().equals(ConnectionStatus.CONNECTED)) {
-                        // notifica ai giocatori che la partita è finita e poi li rimuove
-                        if (multiplayerMatches.get(name).getRemoteObservers().get(player) != null) {
+                        match.setStillPlaying(false);
+                        // notifies to the player he is the only still in game
+                        if (match.getRemoteObservers().get(player) != null) {
                             try {
-                                multiplayerMatches.get(name).getRemoteObservers().get(player).onGameClosing();
+                                if(!match.getTurnManagerMultiplayer().isTimerExpired()){
+                                    match.getTurnManagerMultiplayer().setTimerExpiredTrue();
+                                }
+                                match.getRemoteObservers().get(player).onGameClosing();
                             } catch (RemoteException e) {
                                 System.out.println("Partita terminata!");
                             }
-                            multiplayerMatches.get(name).getRemoteObservers().remove(player);
+                            match.getRemoteObservers().remove(player);
                         } else {
-                            multiplayerMatches.get(name).getSocketObservers().get(player).writeObject(new ClosingGameResponse());
-                            multiplayerMatches.get(name).getSocketObservers().get(player).reset();
-                            multiplayerMatches.get(name).getSocketObservers().remove(player);
+                            match.getSocketObservers().get(player).writeObject(new ClosingGameResponse());
+                            match.getSocketObservers().get(player).reset();
+                            match.getSocketObservers().remove(player);
 
                         }
                     }
@@ -250,19 +258,23 @@ public class Lobby {
     }
 
     public void reconnect(String name) {
+        MatchMultiplayer match;
+
+        match = multiplayerMatches.get(name);
+
         takenUsernames.put(name, ConnectionStatus.CONNECTED);
-        multiplayerMatches.get(name).getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
+        match.getPlayer(name).setStatus(ConnectionStatus.CONNECTED);
 
         // if it's socket, make it observer of the match
         if (socketObservers.get(name) != null) {
-            multiplayerMatches.get(name).getSocketObservers().put(multiplayerMatches.get(name).getPlayer(name), socketObservers.remove(name));
-            multiplayerMatches.get(name).afterReconnection(name);
+            match.getSocketObservers().put(match.getPlayer(name), socketObservers.remove(name));
+            match.afterReconnection(name);
         }
 
         // notify to all other players that the player is now in game
-        for (PlayerMultiplayer p : multiplayerMatches.get(name).getRemoteObservers().keySet()) {
+        for (PlayerMultiplayer p : match.getRemoteObservers().keySet()) {
             try {
-                multiplayerMatches.get(name).getRemoteObservers().get(p).onPlayerReconnection(name);
+                match.getRemoteObservers().get(p).onPlayerReconnection(name);
             } catch (RemoteException e) {
                 disconnect(p.getName());
                 System.out.println("Player " + p.getName() + " disconnected!");
@@ -270,12 +282,12 @@ public class Lobby {
         }
 
         Response response = new PlayerReconnectionResponse(name);
-        for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
+        for (PlayerMultiplayer p : match.getPlayers()) {
             if (!p.getName().equals(name)) {
                 try {
-                    if (multiplayerMatches.get(p.getName()).getSocketObservers().get(p) != null) {
-                        multiplayerMatches.get(p.getName()).getSocketObservers().get(p).writeObject(response);
-                        multiplayerMatches.get(p.getName()).getSocketObservers().get(p).reset();
+                    if (match.getSocketObservers().get(p) != null) {
+                        match.getSocketObservers().get(p).writeObject(response);
+                        match.getSocketObservers().get(p).reset();
                     }
                 } catch (IOException e) {
                     disconnect(p.getName());

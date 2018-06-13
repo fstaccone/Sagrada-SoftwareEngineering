@@ -19,6 +19,7 @@ public abstract class Match {
     private static final int numberOfRounds = 10;
     protected int roundCounter;
     protected Thread localThread;
+    private boolean stillPlaying;
 
     private boolean diceAction;
     private boolean toolAction;
@@ -36,6 +37,7 @@ public abstract class Match {
         this.lobby = lobby;
         lock = new Object();
         bag = new Bag(18);
+        stillPlaying = true;
     }
 
     // getters
@@ -63,10 +65,11 @@ public abstract class Match {
         return numberOfRounds;
     }
 
+    public boolean isStillPlaying() { return stillPlaying; }
+
     public List<WindowPatternCard> getWindowsProposed() {
         return windowsProposed;
     }
-
 
     public int getCurrentRound() {
         return roundCounter;
@@ -109,6 +112,8 @@ public abstract class Match {
     public void incrementRoundCounter() {
         this.roundCounter++;
     }
+
+    public void setStillPlaying(boolean stillPlaying) { this.stillPlaying = stillPlaying; }
 
     /**
      * At the end of each round, all the dices left on the reserve are taken and placed on the round track

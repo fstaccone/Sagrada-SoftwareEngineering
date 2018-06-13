@@ -3,7 +3,6 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,7 +24,7 @@ public class Gui {
     private RemoteController controllerRmi;
     private ClientController controllerSocket;
     private Stage windowStage;
-
+    private boolean stillPlaying;
 
     private boolean myTurn;
     private boolean reconnection;
@@ -58,7 +57,7 @@ public class Gui {
         myTurn = false;
         windowChosen = false;
         this.single = single;
-
+        stillPlaying = true;
         windowStage = fromLogin;
 
         otherFavorTokensMap = new HashMap<>();
@@ -119,7 +118,7 @@ public class Gui {
             //Solo per verifica
             String s = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
             if (gameBoardHandler != null) {
-                gameBoardHandler.setTextArea(s);
+                gameBoardHandler.appendToTextArea(s);
                 gameBoardHandler.initializeActions();
             } else if (chooseCardHandler != null) {
                 chooseCardHandler.setTextArea(s);
@@ -151,7 +150,7 @@ public class Gui {
 
     public void onPlayerReconnection(String name) {
         if (gameBoardHandler != null) {
-            gameBoardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
+            gameBoardHandler.appendToTextArea("Il giocatore " + name + " è entrato nella partita!");
         } else if (chooseCardHandler != null) {
             chooseCardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
         }
@@ -183,21 +182,26 @@ public class Gui {
     }
 
     public void onGameClosing() {
-        gameBoardHandler.onGameClosing();
-        try {
-            Thread.sleep(20000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
+        if (stillPlaying) {
+            gameBoardHandler.onGameClosing();
         }
-        Platform.runLater(() -> windowStage.close());
-        //System.exit(0);
+
+        stillPlaying = false;
     }
 
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
         if (gameBoardHandler != null) {
             gameBoardHandler.showRanking(winner, rankingNames, rankingValues);
         }
+        stillPlaying = false;
+    }
+
+    // todo: eventualmente cambiare il gameboardhandler se ne creiamo uno per il singleplayer
+    public void onGameEndSingle(int goal, int points) {
+        if (gameBoardHandler != null) {
+            gameBoardHandler.showResultForSingle(goal, points);
+        }
+        stillPlaying = false;
     }
 
     public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
@@ -256,7 +260,7 @@ public class Gui {
     public void onOtherTurn(String name) {
         String s = "Ora è il turno di " + name + "!";
         if (gameBoardHandler != null) {
-            gameBoardHandler.setTextArea(s);
+            gameBoardHandler.appendToTextArea(s);
         } else if (chooseCardHandler != null) {
             chooseCardHandler.setTextArea(s);
         }
@@ -301,7 +305,7 @@ public class Gui {
     public void onPlayerExit(String name) {
         System.out.println("On player exit");
         if (gameBoardHandler != null) {
-            gameBoardHandler.setTextArea("Il giocatore " + name + " è uscito dalla partita!");
+            gameBoardHandler.appendToTextArea("Il giocatore " + name + " è uscito dalla partita!");
         } else {
             chooseCardHandler.setTextArea("Il giocatore " + name + " è uscito dalla partita!");
         }
@@ -314,7 +318,7 @@ public class Gui {
 
     public void onToolCardUsedByOthers(String name, int toolNumber) {
         if (gameBoardHandler != null) {
-            gameBoardHandler.setTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+            gameBoardHandler.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         } else
             chooseCardHandler.setTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
     }
@@ -351,11 +355,11 @@ public class Gui {
         gameBoardHandler.setReserve(dicesList);
         gameBoardHandler.onRoundTrack(track);
         if (!reconnection) {
-            gameBoardHandler.setTextArea("Fai la tua prima mossa!");
+            gameBoardHandler.appendToTextArea("Fai la tua prima mossa!");
         } else {
-            gameBoardHandler.setTextArea("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
+            gameBoardHandler.appendToTextArea("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
             for (String toolcard : toolcardsPrices.keySet()) {
-                gameBoardHandler.setTextArea("-" + toolcard + " " + toolcardsPrices.get(toolcard));
+                gameBoardHandler.appendToTextArea("-" + toolcard + " " + toolcardsPrices.get(toolcard));
             }
         }
         gameBoardHandler.createLabelsMap();

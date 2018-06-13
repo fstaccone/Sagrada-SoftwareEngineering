@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.gamelogic;
 import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.PrivateObjectiveCard;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.*;
 
@@ -20,20 +19,22 @@ public class TurnManagerMultiplayer implements Runnable {
     private Timer turnTimer;
     private int turnTime;
     private MatchMultiplayer match;
-    private boolean expired; // it's used to avoid double canceling of timer
+    private boolean timerExpired; // it's used to avoid double canceling of timer
     private int currentTurn;
 
     TurnManagerMultiplayer(MatchMultiplayer match, int turnTime) {
         this.turnTime = turnTime;
         this.match = match;
-        expired = false;
+        timerExpired = false;
     }
+
+    public boolean isTimerExpired() { return timerExpired; }
 
     /**
      * sets the boolean to true in order to avoid double canceling of the timer when the timer expires
      */
-    void setExpiredTrue() {
-        this.expired = true;
+    public void setTimerExpiredTrue() {
+        this.timerExpired = true;
     }
 
 
@@ -42,6 +43,7 @@ public class TurnManagerMultiplayer implements Runnable {
         try {
             initializeClients();
             turnManager();
+            match.terminateMatch();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (RemoteException e) {
@@ -87,7 +89,7 @@ public class TurnManagerMultiplayer implements Runnable {
         List<String> names = match.getPlayers().stream().map(PlayerMultiplayer::getName).collect(Collectors.toList());
         // Notification RMI and Socket
         for (PlayerMultiplayer p : match.getPlayers()) {
-            List<String> privateCard= new ArrayList<>();
+            List<String> privateCard = new ArrayList<>();
             privateCard.add(p.getPrivateObjectiveCard().toString());
             if (getObserverRmi(p) != null) {
                 try {
@@ -238,18 +240,17 @@ public class TurnManagerMultiplayer implements Runnable {
      * manages the core actions of the turn, useful to maintain the right flow during the turn of the player.
      *
      * @param player is the player who is playing this turn
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void playTurnCore(PlayerMultiplayer player) throws RemoteException, InterruptedException {
+    private void playTurnCore(PlayerMultiplayer player) throws InterruptedException {
         notifyTurnBeginning(player);
         setTimer(player);
         play(player);
         notifyTurnEnd(player);
-        if (!expired) {
+        if (!timerExpired) {
             turnTimer.cancel();
         }
-        expired = false;
+        timerExpired = false;
     }
 
     /**
@@ -273,15 +274,23 @@ public class TurnManagerMultiplayer implements Runnable {
      * @throws RemoteException
      */
     private void turnManager() throws InterruptedException, RemoteException {
-        initializeRound();
+        if (match.isStillPlaying()) {
+            initializeRound();
+        }
 
-        currentTurn = 1; // todo: controllare, potrebbe essere ancora 0
-        playFirstTurn();
+        currentTurn = 1;
+        if (match.isStillPlaying()) {
+            playFirstTurn();
+        }
 
         currentTurn = 2;
-        playSecondTurn();
+        if (match.isStillPlaying()) {
+            playSecondTurn();
+        }
 
-        terminateRound();
+        if (match.isStillPlaying()) {
+            terminateRound();
+        }
     }
 
     /**
@@ -357,6 +366,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
         if (match.getCurrentRound() >= NUM_ROUNDS) {
             match.calculateFinalScore();
+            match.setStillPlaying(false);
         } else {
             this.turnManager();
         }

@@ -70,7 +70,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onGameEndSingle(int goal, int points) {
-
+        gui.onGameEndSingle(goal, points);
     }
 
     @Override

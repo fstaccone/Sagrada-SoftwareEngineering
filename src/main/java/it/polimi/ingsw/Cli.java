@@ -31,7 +31,7 @@ public class Cli {
     private List<ToolCommand> toolCommands;
     private List<String> privateCard;
     private WindowPatternCard mySchemeCard;
-
+   // private Map<String, Integer> toolcardsPrices;
     private int myFavorTokens;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
@@ -134,6 +134,7 @@ public class Cli {
         diceValueToBeSet = false;
         tool11DiceToBePlaced = false;
         stillPlaying = true;
+
     }
 
     public void printWelcome() {
@@ -267,25 +268,29 @@ public class Cli {
     }
 
 
+    /**
+     * if you become the only in game due to disconnection of other players, you are the winner
+     */
     public void onGameClosing() {
-        printer.println("Congratulations! You are the winner. You were the only one still in game.");
-        printer.flush();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
+        if (stillPlaying) {
+            printer.println("Congratulazioni! Sei il vincitore. Sei rimasto da solo.");
+            printer.flush();
         }
-
         stillPlaying = false;
     }
 
+    /**
+     * print your private card
+     */
     public void showPrivateCard() {
         printer.println("Your private objective card:");
         printer.println(privateCard);
         printer.flush();
     }
 
+    /**
+     * print public objective cards
+     */
     public void showPublicCards() {
         printer.println("Public objective cards:");
 
@@ -295,16 +300,39 @@ public class Cli {
         printer.flush();
     }
 
+    /**
+     * print toolcards
+     */
     public void showToolCards() {
         printer.println("Tool cards:");
 
         for (String s : toolCardsList) {
             printer.println("- " + s);
         }
-
+/*
+        //todo: controllare se funziona davvero
+        for (String toolcard : toolcardsPrices.keySet()) {
+            printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
+        }
+*/
         printer.flush();
     }
 
+    /**
+     * update the state of the match in case of reconnection
+     *
+     * @param toolcards        are the drawn tool cards
+     * @param publicCards      are the drawn public cards
+     * @param privateCard      is (or are in single player mode) the drawn private card (cards)
+     * @param reserve          is the list of dices available for the current round
+     * @param roundTrack       is the list of left dices for all round played till the reconnection
+     * @param myTokens         is the number of left tokens for you
+     * @param mySchemeCard     is your window pattern card at the current state of the match
+     * @param otherTokens      are tokens of other players
+     * @param otherSchemeCards are the window pattern cards of the other players
+     * @param schemeCardChosen is true if you've already chosen your scheme card
+     * @param toolcardsPrices  is the price of tool cards at this state of the match
+     */
     public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens,
                                     WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards,
                                     boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
@@ -321,6 +349,7 @@ public class Cli {
         this.otherSchemeCardsMap = otherSchemeCards;
         this.otherFavorTokensMap = otherTokens;
         this.windowChosen = schemeCardChosen;
+       // this.toolcardsPrices = toolcardsPrices;
         printer.println("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
         for (String toolcard : toolcardsPrices.keySet()) {
             printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
@@ -873,17 +902,20 @@ public class Cli {
                 }
             }
 
-            String s = null;
+            String s = "";
 
-            do {
+            while (!s.equals("esci")) {
+
+                printer.println("La partita è terminata, scrivi 'esci' per uscire");
+                printer.flush();
+
                 try {
-                    printer.println("La partita è terminata, scrivi 'esci' per uscire");
-                    printer.flush();
                     s = keyboard.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } while (!s.equals("esci"));
+
+            }
 
             System.exit(0);
         }
@@ -951,7 +983,7 @@ public class Cli {
                                     } else {
                                         if (toolCommand.command1(-1, toolNumber1, toolString1)) {
                                             done = true;
-                                        }else {
+                                        } else {
                                             gameErrorPrint();
                                         }
                                     }
@@ -989,7 +1021,7 @@ public class Cli {
                                     } else {
                                         if (toolCommand.command2or3(-1, 2, toolNumber1, toolNumber2, toolNumber3, toolNumber4)) {
                                             done = true;
-                                        }else {
+                                        } else {
                                             gameErrorPrint();
                                         }
                                     }
@@ -1029,7 +1061,7 @@ public class Cli {
                                     } else {
                                         if (toolCommand.command2or3(-1, 3, toolNumber1, toolNumber2, toolNumber3, toolNumber4)) {
                                             done = true;
-                                        }else {
+                                        } else {
                                             gameErrorPrint();
                                         }
                                     }
@@ -1073,7 +1105,7 @@ public class Cli {
                                     } else {
                                         if (toolCommand.command4(-1, toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, toolNumber7, toolNumber8)) {
                                             done = true;
-                                        }else {
+                                        } else {
                                             gameErrorPrint();
                                         }
                                     }
@@ -1185,7 +1217,7 @@ public class Cli {
                                 } else {
                                     if (toolCommand.command7(-1)) {
                                         done = true;
-                                    }else {
+                                    } else {
                                         gameErrorPrint();
                                     }
                                 }
@@ -1215,7 +1247,7 @@ public class Cli {
                             } else {
                                 if (toolCommand.command8(-1)) {
                                     done = true;
-                                }else {
+                                } else {
                                     gameErrorPrint();
                                 }
                             }
@@ -1281,7 +1313,7 @@ public class Cli {
                                     } else {
                                         if (toolCommand.command10(-1, toolNumber1)) {
                                             done = true;
-                                        }else {
+                                        } else {
                                             gameErrorPrint();
                                         }
                                     }
@@ -1342,7 +1374,7 @@ public class Cli {
                                             }
                                             diceValueToBeSet = true;
                                             done = true;
-                                        }else {
+                                        } else {
                                             gameErrorPrint();
                                         }
                                     }
@@ -1366,10 +1398,10 @@ public class Cli {
                                 toolNumber5 = tryParse(parts[6]);
                                 toolNumber6 = tryParse(parts[7]);
                                 boolean done = false;
-                                if (toolNumber1 != null && toolNumber1>0 && toolNumber2 != null && toolNumber2>=0 && toolNumber3 != null && toolNumber3 >= 0 && toolNumber3 < 4 && toolNumber4 != null && toolNumber4 >= 0 && toolNumber4 < 5 && toolNumber5 != null && toolNumber5 >= 0 && toolNumber5 < 4 && toolNumber6 != null && toolNumber6 >= 0 && toolNumber6 < 5 ) {
+                                if (toolNumber1 != null && toolNumber1 > 0 && toolNumber2 != null && toolNumber2 >= 0 && toolNumber3 != null && toolNumber3 >= 0 && toolNumber3 < 4 && toolNumber4 != null && toolNumber4 >= 0 && toolNumber4 < 5 && toolNumber5 != null && toolNumber5 >= 0 && toolNumber5 < 4 && toolNumber6 != null && toolNumber6 >= 0 && toolNumber6 < 5) {
                                     if (single) {
                                         if (diceChosenToBeSacrificed != 9) {
-                                            if (toolCommand.command12(diceChosenToBeSacrificed,toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, -1, -1, -1, -1)) {
+                                            if (toolCommand.command12(diceChosenToBeSacrificed, toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, -1, -1, -1, -1)) {
                                                 done = true;
                                             }
                                         } else {
@@ -1377,9 +1409,9 @@ public class Cli {
                                             printer.flush();
                                         }
                                     } else {
-                                        if (toolCommand.command12(-1,toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, -1, -1, -1, -1)) {
+                                        if (toolCommand.command12(-1, toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, -1, -1, -1, -1)) {
                                             done = true;
-                                        }else {
+                                        } else {
                                             gameErrorPrint();
                                         }
                                     }
@@ -1408,11 +1440,11 @@ public class Cli {
                                 toolNumber8 = tryParse(parts[9]);
                                 toolNumber9 = tryParse(parts[10]);
                                 toolNumber10 = tryParse(parts[11]);
-                                boolean done=false;
-                                if (toolNumber1 != null && toolNumber1>0 && toolNumber2 != null && toolNumber2>=0 && toolNumber3 != null && toolNumber3 >= 0 && toolNumber3 < 4 && toolNumber4 != null && toolNumber4 >= 0 && toolNumber4 < 5 && toolNumber5 != null && toolNumber5 >= 0 && toolNumber5 < 4 && toolNumber6 != null && toolNumber6 >= 0 && toolNumber6 < 5 && toolNumber7 != null && toolNumber7 >= 0 && toolNumber7 < 4 && toolNumber8 != null && toolNumber8 >= 0 && toolNumber8 < 5 && toolNumber9 != null && toolNumber9 >= 0 && toolNumber9< 4 && toolNumber10 != null && toolNumber10 >= 0 && toolNumber10 < 5) {
+                                boolean done = false;
+                                if (toolNumber1 != null && toolNumber1 > 0 && toolNumber2 != null && toolNumber2 >= 0 && toolNumber3 != null && toolNumber3 >= 0 && toolNumber3 < 4 && toolNumber4 != null && toolNumber4 >= 0 && toolNumber4 < 5 && toolNumber5 != null && toolNumber5 >= 0 && toolNumber5 < 4 && toolNumber6 != null && toolNumber6 >= 0 && toolNumber6 < 5 && toolNumber7 != null && toolNumber7 >= 0 && toolNumber7 < 4 && toolNumber8 != null && toolNumber8 >= 0 && toolNumber8 < 5 && toolNumber9 != null && toolNumber9 >= 0 && toolNumber9 < 4 && toolNumber10 != null && toolNumber10 >= 0 && toolNumber10 < 5) {
                                     if (single) {
                                         if (diceChosenToBeSacrificed != 9) {
-                                            if (toolCommand.command12(diceChosenToBeSacrificed,toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, toolNumber7, toolNumber8, toolNumber9, toolNumber10)) {
+                                            if (toolCommand.command12(diceChosenToBeSacrificed, toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, toolNumber7, toolNumber8, toolNumber9, toolNumber10)) {
                                                 done = true;
                                             }
                                         } else {
@@ -1420,9 +1452,9 @@ public class Cli {
                                             printer.flush();
                                         }
                                     } else {
-                                        if (toolCommand.command12(-1,toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, toolNumber7, toolNumber8, toolNumber9, toolNumber10)) {
+                                        if (toolCommand.command12(-1, toolNumber1, toolNumber2, toolNumber3, toolNumber4, toolNumber5, toolNumber6, toolNumber7, toolNumber8, toolNumber9, toolNumber10)) {
                                             done = true;
-                                        }else {
+                                        } else {
                                             gameErrorPrint();
                                         }
                                     }

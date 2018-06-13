@@ -24,13 +24,12 @@ public class Server {
     private static int waitingTime;
     private static int turnTime;
 
-    private static ServerSocket serverSocket;
-    private static ExecutorService threadPool;
-
     public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket;
+        ExecutorService threadPool;
 
         //read configuration file
-        readServerConfig(serverConfig);
+        readServerConfig();
 
         Lobby lobby = new Lobby(waitingTime, turnTime);
         Controller controller = new Controller(lobby);
@@ -61,21 +60,18 @@ public class Server {
     }
 
 
-    private static void readServerConfig(String serverConfig) {
+    private static void readServerConfig() {
 
         FileReader fileReader = null;
-        Scanner scanner = null;
-        Scanner lineParser = null;
         String line;
         HashMap<String, String> valuesMap = new HashMap<>();
 
         //try-catch-finally to guarantee rightness of fileReader's closure after use
         try {
-            fileReader = new FileReader(serverConfig);
+            fileReader = new FileReader(Server.serverConfig);
 
             //try-finally to guarantee rightness of scanner's closure after use
-            try {
-                scanner = new Scanner(fileReader);
+            try (Scanner scanner = new Scanner(fileReader)) {
 
                 //lecture of values added to the valuesMap
                 while (scanner.hasNextLine()) {
@@ -84,21 +80,12 @@ public class Server {
                         continue;
                     }
                     //try-finally to guarantee rightness of lineParser's closure
-                    try {
-                        lineParser = new Scanner(line);
+                    try (Scanner lineParser = new Scanner(line)) {
                         valuesMap.put(lineParser.next(), lineParser.next());
-                    } finally {
-                        if (lineParser != null) {
-                            lineParser.close();
-                        }
                     }
 
                 }
 
-            } finally {
-                if (scanner != null) {
-                    scanner.close();
-                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
