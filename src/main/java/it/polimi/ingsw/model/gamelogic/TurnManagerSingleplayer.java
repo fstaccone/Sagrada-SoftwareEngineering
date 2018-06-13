@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 public class TurnManagerSingleplayer implements Runnable {
 
-    private final static int NUM_ROUNDS = 10;
-    private final static int DICES_NUM = 4;
+    private static final int NUM_ROUNDS = 10;
+    private static final int DICES_NUM = 4;
     private int turnTime;
     private MatchSingleplayer match;
     private Timer turnTimer;

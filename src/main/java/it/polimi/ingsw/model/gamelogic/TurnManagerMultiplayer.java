@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class TurnManagerMultiplayer implements Runnable {
 
-    private final static int NUM_ROUNDS = 10;
+    private static final int NUM_ROUNDS = 10;
     private Timer turnTimer;
     private int turnTime;
     private MatchMultiplayer match;

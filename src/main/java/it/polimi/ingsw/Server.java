@@ -8,8 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -29,16 +30,16 @@ public class Server {
         ExecutorService threadPool;
 
         //read configuration file
-        readServerConfig();
+        readServerConfig(serverConfig);
 
         Lobby lobby = new Lobby(waitingTime, turnTime);
         Controller controller = new Controller(lobby);
 
         //start RMI registry
         try {
-            //Registry registry = LocateRegistry.createRegistry(1099);
-            //registry.rebind(lobbyName,controller);
-            Naming.rebind("//localhost/" + lobbyName, controller);
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.rebind(lobbyName, controller);
+            //Naming.rebind("//localhost/" + lobbyName, controller);
 
             System.out.println("RMI server online on port 1099");
         } catch (RemoteException e) {
@@ -60,18 +61,21 @@ public class Server {
     }
 
 
-    private static void readServerConfig() {
+    private static void readServerConfig(String serverConfig) {
 
         FileReader fileReader = null;
+        Scanner scanner = null;
+        Scanner lineParser = null;
         String line;
         HashMap<String, String> valuesMap = new HashMap<>();
 
         //try-catch-finally to guarantee rightness of fileReader's closure after use
         try {
-            fileReader = new FileReader(Server.serverConfig);
+            fileReader = new FileReader(serverConfig);
 
             //try-finally to guarantee rightness of scanner's closure after use
-            try (Scanner scanner = new Scanner(fileReader)) {
+            try {
+                scanner = new Scanner(fileReader);
 
                 //lecture of values added to the valuesMap
                 while (scanner.hasNextLine()) {
@@ -80,12 +84,21 @@ public class Server {
                         continue;
                     }
                     //try-finally to guarantee rightness of lineParser's closure
-                    try (Scanner lineParser = new Scanner(line)) {
+                    try {
+                        lineParser = new Scanner(line);
                         valuesMap.put(lineParser.next(), lineParser.next());
+                    } finally {
+                        if (lineParser != null) {
+                            lineParser.close();
+                        }
                     }
 
                 }
 
+            } finally {
+                if (scanner != null) {
+                    scanner.close();
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
