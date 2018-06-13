@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -125,6 +126,8 @@ public class LoginHandler implements Initializable {
 
     @FXML
     private void playClicked() throws Exception {
+        AudioClip audioClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/button.mp3");
+        audioClip.play();
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         readInput();
 

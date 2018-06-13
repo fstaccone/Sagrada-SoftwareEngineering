@@ -238,6 +238,7 @@ public class Lobby {
                                     match.getTurnManagerMultiplayer().setTimerExpiredTrue();
                                 }
                                 match.getRemoteObservers().get(player).onGameClosing();
+
                             } catch (RemoteException e) {
                                 System.out.println("Partita terminata!");
                             }
