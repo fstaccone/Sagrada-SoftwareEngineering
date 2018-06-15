@@ -6,6 +6,7 @@ import it.polimi.ingsw.socket.ClientController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -50,6 +51,7 @@ public class Gui {
     private boolean single;
 
     private String playerSchemeCardImageURL;
+    private AudioClip turnClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/turn.mp3");
 
     public Gui(Stage fromLogin, String username, RemoteController controllerRmi, ClientController controllerSocket, boolean single) {
         this.username = username;
@@ -118,6 +120,7 @@ public class Gui {
         this.myTurn = isMyTurn;
         if (myTurn) {
             //Solo per verifica
+            turnClip.play();
             String s = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
             if (gameBoardHandler != null) {
                 gameBoardHandler.appendToTextArea(s);
@@ -215,10 +218,9 @@ public class Gui {
         chooseCardHandlerMultiplayer.showOpponents(players);
     }
 
-
     public void onGameClosing() {
         if (stillPlaying) {
-            gameBoardHandler.onGameClosing();
+            gameBoardHandler.onGameClosing();//da fare anche su choosecardhandler
         }
         stillPlaying = false;
     }
@@ -349,6 +351,9 @@ public class Gui {
     }
 
     public void onWindowChoice(List<String> windows) {
+        AudioClip cardsClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/cards.mp3");
+        cardsClip.play();
+
         if (single) {
             chooseCardHandlerSingle.setPrivateCard(privateCards.get(0), privateCards.get(1));
             chooseCardHandlerSingle.setWindows(windows);
@@ -368,6 +373,8 @@ public class Gui {
 
     public void onAfterWindowChoiceMultiplayer() {
 
+        AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/dices.mp3");
+        dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
         try {
             fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board.fxml"));
@@ -426,5 +433,4 @@ public class Gui {
     public void onAfterWindowChoiceSingleplayer() {
 
     }
-
 }
