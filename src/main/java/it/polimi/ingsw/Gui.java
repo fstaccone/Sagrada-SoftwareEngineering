@@ -29,7 +29,9 @@ public class Gui {
     private boolean myTurn;
     private boolean reconnection;
 
-    private ChooseCardHandler chooseCardHandler;
+    // todo: come facciamo per il nome? Si potrebbe creare un' interfaccia
+    private ChooseCardHandlerMultiplayer chooseCardHandlerMultiplayer;
+    private ChooseCardHandlerSingle chooseCardHandlerSingle;
     private GameBoardHandler gameBoardHandler;
     private String track;
     private List<String> toolCardsList;
@@ -120,13 +122,13 @@ public class Gui {
             if (gameBoardHandler != null) {
                 gameBoardHandler.appendToTextArea(s);
                 gameBoardHandler.initializeActions();
-            } else if (chooseCardHandler != null) {
-                chooseCardHandler.setTextArea(s);
-                chooseCardHandler.setTurn(true);
+            } else if (chooseCardHandlerMultiplayer != null) {
+                chooseCardHandlerMultiplayer.appendToTextArea(s);
+                chooseCardHandlerMultiplayer.setTurn(true);
             }
         } else {
-            if (chooseCardHandler != null) {
-                chooseCardHandler.setTurn(false);
+            if (chooseCardHandlerMultiplayer != null) {
+                chooseCardHandlerMultiplayer.setTurn(false);
             }
         }
     }
@@ -151,8 +153,8 @@ public class Gui {
     public void onPlayerReconnection(String name) {
         if (gameBoardHandler != null) {
             gameBoardHandler.appendToTextArea("Il giocatore " + name + " è entrato nella partita!");
-        } else if (chooseCardHandler != null) {
-            chooseCardHandler.setTextArea("Il giocatore " + name + " è entrato nella partita!");
+        } else if (chooseCardHandlerMultiplayer != null) {
+            chooseCardHandlerMultiplayer.appendToTextArea("Il giocatore " + name + " è entrato nella partita!");
         }
     }
 
@@ -160,32 +162,64 @@ public class Gui {
         players = names;
 
         if (windowChosen) {
-            onAfterWindowChoice(); // todo: controllare
+            if (single) {
+                onAfterWindowChoiceSingleplayer();
+            } else {
+                onAfterWindowChoiceMultiplayer(); // todo: controllare
+            }
         } else {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            try {
-                fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/choose-card.fxml"));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+            if (single) {
+                initializeChooseCardSingle();
+            } else {
+                initializeChooseCardMulti();
             }
-            Parent root = null;
-            try {
-                root = fxmlLoader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            chooseCardHandler = fxmlLoader.getController();
-            Scene scene = new Scene(root);
-            chooseCardHandler.init(windowStage, scene, controllerRmi, controllerSocket, username);
-            chooseCardHandler.setOpponents(players);
         }
     }
+
+    private void initializeChooseCardSingle() {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        Parent root = null;
+        try {
+            fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/choose-card-single.fxml"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        chooseCardHandlerSingle = fxmlLoader.getController();
+        Scene scene = new Scene(root);
+        chooseCardHandlerSingle.init(windowStage, scene, controllerRmi, controllerSocket, username);
+        chooseCardHandlerSingle.welcome();
+    }
+
+    private void initializeChooseCardMulti() {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        Parent root = null;
+        try {
+            fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/choose-card-multiplayer.fxml"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        chooseCardHandlerMultiplayer = fxmlLoader.getController();
+        Scene scene = new Scene(root);
+        chooseCardHandlerMultiplayer.init(windowStage, scene, controllerRmi, controllerSocket, username);
+        chooseCardHandlerMultiplayer.welcome();
+        chooseCardHandlerMultiplayer.showOpponents(players);
+    }
+
 
     public void onGameClosing() {
         if (stillPlaying) {
             gameBoardHandler.onGameClosing();
         }
-
         stillPlaying = false;
     }
 
@@ -261,8 +295,8 @@ public class Gui {
         String s = "Ora è il turno di " + name + "!";
         if (gameBoardHandler != null) {
             gameBoardHandler.appendToTextArea(s);
-        } else if (chooseCardHandler != null) {
-            chooseCardHandler.setTextArea(s);
+        } else if (chooseCardHandlerMultiplayer != null) {
+            chooseCardHandlerMultiplayer.appendToTextArea(s);
         }
     }
 
@@ -273,6 +307,9 @@ public class Gui {
             if (c != null) {
                 this.privateCards.add(c.substring(7, c.length() - 1).toLowerCase());
             }
+            System.out.println("---------------------------------" + privateCards);
+            System.out.println("---------------------------------" + this.privateCards);
+
         }
 
         parsePublicCards(publicCards);
@@ -307,23 +344,29 @@ public class Gui {
         if (gameBoardHandler != null) {
             gameBoardHandler.appendToTextArea("Il giocatore " + name + " è uscito dalla partita!");
         } else {
-            chooseCardHandler.setTextArea("Il giocatore " + name + " è uscito dalla partita!");
+            chooseCardHandlerMultiplayer.appendToTextArea("Il giocatore " + name + " è uscito dalla partita!");
         }
     }
 
     public void onWindowChoice(List<String> windows) {
-        chooseCardHandler.setPrivateCard(privateCards.get(0));
-        chooseCardHandler.setWindows(windows);
+        if (single) {
+            chooseCardHandlerSingle.setPrivateCard(privateCards.get(0), privateCards.get(1));
+            chooseCardHandlerSingle.setWindows(windows);
+
+        } else {
+            chooseCardHandlerMultiplayer.setPrivateCard(privateCards.get(0));
+            chooseCardHandlerMultiplayer.setWindows(windows); // todo: ripetuto per lo stesso motivo del nome
+        }
     }
 
     public void onToolCardUsedByOthers(String name, int toolNumber) {
         if (gameBoardHandler != null) {
             gameBoardHandler.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         } else
-            chooseCardHandler.setTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+            chooseCardHandlerMultiplayer.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
     }
 
-    public void onAfterWindowChoice() {
+    public void onAfterWindowChoiceMultiplayer() {
 
         FXMLLoader fx = new FXMLLoader();
         try {
@@ -337,8 +380,8 @@ public class Gui {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (chooseCardHandler != null) {
-            playerSchemeCardImageURL = chooseCardHandler.getImageUrl();
+        if (chooseCardHandlerMultiplayer != null) {
+            playerSchemeCardImageURL = chooseCardHandlerMultiplayer.getImageUrl();
         }
         Scene scene = new Scene(root);
         gameBoardHandler = fx.getController();
@@ -350,7 +393,7 @@ public class Gui {
         }
 
         gameBoardHandler.setToolCards(toolCardsList);
-        gameBoardHandler.setPrivateCard(privateCards.get(0)); // todo: se single player?
+        gameBoardHandler.setPrivateCard(privateCards.get(0));
         gameBoardHandler.setPublicCards(publicCardsList);
         gameBoardHandler.setReserve(dicesList);
         gameBoardHandler.onRoundTrack(track);
@@ -378,6 +421,10 @@ public class Gui {
         }
         gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
         gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
+    }
+
+    public void onAfterWindowChoiceSingleplayer() {
 
     }
+
 }

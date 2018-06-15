@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 public class LoginHandler implements Initializable {
 
     private final static String GAME_NAME = "Lobby";
+    private final static String RESOURCES = "File:./src/main/java/it/polimi/ingsw/resources/";
     private transient Socket socket = null;
     private transient ClientController controllerSocket;
     private String username;
@@ -254,6 +255,7 @@ public class LoginHandler implements Initializable {
                     window.close();
                     new RmiCli(username, controllerRmi, singleplayer).reconnect();
                 } else {
+                    loadAndShowGuiSingle();
                     new RmiGui(window, username, controllerRmi, singleplayer).reconnect();
                 }
             } else {
@@ -279,6 +281,25 @@ public class LoginHandler implements Initializable {
         }
     }
 
+    private void loadAndShowGuiSingle(){
+        FXMLLoader fx = new FXMLLoader();
+        try {
+            fx.setLocation(new URL(RESOURCES + "choose-card-single.fxml"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Scene chooseCard = null;
+        try {
+            chooseCard = new Scene(fx.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        window.setScene(chooseCard);
+        window.setTitle("Scelta della carta schema");
+        window.setResizable(false);
+        window.show();
+    }
 
     // the connection is established between client and lobby
     private void setupRmiConnection() throws RemoteException {
@@ -328,6 +349,7 @@ public class LoginHandler implements Initializable {
                     window.close();
                     new RmiCli(username, controllerRmi, singleplayer).launch();
                 } else {
+
                     new RmiGui(window, username, controllerRmi, singleplayer).launch();
                 }
             } catch (Exception e) {

@@ -84,7 +84,7 @@ public class Cli {
             "\n 'h'                                         to show game available commands" +
                     "\n 'q'                                         to quit the game" +
                     "\n 'r'                                         to show game rules" +
-                    "\n 'sp'                                        to show all opponents' names" +
+                    "\n 'sp'                                        to show all textArea' names" +
                     "\n 'track'                                     to show current state of the round track" +
                     "\n 'private'                                   to show your private objective card" +
                     "\n 'public'                                    to show public objective cards" +

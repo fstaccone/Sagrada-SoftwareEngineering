@@ -181,7 +181,7 @@ public class ClientController implements ResponseHandler {
         if (socketCli != null) {
             socketCli.getCli().onAfterWindowChoice();
         } else
-            socketGui.getGui().onAfterWindowChoice();
+            socketGui.getGui().onAfterWindowChoiceMultiplayer();
     }
 
     @Override

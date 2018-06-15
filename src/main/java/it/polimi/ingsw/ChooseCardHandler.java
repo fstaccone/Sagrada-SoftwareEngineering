@@ -5,8 +5,6 @@ import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
 import it.polimi.ingsw.socket.requests.QuitGameRequest;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -14,71 +12,53 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class ChooseCardHandler implements Initializable {
+public class ChooseCardHandler {
 
-    private boolean myTurn = false;
+    public ChooseCardHandler( boolean single, boolean myTurn) {
+        this.single = single;
+        choice = ChooseCardHandler.OUT_OF_RANGE;
+        this.myTurn = myTurn;
+    }
 
-    @FXML
-    Button card0;
+    protected static final String WINDOWS_URL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
+    protected static final String PRIVATE_CARDS_URL = "File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/";
+    protected static final int OUT_OF_RANGE = 5;
 
-    @FXML
-    Button card1;
-
-    @FXML
-    Button card2;
-
-    @FXML
-    Button card3;
-
-    @FXML
-    Button play;
-
-    @FXML
-    TextArea opponents;
-
-    @FXML
-    ImageView privateObjCard;
-
-    @FXML
-    Button quit;
-
-    private int choice;
-
+    protected int choice;
+    private boolean myTurn;
+    protected boolean single;
     private String url0;
     private String url1;
     private String url2;
     private String url3;
+
     private Stage window;
+
     private RemoteController remoteController;
     private ClientController clientController;
-    private String username;
+
+    protected String username;
     private String imgURL;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        choice = 5;
+    public void initialize(Button card0, Button card1, Button card2, Button card3) {
         card0.setDisable(true);
         card1.setDisable(true);
         card2.setDisable(true);
         card3.setDisable(true);
     }
 
-    @FXML
     public void onQuitClicked() throws RemoteException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Exit");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confermi di voler abbandonare la partita?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Abbandona");
         alert.setHeaderText(null);
         alert.setResizable(false);
         alert.setGraphic(null);
@@ -86,19 +66,18 @@ public class ChooseCardHandler implements Initializable {
         if (alert.getResult() == ButtonType.YES) {
             window.close();
             if (remoteController != null)
-                remoteController.quitGame(username, false);
+                remoteController.quitGame(username, single);
             else
-                clientController.request(new QuitGameRequest(username, false));
+                clientController.request(new QuitGameRequest(username, single));
             System.exit(0);
         }
     }
 
-    @FXML
-    public void onPlayClicked() throws Exception {
+    public void onPlayClicked(Button play, TextArea textArea) throws RemoteException {
         if (myTurn) {
-            if (choice == 5) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have to choose a card", ButtonType.OK);
-                alert.setTitle("CHOOSE A CARD");
+            if (choice == OUT_OF_RANGE) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Devi scegliere una carta schema!", ButtonType.OK);
+                alert.setTitle("Scelta della carta");
                 alert.setHeaderText(null);
                 alert.setResizable(false);
                 alert.setGraphic(null);
@@ -124,33 +103,13 @@ public class ChooseCardHandler implements Initializable {
                         imgURL = null;
                 }
                 if (remoteController != null)
-                    remoteController.chooseWindow(username, choice, false);
+                    remoteController.chooseWindow(username, choice, single);
                 else
-                    clientController.request(new ChooseWindowRequest(username, choice, false));
+                    clientController.request(new ChooseWindowRequest(username, choice, single));
             }
         } else {
-            setTextArea("Aspetta il tuo turno per scegliere la carta!");
+            appendToTextArea(textArea, "Aspetta il tuo turno per scegliere la carta!");
         }
-    }
-
-    @FXML
-    public void chosen0(MouseEvent mouseEvent) {
-        choice = 0;
-    }
-
-    @FXML
-    public void chosen1(MouseEvent mouseEvent) {
-        choice = 1;
-    }
-
-    @FXML
-    public void chosen2(MouseEvent mouseEvent) {
-        choice = 2;
-    }
-
-    @FXML
-    public void chosen3(MouseEvent mouseEvent) {
-        choice = 3;
     }
 
     //Initializing
@@ -161,19 +120,19 @@ public class ChooseCardHandler implements Initializable {
         window = windowFromGui;
         Platform.runLater(() -> {
             window.setScene(sceneFromGui);
-            window.setTitle("Game");
+            window.setTitle("Scelta della carta schema");
             window.setResizable(false);
             window.show();
         });
     }
 
     //The window now shows the 4 window pattern cards the player have to choose between
-    public void setWindows(List<String> windows) {
+    public void setWindows(List<String> windows, Button card0, Button card1, Button card2, Button card3) {
         card0.setDisable(false);
         card1.setDisable(false);
         card2.setDisable(false);
         card3.setDisable(false);
-        int i = 0;
+
         ArrayList<String> imageURLs = new ArrayList<>();
         for (String s : windows) {
             BufferedReader reader = new BufferedReader(new StringReader(s));
@@ -183,16 +142,10 @@ public class ChooseCardHandler implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println(i + s);
-            i++;
-            //Now I get a substring with the name of the window pattern card
-            String genericURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
-            System.out.println(s);
-            s = genericURL + s.substring(6).toLowerCase().replaceAll(" ", "_").replaceAll("'", "") + (".png");
-            //Questo stampa l'url da cui prenderemo l'immagine, per ora serve a controllare se qualche è scritto male
-            System.out.println(s);
+            s = WINDOWS_URL + s.substring(6).toLowerCase().replaceAll(" ", "_").replaceAll("'", "") + (".png");
             imageURLs.add(s);
         }
+
         //Initializing card 0
         url0 = imageURLs.get(0);
         Image cardImg0 = new Image(url0);
@@ -227,28 +180,21 @@ public class ChooseCardHandler implements Initializable {
         return imgURL;
     }
 
-    public void setOpponents(List<String> players) {
-        StringBuilder otherPlayers = new StringBuilder();
-        for (String s : players) {
-            if (!s.equals(username)) {
-                otherPlayers.append(" - ");
-                otherPlayers.append(s);
-            }
-        }
-        opponents.setText("Stai giocando contro:\n" + otherPlayers.toString());
-    }
-
-    public void setTextArea(String s) {
+    public void appendToTextArea(TextArea textArea, String s) {
         s = "\n" + s;
-        opponents.appendText(s);
-    }
-
-    public void setPrivateCard(String privateCard) {
-        Image privateObjCardImg = new Image("File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/" + privateCard + ".png");
-        privateObjCard.setImage(privateObjCardImg);
+        textArea.appendText(s);
+        textArea.setScrollTop(Double.MAX_VALUE);
     }
 
     public void setTurn(boolean myTurn) {
         this.myTurn = myTurn;
+    }
+
+    public void setChoice(int choice) {
+        this.choice = choice;
+    }
+
+    public void welcome(TextArea textArea) {
+        appendToTextArea(textArea, "Benvenuto in questa nuova partita di Sagrada. Buon divertimento!");
     }
 }
