@@ -18,7 +18,7 @@ public class WindowPatternCardDeck extends Deck<WindowPatternCard>{
 
         for(int j=0;j<4*numOfPlayers;j++) {
             randomGenerator = new Random();
-            int windowIndex = randomGenerator.nextInt(deck.size() -1);
+            int windowIndex = randomGenerator.nextInt(deck.size());
             String windowName = deck.get(windowIndex);
             switch (windowName) {
 

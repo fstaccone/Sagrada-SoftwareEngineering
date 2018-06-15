@@ -30,7 +30,8 @@ public  class PublicObjectiveCardDeck extends Deck<PublicObjectiveCard>{
             n=2;
         else n=3;
         for(int j=0;j<n;j++) {
-            int publicIndex = randomGenerator.nextInt(deck.size() - 1);
+            int publicIndex = randomGenerator.nextInt(deck.size());
+            System.out.println("Numero: " + publicIndex);//CANCELLA
             String publicName = deck.get(publicIndex);
             switch (publicName) {
 
