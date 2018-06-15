@@ -429,8 +429,9 @@ public class Gui {
     }
 
     public void onAfterWindowChoiceSingleplayer() {
-        System.out.println("NON ARRIVA MAI QUI");
-        /*
+
+        //CI VUOLE IL GAMEBOARDHANDLERSINGLE, VAI SOCIOOOO
+
         AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/dices.mp3");
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
@@ -454,10 +455,9 @@ public class Gui {
         gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
         if (mySchemeCard != null) {
             gameBoardHandler.setMyWindow(mySchemeCard);
-            gameBoardHandler.setFavourTokens(myTokens);
         }
         gameBoardHandler.setToolCards(toolCardsList);
-        */
+
     }
 
 }

@@ -9,7 +9,7 @@
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
 
-<AnchorPane id="gameBoard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.resources.GameBoardSingleHandler">
+<AnchorPane id="gameBoard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GameBoardHandlerSingle">
     <children>
         <Pane fx:id="playerWindowPatternCard" layoutX="740.0" layoutY="559.0" prefHeight="300.0" prefWidth="340.0" />
         <Pane id="reserve" fx:id="reserve" layoutX="768.0" layoutY="259.0" prefHeight="261.0" prefWidth="285.0" />

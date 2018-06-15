@@ -60,7 +60,10 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onAfterWindowChoice() {
-        gui.onAfterWindowChoiceMultiplayer();
+        if(single)
+            gui.onAfterWindowChoiceSingleplayer();
+        else
+            gui.onAfterWindowChoiceMultiplayer();
     }
 
     @Override
