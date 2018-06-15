@@ -102,6 +102,23 @@ public class MatchSingleplayer extends Match implements Runnable {
         roundCounter = 0;
         drawPrivateObjectiveCards();
 
+        if (observerRmi != null) {
+            try {
+                observerRmi.onGameStarted(player.isSchemeCardSet(), null);
+            } catch (RemoteException e) {
+                terminateMatch();
+                System.out.println("Match singleplayer interrotto");
+            }
+        } else if (observerSocket != null) {
+            try {
+                observerSocket.writeObject(new GameStartedResponse(player.isSchemeCardSet(), null));
+                observerSocket.reset();
+            } catch (IOException e) {
+                terminateMatch();
+                System.out.println("Match singleplayer interrotto");
+            }
+        }
+
         turnManager.run();
     }
 

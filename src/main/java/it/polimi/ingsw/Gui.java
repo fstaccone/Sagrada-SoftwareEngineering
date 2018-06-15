@@ -309,8 +309,6 @@ public class Gui {
             if (c != null) {
                 this.privateCards.add(c.substring(7, c.length() - 1).toLowerCase());
             }
-            System.out.println("---------------------------------" + privateCards);
-            System.out.println("---------------------------------" + this.privateCards);
 
         }
 
@@ -431,6 +429,35 @@ public class Gui {
     }
 
     public void onAfterWindowChoiceSingleplayer() {
-
+        System.out.println("NON ARRIVA MAI QUI");
+        /*
+        AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/dices.mp3");
+        dicesClip.play();
+        FXMLLoader fx = new FXMLLoader();
+        try {
+            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board-single.fxml"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Parent root = null;
+        try {
+            root = fx.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (chooseCardHandlerSingle != null) {
+            playerSchemeCardImageURL = chooseCardHandlerSingle.getImageUrl();
+        }
+        Scene scene = new Scene(root);
+        gameBoardHandler = fx.getController();
+        gameBoardHandler.init(scene, this);
+        gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
+        if (mySchemeCard != null) {
+            gameBoardHandler.setMyWindow(mySchemeCard);
+            gameBoardHandler.setFavourTokens(myTokens);
+        }
+        gameBoardHandler.setToolCards(toolCardsList);
+        */
     }
+
 }

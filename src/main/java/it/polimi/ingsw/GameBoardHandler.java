@@ -378,6 +378,7 @@ public class GameBoardHandler implements Initializable {
         public void handle(MouseEvent event) {
             if (gui.isMyTurn()) {
                 if (diceChosen != 9) {
+                    resetToolValues();
                     ImageView slot = (ImageView) event.getSource();
                     Integer tempX = GridPane.getRowIndex(slot);
                     if (tempX == null) tempX = 0;
