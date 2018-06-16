@@ -222,6 +222,16 @@ public class WindowPatternCard implements Serializable{
     }
 
     /**
+     * Used when after a wrong usage of a toolcard the player has to put the dice back to its original position
+     * @param d the dice to put back
+     * @param row the row index of the original position of the dice
+     * @param column the column index of the original position of the dice
+     */
+    public void putDiceBack(Dice d, int row, int column) {
+            window[row][column].putDiceIgnoringAllConstraints(d);
+    }
+
+    /**
      * places a new dice d without checking the eventual value constraint of the chosen position
      * @param d is the new dice to place
      * @param row is the row of the chosen position

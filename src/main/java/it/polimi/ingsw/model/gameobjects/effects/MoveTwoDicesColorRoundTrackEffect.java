@@ -50,8 +50,8 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                     if (dice2.equals(schema.getDice(newRow2, newColumn2))) {
                         schema.removeDice(newRow2, newColumn2);
                     }
-                    schema.putDice(dice1, row1, column1);
-                    schema.putDice(dice2, row2, column2);
+                    schema.putDiceBack(dice1, row1, column1);
+                    schema.putDiceBack(dice2, row2, column2);
                     return false;
                 }
 
@@ -65,7 +65,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                 }
                 return true;
             } else {
-                schema.putDice(dice1, row1, column1);
+                schema.putDiceBack(dice1, row1, column1);
                 return false;
             }
         }
@@ -110,8 +110,8 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                         if (dice2.equals(schema.getDice(newRow2, newColumn2))) {
                             schema.removeDice(newRow2, newColumn2);
                         }
-                        schema.putDice(dice1, row1, column1);
-                        schema.putDice(dice2, row2, column2);
+                        schema.putDiceBack(dice1, row1, column1);
+                        schema.putDiceBack(dice2, row2, column2);
                         return false;
                     }
                 } else if (dice1 != null && dice2 == null && dice1.getColor().equals(color)) {
@@ -141,7 +141,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                         }
                         return true;
                     } else {
-                        schema.putDice(dice1, row1, column1);
+                        schema.putDiceBack(dice1, row1, column1);
                         return false;
                     }
                 } else

@@ -31,13 +31,13 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                 int newRow = player.getFinalX1();
                 int newColumn = player.getFinalY1();
                 schema.removeDice(row, column);
-                schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn); //DA RIVEDERE
+                schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn);
                 if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
                     //resetPlayerValues();
                     match.getBoard().getReserve().getDices().remove(sacrificeDice);
                     return true;
                 } else {
-                    schema.putDice(dice, row, column);
+                    schema.putDiceBack(dice, row, column);
                     //resetPlayerValues();
                     return false;
                 }
@@ -81,7 +81,7 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                         }
                         return true;
                     } else {
-                        schema.putDice(dice, row, column);
+                        schema.putDiceBack(dice, row, column);
                         //resetPlayerValues();
                         return false;
                     }

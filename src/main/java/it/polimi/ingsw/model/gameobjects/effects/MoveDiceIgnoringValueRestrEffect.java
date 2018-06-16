@@ -37,7 +37,7 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
                     match.getBoard().getReserve().getDices().remove(sacrificeDice);
                     return true;
                 } else {
-                    schema.putDice(dice, row, column);
+                    schema.putDiceBack(dice, row, column);
                     //resetPlayerValues();
                     return false;
                 }
@@ -79,7 +79,7 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
                         //resetPlayerValues();
                         return true;
                     } else {
-                        schema.putDice(dice, row, column);
+                        schema.putDiceBack(dice, row, column);
                         //resetPlayerValues();
                         return false;
                     }
