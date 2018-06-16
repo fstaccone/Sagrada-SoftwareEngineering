@@ -31,7 +31,7 @@ public class Cli {
     private List<ToolCommand> toolCommands;
     private List<String> privateCard;
     private WindowPatternCard mySchemeCard;
-   // private Map<String, Integer> toolcardsPrices;
+    // private Map<String, Integer> toolcardsPrices;
     private int myFavorTokens;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
@@ -73,19 +73,19 @@ public class Cli {
     private static final String RULES = ("Da decidere se in italiano o in inglese");
 
     private static final String HELP_IN_TURN_MULTI = (
-                    "\n 'passa'                                     per passare il turno al prossimo giocatore " +
+            "\n 'passa'                                     per passare il turno al prossimo giocatore " +
                     "\n 'pd' + 'coordinata x' + 'coordinata y'      per piazzare il dado nella tua carta schema nella posizione [x][y] " +
                     "\n 'pd11' + 'coordinata x' + 'coordinata y'    per piazzare il dado scelto con la carta utensile 11 nella tua carta schema nella posizione [x][y] " +
                     "\n 'scs' + 'numero'                            per scegliere la tua carta schema 'numero)' dall'elenco delle carte schema(disponibile una volta soltanto, all'inizio della partita)" +
                     "\n 'sd' + 'numero'                             per scegliere il dado 'numero)' dall'elenco della riserva" +
-                    "\n 'usautensile' + 'numero'                    per usare l'effetto della carta utensile [numero]"+
-                    "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] " );
+                    "\n 'usautensile' + 'numero'                    per usare l'effetto della carta utensile [numero]" +
+                    "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] ");
 
     private static final String HELP_GENERAL_MULTI = (
-                    "\n 'aiuto'                                     per mostrare i comandi di gioco" +
+            "\n 'aiuto'                                     per mostrare i comandi di gioco" +
                     "\n 'avversari'                                 per mostrare i nomi degli avversari" +
-                    "\n 'cartaschema'                               per mostrare tutte la tua carta schema"+
-                    "\n 'carteschema'                               per mostrare tutte le carte schema degli avversari"+
+                    "\n 'cartaschema'                               per mostrare tutte la tua carta schema" +
+                    "\n 'carteschema'                               per mostrare tutte le carte schema degli avversari" +
                     "\n 'esci'                                      per uscire dal gioco" +
                     "\n 'mcs' + 'nome'                              per mostrare la carta schema del tuo avversario il cui nome è [nome]" +
                     "\n 'priv'                                      per mostrare la tua carta obiettivo privato" +
@@ -99,10 +99,10 @@ public class Cli {
                     "\n 'utensili'                                  per mostrare tutte le carte utensili disponibili \n");
 
     private static final String HELP_SINGLE = (
-                    "\n 'aiuto'                                     per mostrare i comandi di gioco" +
-                    "\n 'cartaschema'                               per mostrare tutte la tua carta schema"+
+            "\n 'aiuto'                                     per mostrare i comandi di gioco" +
+                    "\n 'cartaschema'                               per mostrare tutte la tua carta schema" +
                     "\n 'esci'                                      per uscire dal gioco" +
-                    "\n 'passa'                                     per passare il turno"+
+                    "\n 'passa'                                     per passare il turno" +
                     "\n 'pd' + 'coordinata x' + 'coordinata y'      per piazzare il dado nella tua carta schema nella posizione [x][y] " +
                     "\n 'priv'                                      per mostrare le tue carte obiettivo privato" +
                     "\n 'pub'                                       per mostrare le tue carte obiettivo pubblico" +
@@ -115,7 +115,7 @@ public class Cli {
                     "\n 'usautensile' + 'number'                    per usare l'effetto della carta utensile [numero]" +
                     "\n 'utensile' + 'number'                       per mostrare la descrizione d'uso della carta utensile [numero] [numero] " +
                     "\n 'utensili'                                  per mostrare tutte le carte utensili disponibili  \n" +
-                    "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] " );
+                    "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] ");
 
 
     private static final String SYNTAX_ERROR = (
@@ -352,7 +352,7 @@ public class Cli {
         this.otherSchemeCardsMap = otherSchemeCards;
         this.otherFavorTokensMap = otherTokens;
         this.windowChosen = schemeCardChosen;
-       // this.toolcardsPrices = toolcardsPrices;
+        // this.toolcardsPrices = toolcardsPrices;
         printer.println("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
         for (String toolcard : toolcardsPrices.keySet()) {
             printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
@@ -526,7 +526,7 @@ public class Cli {
                             break;
 
                             case "segnalinialtrui": {
-                               showOtherTokens();
+                                showOtherTokens();
                             }
                             break;
 
@@ -673,7 +673,7 @@ public class Cli {
                             break;
 
                             case "riserva": {
-                               showReserve();
+                                showReserve();
                             }
                             break;
 
@@ -913,7 +913,7 @@ public class Cli {
             }
         }
 
-        private void showReserve(){
+        private void showReserve() {
             if (windowChosenCheck(windowChosen)) {
                 printer.println("\nDi seguito lo stato corrente della riserva:           ~ ['sd'+ 'numero' per scegliere il dado 'numero)' dall'elenco della riserva]\n");
                 printer.flush();
@@ -927,21 +927,22 @@ public class Cli {
             }
         }
 
-        private void showSchemeCards(){
+        private void showSchemeCards() {
             printer.println(otherSchemeCardsMap.toString());
             printer.flush();
         }
 
-        private void showOtherTokens(){
+        private void showOtherTokens() {
             printer.println(otherSchemeCardsMap.toString());
             printer.flush();
         }
-        private void printRules(){
+
+        private void printRules() {
             printer.println("\nRegole: da scrivere");
             printer.flush();
         }
 
-        private void showRoundTrack(){
+        private void showRoundTrack() {
             printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
             printer.flush();
         }
@@ -992,11 +993,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato modificato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1030,11 +1027,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato spostato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1070,11 +1063,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato spostato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1114,11 +1103,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
 
                                 } else {
                                     syntaxErrorPrint();
@@ -1158,11 +1143,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1194,11 +1175,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1226,11 +1203,7 @@ public class Cli {
                                         gameErrorPrint();
                                     }
                                 }
-                                if (done) {
-                                    diceChosenToBeSacrificed = 9;
-                                    printer.println("\nBen fatto! La riserva è stata rimescolata correttamente!\n");
-                                    printer.flush();
-                                }
+                                checkIfItsDone(done);
                             } else {
                                 printer.println("\nNon puoi scegliere un dado e poi rimescolare la riserva!\n");
                                 printer.flush();
@@ -1256,11 +1229,7 @@ public class Cli {
                                     gameErrorPrint();
                                 }
                             }
-                            if (done) {
-                                diceChosenToBeSacrificed = 9;
-                                printer.println("\nBen fatto! Ora puoi piazzare un altro dado nel turno!\n");
-                                printer.flush();
-                            }
+                            checkIfItsDone(done);
                         }
                         break;
                         case 9: {
@@ -1286,11 +1255,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te scelto è stato piazzato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1322,11 +1287,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te scelto è stato modificato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1383,11 +1344,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color + " e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 }
                                 toolNumber1 = null;
                             }
@@ -1420,11 +1377,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te scelto è stato spostato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1463,11 +1416,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! I dadi da te scelti sono stati spostati correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
 
                                 } else {
                                     syntaxErrorPrint();
@@ -1541,10 +1490,19 @@ public class Cli {
             }
         }
 
+        private void checkIfItsDone(boolean done) {
+            if (done) {
+                diceChosenToBeSacrificed = 9;
+                printer.println("\nBen fatto! Il dado da te selezionato è stato modificato correttamente!\n");
+                printer.flush();
+            }
+        }
+
         private void syntaxErrorPrint() {
             printer.println(SYNTAX_ERROR);
             printer.flush();
         }
+
 
         private void gameErrorPrint() {
             printer.println(GAME_ERROR);
