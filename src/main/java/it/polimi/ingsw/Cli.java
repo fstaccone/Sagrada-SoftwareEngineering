@@ -23,15 +23,12 @@ public class Cli {
     private boolean myTurn;
     private final PrintWriter printer;
     private boolean stillPlaying;
-
-    private List<String> players;
     private List<String> dicesList;
     private List<String> toolCardsList;
     private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
     private List<String> privateCard;
     private WindowPatternCard mySchemeCard;
-    // private Map<String, Integer> toolcardsPrices;
     private int myFavorTokens;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
@@ -42,13 +39,9 @@ public class Cli {
     private int coordinateY;
     private boolean diceValueToBeSet;
     private boolean tool11DiceToBePlaced;
-
     private List<String> playersNames;
-
     private boolean windowChosen;
-
     private boolean single;
-
 
     private static final String WELCOME = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/*@@@@@@@@@@@@@@@\n" +
@@ -140,11 +133,10 @@ public class Cli {
         toolCommands = new ArrayList<>();
         toolCardsList = new ArrayList<>();
         publicCardsList = new ArrayList<>();
-        players = new ArrayList<>();
+        playersNames = new ArrayList<>();
         diceValueToBeSet = false;
         tool11DiceToBePlaced = false;
         stillPlaying = true;
-
     }
 
     public void printWelcome() {
@@ -171,7 +163,6 @@ public class Cli {
 
         if (names != null) {
             playersNames = names;
-
             printNames();
         }
     }
@@ -242,26 +233,22 @@ public class Cli {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
-        this.players = players;
+        this.playersNames = players;
     }
 
     private void parsePublicCards(String publicCards) {
         String cards = publicCards.substring(1, publicCards.length() - 1);
         publicCardsList = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
-
-
     }
 
     private void parseToolcards(String toolcards) {
         String cards = toolcards.substring(1, toolcards.length() - 1);
-
         toolCardsList = Pattern.compile(", ")
                 .splitAsStream(cards)
                 .collect(Collectors.toList());
 
         for (String card : toolCardsList) {
             String[] strings = card.split(":");
-
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
             this.toolCommands.add(new ToolCommand(i, this.printer, this.controllerRmi, this.controllerSocket, this.username, this.single));
         }
@@ -352,7 +339,6 @@ public class Cli {
         this.otherSchemeCardsMap = otherSchemeCards;
         this.otherFavorTokensMap = otherTokens;
         this.windowChosen = schemeCardChosen;
-        // this.toolcardsPrices = toolcardsPrices;
         printer.println("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
         for (String toolcard : toolcardsPrices.keySet()) {
             printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
@@ -433,26 +419,167 @@ public class Cli {
                     if (myTurn || single) {
                         switch (parts[0]) {
 
-                            case "sd": {
+                            case "aiuto": {
+                                printer.println("\nInserisci un comando valido tra i seguenti:          ('+' sta per SPAZIO)");
+                                if (single) {
+                                    printer.println(HELP_SINGLE);
+                                } else {
+                                    printer.println(HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+                                }
+                                printer.flush();
+                            }
+                            break;
 
-                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
-                                    if (parametersCardinalityCheck(2)) {
-                                        toolNumber1 = tryParse(parts[1]);
-                                        if (toolNumber1 != null) {
-                                            if (toolNumber1 >= 0 && toolNumber1 < dicesList.size()) {
-                                                diceChosen = toolNumber1;
-                                                printer.println("\nHai scelto il dado: " + dicesList.toArray()[diceChosen].toString() + "\n");
-                                                printer.flush();
-                                            } else {
-                                                printer.println("\nATTENZIONE: Il dado che stai provando a usare non esiste, per favore riprova!  ");
-                                                printer.flush();
+                            case "avversari": {
+                                printNames();
+                            }
+                            break;
+
+                            case "cartaschema": {
+                                showMySchemeCard();
+                            }
+                            break;
+
+                            case "carteschema": {
+                                showSchemeCards();
+                            }
+                            break;
+
+                            case "esci": {
+                                quit();
+                            }
+                            break;
+
+                            case "mcs": {
+                                showWindow();
+                            }
+                            break;
+
+                            case "passa": {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
+                                    //RMI
+                                    if (controllerRmi != null)
+                                        controllerRmi.goThrough(username, single);
+                                        //SOCKET
+                                    else
+                                        controllerSocket.request(new GoThroughRequest(username, single));
+                                }
+                            }
+                            break;
+
+                            case "pd": {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
+                                    if (diceChosen != 9) {
+                                        if (placeDiceParametersCheck(parts[1], parts[2])) {
+                                            //RMI
+                                            if (controllerRmi != null) {
+                                                try {
+                                                    if (controllerRmi.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
+                                                        printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
+                                                        printer.flush();
+                                                        diceChosen = 9; //ro reset the value
+                                                    } else {
+                                                        printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
+                                                        printer.flush();
+
+                                                    }
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
-                                        } else {
-                                            syntaxErrorPrint();
+
+                                            //SOCKET
+                                            else {
+                                                controllerSocket.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
+                                                try {
+                                                    Thread.sleep(500);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                    Thread.currentThread().interrupt();
+                                                }
+                                                if (controllerSocket.isDicePlaced()) {
+                                                    controllerSocket.setDicePlaced(false);//to reset the value
+                                                    diceChosen = 9;//to reset the value
+                                                    printer.println("\nBen fatto! il dado è stato piazzato correttamente!\n");
+                                                    printer.flush();
+                                                } else {
+                                                    printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
+                                                    printer.flush();
+                                                }
+                                            }
+
                                         }
                                         toolNumber1 = null;
+                                        toolNumber2 = null;
+                                    }
+
+                                } else {
+                                    printer.println("\nATTENZIONE: Devi scegliere un dado prima di piazzarlo!");
+                                    printer.flush();
+                                }
+                            }
+                            break;
+
+                            case "pd11": {
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && tool11DiceToBePlaced) {
+                                    if (placeDiceParametersCheck(parts[1], parts[2])) {
+                                        if (controllerRmi != null) {
+                                            try {
+                                                if (controllerRmi.placeDiceTool11(coordinateX, coordinateY, username, single)) {
+                                                    printer.println("\nBen fatto!! Il dado è stato piazzato correttamente!\n");
+                                                    printer.flush();
+                                                } else {
+                                                    printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi!, o stai provando mettere un secondo dado nel turno!");
+                                                    printer.flush();
+                                                }
+                                            } catch (RemoteException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
+
+                                        //SOCKET
+                                        else {
+                                            controllerSocket.request(new PlaceDiceTool11Request(coordinateX, coordinateY, username, single));
+                                            try {
+                                                Thread.sleep(500);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                                Thread.currentThread().interrupt();
+                                            }
+                                            if (controllerSocket.isDicePlaced()) {
+                                                controllerSocket.setDicePlaced(false);//to reset the value
+                                                printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
+                                                printer.flush();
+                                            } else {
+                                                printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi, o stai provando mettere un secondo dado nel turno!");
+                                                printer.flush();
+                                            }
+                                        }
+                                        toolNumber1 = null;
+                                        toolNumber2 = null;
                                     }
                                 }
+                            }
+                            break;
+
+                            case "priv": {
+                                showPrivateCard();
+                            }
+                            break;
+
+                            case "pub": {
+                                showPublicCards();
+                            }
+                            break;
+
+
+                            case "regole": {
+                                printRules();
+                            }
+                            break;
+
+                            case "riserva": {
+                                showReserve();
                             }
                             break;
 
@@ -510,18 +637,31 @@ public class Cli {
                             }
                             break;
 
-                            case "aiuto": {
-                                if (single) {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' sta per SPAZIO)" + HELP_SINGLE);
-                                } else {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' sta per SPAZIO)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+                            case "sd": {
+
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
+                                    if (parametersCardinalityCheck(2)) {
+                                        toolNumber1 = tryParse(parts[1]);
+                                        if (toolNumber1 != null) {
+                                            if (toolNumber1 >= 0 && toolNumber1 < dicesList.size()) {
+                                                diceChosen = toolNumber1;
+                                                printer.println("\nHai scelto il dado: " + dicesList.toArray()[diceChosen].toString() + "\n");
+                                                printer.flush();
+                                            } else {
+                                                printer.println("\nATTENZIONE: Il dado che stai provando a usare non esiste, per favore riprova!  ");
+                                                printer.flush();
+                                            }
+                                        } else {
+                                            syntaxErrorPrint();
+                                        }
+                                        toolNumber1 = null;
+                                    }
                                 }
-                                printer.flush();
                             }
                             break;
 
-                            case "carteschema": {
-                                showSchemeCards();
+                            case "segnalini": {
+                                showFavorTokens();
                             }
                             break;
 
@@ -530,165 +670,8 @@ public class Cli {
                             }
                             break;
 
-                            case "passa": {
-                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
-                                    //RMI
-                                    if (controllerRmi != null)
-                                        controllerRmi.goThrough(username, single);
-                                        //SOCKET
-                                    else
-                                        controllerSocket.request(new GoThroughRequest(username, single));
-                                }
-                            }
-                            break;
-
-                            case "pd": {
-                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
-                                    if (diceChosen != 9) {
-                                        if (parametersCardinalityCheck(3)) {
-                                            toolNumber1 = tryParse(parts[1]);
-                                            toolNumber2 = tryParse(parts[2]);
-                                            if (toolNumber1 != null && toolNumber2 != null) {
-                                                if (toolNumber1 >= 0 && toolNumber1 < 4 && toolNumber2 >= 0 && toolNumber2 < 5) {
-                                                    coordinateX = toolNumber1;
-                                                    coordinateY = toolNumber2;
-                                                    printer.println("\nHai scelto di posizionare il dado nella posizione [" + coordinateX + "][" + coordinateY + "] della tua carta schema");
-                                                    printer.flush();
-
-                                                    //RMI
-                                                    if (controllerRmi != null) {
-                                                        if (controllerRmi.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
-                                                            printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
-                                                            printer.flush();
-                                                            diceChosen = 9; //ro reset the value
-                                                        } else {
-                                                            printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
-                                                            printer.flush();
-
-                                                        }
-                                                    }
-
-                                                    //SOCKET
-                                                    else {
-                                                        controllerSocket.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
-                                                        try {
-                                                            Thread.sleep(500);
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                            Thread.currentThread().interrupt();
-                                                        }
-                                                        if (controllerSocket.isDicePlaced()) {
-                                                            controllerSocket.setDicePlaced(false);//to reset the value
-                                                            diceChosen = 9;//to reset the value
-                                                            printer.println("\nBen fatto! il dado è stato piazzato correttamente!\n");
-                                                            printer.flush();
-                                                        } else {
-                                                            printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
-                                                            printer.flush();
-                                                        }
-                                                    }
-
-                                                } else {
-                                                    printer.println("\nATTENZIONE: Le coordinate da te inserite sono fuori dai limiti!");
-                                                    printer.flush();
-                                                }
-                                            } else {
-                                                syntaxErrorPrint();
-                                            }
-                                        }
-                                        toolNumber1 = null;
-                                        toolNumber2 = null;
-                                    } else {
-                                        printer.println("\nATTENZIONE: Devi scegliere un dado prima di piazzarlo!");
-                                        printer.flush();
-                                    }
-                                }
-                            }
-                            break;
-
-                            case "pd11": {
-                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && tool11DiceToBePlaced) {
-                                    if (parametersCardinalityCheck(3)) {
-                                        toolNumber1 = tryParse(parts[1]);
-                                        toolNumber2 = tryParse(parts[2]);
-                                        if (toolNumber1 != null && toolNumber2 != null) {
-                                            if (toolNumber1 >= 0 && toolNumber1 < 4 && toolNumber2 >= 0 && toolNumber2 < 5) {
-                                                coordinateX = toolNumber1;
-                                                coordinateY = toolNumber2;
-                                                printer.println("\nHai scelto di posizionare il dado nella posizione [" + coordinateX + "][" + coordinateY + "] della tua carta schema");
-                                                printer.flush();
-                                                if (controllerRmi != null) {
-                                                    if (controllerRmi.placeDiceTool11(coordinateX, coordinateY, username, single)) {
-                                                        printer.println("\nBen fatto!! Il dado è stato piazzato correttamente!\n");
-                                                        printer.flush();
-                                                    } else {
-                                                        printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi!, o stai provando mettere un secondo dado nel turno!");
-                                                        printer.flush();
-                                                    }
-                                                }
-
-                                                //SOCKET
-                                                else {
-                                                    controllerSocket.request(new PlaceDiceTool11Request(coordinateX, coordinateY, username, single));
-                                                    try {
-                                                        Thread.sleep(500);
-                                                    } catch (InterruptedException e) {
-                                                        e.printStackTrace();
-                                                        Thread.currentThread().interrupt();
-                                                    }
-                                                    if (controllerSocket.isDicePlaced()) {
-                                                        controllerSocket.setDicePlaced(false);//to reset the value
-                                                        printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
-                                                        printer.flush();
-                                                    } else {
-                                                        printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi, o stai provando mettere un secondo dado nel turno!");
-                                                        printer.flush();
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-
-                            case "priv": {
-                                showPrivateCard();
-                            }
-                            break;
-
-                            case "pub": {
-                                showPublicCards();
-                            }
-                            break;
-
-                            case "esci": {
-                                quit();
-                            }
-                            break;
-
-                            case "regole": {
-                                printRules();
-                            }
-                            break;
-
-                            case "riserva": {
-                                showReserve();
-                            }
-                            break;
-
-                            case "cartaschema": {
-                                showMySchemeCard();
-                            }
-                            break;
-
-                            case "avversari": {
-                                printNames();
-                            }
-                            break;
-
-                            case "mcs": {
-                                showWindow();
+                            case "tracciato": {
+                                showRoundTrack();
                             }
                             break;
 
@@ -718,18 +701,8 @@ public class Cli {
                             }
                             break;
 
-                            case "segnalini": {
-                                showFavorTokens();
-                            }
-                            break;
-
                             case "utensili": {
                                 showToolCards();
-                            }
-                            break;
-
-                            case "tracciato": {
-                                showRoundTrack();
                             }
                             break;
 
@@ -786,23 +759,33 @@ public class Cli {
                         switch (parts[0]) {
 
                             case "aiuto": {
-                                if (single) {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
-                                } else {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
-                                }
+                                printer.println("\nInserisci un comando valido tra i seguenti               ('+' means SPACE)" + HELP_GENERAL_MULTI);
                                 printer.flush();
                             }
                             break;
 
+                            case "avversari": {
+                                printNames();
+                            }
+                            break;
+
+                            case "cartaschema": {
+                                showMySchemeCard();
+                            }
+                            break;
 
                             case "carteschema": {
                                 showSchemeCards();
                             }
                             break;
 
-                            case "segnalinialtrui": {
-                                showOtherTokens();
+                            case "esci": {
+                                quit();
+                            }
+                            break;
+
+                            case "mcs": {
+                                showWindow();
                             }
                             break;
 
@@ -816,11 +799,6 @@ public class Cli {
                             }
                             break;
 
-                            case "esci": {
-                                quit();
-                            }
-                            break;
-
                             case "regole": {
                                 printRules();
                             }
@@ -831,35 +809,23 @@ public class Cli {
                             }
                             break;
 
-                            case "cartaschema": {
-                                showMySchemeCard();
+                            case "segnalini": {
+                                showFavorTokens();
                             }
                             break;
 
-                            case "avversari": {
-                                printNames();
-                            }
-                            break;
-
-                            case "mcs": {
-                                showWindow();
+                            case "segnalinialtrui": {
+                                showOtherTokens();
                             }
                             break;
 
                             case "utensili": {
-
                                 showToolCards();
                             }
                             break;
 
-
                             case "tracciato": {
                                 showRoundTrack();
-                            }
-                            break;
-
-                            case "segnalini": {
-                                showFavorTokens();
                             }
                             break;
 
@@ -869,33 +835,28 @@ public class Cli {
                             }
                         }
                     }
-                } catch (IOException e) {
+                } catch (
+                        IOException e) {
                     e.printStackTrace();
                 }
             }
 
             String s = "";
-
             while (!s.equals("esci")) {
-
                 printer.println("La partita è terminata, scrivi 'esci' per uscire");
                 printer.flush();
-
                 try {
                     s = keyboard.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
-
             System.exit(0);
         }
 
         private void showWindow() {
             if (parametersCardinalityCheck(2)) {
                 if (playersNames.contains(parts[1])) {
-
                     if (otherSchemeCardsMap.containsKey(parts[1])) {
                         printer.println("\nDi seguito la carta schema del tuo avversario " + parts[1].toUpperCase() + ":");
                         printer.println(otherSchemeCardsMap.get(parts[1]).toString());
@@ -904,7 +865,6 @@ public class Cli {
                         printer.println("\nATTENZIONE:Il giocatore " + parts[1].toUpperCase() + " non è un tuo avversario!");
                         printer.flush();
                     }
-
 
                 } else {
                     printer.println("\nATTENZIONE: Il giocatore " + parts[1].toUpperCase() + " non esiste!");
@@ -933,12 +893,12 @@ public class Cli {
         }
 
         private void showOtherTokens() {
-            printer.println(otherSchemeCardsMap.toString());
+            printer.println(otherFavorTokensMap.toString());
             printer.flush();
         }
 
         private void printRules() {
-            printer.println("\nRegole: da scrivere");
+            printer.println(RULES);
             printer.flush();
         }
 
@@ -1344,7 +1304,11 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    checkIfItsDone(done);
+                                    if (done) {
+                                        diceChosenToBeSacrificed = 9;
+                                        printer.println("\nBen fatto! Il dado da te selezionato è stato inserito correttamente nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color + " e piazzarlo!\n Per effettuare questa operazione digita il comando 'valore' accompagnato da uno spazio e dal valore che vuoi");
+                                        printer.flush();
+                                    }
                                 }
                                 toolNumber1 = null;
                             }
@@ -1503,6 +1467,30 @@ public class Cli {
             printer.flush();
         }
 
+        private boolean placeDiceParametersCheck(String parameter1, String parameter2) {
+            if (parametersCardinalityCheck(3)) {
+                toolNumber1 = tryParse(parameter1);
+                toolNumber2 = tryParse(parameter2);
+                if (toolNumber1 != null && toolNumber2 != null) {
+                    if (toolNumber1 >= 0 && toolNumber1 < 4 && toolNumber2 >= 0 && toolNumber2 < 5) {
+                        coordinateX = toolNumber1;
+                        coordinateY = toolNumber2;
+                        printer.println("\nHai scelto di posizionare il dado nella posizione [" + coordinateX + "][" + coordinateY + "] della tua carta schema");
+                        printer.flush();
+                        return true;
+                    } else {
+                        printer.println("\nATTENZIONE: Le coordinate da te inserite sono fuori dai limiti!");
+                        printer.flush();
+                        return false;
+                    }
+                } else {
+                    syntaxErrorPrint();
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
 
         private void gameErrorPrint() {
             printer.println(GAME_ERROR);
