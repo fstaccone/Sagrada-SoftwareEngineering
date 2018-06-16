@@ -97,7 +97,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
         parent.setTurn(myTurn);
     }
 
-    public void welcome(){
+    public void welcome() {
         parent.welcome(textArea);
     }
 

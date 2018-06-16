@@ -96,7 +96,7 @@ public class ChooseCardHandlerSingle implements Initializable {
         parent.appendToTextArea(textArea, s);
     }
 
-    public void welcome(){
+    public void welcome() {
         parent.welcome(textArea);
     }
 

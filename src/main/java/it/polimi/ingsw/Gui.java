@@ -375,7 +375,7 @@ public class Gui {
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
         try {
-            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board.fxml"));
+            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board-multi.fxml"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,6 @@ import it.polimi.ingsw.socket.requests.AddPlayerRequest;
 import it.polimi.ingsw.socket.requests.CheckUsernameRequest;
 import it.polimi.ingsw.socket.requests.CreateMatchRequest;
 import it.polimi.ingsw.socket.requests.RemoveFromWaitingPlayersRequest;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -41,12 +40,12 @@ public class LoginHandler implements Initializable {
     private transient ClientController controllerSocket;
     private String username;
     private Stage window;
-    private transient boolean isRmi = true;
-    private transient boolean isSocket = false; // todo: cancellare
-    private transient boolean isGui = true;
-    private transient boolean isCli = false;
+    private transient boolean isRmi;
+    private transient boolean isSocket;
+    private transient boolean isGui;
+    private transient boolean isCli;
 
-    private transient boolean singleplayer = false;
+    private transient boolean singleplayer;
     private transient Integer difficulty;
     private transient String serverAddress;
     private WaitingScreenHandler handler;
@@ -92,8 +91,12 @@ public class LoginHandler implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.rmiCheckmark.setSelected(true);
-        this.cliCheckmark.setSelected(true);
+        rmiCheckmark.setSelected(true);
+        cliCheckmark.setSelected(true);
+        isRmi = true;
+        isGui = true;
+        isCli = false;
+        singleplayer = false;
     }
 
     @FXML
@@ -284,7 +287,7 @@ public class LoginHandler implements Initializable {
         }
     }
 
-    private void loadAndShowGuiSingle(){
+    private void loadAndShowGuiSingle() {
         FXMLLoader fx = new FXMLLoader();
         try {
             fx.setLocation(new URL(RESOURCES + "choose-card-single.fxml"));
