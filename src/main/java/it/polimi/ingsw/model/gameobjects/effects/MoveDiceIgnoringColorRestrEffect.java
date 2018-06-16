@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 public class MoveDiceIgnoringColorRestrEffect implements Effect {
 
     private Integer price;
-    private Player player;
 
     public MoveDiceIgnoringColorRestrEffect() {
         price = 1;
@@ -19,7 +18,6 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
 
     @Override
     public boolean applyEffect(Player player, Match match) {
-        this.player = player;
         WindowPatternCard schema = player.getSchemeCard();
         int row = player.getStartX1();
         int column = player.getStartY1();
@@ -28,21 +26,16 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
         if (player.getDiceToBeSacrificed() != 9) {
             Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
             if (sacrificeDice.getColor().equals(Colors.BLUE)&&dice != null) {
-                int newRow = player.getFinalX1();
-                int newColumn = player.getFinalY1();
-                schema.removeDice(row, column);
-                schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn); //DA RIVEDERE
-                if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
-                    //resetPlayerValues();
+                putDice(dice,schema,player,row,column);
+                if (dice.equals(schema.getWindow()[player.getFinalX1()][player.getFinalY1()].getDice())) {
                     match.getBoard().getReserve().getDices().remove(sacrificeDice);
                     return true;
                 } else {
-                    schema.putDice(dice, row, column);
-                    //resetPlayerValues();
+                    schema.putDiceBack(dice, row, column);
+
                     return false;
                 }
             } else {
-                //resetPlayerValues();
                 return false;
             }
         }
@@ -52,14 +45,9 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
             MatchMultiplayer m = (MatchMultiplayer) match;
             if (p.getNumFavorTokens() >= price) {
                 if (dice != null) {
-                    int newRow = player.getFinalX1();
-                    int newColumn = player.getFinalY1();
-                    schema.removeDice(row, column);
-                    schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn); //DA RIVEDERE
-                    if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
-                        //resetPlayerValues();
+                    putDice(dice,schema,player,row,column);
+                    if (dice.equals(schema.getWindow()[p.getFinalX1()][p.getFinalY1()].getDice())) {
                         p.setNumFavorTokens(p.getNumFavorTokens() - price);
-
                         if (price.equals(1)) {
                             //NOTIFY TO OTHERS
                             Response response = new ToolCardUsedByOthersResponse(p.getName(), 2);
@@ -81,12 +69,10 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                         }
                         return true;
                     } else {
-                        schema.putDice(dice, row, column);
-                        //resetPlayerValues();
+                        schema.putDiceBack(dice, row, column);
                         return false;
                     }
                 } else {
-                    //resetPlayerValues();
                     return false;
                 }
             } else
@@ -95,11 +81,11 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
         }
     }
 
-    private void resetPlayerValues() {
-        player.setStartX1(5);//UNREACHABLE VALUE, USED TO RESET
-        player.setFinalX1(5);
-        player.setStartY1(4);//UNREACHABLE VALUE, USED TO RESET
-        player.setFinalY1(4);
+    private void putDice(Dice dice, WindowPatternCard schema, Player player, int row, int column){
+        int newRow = player.getFinalX1();
+        int newColumn = player.getFinalY1();
+        schema.removeDice(row, column);
+        schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn);
     }
 
 }

@@ -43,8 +43,8 @@ public class MoveTwoDicesEffect implements Effect {
                     if (dice2.equals(schema.getDice(newRow2, newColumn2))) {
                         schema.removeDice(newRow2, newColumn2);
                     }
-                    schema.putDice(dice1, row1, column1);
-                    schema.putDice(dice2, row2, column2);
+                    schema.putDiceBack(dice1, row1, column1);
+                    schema.putDiceBack(dice2, row2, column2);
                     return false;
                 }
             } else {
@@ -91,8 +91,8 @@ public class MoveTwoDicesEffect implements Effect {
                         if (dice2.equals(schema.getDice(newRow2, newColumn2))) {
                             schema.removeDice(newRow2, newColumn2);
                         }
-                        schema.putDice(dice1, row1, column1);
-                        schema.putDice(dice2, row2, column2);
+                        schema.putDiceBack(dice1, row1, column1);
+                        schema.putDiceBack(dice2, row2, column2);
                         return false;
                     }
                 } else

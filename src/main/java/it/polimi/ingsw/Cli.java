@@ -23,15 +23,12 @@ public class Cli {
     private boolean myTurn;
     private final PrintWriter printer;
     private boolean stillPlaying;
-
-    private List<String> players;
     private List<String> dicesList;
     private List<String> toolCardsList;
     private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
     private List<String> privateCard;
     private WindowPatternCard mySchemeCard;
-   // private Map<String, Integer> toolcardsPrices;
     private int myFavorTokens;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
@@ -42,13 +39,9 @@ public class Cli {
     private int coordinateY;
     private boolean diceValueToBeSet;
     private boolean tool11DiceToBePlaced;
-
     private List<String> playersNames;
-
     private boolean windowChosen;
-
     private boolean single;
-
 
     private static final String WELCOME = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/*@@@@@@@@@@@@@@@\n" +
@@ -73,40 +66,50 @@ public class Cli {
     private static final String RULES = ("Da decidere se in italiano o in inglese");
 
     private static final String HELP_IN_TURN_MULTI = (
-            "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
-                    "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
-                    "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
-                    "\n 'pass'                                      to pass the turn to the next player " +
-                    "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
-                    "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
+            "\n 'passa'                                     per passare il turno al prossimo giocatore " +
+                    "\n 'pd' + 'coordinata x' + 'coordinata y'      per piazzare il dado nella tua carta schema nella posizione [x][y] " +
+                    "\n 'pd11' + 'coordinata x' + 'coordinata y'    per piazzare il dado scelto con la carta utensile 11 nella tua carta schema nella posizione [x][y] " +
+                    "\n 'scs' + 'numero'                            per scegliere la tua carta schema 'numero)' dall'elenco delle carte schema(disponibile una volta soltanto, all'inizio della partita)" +
+                    "\n 'sd' + 'numero'                             per scegliere il dado 'numero)' dall'elenco della riserva" +
+                    "\n 'usautensile' + 'numero'                    per usare l'effetto della carta utensile [numero]" +
+                    "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] ");
 
     private static final String HELP_GENERAL_MULTI = (
-            "\n 'h'                                         to show game available commands" +
-                    "\n 'q'                                         to quit the game" +
-                    "\n 'r'                                         to show game rules" +
-                    "\n 'sp'                                        to show all textArea' names" +
-                    "\n 'track'                                     to show current state of the round track" +
-                    "\n 'private'                                   to show your private objective card" +
-                    "\n 'public'                                    to show public objective cards" +
-                    "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
-                    "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
-                    "\n 'toolcards'                                 to show the list of available tool cards \n");
+            "\n 'aiuto'                                     per mostrare i comandi di gioco" +
+                    "\n 'avversari'                                 per mostrare i nomi degli avversari" +
+                    "\n 'cartaschema'                               per mostrare tutte la tua carta schema" +
+                    "\n 'carteschema'                               per mostrare tutte le carte schema degli avversari" +
+                    "\n 'esci'                                      per uscire dal gioco" +
+                    "\n 'mcs' + 'nome'                              per mostrare la carta schema del tuo avversario il cui nome è [nome]" +
+                    "\n 'priv'                                      per mostrare la tua carta obiettivo privato" +
+                    "\n 'pub'                                       per mostrare le tue carte obiettivo pubblico" +
+                    "\n 'regole'                                    per mostrare le regole del gioco" +
+                    "\n 'riserva'                                   per mostrare lo stato corrente della riserva, (disponibile solo dall'inizio del primo turno)" +
+                    "\n 'segnalini'                                 per mostrare i tuoi segnalini " +
+                    "\n 'segnalinialtrui'                           per mostrare i segnalini degli avversari" +
+                    "\n 'tracciato'                                 per mostrare lo stato attuale del tracciato dei round" +
+                    "\n 'utensile' + 'numero'                       per mostrare la descrizione d'uso della carta utensile [numero] " +
+                    "\n 'utensili'                                  per mostrare tutte le carte utensili disponibili \n");
 
     private static final String HELP_SINGLE = (
-            "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
-                    "\n 'cdr' + 'number'                            to choose the dice from the Reserve that you want to place on the ToolCard" +
-                    "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
-                    "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
-                    "\n 'pass'                                      to pass the turn" +
-                    "\n 'private'                                   to show your private objective cards" +
-                    "\n 'public'                                    to show public objective cards" +
-                    "\n 'q'                                         to quit the game" +
-                    "\n 'r'                                         to show game rules" +
-                    "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
-                    "\n 'track'                                     to show current state of the round track" +
-                    "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
-                    "\n 'toolcards'                                 to show the list of available tool cards \n" +
-                    "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
+            "\n 'aiuto'                                     per mostrare i comandi di gioco" +
+                    "\n 'cartaschema'                               per mostrare tutte la tua carta schema" +
+                    "\n 'esci'                                      per uscire dal gioco" +
+                    "\n 'passa'                                     per passare il turno" +
+                    "\n 'pd' + 'coordinata x' + 'coordinata y'      per piazzare il dado nella tua carta schema nella posizione [x][y] " +
+                    "\n 'priv'                                      per mostrare le tue carte obiettivo privato" +
+                    "\n 'pub'                                       per mostrare le tue carte obiettivo pubblico" +
+                    "\n 'regole'                                    per mostrare le regole del gioco" +
+                    "\n 'riserva'                                   per mostrare lo stato corrente della riserva, (disponibile solo dall'inizio del primo turno)" +
+                    "\n 'sacrifico' + 'numero'                      per sacrificare il dado 'numero)' dall'elenco della riserva per l'utilizzo di una carta utensile" +
+                    "\n 'scs' + 'numero'                            per scegliere la tua carta schema 'numero)' dall'elenco delle carte schema(disponibile una volta soltanto, all'inizio della partita)" +
+                    "\n 'sd' + 'numero'                             per scegliere il dado 'numero)' dall'elenco della riserva" +
+                    "\n 'tracciato'                                 per mostrare lo stato attuale del tracciato dei round" +
+                    "\n 'usautensile' + 'number'                    per usare l'effetto della carta utensile [numero]" +
+                    "\n 'utensile' + 'number'                       per mostrare la descrizione d'uso della carta utensile [numero] [numero] " +
+                    "\n 'utensili'                                  per mostrare tutte le carte utensili disponibili  \n" +
+                    "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] ");
+
 
     private static final String SYNTAX_ERROR = (
             "\nATTENZIONE: Richiesta non valida a livello di sintassi!\n");
@@ -130,11 +133,10 @@ public class Cli {
         toolCommands = new ArrayList<>();
         toolCardsList = new ArrayList<>();
         publicCardsList = new ArrayList<>();
-        players = new ArrayList<>();
+        playersNames = new ArrayList<>();
         diceValueToBeSet = false;
         tool11DiceToBePlaced = false;
         stillPlaying = true;
-
     }
 
     public void printWelcome() {
@@ -161,7 +163,6 @@ public class Cli {
 
         if (names != null) {
             playersNames = names;
-            printer.println("Stai giocando contro:\n");
             printNames();
         }
     }
@@ -206,7 +207,7 @@ public class Cli {
 
     public void onWindowChoice(List<String> windows) {
         int i = 0;
-        printer.println("Choose your window among the following                                        ~ [cw] + [number]\n");
+        printer.println("Choose your window among the following                                        ~ [scs] + [number]\n");
         printer.flush();
         for (String s : windows) {
             printer.println(i++ + ") " + s + "\n");
@@ -232,26 +233,22 @@ public class Cli {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
-        this.players = players;
+        this.playersNames = players;
     }
 
     private void parsePublicCards(String publicCards) {
         String cards = publicCards.substring(1, publicCards.length() - 1);
         publicCardsList = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
-
-
     }
 
     private void parseToolcards(String toolcards) {
         String cards = toolcards.substring(1, toolcards.length() - 1);
-
         toolCardsList = Pattern.compile(", ")
                 .splitAsStream(cards)
                 .collect(Collectors.toList());
 
         for (String card : toolCardsList) {
             String[] strings = card.split(":");
-
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
             this.toolCommands.add(new ToolCommand(i, this.printer, this.controllerRmi, this.controllerSocket, this.username, this.single));
         }
@@ -304,17 +301,10 @@ public class Cli {
      * print toolcards
      */
     public void showToolCards() {
-        printer.println("Tool cards:");
-
+        printer.println("\nDi seguito trovi tutte le carte utensili:          ~ ['utensile' + 'numero' per capire come usare la carta utensile che vuoi utilizzare]\n");
         for (String s : toolCardsList) {
             printer.println("- " + s);
         }
-/*
-        //todo: controllare se funziona davvero
-        for (String toolcard : toolcardsPrices.keySet()) {
-            printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
-        }
-*/
         printer.flush();
     }
 
@@ -349,7 +339,6 @@ public class Cli {
         this.otherSchemeCardsMap = otherSchemeCards;
         this.otherFavorTokensMap = otherTokens;
         this.windowChosen = schemeCardChosen;
-       // this.toolcardsPrices = toolcardsPrices;
         printer.println("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
         for (String toolcard : toolcardsPrices.keySet()) {
             printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
@@ -430,30 +419,171 @@ public class Cli {
                     if (myTurn || single) {
                         switch (parts[0]) {
 
-                            case "cd": {
+                            case "aiuto": {
+                                printer.println("\nInserisci un comando valido tra i seguenti:          ('+' sta per SPAZIO)");
+                                if (single) {
+                                    printer.println(HELP_SINGLE);
+                                } else {
+                                    printer.println(HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+                                }
+                                printer.flush();
+                            }
+                            break;
 
-                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
-                                    if (parametersCardinalityCheck(2)) {
-                                        toolNumber1 = tryParse(parts[1]);
-                                        if (toolNumber1 != null) {
-                                            if (toolNumber1 >= 0 && toolNumber1 < dicesList.size()) {
-                                                diceChosen = toolNumber1;
-                                                printer.println("\nHai scelto il dado: " + dicesList.toArray()[diceChosen].toString() + "\n");
-                                                printer.flush();
-                                            } else {
-                                                printer.println("\nATTENZIONE: Il dado che stai provando a usare non esiste, per favore riprova!  ");
-                                                printer.flush();
+                            case "avversari": {
+                                printNames();
+                            }
+                            break;
+
+                            case "cartaschema": {
+                                showMySchemeCard();
+                            }
+                            break;
+
+                            case "carteschema": {
+                                showSchemeCards();
+                            }
+                            break;
+
+                            case "esci": {
+                                quit();
+                            }
+                            break;
+
+                            case "mcs": {
+                                showWindow();
+                            }
+                            break;
+
+                            case "passa": {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
+                                    //RMI
+                                    if (controllerRmi != null)
+                                        controllerRmi.goThrough(username, single);
+                                        //SOCKET
+                                    else
+                                        controllerSocket.request(new GoThroughRequest(username, single));
+                                }
+                            }
+                            break;
+
+                            case "pd": {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
+                                    if (diceChosen != 9) {
+                                        if (placeDiceParametersCheck(parts[1], parts[2])) {
+                                            //RMI
+                                            if (controllerRmi != null) {
+                                                try {
+                                                    if (controllerRmi.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
+                                                        printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
+                                                        printer.flush();
+                                                        diceChosen = 9; //ro reset the value
+                                                    } else {
+                                                        printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
+                                                        printer.flush();
+
+                                                    }
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
-                                        } else {
-                                            syntaxErrorPrint();
+
+                                            //SOCKET
+                                            else {
+                                                controllerSocket.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
+                                                try {
+                                                    Thread.sleep(500);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                    Thread.currentThread().interrupt();
+                                                }
+                                                if (controllerSocket.isDicePlaced()) {
+                                                    controllerSocket.setDicePlaced(false);//to reset the value
+                                                    diceChosen = 9;//to reset the value
+                                                    printer.println("\nBen fatto! il dado è stato piazzato correttamente!\n");
+                                                    printer.flush();
+                                                } else {
+                                                    printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
+                                                    printer.flush();
+                                                }
+                                            }
+
                                         }
                                         toolNumber1 = null;
+                                        toolNumber2 = null;
+                                    }
+
+                                } else {
+                                    printer.println("\nATTENZIONE: Devi scegliere un dado prima di piazzarlo!");
+                                    printer.flush();
+                                }
+                            }
+                            break;
+
+                            case "pd11": {
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && tool11DiceToBePlaced) {
+                                    if (placeDiceParametersCheck(parts[1], parts[2])) {
+                                        if (controllerRmi != null) {
+                                            try {
+                                                if (controllerRmi.placeDiceTool11(coordinateX, coordinateY, username, single)) {
+                                                    printer.println("\nBen fatto!! Il dado è stato piazzato correttamente!\n");
+                                                    printer.flush();
+                                                } else {
+                                                    printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi!, o stai provando mettere un secondo dado nel turno!");
+                                                    printer.flush();
+                                                }
+                                            } catch (RemoteException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
+
+                                        //SOCKET
+                                        else {
+                                            controllerSocket.request(new PlaceDiceTool11Request(coordinateX, coordinateY, username, single));
+                                            try {
+                                                Thread.sleep(500);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                                Thread.currentThread().interrupt();
+                                            }
+                                            if (controllerSocket.isDicePlaced()) {
+                                                controllerSocket.setDicePlaced(false);//to reset the value
+                                                printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
+                                                printer.flush();
+                                            } else {
+                                                printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi, o stai provando mettere un secondo dado nel turno!");
+                                                printer.flush();
+                                            }
+                                        }
+                                        toolNumber1 = null;
+                                        toolNumber2 = null;
                                     }
                                 }
                             }
                             break;
 
-                            case "cdr": {
+                            case "priv": {
+                                showPrivateCard();
+                            }
+                            break;
+
+                            case "pub": {
+                                showPublicCards();
+                            }
+                            break;
+
+
+                            case "regole": {
+                                printRules();
+                            }
+                            break;
+
+                            case "riserva": {
+                                showReserve();
+                            }
+                            break;
+
+                            case "sacrifico": {
 
                                 if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parametersCardinalityCheck(2)) {
@@ -476,7 +606,7 @@ public class Cli {
                             }
                             break;
 
-                            case "cw": {
+                            case "scs": {
                                 if (!windowChosen && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parametersCardinalityCheck(2)) {
                                         toolNumber1 = tryParse(parts[1]);
@@ -507,203 +637,45 @@ public class Cli {
                             }
                             break;
 
-                            case "h": {
-                                if (single) {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
-                                } else {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
-                                }
-                                printer.flush();
-                            }
-                            break;
+                            case "sd": {
 
-                            case "otherschemecards": {
-                                printer.println(otherSchemeCardsMap.toString());
-                                printer.flush();
-                            }
-                            break;
-
-                            case "othertokens": {
-                                printer.println(otherFavorTokensMap.toString());
-                                printer.flush();
-                            }
-                            break;
-
-                            case "pass": {
-                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
-                                    //RMI
-                                    if (controllerRmi != null)
-                                        controllerRmi.goThrough(username, single);
-                                        //SOCKET
-                                    else
-                                        controllerSocket.request(new GoThroughRequest(username, single));
-                                }
-                            }
-                            break;
-
-                            case "pd": {
-                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
-                                    if (diceChosen != 9) {
-                                        if (parametersCardinalityCheck(3)) {
-                                            toolNumber1 = tryParse(parts[1]);
-                                            toolNumber2 = tryParse(parts[2]);
-                                            if (toolNumber1 != null && toolNumber2 != null) {
-                                                if (toolNumber1 >= 0 && toolNumber1 < 4 && toolNumber2 >= 0 && toolNumber2 < 5) {
-                                                    coordinateX = toolNumber1;
-                                                    coordinateY = toolNumber2;
-                                                    printer.println("\nHai scelto di posizionare il dado nella posizione [" + coordinateX + "][" + coordinateY + "] della tua carta schema");
-                                                    printer.flush();
-
-                                                    //RMI
-                                                    if (controllerRmi != null) {
-                                                        if (controllerRmi.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
-                                                            printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
-                                                            printer.flush();
-                                                            diceChosen = 9; //ro reset the value
-                                                        } else {
-                                                            printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
-                                                            printer.flush();
-
-                                                        }
-                                                    }
-
-                                                    //SOCKET
-                                                    else {
-                                                        controllerSocket.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
-                                                        try {
-                                                            Thread.sleep(500);
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                            Thread.currentThread().interrupt();
-                                                        }
-                                                        if (controllerSocket.isDicePlaced()) {
-                                                            controllerSocket.setDicePlaced(false);//to reset the value
-                                                            diceChosen = 9;//to reset the value
-                                                            printer.println("\nBen fatto! il dado è stato piazzato correttamente!\n");
-                                                            printer.flush();
-                                                        } else {
-                                                            printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
-                                                            printer.flush();
-                                                        }
-                                                    }
-
-                                                } else {
-                                                    printer.println("\nATTENZIONE: Le coordinate da te inserite sono fuori dai limiti!");
-                                                    printer.flush();
-                                                }
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
+                                    if (parametersCardinalityCheck(2)) {
+                                        toolNumber1 = tryParse(parts[1]);
+                                        if (toolNumber1 != null) {
+                                            if (toolNumber1 >= 0 && toolNumber1 < dicesList.size()) {
+                                                diceChosen = toolNumber1;
+                                                printer.println("\nHai scelto il dado: " + dicesList.toArray()[diceChosen].toString() + "\n");
+                                                printer.flush();
                                             } else {
-                                                syntaxErrorPrint();
+                                                printer.println("\nATTENZIONE: Il dado che stai provando a usare non esiste, per favore riprova!  ");
+                                                printer.flush();
                                             }
+                                        } else {
+                                            syntaxErrorPrint();
                                         }
                                         toolNumber1 = null;
-                                        toolNumber2 = null;
-                                    } else {
-                                        printer.println("\nATTENZIONE: Devi scegliere un dado prima di piazzarlo!");
-                                        printer.flush();
                                     }
                                 }
                             }
                             break;
 
-                            case "pd11": {
-                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && tool11DiceToBePlaced) {
-                                    if (parametersCardinalityCheck(3)) {
-                                        toolNumber1 = tryParse(parts[1]);
-                                        toolNumber2 = tryParse(parts[2]);
-                                        if (toolNumber1 != null && toolNumber2 != null) {
-                                            if (toolNumber1 >= 0 && toolNumber1 < 4 && toolNumber2 >= 0 && toolNumber2 < 5) {
-                                                coordinateX = toolNumber1;
-                                                coordinateY = toolNumber2;
-                                                printer.println("\nHai scelto di posizionare il dado nella posizione [" + coordinateX + "][" + coordinateY + "] della tua carta schema");
-                                                printer.flush();
-                                                if (controllerRmi != null) {
-                                                    if (controllerRmi.placeDiceTool11(coordinateX, coordinateY, username, single)) {
-                                                        printer.println("\nBen fatto!! Il dado è stato piazzato correttamente!\n");
-                                                        printer.flush();
-                                                    } else {
-                                                        printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi!, o stai provando mettere un secondo dado nel turno!");
-                                                        printer.flush();
-                                                    }
-                                                }
-
-                                                //SOCKET
-                                                else {
-                                                    controllerSocket.request(new PlaceDiceTool11Request(coordinateX, coordinateY, username, single));
-                                                    try {
-                                                        Thread.sleep(500);
-                                                    } catch (InterruptedException e) {
-                                                        e.printStackTrace();
-                                                        Thread.currentThread().interrupt();
-                                                    }
-                                                    if (controllerSocket.isDicePlaced()) {
-                                                        controllerSocket.setDicePlaced(false);//to reset the value
-                                                        printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
-                                                        printer.flush();
-                                                    } else {
-                                                        printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi, o stai provando mettere un secondo dado nel turno!");
-                                                        printer.flush();
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                            case "segnalini": {
+                                showFavorTokens();
                             }
                             break;
 
-                            case "private": {
-                                showPrivateCard();//DA SISTEMARE CON SINGLEPLAYER CHE NE HA 2
+                            case "segnalinialtrui": {
+                                showOtherTokens();
                             }
                             break;
 
-                            case "public": {
-                                showPublicCards();
+                            case "tracciato": {
+                                showRoundTrack();
                             }
                             break;
 
-                            case "q": {
-                                quit();
-                            }
-                            break;
-
-                            case "r": {
-                                printer.println("\nRegole: da scrivere");
-                                printer.flush();
-                            }
-                            break;
-
-                            case "reserve": {
-                                if (windowChosenCheck(windowChosen)) {
-                                    printer.println("\nStato della RISERVA:           ~ ['sd + numero' per scegliere il dado che vuoi]\n");
-                                    printer.flush();
-                                    int i = 0;
-                                    for (String dice : dicesList) {
-                                        printer.println(i++ + ") " + dice);
-                                        printer.flush();
-                                    }
-                                    printer.println();
-                                    printer.flush();
-                                }
-                            }
-                            break;
-
-                            case "schemecard": {
-                                showMySchemeCard();
-                            }
-                            break;
-
-                            case "sp": {
-                                printer.println("Stai giocando contro:");
-                                printNames();
-                            }
-                            break;
-
-                            case "sw": {
-                                showWindow();
-                            }
-                            break;
-
-                            case "tool": {
+                            case "utensile": {
 
                                 boolean found = false;
                                 if (parametersCardinalityCheck(2)) {
@@ -712,13 +684,13 @@ public class Cli {
                                         for (ToolCommand toolCommand : toolCommands) {
                                             if (toolCommand.getI() == Integer.parseInt(parts[1])) {
                                                 found = true;
-                                                printer.println("\nHere follows the ToolCard description:\n");
+                                                printer.println("\nDi seguito puoi trovare la descrizione d'uso della carta utensile:\n");
                                                 printer.println(toolCommand.parametersNeeded);
                                                 printer.flush();
                                             }
                                         }
                                         if (!found) {
-                                            printer.println("\nWARNING: Toolcard not in the ToolCard List!");
+                                            printer.println("\nATENZIONE: Carta utensile non presente!");
                                             printer.flush();
                                         }
                                     } else {
@@ -729,24 +701,12 @@ public class Cli {
                             }
                             break;
 
-                            case "tokens": {
-                                showFavorTokens();
-                            }
-                            break;
-
-                            case "toolcards": {
-                                printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
+                            case "utensili": {
                                 showToolCards();
                             }
                             break;
 
-                            case "track": {
-                                printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
-                                printer.flush();
-                            }
-                            break;
-
-                            case "usetool": {
+                            case "usautensile": {
                                 if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parts.length >= 2) {
                                         toolNumber1 = tryParse(parts[1]);
@@ -791,103 +751,81 @@ public class Cli {
                             break;
 
                             default: {
-                                printer.println("\nWARNING: Wrong command. Insert 'h' command for help!");
+                                printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!");
                                 printer.flush();
                             }
                         }
                     } else {
                         switch (parts[0]) {
 
-                            case "h": {
-                                if (single) {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
-                                } else {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
-                                }
+                            case "aiuto": {
+                                printer.println("\nInserisci un comando valido tra i seguenti               ('+' means SPACE)" + HELP_GENERAL_MULTI);
                                 printer.flush();
                             }
                             break;
 
-
-                            case "otherschemecards": {
-                                printer.println(otherSchemeCardsMap.toString());
-                                printer.flush();
-                            }
-                            break;
-
-                            case "othertokens": {
-                                printer.println(otherFavorTokensMap.toString());
-                                printer.flush();
-                            }
-                            break;
-
-                            case "private": {
-                                showPrivateCard();
-                            }
-                            break;
-
-                            case "public": {
-                                showPublicCards();
-                            }
-                            break;
-
-                            case "q": {
-                                quit();
-                            }
-                            break;
-
-                            case "r": {
-                                printer.println(RULES);
-                                printer.flush();
-                            }
-                            break;
-
-                            case "reserve": {
-                                if (windowChosenCheck(windowChosen)) {
-                                    printer.println("\nHere follows the current RESERVE state:           ~ ['cd number' to choose the dice you want]\n");
-                                    printer.flush();
-                                    int i = 0;
-                                    for (String dice : dicesList) {
-                                        printer.println(i++ + ") " + dice);
-                                        printer.flush();
-                                    }
-                                    printer.println();
-                                    printer.flush();
-                                }
-                            }
-                            break;
-
-                            case "schemecard": {
-                                showMySchemeCard();
-                            }
-                            break;
-
-                            case "sp": {
-                                printer.println("Stai giocando contro:");
+                            case "avversari": {
                                 printNames();
                             }
                             break;
 
-                            case "sw": {
+                            case "cartaschema": {
+                                showMySchemeCard();
+                            }
+                            break;
+
+                            case "carteschema": {
+                                showSchemeCards();
+                            }
+                            break;
+
+                            case "esci": {
+                                quit();
+                            }
+                            break;
+
+                            case "mcs": {
                                 showWindow();
                             }
                             break;
 
-                            case "toolcards": {
-                                printer.println("\nHere follows the ToolCards list:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
+                            case "priv": {
+                                showPrivateCard();
+                            }
+                            break;
+
+                            case "pub": {
+                                showPublicCards();
+                            }
+                            break;
+
+                            case "regole": {
+                                printRules();
+                            }
+                            break;
+
+                            case "riserva": {
+                                showReserve();
+                            }
+                            break;
+
+                            case "segnalini": {
+                                showFavorTokens();
+                            }
+                            break;
+
+                            case "segnalinialtrui": {
+                                showOtherTokens();
+                            }
+                            break;
+
+                            case "utensili": {
                                 showToolCards();
                             }
                             break;
 
-
-                            case "track": {
-                                printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
-                                printer.flush();
-                            }
-                            break;
-
-                            case "tokens": {
-                                showFavorTokens();
+                            case "tracciato": {
+                                showRoundTrack();
                             }
                             break;
 
@@ -897,33 +835,28 @@ public class Cli {
                             }
                         }
                     }
-                } catch (IOException e) {
+                } catch (
+                        IOException e) {
                     e.printStackTrace();
                 }
             }
 
             String s = "";
-
             while (!s.equals("esci")) {
-
                 printer.println("La partita è terminata, scrivi 'esci' per uscire");
                 printer.flush();
-
                 try {
                     s = keyboard.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
-
             System.exit(0);
         }
 
         private void showWindow() {
             if (parametersCardinalityCheck(2)) {
                 if (playersNames.contains(parts[1])) {
-
                     if (otherSchemeCardsMap.containsKey(parts[1])) {
                         printer.println("\nDi seguito la carta schema del tuo avversario " + parts[1].toUpperCase() + ":");
                         printer.println(otherSchemeCardsMap.get(parts[1]).toString());
@@ -933,12 +866,45 @@ public class Cli {
                         printer.flush();
                     }
 
-
                 } else {
                     printer.println("\nATTENZIONE: Il giocatore " + parts[1].toUpperCase() + " non esiste!");
                     printer.flush();
                 }
             }
+        }
+
+        private void showReserve() {
+            if (windowChosenCheck(windowChosen)) {
+                printer.println("\nDi seguito lo stato corrente della riserva:           ~ ['sd'+ 'numero' per scegliere il dado 'numero)' dall'elenco della riserva]\n");
+                printer.flush();
+                int i = 0;
+                for (String dice : dicesList) {
+                    printer.println(i++ + ") " + dice);
+                    printer.flush();
+                }
+                printer.println();
+                printer.flush();
+            }
+        }
+
+        private void showSchemeCards() {
+            printer.println(otherSchemeCardsMap.toString());
+            printer.flush();
+        }
+
+        private void showOtherTokens() {
+            printer.println(otherFavorTokensMap.toString());
+            printer.flush();
+        }
+
+        private void printRules() {
+            printer.println(RULES);
+            printer.flush();
+        }
+
+        private void showRoundTrack() {
+            printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
+            printer.flush();
         }
 
         private void quit() {
@@ -987,11 +953,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato modificato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1025,11 +987,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato spostato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1065,11 +1023,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te selezionato è stato spostato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1109,11 +1063,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
 
                                 } else {
                                     syntaxErrorPrint();
@@ -1153,11 +1103,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1189,11 +1135,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! I dadi da te selezionati sono stati spostati correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1221,11 +1163,7 @@ public class Cli {
                                         gameErrorPrint();
                                     }
                                 }
-                                if (done) {
-                                    diceChosenToBeSacrificed = 9;
-                                    printer.println("\nBen fatto! La riserva è stata rimescolata correttamente!\n");
-                                    printer.flush();
-                                }
+                                checkIfItsDone(done);
                             } else {
                                 printer.println("\nNon puoi scegliere un dado e poi rimescolare la riserva!\n");
                                 printer.flush();
@@ -1251,11 +1189,7 @@ public class Cli {
                                     gameErrorPrint();
                                 }
                             }
-                            if (done) {
-                                diceChosenToBeSacrificed = 9;
-                                printer.println("\nBen fatto! Ora puoi piazzare un altro dado nel turno!\n");
-                                printer.flush();
-                            }
+                            checkIfItsDone(done);
                         }
                         break;
                         case 9: {
@@ -1281,11 +1215,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te scelto è stato piazzato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1317,11 +1247,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te scelto è stato modificato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1415,11 +1341,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! Il dado da te scelto è stato spostato correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
                                 } else {
                                     syntaxErrorPrint();
                                 }
@@ -1458,11 +1380,7 @@ public class Cli {
                                             gameErrorPrint();
                                         }
                                     }
-                                    if (done) {
-                                        diceChosenToBeSacrificed = 9;
-                                        printer.println("\nBen fatto! I dadi da te scelti sono stati spostati correttamente!\n");
-                                        printer.flush();
-                                    }
+                                    checkIfItsDone(done);
 
                                 } else {
                                     syntaxErrorPrint();
@@ -1536,9 +1454,42 @@ public class Cli {
             }
         }
 
+        private void checkIfItsDone(boolean done) {
+            if (done) {
+                diceChosenToBeSacrificed = 9;
+                printer.println("\nBen fatto! Il dado da te selezionato è stato modificato correttamente!\n");
+                printer.flush();
+            }
+        }
+
         private void syntaxErrorPrint() {
             printer.println(SYNTAX_ERROR);
             printer.flush();
+        }
+
+        private boolean placeDiceParametersCheck(String parameter1, String parameter2) {
+            if (parametersCardinalityCheck(3)) {
+                toolNumber1 = tryParse(parameter1);
+                toolNumber2 = tryParse(parameter2);
+                if (toolNumber1 != null && toolNumber2 != null) {
+                    if (toolNumber1 >= 0 && toolNumber1 < 4 && toolNumber2 >= 0 && toolNumber2 < 5) {
+                        coordinateX = toolNumber1;
+                        coordinateY = toolNumber2;
+                        printer.println("\nHai scelto di posizionare il dado nella posizione [" + coordinateX + "][" + coordinateY + "] della tua carta schema");
+                        printer.flush();
+                        return true;
+                    } else {
+                        printer.println("\nATTENZIONE: Le coordinate da te inserite sono fuori dai limiti!");
+                        printer.flush();
+                        return false;
+                    }
+                } else {
+                    syntaxErrorPrint();
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
 
         private void gameErrorPrint() {
