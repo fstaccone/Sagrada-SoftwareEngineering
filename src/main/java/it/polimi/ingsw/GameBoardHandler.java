@@ -843,7 +843,7 @@ public class GameBoardHandler implements Initializable {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
         GridPane schemeCard = new GridPane();
-        schemeCard.setGridLinesVisible(false);
+        schemeCard.setGridLinesVisible(true);
         schemeCard.setPrefSize(334, 261);
         schemeCard.setHgap(10);
         schemeCard.setVgap(14);

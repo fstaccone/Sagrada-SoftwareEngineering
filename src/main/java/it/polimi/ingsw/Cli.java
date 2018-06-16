@@ -73,40 +73,50 @@ public class Cli {
     private static final String RULES = ("Da decidere se in italiano o in inglese");
 
     private static final String HELP_IN_TURN_MULTI = (
-            "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
-                    "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
-                    "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
-                    "\n 'pass'                                      to pass the turn to the next player " +
-                    "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
-                    "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
+                    "\n 'passa'                                     per passare il turno al prossimo giocatore " +
+                    "\n 'pd' + 'coordinata x' + 'coordinata y'      per piazzare il dado nella tua carta schema nella posizione [x][y] " +
+                    "\n 'pd11' + 'coordinata x' + 'coordinata y'    per piazzare il dado scelto con la carta utensile 11 nella tua carta schema nella posizione [x][y] " +
+                    "\n 'scs' + 'numero'                            per scegliere la tua carta schema 'numero)' dall'elenco delle carte schema(disponibile una volta soltanto, all'inizio della partita)" +
+                    "\n 'sd' + 'numero'                             per scegliere il dado 'numero)' dall'elenco della riserva" +
+                    "\n 'usautensile' + 'numero'                    per usare l'effetto della carta utensile [numero]"+
+                    "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] " );
 
     private static final String HELP_GENERAL_MULTI = (
-            "\n 'h'                                         to show game available commands" +
-                    "\n 'q'                                         to quit the game" +
-                    "\n 'r'                                         to show game rules" +
-                    "\n 'sp'                                        to show all textArea' names" +
-                    "\n 'track'                                     to show current state of the round track" +
-                    "\n 'private'                                   to show your private objective card" +
-                    "\n 'public'                                    to show public objective cards" +
-                    "\n 'sw' + 'name'                               to show the window pattern card of player [name]" +
-                    "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
-                    "\n 'toolcards'                                 to show the list of available tool cards \n");
+                    "\n 'aiuto'                                     per mostrare i comandi di gioco" +
+                    "\n 'avversari'                                 per mostrare i nomi degli avversari" +
+                    "\n 'cartaschema'                               per mostrare tutte la tua carta schema"+
+                    "\n 'carteschema'                               per mostrare tutte le carte schema degli avversari"+
+                    "\n 'esci'                                      per uscire dal gioco" +
+                    "\n 'mcs' + 'nome'                              per mostrare la carta schema del tuo avversario il cui nome è [nome]" +
+                    "\n 'priv'                                      per mostrare la tua carta obiettivo privato" +
+                    "\n 'pub'                                       per mostrare le tue carte obiettivo pubblico" +
+                    "\n 'regole'                                    per mostrare le regole del gioco" +
+                    "\n 'riserva'                                   per mostrare lo stato corrente della riserva, (disponibile solo dall'inizio del primo turno)" +
+                    "\n 'segnalini'                                 per mostrare i tuoi segnalini " +
+                    "\n 'segnalinialtrui'                           per mostrare i segnalini degli avversari" +
+                    "\n 'tracciato'                                 per mostrare lo stato attuale del tracciato dei round" +
+                    "\n 'utensile' + 'numero'                       per mostrare la descrizione d'uso della carta utensile [numero] " +
+                    "\n 'utensili'                                  per mostrare tutte le carte utensili disponibili \n");
 
     private static final String HELP_SINGLE = (
-            "\n 'cd' + 'number'                             to choose the dice from the Reserve" +
-                    "\n 'cdr' + 'number'                            to choose the dice from the Reserve that you want to place on the ToolCard" +
-                    "\n 'cw' + 'number'                             to choose tour window pattern card (available once only, at the beginning of the match)" +
-                    "\n 'pd' + 'coordinate x' + 'coordinate y'      to place the chosen dice in your Scheme Card " +
-                    "\n 'pass'                                      to pass the turn" +
-                    "\n 'private'                                   to show your private objective cards" +
-                    "\n 'public'                                    to show public objective cards" +
-                    "\n 'q'                                         to quit the game" +
-                    "\n 'r'                                         to show game rules" +
-                    "\n 'reserve'                                   to show current state of reserve, (available only from the beginning of the first turn)" +
-                    "\n 'track'                                     to show current state of the round track" +
-                    "\n 'tool' + 'number'                           to show the description of the tool card [number] " +
-                    "\n 'toolcards'                                 to show the list of available tool cards \n" +
-                    "\n 'usetool' + 'number'                        to use the effect of the tool card [number]");
+                    "\n 'aiuto'                                     per mostrare i comandi di gioco" +
+                    "\n 'cartaschema'                               per mostrare tutte la tua carta schema"+
+                    "\n 'esci'                                      per uscire dal gioco" +
+                    "\n 'passa'                                     per passare il turno"+
+                    "\n 'pd' + 'coordinata x' + 'coordinata y'      per piazzare il dado nella tua carta schema nella posizione [x][y] " +
+                    "\n 'priv'                                      per mostrare le tue carte obiettivo privato" +
+                    "\n 'pub'                                       per mostrare le tue carte obiettivo pubblico" +
+                    "\n 'regole'                                    per mostrare le regole del gioco" +
+                    "\n 'riserva'                                   per mostrare lo stato corrente della riserva, (disponibile solo dall'inizio del primo turno)" +
+                    "\n 'sacrifico' + 'numero'                      per sacrificare il dado 'numero)' dall'elenco della riserva per l'utilizzo di una carta utensile" +
+                    "\n 'scs' + 'numero'                            per scegliere la tua carta schema 'numero)' dall'elenco delle carte schema(disponibile una volta soltanto, all'inizio della partita)" +
+                    "\n 'sd' + 'numero'                             per scegliere il dado 'numero)' dall'elenco della riserva" +
+                    "\n 'tracciato'                                 per mostrare lo stato attuale del tracciato dei round" +
+                    "\n 'usautensile' + 'number'                    per usare l'effetto della carta utensile [numero]" +
+                    "\n 'utensile' + 'number'                       per mostrare la descrizione d'uso della carta utensile [numero] [numero] " +
+                    "\n 'utensili'                                  per mostrare tutte le carte utensili disponibili  \n" +
+                    "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] " );
+
 
     private static final String SYNTAX_ERROR = (
             "\nATTENZIONE: Richiesta non valida a livello di sintassi!\n");
@@ -161,7 +171,7 @@ public class Cli {
 
         if (names != null) {
             playersNames = names;
-            printer.println("Stai giocando contro:\n");
+
             printNames();
         }
     }
@@ -206,7 +216,7 @@ public class Cli {
 
     public void onWindowChoice(List<String> windows) {
         int i = 0;
-        printer.println("Choose your window among the following                                        ~ [cw] + [number]\n");
+        printer.println("Choose your window among the following                                        ~ [scs] + [number]\n");
         printer.flush();
         for (String s : windows) {
             printer.println(i++ + ") " + s + "\n");
@@ -304,17 +314,10 @@ public class Cli {
      * print toolcards
      */
     public void showToolCards() {
-        printer.println("Tool cards:");
-
+        printer.println("\nDi seguito trovi tutte le carte utensili:          ~ ['utensile' + 'numero' per capire come usare la carta utensile che vuoi utilizzare]\n");
         for (String s : toolCardsList) {
             printer.println("- " + s);
         }
-/*
-        //todo: controllare se funziona davvero
-        for (String toolcard : toolcardsPrices.keySet()) {
-            printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
-        }
-*/
         printer.flush();
     }
 
@@ -430,7 +433,7 @@ public class Cli {
                     if (myTurn || single) {
                         switch (parts[0]) {
 
-                            case "cd": {
+                            case "sd": {
 
                                 if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parametersCardinalityCheck(2)) {
@@ -453,7 +456,7 @@ public class Cli {
                             }
                             break;
 
-                            case "cdr": {
+                            case "sacrifico": {
 
                                 if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parametersCardinalityCheck(2)) {
@@ -476,7 +479,7 @@ public class Cli {
                             }
                             break;
 
-                            case "cw": {
+                            case "scs": {
                                 if (!windowChosen && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parametersCardinalityCheck(2)) {
                                         toolNumber1 = tryParse(parts[1]);
@@ -507,29 +510,27 @@ public class Cli {
                             }
                             break;
 
-                            case "h": {
+                            case "aiuto": {
                                 if (single) {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' sta per SPAZIO)" + HELP_SINGLE);
                                 } else {
-                                    printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+                                    printer.println("\nInserisci un comando valido tra i seguenti('+' sta per SPAZIO)" + HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
                                 }
                                 printer.flush();
                             }
                             break;
 
-                            case "otherschemecards": {
-                                printer.println(otherSchemeCardsMap.toString());
-                                printer.flush();
+                            case "carteschema": {
+                                showSchemeCards();
                             }
                             break;
 
-                            case "othertokens": {
-                                printer.println(otherFavorTokensMap.toString());
-                                printer.flush();
+                            case "segnalinialtrui": {
+                               showOtherTokens();
                             }
                             break;
 
-                            case "pass": {
+                            case "passa": {
                                 if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
                                     //RMI
                                     if (controllerRmi != null)
@@ -651,59 +652,47 @@ public class Cli {
                             }
                             break;
 
-                            case "private": {
-                                showPrivateCard();//DA SISTEMARE CON SINGLEPLAYER CHE NE HA 2
+                            case "priv": {
+                                showPrivateCard();
                             }
                             break;
 
-                            case "public": {
+                            case "pub": {
                                 showPublicCards();
                             }
                             break;
 
-                            case "q": {
+                            case "esci": {
                                 quit();
                             }
                             break;
 
-                            case "r": {
-                                printer.println("\nRegole: da scrivere");
-                                printer.flush();
+                            case "regole": {
+                                printRules();
                             }
                             break;
 
-                            case "reserve": {
-                                if (windowChosenCheck(windowChosen)) {
-                                    printer.println("\nStato della RISERVA:           ~ ['sd + numero' per scegliere il dado che vuoi]\n");
-                                    printer.flush();
-                                    int i = 0;
-                                    for (String dice : dicesList) {
-                                        printer.println(i++ + ") " + dice);
-                                        printer.flush();
-                                    }
-                                    printer.println();
-                                    printer.flush();
-                                }
+                            case "riserva": {
+                               showReserve();
                             }
                             break;
 
-                            case "schemecard": {
+                            case "cartaschema": {
                                 showMySchemeCard();
                             }
                             break;
 
-                            case "sp": {
-                                printer.println("Stai giocando contro:");
+                            case "avversari": {
                                 printNames();
                             }
                             break;
 
-                            case "sw": {
+                            case "mcs": {
                                 showWindow();
                             }
                             break;
 
-                            case "tool": {
+                            case "utensile": {
 
                                 boolean found = false;
                                 if (parametersCardinalityCheck(2)) {
@@ -712,13 +701,13 @@ public class Cli {
                                         for (ToolCommand toolCommand : toolCommands) {
                                             if (toolCommand.getI() == Integer.parseInt(parts[1])) {
                                                 found = true;
-                                                printer.println("\nHere follows the ToolCard description:\n");
+                                                printer.println("\nDi seguito puoi trovare la descrizione d'uso della carta utensile:\n");
                                                 printer.println(toolCommand.parametersNeeded);
                                                 printer.flush();
                                             }
                                         }
                                         if (!found) {
-                                            printer.println("\nWARNING: Toolcard not in the ToolCard List!");
+                                            printer.println("\nATENZIONE: Carta utensile non presente!");
                                             printer.flush();
                                         }
                                     } else {
@@ -729,24 +718,22 @@ public class Cli {
                             }
                             break;
 
-                            case "tokens": {
+                            case "segnalini": {
                                 showFavorTokens();
                             }
                             break;
 
-                            case "toolcards": {
-                                printer.println("\nHere follows the ToolCards List:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
+                            case "utensili": {
                                 showToolCards();
                             }
                             break;
 
-                            case "track": {
-                                printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
-                                printer.flush();
+                            case "tracciato": {
+                                showRoundTrack();
                             }
                             break;
 
-                            case "usetool": {
+                            case "usautensile": {
                                 if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
                                     if (parts.length >= 2) {
                                         toolNumber1 = tryParse(parts[1]);
@@ -791,14 +778,14 @@ public class Cli {
                             break;
 
                             default: {
-                                printer.println("\nWARNING: Wrong command. Insert 'h' command for help!");
+                                printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!");
                                 printer.flush();
                             }
                         }
                     } else {
                         switch (parts[0]) {
 
-                            case "h": {
+                            case "aiuto": {
                                 if (single) {
                                     printer.println("\nInserisci un comando valido tra i seguenti('+' means SPACE)" + HELP_SINGLE);
                                 } else {
@@ -809,84 +796,69 @@ public class Cli {
                             break;
 
 
-                            case "otherschemecards": {
-                                printer.println(otherSchemeCardsMap.toString());
-                                printer.flush();
+                            case "carteschema": {
+                                showSchemeCards();
                             }
                             break;
 
-                            case "othertokens": {
-                                printer.println(otherFavorTokensMap.toString());
-                                printer.flush();
+                            case "segnalinialtrui": {
+                                showOtherTokens();
                             }
                             break;
 
-                            case "private": {
+                            case "priv": {
                                 showPrivateCard();
                             }
                             break;
 
-                            case "public": {
+                            case "pub": {
                                 showPublicCards();
                             }
                             break;
 
-                            case "q": {
+                            case "esci": {
                                 quit();
                             }
                             break;
 
-                            case "r": {
-                                printer.println(RULES);
-                                printer.flush();
+                            case "regole": {
+                                printRules();
                             }
                             break;
 
-                            case "reserve": {
-                                if (windowChosenCheck(windowChosen)) {
-                                    printer.println("\nHere follows the current RESERVE state:           ~ ['cd number' to choose the dice you want]\n");
-                                    printer.flush();
-                                    int i = 0;
-                                    for (String dice : dicesList) {
-                                        printer.println(i++ + ") " + dice);
-                                        printer.flush();
-                                    }
-                                    printer.println();
-                                    printer.flush();
-                                }
+                            case "riserva": {
+                                showReserve();
                             }
                             break;
 
-                            case "schemecard": {
+                            case "cartaschema": {
                                 showMySchemeCard();
                             }
                             break;
 
-                            case "sp": {
-                                printer.println("Stai giocando contro:");
+                            case "avversari": {
                                 printNames();
                             }
                             break;
 
-                            case "sw": {
+                            case "mcs": {
                                 showWindow();
                             }
                             break;
 
-                            case "toolcards": {
-                                printer.println("\nHere follows the ToolCards list:          ~ ['tool number' to understand how to play the toolcard you want to use]\n");
+                            case "utensili": {
+
                                 showToolCards();
                             }
                             break;
 
 
-                            case "track": {
-                                printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
-                                printer.flush();
+                            case "tracciato": {
+                                showRoundTrack();
                             }
                             break;
 
-                            case "tokens": {
+                            case "segnalini": {
                                 showFavorTokens();
                             }
                             break;
@@ -939,6 +911,39 @@ public class Cli {
                     printer.flush();
                 }
             }
+        }
+
+        private void showReserve(){
+            if (windowChosenCheck(windowChosen)) {
+                printer.println("\nDi seguito lo stato corrente della riserva:           ~ ['sd'+ 'numero' per scegliere il dado 'numero)' dall'elenco della riserva]\n");
+                printer.flush();
+                int i = 0;
+                for (String dice : dicesList) {
+                    printer.println(i++ + ") " + dice);
+                    printer.flush();
+                }
+                printer.println();
+                printer.flush();
+            }
+        }
+
+        private void showSchemeCards(){
+            printer.println(otherSchemeCardsMap.toString());
+            printer.flush();
+        }
+
+        private void showOtherTokens(){
+            printer.println(otherSchemeCardsMap.toString());
+            printer.flush();
+        }
+        private void printRules(){
+            printer.println("\nRegole: da scrivere");
+            printer.flush();
+        }
+
+        private void showRoundTrack(){
+            printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
+            printer.flush();
         }
 
         private void quit() {
