@@ -128,7 +128,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
-        gui.onGameEnd(winner, rankingNames, rankingValues);
+        gui.onGameEndMulti(winner, rankingNames, rankingValues);
     }
 
     @Override

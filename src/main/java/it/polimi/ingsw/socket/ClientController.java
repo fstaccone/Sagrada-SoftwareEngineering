@@ -272,7 +272,7 @@ public class ClientController implements ResponseHandler {
         if (socketCli != null) {
             socketCli.getCli().onGameEnd(response.getWinner(), response.getNames(), response.getValues());
         } else {
-            socketGui.getGui().onGameEnd(response.getWinner(), response.getNames(), response.getValues());
+            socketGui.getGui().onGameEndMulti(response.getWinner(), response.getNames(), response.getValues());
         }
     }
 

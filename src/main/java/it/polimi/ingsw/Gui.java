@@ -33,7 +33,8 @@ public class Gui {
     // todo: come facciamo per il nome? Si potrebbe creare un' interfaccia
     private ChooseCardHandlerMultiplayer chooseCardHandlerMultiplayer;
     private ChooseCardHandlerSingle chooseCardHandlerSingle;
-    private GameBoardHandler gameBoardHandler;
+    private GameBoardHandlerMulti gameBoardHandlerMulti;
+    private GameBoardHandlerSingle gameBoardHandlerSingle;
     private String track;
     private List<String> toolCardsList;
     private List<String> dicesList;
@@ -72,6 +73,10 @@ public class Gui {
     }
 
     // getters
+    public boolean isSingle() {
+        return single;
+    }
+
     public List<String> getToolCardsList() {
         return toolCardsList;
     }
@@ -122,9 +127,9 @@ public class Gui {
             //Solo per verifica
             turnClip.play();
             String s = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
-            if (gameBoardHandler != null) {
-                gameBoardHandler.appendToTextArea(s);
-                gameBoardHandler.initializeActions();
+            if (gameBoardHandlerMulti != null) {
+                gameBoardHandlerMulti.appendToTextArea(s);
+                gameBoardHandlerMulti.initializeActions();
             } else if (chooseCardHandlerMultiplayer != null) {
                 chooseCardHandlerMultiplayer.appendToTextArea(s);
                 chooseCardHandlerMultiplayer.setTurn(true);
@@ -148,14 +153,21 @@ public class Gui {
             dicesList.add(s);
         }
         for (String dice : dicesList) System.out.println(dice);
-        if (gameBoardHandler != null) {
-            gameBoardHandler.setReserve(dicesList);
+        if (single) {
+            if (gameBoardHandlerSingle != null) {
+                gameBoardHandlerSingle.setReserve(dicesList);
+            }
+        } else {
+            if (gameBoardHandlerMulti != null) {
+                gameBoardHandlerMulti.setReserve(dicesList);
+            }
         }
+
     }
 
     public void onPlayerReconnection(String name) {
-        if (gameBoardHandler != null) {
-            gameBoardHandler.appendToTextArea("Il giocatore " + name + " è entrato nella partita!");
+        if (gameBoardHandlerMulti != null) {
+            gameBoardHandlerMulti.appendToTextArea("Il giocatore " + name + " è entrato nella partita!");
         } else if (chooseCardHandlerMultiplayer != null) {
             chooseCardHandlerMultiplayer.appendToTextArea("Il giocatore " + name + " è entrato nella partita!");
         }
@@ -220,22 +232,22 @@ public class Gui {
 
     public void onGameClosing() {
         if (stillPlaying) {
-            gameBoardHandler.onGameClosing();//da fare anche su choosecardhandler
+            gameBoardHandlerMulti.onGameClosing();//da fare anche su choosecardhandler
         }
         stillPlaying = false;
     }
 
-    public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
-        if (gameBoardHandler != null) {
-            gameBoardHandler.showRanking(winner, rankingNames, rankingValues);
+    public void onGameEndMulti(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+        if (gameBoardHandlerMulti != null) {
+            gameBoardHandlerMulti.showRanking(winner, rankingNames, rankingValues);
         }
         stillPlaying = false;
     }
 
     // todo: eventualmente cambiare il gameboardhandler se ne creiamo uno per il singleplayer
     public void onGameEndSingle(int goal, int points) {
-        if (gameBoardHandler != null) {
-            gameBoardHandler.showResultForSingle(goal, points);
+        if (gameBoardHandlerSingle != null) {
+            gameBoardHandlerSingle.showResultForSingle(goal, points);
         }
         stillPlaying = false;
     }
@@ -262,41 +274,53 @@ public class Gui {
     }
 
     public void onRoundTrack(String track) {
-        if (gameBoardHandler != null) {
-            gameBoardHandler.onRoundTrack(track);
+        if (single) {
+            if (gameBoardHandlerSingle != null) {
+                gameBoardHandlerSingle.onRoundTrack(track);
+            }
+        } else {
+            if (gameBoardHandlerMulti != null) {
+                gameBoardHandlerMulti.onRoundTrack(track);
+            }
         }
     }
 
     public void onMyWindow(WindowPatternCard window) {
-        if (gameBoardHandler != null) {
-            gameBoardHandler.setMyWindow(window);
+        if (single) {
+            if (gameBoardHandlerSingle != null) {
+                gameBoardHandlerSingle.setMyWindow(window);
+            }
+        } else {
+            if (gameBoardHandlerMulti != null) {
+                gameBoardHandlerMulti.setMyWindow(window);
+            }
         }
     }
 
     /* to update the owner's tokens*/
     public void onMyFavorTokens(int value) {
-        if (gameBoardHandler != null) {
-            gameBoardHandler.setFavourTokens(value);
+        if (gameBoardHandlerMulti != null) {
+            gameBoardHandlerMulti.setFavourTokens(value);
         }
     }
 
     /* to update the others' tokens*/
     public void onOtherFavorTokens(int value, String name) {
         otherFavorTokensMap.put(name, value);
-        if (gameBoardHandler != null) {
-            gameBoardHandler.onOtherFavorTokens(value, name);
+        if (gameBoardHandlerMulti != null) {
+            gameBoardHandlerMulti.onOtherFavorTokens(value, name);
         }
     }
 
     public void onOtherSchemeCards(WindowPatternCard window, String name) {
         otherSchemeCardsMap.put(name, window);
-        if (gameBoardHandler != null) gameBoardHandler.onOtherSchemeCards(window, name);
+        if (gameBoardHandlerMulti != null) gameBoardHandlerMulti.onOtherSchemeCards(window, name);
     }
 
     public void onOtherTurn(String name) {
         String s = "Ora è il turno di " + name + "!";
-        if (gameBoardHandler != null) {
-            gameBoardHandler.appendToTextArea(s);
+        if (gameBoardHandlerMulti != null) {
+            gameBoardHandlerMulti.appendToTextArea(s);
         } else if (chooseCardHandlerMultiplayer != null) {
             chooseCardHandlerMultiplayer.appendToTextArea(s);
         }
@@ -341,8 +365,8 @@ public class Gui {
 
     public void onPlayerExit(String name) {
         System.out.println("On player exit");
-        if (gameBoardHandler != null) {
-            gameBoardHandler.appendToTextArea("Il giocatore " + name + " è uscito dalla partita!");
+        if (gameBoardHandlerMulti != null) {
+            gameBoardHandlerMulti.appendToTextArea("Il giocatore " + name + " è uscito dalla partita!");
         } else {
             chooseCardHandlerMultiplayer.appendToTextArea("Il giocatore " + name + " è uscito dalla partita!");
         }
@@ -363,8 +387,8 @@ public class Gui {
     }
 
     public void onToolCardUsedByOthers(String name, int toolNumber) {
-        if (gameBoardHandler != null) {
-            gameBoardHandler.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+        if (gameBoardHandlerMulti != null) {
+            gameBoardHandlerMulti.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         } else
             chooseCardHandlerMultiplayer.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
     }
@@ -389,30 +413,30 @@ public class Gui {
             playerSchemeCardImageURL = chooseCardHandlerMultiplayer.getImageUrl();
         }
         Scene scene = new Scene(root);
-        gameBoardHandler = fx.getController();
-        gameBoardHandler.init(scene, this);
-        gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
+        gameBoardHandlerMulti = fx.getController();
+        gameBoardHandlerMulti.init(scene, this);
+        gameBoardHandlerMulti.setWindowPatternCardImg(playerSchemeCardImageURL);
         if (mySchemeCard != null) {
-            gameBoardHandler.setMyWindow(mySchemeCard);
-            gameBoardHandler.setFavourTokens(myTokens);
+            gameBoardHandlerMulti.setMyWindow(mySchemeCard);
+            gameBoardHandlerMulti.setFavourTokens(myTokens);
         }
 
-        gameBoardHandler.setToolCards(toolCardsList);
-        gameBoardHandler.setPrivateCard(privateCards.get(0));
-        gameBoardHandler.setPublicCards(publicCardsList);
-        gameBoardHandler.setReserve(dicesList);
-        gameBoardHandler.onRoundTrack(track);
+        gameBoardHandlerMulti.setToolCards(toolCardsList);
+        gameBoardHandlerMulti.setPrivateCard(privateCards.get(0));
+        gameBoardHandlerMulti.setPublicCards(publicCardsList);
+        gameBoardHandlerMulti.setReserve(dicesList);
+        gameBoardHandlerMulti.onRoundTrack(track);
         if (!reconnection) {
-            gameBoardHandler.appendToTextArea("Fai la tua prima mossa!");
+            gameBoardHandlerMulti.appendToTextArea("Fai la tua prima mossa!");
         } else {
-            gameBoardHandler.appendToTextArea("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
+            gameBoardHandlerMulti.appendToTextArea("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
             for (String toolcard : toolcardsPrices.keySet()) {
-                gameBoardHandler.appendToTextArea("-" + toolcard + " " + toolcardsPrices.get(toolcard));
+                gameBoardHandlerMulti.appendToTextArea("-" + toolcard + " " + toolcardsPrices.get(toolcard));
             }
         }
-        gameBoardHandler.createLabelsMap();
-        gameBoardHandler.createOtherLabelsList();
-        gameBoardHandler.initializeLabels(players);
+        gameBoardHandlerMulti.createLabelsMap();
+        gameBoardHandlerMulti.createOtherLabelsList();
+        gameBoardHandlerMulti.initializeLabels(players);
 
 
         //FOR SOCKET CONNECTION
@@ -424,8 +448,8 @@ public class Gui {
                 Thread.currentThread().interrupt();
             }
         }
-        gameBoardHandler.initializeFavorTokens(otherFavorTokensMap);
-        gameBoardHandler.initializeSchemeCards(otherSchemeCardsMap);
+        gameBoardHandlerMulti.initializeFavorTokens(otherFavorTokensMap);
+        gameBoardHandlerMulti.initializeSchemeCards(otherSchemeCardsMap);
     }
 
     public void onAfterWindowChoiceSingleplayer() {
@@ -450,14 +474,13 @@ public class Gui {
             playerSchemeCardImageURL = chooseCardHandlerSingle.getImageUrl();
         }
         Scene scene = new Scene(root);
-        gameBoardHandler = fx.getController();
-        gameBoardHandler.init(scene, this);
-        gameBoardHandler.setWindowPatternCardImg(playerSchemeCardImageURL);
+        gameBoardHandlerSingle = fx.getController();
+        gameBoardHandlerSingle.init(scene, this);
+        gameBoardHandlerSingle.setWindowPatternCardImg(playerSchemeCardImageURL);
         if (mySchemeCard != null) {
-            gameBoardHandler.setMyWindow(mySchemeCard);
+            gameBoardHandlerSingle.setMyWindow(mySchemeCard);
         }
-        gameBoardHandler.setToolCards(toolCardsList);
-
+        //gameBoardHandlerSingle.setToolCards(toolCardsList); // todo: da implementare
     }
 
 }
