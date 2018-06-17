@@ -12,10 +12,21 @@ public class ExchangeDiceRoundTrackEffect implements Effect {
 
     private Integer price;
 
+    /**
+     * When initialized, the price of the tool card is set to 1
+     */
     public ExchangeDiceRoundTrackEffect() {
         price = 1;
     }
 
+    /**
+     * This tool card allows the player to switch a dice chosen from the reserve with a dice in the round track
+     * @param player is the player that uses this tool card
+     * @param match is the player's current match
+     * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
+     * sacrifice, for multi player: enough favor tokens) and the player chooses an existing dice from reserve and
+     * round track.
+     */
     @Override
     public boolean applyEffect(Player player, Match match) {
         RoundTrack track = match.getBoard().getRoundTrack();

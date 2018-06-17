@@ -15,10 +15,20 @@ public class ChooseAnotherDiceEffect implements Effect {
 
     private Integer price;
 
+    /**
+     * When the match starts the price is 1
+     */
     public ChooseAnotherDiceEffect() {
         price = 1;
     }
 
+    /**
+     * If the preliminary conditions are satisfied (enough favor tokens for multi player, correct dice to sacrifice
+     * for single player), the player is allowed to choose and place a second dice in his first turn
+     * @param player is the player that uses the tool card
+     * @param match is the player's current match
+     * @return true if the preliminary conditions are satisfied, false otherwise
+     */
     @Override
     public boolean applyEffect(Player player, Match match) {
         //SINGLEPLAYER

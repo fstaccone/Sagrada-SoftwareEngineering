@@ -11,6 +11,13 @@ public class DifferentShadesInAColumnEffect implements Effect {
     public DifferentShadesInAColumnEffect() {
     }
 
+    /**
+     * Gives 4 points to the player for every column in his scheme card which is fully completed without dices with the
+     * same value
+     * @param player is the player that uses this public objective card
+     * @param match is the player's current match
+     * @return
+     */
     @Override
     public boolean applyEffect(Player player, Match match) {
         int temp = player.getPoints();

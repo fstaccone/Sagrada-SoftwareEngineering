@@ -9,6 +9,12 @@ public class DifferentShadesEffect implements Effect{
     public DifferentShadesEffect() {
     }
 
+    /**
+     * Gives 5 points to the player for every set of dices with all the 5 different values in his scheme card
+     * @param caller is the player that uses this public objective card
+     * @param match is the player's current match
+     * @return
+     */
     @Override
     public boolean applyEffect(Player caller, Match match) {
         Square[][] schema = caller.getSchemeCard().getWindow();

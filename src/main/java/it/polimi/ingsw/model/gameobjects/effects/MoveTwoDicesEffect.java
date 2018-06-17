@@ -12,10 +12,22 @@ public class MoveTwoDicesEffect implements Effect {
 
     private Integer price;
 
+    /**
+     * When initialized, the price of the tool card is set to 1
+     */
     public MoveTwoDicesEffect() {
         price = 1;
     }
 
+    /**
+     * This tool card allows the player to move exactly 2 dices in his scheme card.
+     * The player has to consider all placement rules.
+     * @param player is the player that uses this tool card
+     * @param match is the player's current match
+     * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
+     * sacrifice, for multi player: enough favor tokens) and the chosen dices are placed correctly in their new
+     * positions.
+     */
     @Override
     public boolean applyEffect(Player player, Match match) {
         WindowPatternCard schema = player.getSchemeCard();

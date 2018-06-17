@@ -17,10 +17,22 @@ public class UpsideDownDiceEffect implements Effect {
     private MatchMultiplayer m;
     private PlayerMultiplayer p;
 
+    /**
+     * When initialized, the price of the tool card is set to 1
+     */
     public UpsideDownDiceEffect() {
         price = 1;
     }
 
+    /**
+     * This tool card allows the player to put a chosen dice from the reserve upside down.
+     * It means that if the dice value is 6, after using the tool card it'll be 1, if it's 5, it'll be 2 and so on.
+     * @param player is the player that uses this tool card
+     * @param match is the player's current match
+     * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
+     * sacrifice, for multi player: enough favor tokens) and the chosen dice from the reserve has a value between
+     * 1 and 6.
+     */
     @Override
     public boolean applyEffect(Player player, Match match) {
         int value = match.getBoard().getReserve().getDices().get(player.getDice()).getValue();
@@ -108,6 +120,10 @@ public class UpsideDownDiceEffect implements Effect {
         }
     }
 
+    /**
+     * If the price is 1, which means that it's the first time this tool card is used in the current match, all players
+     * are advised that the tool card has been used and its price is now 2.
+     */
     private void notifytoOthersAndUpdatePrice() {
         if (price.equals(1)) {
             //NOTIFY TO OTHERS

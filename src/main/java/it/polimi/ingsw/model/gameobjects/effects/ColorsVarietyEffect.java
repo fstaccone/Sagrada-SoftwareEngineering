@@ -11,6 +11,12 @@ public class ColorsVarietyEffect implements Effect {
 
     }
 
+    /**
+     * Gives the player 4 points for every set of dices of the 5 different colors in his scheme card
+     * @param caller is the player that uses this public objective card
+     * @param match is the player's current match
+     * @return
+     */
     @Override
     public boolean applyEffect(Player caller, Match match) {
         Square[][] schema = caller.getSchemeCard().getWindow();
