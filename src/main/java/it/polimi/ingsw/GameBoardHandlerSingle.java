@@ -11,15 +11,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameBoardHandlerSingle {
     private Gui gui;
     private GameBoardHandler gameBoardHandler;
+    private Map<Integer, Button> toolCardsMap = new HashMap<>();
+
 
     @FXML
     Label privObjLabel;
@@ -30,21 +33,25 @@ public class GameBoardHandlerSingle {
     @FXML
     Pane toolPane;
     @FXML
+    Pane toolPane1;
+    @FXML
+    Pane toolPane2;
+    @FXML
     Button useButton;
     @FXML
     Label toolLabel;
     @FXML
     Pane playerWindowPatternCard;
     @FXML
-    Button toolCard0;
+    Button tool0;
     @FXML
-    Button toolCard1;
+    Button tool1;
     @FXML
-    Button toolCard2;
+    Button tool2;
     @FXML
-    Button toolCard3;
+    Button tool3;
     @FXML
-    Button toolCard4;
+    Button tool4;
     @FXML
     Button passButton;
     @FXML
@@ -68,18 +75,28 @@ public class GameBoardHandlerSingle {
     @FXML
     Label playerName;
 
+
     public void init(Scene scene, Gui gui) {
         this.gui = gui;
-        gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this,gameBoard,toolPane,toolLabel,useButton);
+        gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this, gameBoard, toolPane, toolLabel, useButton);
         gameBoardHandler.init(scene, gui);
+        initializeToolMap();
         Platform.runLater(() -> {
-            //useButton.setVisible(false);
+            useButton.setVisible(false);
             toolLabel.setVisible(false);
-            //toolPane.setVisible(false);
+            toolPane.setVisible(false);
         });
     }
 
-    public void appendToTextArea(String s){
+    private void initializeToolMap() {
+        toolCardsMap.put(0, tool0);
+        toolCardsMap.put(1, tool1);
+        toolCardsMap.put(2, tool2);
+        toolCardsMap.put(3, tool3);
+        toolCardsMap.put(4, tool4);
+    }
+
+    public void appendToTextArea(String s) {
         gameBoardHandler.appendToTextArea(s);
     }
 
@@ -177,17 +194,16 @@ public class GameBoardHandlerSingle {
         }
     };
 
-    // todo: evitare di ripetere codice qui è più complicato del previsto
-    /*
     public void setToolCards(List<String> toolCardsList) {
-        for (String toolCard : toolCardsList) {
-            setSingleToolcard(toolLabel, tool0, tool1, tool2, toolCardsList.get(0));
-            setSingleToolcard(toolLabel, tool1, tool0, tool2, toolCardsList.get(1));
-            setSingleToolcard(toolLabel, tool2, tool0, tool1, toolCardsList.get(2));
+        for (int i = 0; i < toolCardsList.size(); i++) {
+            setSingleToolcard(toolCardsMap.get(i), toolCardsList.get(i));
+        }
+        for(int i = toolCardsList.size(); i < 5; i++){
+            toolCardsMap.get(i).setDisable(true);
         }
     }
 
-    private void setSingleToolcard(Label label, Button main, Button other1, Button other2, String toolcard) {
+    private void setSingleToolcard(Button main, String toolcard) {
         String url = GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png";
         Image cardImg = new Image(url);
 
@@ -197,21 +213,29 @@ public class GameBoardHandlerSingle {
         Platform.runLater(() -> main.setGraphic(cardView));
         main.setOnAction(toolSelected);
         main.setOnMouseEntered(event -> {
+            main.setTranslateX(20);
             main.setTranslateY(-60);
             main.setStyle("-fx-scale-x: 1.5;-fx-scale-y: 1.5");
-            other1.setVisible(false);
-            other2.setVisible(false);
-            label.setVisible(false);
+            for (int i : toolCardsMap.keySet()) {
+                if (toolCardsMap.get(i) != null && toolCardsMap.get(i) != main) {
+                    toolCardsMap.get(i).setVisible(false);
+                }
+            }
+            toolCardsLabel.setVisible(false);
         });
+
         main.setOnMouseExited(event -> {
+            main.setTranslateX(0);
             main.setTranslateY(0);
             main.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
-            other1.setVisible(true);
-            other2.setVisible(true);
-            label.setVisible(true);
+            for (int i : toolCardsMap.keySet()) {
+                if (toolCardsMap.get(i) != null && toolCardsMap.get(i) != main) {
+                    toolCardsMap.get(i).setVisible(true);
+                }
+            }
+            toolCardsLabel.setVisible(true);
         });
     }
-    */
 
     @FXML
     public void onPassButtonClicked() {

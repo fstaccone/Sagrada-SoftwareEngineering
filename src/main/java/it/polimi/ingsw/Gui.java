@@ -126,17 +126,21 @@ public class Gui {
         if (myTurn) {
             //Solo per verifica
             turnClip.play();
-            String s = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
+            String multi = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
+            String single ="Round: " + round + "\tTurno: " + turn;
             if (gameBoardHandlerMulti != null) {
-                gameBoardHandlerMulti.appendToTextArea(s);
+                gameBoardHandlerMulti.appendToTextArea(multi);
                 gameBoardHandlerMulti.initializeActions();
             } else if (chooseCardHandlerMultiplayer != null) {
-                chooseCardHandlerMultiplayer.appendToTextArea(s);
+                chooseCardHandlerMultiplayer.appendToTextArea(multi);
                 chooseCardHandlerMultiplayer.setTurn(true);
+            } else if(gameBoardHandlerSingle != null){
+                gameBoardHandlerSingle.appendToTextArea(single);
             }
         } else {
             if (chooseCardHandlerMultiplayer != null) {
                 chooseCardHandlerMultiplayer.setTurn(false);
+                gameBoardHandlerMulti.initializeActions();
             }
         }
     }
@@ -205,6 +209,7 @@ public class Gui {
             e.printStackTrace();
         }
         chooseCardHandlerSingle = fxmlLoader.getController();
+        assert root != null;
         Scene scene = new Scene(root);
         chooseCardHandlerSingle.init(windowStage, scene, controllerRmi, controllerSocket, username);
         chooseCardHandlerSingle.welcome();
@@ -224,6 +229,7 @@ public class Gui {
             e.printStackTrace();
         }
         chooseCardHandlerMultiplayer = fxmlLoader.getController();
+        assert root != null;
         Scene scene = new Scene(root);
         chooseCardHandlerMultiplayer.init(windowStage, scene, controllerRmi, controllerSocket, username);
         chooseCardHandlerMultiplayer.welcome();
@@ -412,6 +418,7 @@ public class Gui {
         if (chooseCardHandlerMultiplayer != null) {
             playerSchemeCardImageURL = chooseCardHandlerMultiplayer.getImageUrl();
         }
+        assert root != null;
         Scene scene = new Scene(root);
         gameBoardHandlerMulti = fx.getController();
         gameBoardHandlerMulti.init(scene, this);
@@ -454,8 +461,6 @@ public class Gui {
 
     public void onAfterWindowChoiceSingleplayer() {
 
-        //CI VUOLE IL GAMEBOARDHANDLERSINGLE, VAI SOCIOOOO
-
         AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/dices.mp3");
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
@@ -473,6 +478,7 @@ public class Gui {
         if (chooseCardHandlerSingle != null) {
             playerSchemeCardImageURL = chooseCardHandlerSingle.getImageUrl();
         }
+        assert root != null;
         Scene scene = new Scene(root);
         gameBoardHandlerSingle = fx.getController();
         gameBoardHandlerSingle.init(scene, this);
@@ -480,7 +486,9 @@ public class Gui {
         if (mySchemeCard != null) {
             gameBoardHandlerSingle.setMyWindow(mySchemeCard);
         }
-        //gameBoardHandlerSingle.setToolCards(toolCardsList); // todo: da implementare
+        gameBoardHandlerSingle.setToolCards(toolCardsList);
+        gameBoardHandlerSingle.setPrivateCards(privateCards.get(0), privateCards.get(1));
+        gameBoardHandlerSingle.setPublicCards(publicCardsList);
     }
 
 }
