@@ -7,14 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +101,7 @@ public class GameBoardHandlerMulti {
 
     public void init(Scene scene, Gui gui) {
         this.gui = gui;
-        gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null);
+        gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null,gameBoard,toolPane,toolLabel,useButton);
         gameBoardHandler.init(scene, gui);
         Platform.runLater(() -> {
             label0.setText(gui.getUsername());
@@ -134,20 +130,6 @@ public class GameBoardHandlerMulti {
     public void setWindowPatternCardImg(String imgURL){
         gameBoardHandler.setWindowPatternCardImg(imgURL);
     }
-
-    private EventHandler<MouseEvent> windowPatternCardSlotSelected = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            gameBoardHandler.windowPatternCardSlotSelected((ImageView) event.getSource());
-        }
-    };
-
-    private EventHandler<MouseEvent> reserveDiceSelected = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            gameBoardHandler.reserveDiceSelected(event.getSource().toString());
-        }
-    };
 
     private EventHandler<ActionEvent> toolSelected = new EventHandler<ActionEvent>() {
         @Override
@@ -459,12 +441,12 @@ public class GameBoardHandlerMulti {
     }
 
     public void setToolCards(List<String> toolCardsList) {
-        setSingleToolcard(toolLabel, tool0, tool1, tool2, toolCardsList.get(0));
-        setSingleToolcard(toolLabel, tool1, tool0, tool2, toolCardsList.get(1));
-        setSingleToolcard(toolLabel, tool2, tool0, tool1, toolCardsList.get(2));
+        setSingleToolcard(tool0, tool1, tool2, toolCardsList.get(0));
+        setSingleToolcard(tool1, tool0, tool2, toolCardsList.get(1));
+        setSingleToolcard(tool2, tool0, tool1, toolCardsList.get(2));
     }
 
-    private void setSingleToolcard(Label label, Button main, Button other1, Button other2, String toolcard){
+    private void setSingleToolcard( Button main, Button other1, Button other2, String toolcard){
         String url = GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png";
         Image cardImg = new Image(url);
 
@@ -474,18 +456,30 @@ public class GameBoardHandlerMulti {
         Platform.runLater(() -> main.setGraphic(cardView));
         main.setOnAction(toolSelected);
         main.setOnMouseEntered(event -> {
+            main.setTranslateX(20);
             main.setTranslateY(-60);
             main.setStyle("-fx-scale-x: 1.5;-fx-scale-y: 1.5");
             other1.setVisible(false);
             other2.setVisible(false);
-            label.setVisible(false);
+            toolCardsLabel.setVisible(false);
         });
         main.setOnMouseExited(event -> {
+            main.setTranslateX(0);
             main.setTranslateY(0);
             main.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
             other1.setVisible(true);
             other2.setVisible(true);
-            label.setVisible(true);
+            toolCardsLabel.setVisible(true);
         });
+    }
+
+    @FXML
+    public void onPassButtonClicked() {
+        gameBoardHandler.passButtonClicked();
+    }
+
+    @FXML
+    public void onQuitClicked() {
+       gameBoardHandler.quitClicked();
     }
 }

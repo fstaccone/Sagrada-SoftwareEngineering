@@ -48,7 +48,7 @@
             </font>
         </Label>
     </Pane>
-    <Button id="passButton" fx:id="passButton" layoutX="995.0" layoutY="186.0" mnemonicParsing="false"
+    <Button id="passButton" fx:id="passButton" layoutX="995.0" layoutY="186.0" onAction="#onPassButtonClicked" mnemonicParsing="false"
             prefHeight="40.0" prefWidth="92.0" text="PASSA" textFill="WHITE">
         <font>
             <Font name="Courier New Bold" size="18.0"/>
@@ -56,7 +56,7 @@
     </Button>
     <Pane id="toolPane" fx:id="toolPane" depthTest="DISABLE" layoutX="19.0" layoutY="78.0" prefHeight="463.0"
           prefWidth="159.0" style="-fx-background-color: #251494;">
-        <Button id="passButton" fx:id="useButton" layoutX="34.0" layoutY="409.0" mnemonicParsing="false"
+        <Button id="passButton" fx:id="useButton" layoutX="34.0" layoutY="409.0"  mnemonicParsing="false"
                 prefHeight="40.0" prefWidth="92.0" text="USA" textFill="WHITE">
             <font>
                 <Font name="Courier New Bold" size="18.0"/>
@@ -72,7 +72,7 @@
     </Pane>
 
     <TextArea fx:id="textArea" layoutX="956.0" layoutY="27.0" prefHeight="144.0" prefWidth="427.0" wrapText="true"/>
-    <Button id="gameBoardQuit" fx:id="quit" layoutX="1258.0" layoutY="186.0" mnemonicParsing="false"
+    <Button id="gameBoardQuit" fx:id="quit" layoutX="1258.0" layoutY="186.0" mnemonicParsing="false" onAction="#onQuitClicked"
             prefHeight="40.0" prefWidth="92.0" text="ESCI" textFill="WHITE">
         <font>
             <Font name="Courier New Bold" size="18.0"/>

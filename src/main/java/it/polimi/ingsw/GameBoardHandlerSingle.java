@@ -70,12 +70,12 @@ public class GameBoardHandlerSingle {
 
     public void init(Scene scene, Gui gui) {
         this.gui = gui;
-        gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this);
+        gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this,gameBoard,toolPane,toolLabel,useButton);
         gameBoardHandler.init(scene, gui);
         Platform.runLater(() -> {
-            useButton.setVisible(false);
+            //useButton.setVisible(false);
             toolLabel.setVisible(false);
-            toolPane.setVisible(false);
+            //toolPane.setVisible(false);
         });
     }
 
@@ -107,20 +107,6 @@ public class GameBoardHandlerSingle {
     public void setWindowPatternCardImg(String imgURL) {
         gameBoardHandler.setWindowPatternCardImg(imgURL);
     }
-
-    private EventHandler<MouseEvent> windowPatternCardSlotSelected = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            gameBoardHandler.windowPatternCardSlotSelected((ImageView) event.getSource());
-        }
-    };
-
-    private EventHandler<MouseEvent> reserveDiceSelected = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            gameBoardHandler.reserveDiceSelected(event.getSource().toString());
-        }
-    };
 
     public void showResultForSingle(int goal, int points) {
 
@@ -226,4 +212,14 @@ public class GameBoardHandlerSingle {
         });
     }
     */
+
+    @FXML
+    public void onPassButtonClicked() {
+        gameBoardHandler.passButtonClicked();
+    }
+
+    @FXML
+    public void onQuitClicked() {
+        gameBoardHandler.quitClicked();
+    }
 }

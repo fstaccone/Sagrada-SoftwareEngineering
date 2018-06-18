@@ -8,7 +8,6 @@ import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -56,6 +55,7 @@ public class GameBoardHandler {
     private int targetDiceFromRoundForTools = GameBoardHandler.OUT_OF_RANGE;
     private int partialReserveIndexForTools = GameBoardHandler.OUT_OF_RANGE;
     private int targetReserveIndexForTools = GameBoardHandler.OUT_OF_RANGE;
+    private int targetSacrificeDiceForTools = GameBoardHandler.OUT_OF_RANGE;
     private Integer finalCoordinateX1;
     private Integer finalCoordinateY1;
     private Integer finalCoordinateX2;
@@ -67,10 +67,10 @@ public class GameBoardHandler {
     private TextField finalY1;
     private TextField finalX2;
     private TextField finalY2;
-    private int pickedDices = GameBoardHandler.OUT_OF_RANGE;
-
+    private int pickedDices = 0;
 
     /* Useful for contexts */
+    private ImageView sacrificeImageView;
     private ImageView imageView1;
     private ImageView imageView2;
     private ImageView imageView3;
@@ -91,44 +91,32 @@ public class GameBoardHandler {
     private GridPane schemeCard = new GridPane();
     private final boolean single;
 
-    public GameBoardHandler(boolean single, GameBoardHandlerMulti gameBoardHandlerMulti, GameBoardHandlerSingle gameBoardHandlerSingle) {
+    private AnchorPane gameBoard;
+    private Pane toolPane;
+    private Label toolLabel;
+    private Button useButton;
+
+    public GameBoardHandler(boolean single, GameBoardHandlerMulti gameBoardHandlerMulti, GameBoardHandlerSingle gameBoardHandlerSingle, AnchorPane gameBoard, Pane toolPane, Label toolLabel, Button useButton) {
         this.gameBoardHandlerMulti = gameBoardHandlerMulti;
         this.gameBoardHandlerSingle = gameBoardHandlerSingle;
         this.single = single;
+        this.gameBoard = gameBoard;
+        this.toolPane = toolPane;
+        this.toolLabel = toolLabel;
+        this.useButton = useButton;
+
     }
 
-    public void reserveDiceSelected(String source) {
-        if (gui.isMyTurn()) {
-            source = source.substring(13, 14);
-            int i = Integer.parseInt(source);
-            source = gui.getDicesList().get(i);
-            diceChosen = i;
-            appendToTextArea("Hai scelto il dado: " + source + " pos: " + i);
-        }
-    }
-
-    public void toolSelected(String source) {
-        if (gui.isMyTurn()) {
-            int tool = Integer.parseInt(source);
-            String name = gui.getToolCardsList().get(tool);
-            name = name.replaceAll("tool", "");
-            int number = Integer.parseInt(name);
-
-         //   resetToolValues();
-         //   new ToolContext(number);
-        }
-    }
 
     private void setupSchemeCardSource(ImageView source) {
-
         source.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 source.setCursor(Cursor.HAND);
             }
         });
-
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
             public void handle(MouseEvent event) {
 
                 if (pickedDices == 0) {
@@ -138,42 +126,33 @@ public class GameBoardHandler {
                     partialStartXForTools2 = GridPane.getRowIndex(source);
                     partialStartYForTools2 = GridPane.getColumnIndex(source);
                 }
-
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
-
                 ClipboardContent content = new ClipboardContent();
-
                 content.putImage(source.getImage());
                 db.setContent(content);
-
                 event.consume();
             }
         });
     }
 
     private void setupReserveSource(ImageView source) {
-
         source.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 source.setCursor(Cursor.HAND);
             }
         });
-
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
             public void handle(MouseEvent event) {
 
                 String s = event.getSource().toString();
                 s = s.substring(13, 14);
                 partialReserveIndexForTools = Integer.parseInt(s);
-
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
-
                 ClipboardContent content = new ClipboardContent();
-
                 content.putImage(source.getImage());
                 db.setContent(content);
-
                 event.consume();
             }
         });
@@ -189,26 +168,24 @@ public class GameBoardHandler {
         });
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
             public void handle(MouseEvent event) {
 
                 partialRoundForTools = GridPane.getColumnIndex(source) + 1;
                 partialDiceFromRoundForTools = GridPane.getRowIndex(source);
-
-
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
-
                 ClipboardContent content = new ClipboardContent();
-
                 content.putImage(source.getImage());
                 db.setContent(content);
-
                 event.consume();
             }
         });
     }
 
     private void setupReserveTarget(ImageView target) {
+
         target.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
             public void handle(DragEvent event) {
 
                 if (event.getDragboard().hasImage()) {
@@ -219,6 +196,7 @@ public class GameBoardHandler {
         });
 
         target.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
             public void handle(DragEvent event) {
 
                 Dragboard db = event.getDragboard();
@@ -231,8 +209,10 @@ public class GameBoardHandler {
         });
     }
 
-    private void setupSchemeCardTarget(ImageView target) {
+    private void setupSacrificeTarget(ImageView target) {
+
         target.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
             public void handle(DragEvent event) {
 
                 if (event.getDragboard().hasImage()) {
@@ -243,10 +223,34 @@ public class GameBoardHandler {
         });
 
         target.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                target.setImage(db.getImage());
+                targetSacrificeDiceForTools = partialReserveIndexForTools;
+                event.consume();
+            }
+        });
+    }
+
+    private void setupSchemeCardTarget(ImageView target) {
+
+        target.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+
+                if (event.getDragboard().hasImage()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+                event.consume();
+            }
+        });
+
+        target.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
             public void handle(DragEvent event) {
 
                 Dragboard db = event.getDragboard();
-
                 target.setImage(db.getImage());
                 if (pickedDices == 0) {
                     targetStartXForTools1 = partialStartXForTools1;
@@ -256,14 +260,15 @@ public class GameBoardHandler {
                     targetStartXForTools2 = partialStartXForTools2;
                     targetStartYForTools2 = partialStartYForTools2;
                 }
-
                 event.consume();
             }
         });
     }
 
     private void setupRoundTrackTarget(ImageView target) {
+
         target.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
             public void handle(DragEvent event) {
 
                 if (event.getDragboard().hasImage()) {
@@ -274,6 +279,7 @@ public class GameBoardHandler {
         });
 
         target.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
             public void handle(DragEvent event) {
 
                 Dragboard db = event.getDragboard();
@@ -285,10 +291,22 @@ public class GameBoardHandler {
         });
     }
 
+    public void toolSelected(String source) {
+        if (gui.isMyTurn()) {
+            int tool = Integer.parseInt(source);
+            String name = gui.getToolCardsList().get(tool);
+            name = name.replaceAll("tool", "");
+            int number = Integer.parseInt(name);
+
+            resetToolValues();
+            new ToolContext(number);
+        }
+    }
+
     public void windowPatternCardSlotSelected(ImageView slot) {
         if (gui.isMyTurn()) {
             if (diceChosen != OUT_OF_RANGE) {
-                //resetToolValues();
+                resetToolValues();
                 Integer tempX = GridPane.getRowIndex(slot);
                 if (tempX == null) tempX = 0;
                 Integer tempY = GridPane.getColumnIndex(slot);
@@ -344,6 +362,9 @@ public class GameBoardHandler {
             window.show();
         });
 
+        if (gameBoardHandlerSingle != null) {
+            sacrificeImageView = new ImageView();
+        }
         imageView1 = new ImageView();
         imageView2 = new ImageView();
         imageView3 = new ImageView();
@@ -403,7 +424,7 @@ public class GameBoardHandler {
         }
     }
 
-    private void setImageInSlot(int row, int col){
+    private void setImageInSlot(int row, int col) {
         Image img = new Image(TRANSPARENT_IMAGE_URL);
         ImageView imgView = new ImageView(img);
         imgView.setFitWidth(58);
@@ -495,7 +516,13 @@ public class GameBoardHandler {
     private EventHandler<MouseEvent> reserveDiceSelected = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            reserveDiceSelected(event.getSource().toString());
+            if (gui.isMyTurn()) {
+                String source = event.getSource().toString().substring(13, 14);
+                int i = Integer.parseInt(source);
+                source = gui.getDicesList().get(i);
+                diceChosen = i;
+                appendToTextArea("Hai scelto il dado: " + source + " pos: " + i);
+            }
         }
     };
 
@@ -608,53 +635,9 @@ public class GameBoardHandler {
         }
     }
 
-    // todo: da cambiare "in evento non associato al tag fxml"
-    @FXML
-    public void onPassButtonClicked() {
-        //resetToolValues();
-        if (gui.isMyTurn()) {
-            if (remoteController != null) {
-                try {
-                    remoteController.goThrough(username, single);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                clientController.request(new GoThroughRequest(username, single));
-            }
-        } else {
-            if (!single) {
-                appendToTextArea("Non è il tuo turno!");
-            }
-        }
-    }
-
-    // todo: da cambiare "in evento non associato al tag fxml"
-    @FXML
-    public void onQuitClicked() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi davvero uscire?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Uscita");
-        alert.setHeaderText(null);
-        alert.setResizable(false);
-        alert.setGraphic(null);
-        alert.showAndWait();
-        if (alert.getResult() == ButtonType.YES) {
-            window.close();
-            if (remoteController != null) {
-                try {
-                    remoteController.quitGame(username, false);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                clientController.request(new QuitGameRequest(username, false));
-            }
-            System.exit(0);
-        }
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
+
     private void resetToolValues() {
         partialReserveIndexForTools = OUT_OF_RANGE;
         targetReserveIndexForTools = OUT_OF_RANGE;
@@ -676,7 +659,7 @@ public class GameBoardHandler {
         finalCoordinateX2 = null;
         finalCoordinateY2 = null;
         incrOrDecr = null;
-        pickedDices = OUT_OF_RANGE;
+        pickedDices = 0;
         imageView1.setVisible(false);
         imageView2.setVisible(false);
         imageView3.setVisible(false);
@@ -691,6 +674,9 @@ public class GameBoardHandler {
         plus.setVisible(false);
         minus.setVisible(false);
         concludeButton.setVisible(false);
+        if(gameBoardHandlerSingle!=null) {
+            sacrificeImageView.setVisible(false);
+        }
     }
 
 
@@ -749,6 +735,9 @@ public class GameBoardHandler {
         }
 
         private void createContext1() {
+
+            setupSacrificeImageView();
+
             imageView1 = null;
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
@@ -784,15 +773,18 @@ public class GameBoardHandler {
             useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (targetReserveIndexForTools != 9 && incrOrDecr != null && (incrOrDecr.equals("+") || incrOrDecr.equals("-"))) {
+                    if (targetReserveIndexForTools != GameBoardHandler.OUT_OF_RANGE && incrOrDecr != null && (incrOrDecr.equals("+") || incrOrDecr.equals("-"))) {
                         //RMI
                         if (remoteController != null) {
                             try {
-
-                                if (remoteController.useToolCard1(-1, targetReserveIndexForTools, incrOrDecr, username, false)) {
-                                    appendToTextArea("Carta utensile 1 utilizzata correttamente!");
+                                if (gameBoardHandlerSingle != null) {
+                                    if (targetSacrificeDiceForTools != GameBoardHandler.OUT_OF_RANGE && targetSacrificeDiceForTools != targetReserveIndexForTools) {
+                                        checkBoolean(remoteController.useToolCard1(targetSacrificeDiceForTools, targetReserveIndexForTools, incrOrDecr, username, false), 1);
+                                    } else {
+                                        appendToTextArea("Non hai inserito alcun dado da sacrificare, o lo hai fatto in modo errato!\n");
+                                    }
                                 } else {
-                                    appendToTextArea("Carta utensile 1 non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
+                                    checkBoolean(remoteController.useToolCard1(-1, targetReserveIndexForTools, incrOrDecr, username, false), 1);
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -800,22 +792,23 @@ public class GameBoardHandler {
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard1Request(-1, targetReserveIndexForTools, incrOrDecr, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 1 utilizzata correttamente!");
+                            if (gameBoardHandlerSingle != null) {
+                                if (targetSacrificeDiceForTools != GameBoardHandler.OUT_OF_RANGE && targetSacrificeDiceForTools != targetReserveIndexForTools) {
+                                    clientController.request(new UseToolCard1Request(targetSacrificeDiceForTools, targetReserveIndexForTools, incrOrDecr, username, false));
+                                } else {
+                                    appendToTextArea("Non hai inserito alcun dado da sacrificare, o lo hai fatto in modo errato!\n");
+                                }
                             } else {
-                                appendToTextArea("Carta utensile 1 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                clientController.request(new UseToolCard1Request(-1, targetReserveIndexForTools, incrOrDecr, username, false));
                             }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 1);
                         }
-
                     } else {
                         appendToTextArea("Non hai scelto alcun dado dalla riserva o non hai cliccato '+' o '-'!");
                     }
                     resetToolValues();
                 }
             });
-
-
         }
 
         private void createContext2or3(int n) {
@@ -850,32 +843,17 @@ public class GameBoardHandler {
                 public void handle(MouseEvent event) {
                     finalCoordinateX1 = tryParse(finalX1.getText());
                     finalCoordinateY1 = tryParse(finalY1.getText());
-                    if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetStartXForTools1 != 4 && targetStartYForTools1 != 5) {
+                    if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetStartXForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools1 != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
-                                System.out.println(targetStartXForTools1);
-                                System.out.println(targetStartYForTools1);
-                                System.out.println(finalCoordinateX1);
-                                System.out.println(finalCoordinateY1);
-
-                                if (remoteController.useToolCard2or3(-1, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false)) {
-                                    appendToTextArea("Carta utensile " + n + " utilizzata correttamente!");
-                                } else {
-                                    appendToTextArea("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-
-                                }
+                                checkBoolean(remoteController.useToolCard2or3(-1, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false), n);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             clientController.request(new UseToolCard2or3Request(-1, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile " + n + " utilizzata correttamente!");
-                            } else {
-                                appendToTextArea("Carta utensile " + n + " non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), n);
                         }
-
                     } else {
                         appendToTextArea("Non hai scelto alcun dado dalla carta schema o non hai settato correttamente le coordinate!");
                     }
@@ -939,27 +917,16 @@ public class GameBoardHandler {
                     finalCoordinateY1 = tryParse(finalY1.getText());
                     finalCoordinateX2 = tryParse(finalX2.getText());
                     finalCoordinateY2 = tryParse(finalY2.getText());
-                    if (finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 4 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 5 && targetStartXForTools1 != 4 && targetStartYForTools1 != 5 && targetStartXForTools2 != 4 && targetStartYForTools2 != 5) {
+                    if (finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 4 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 5 && targetStartXForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartXForTools2 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools2 != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
-
-
-                                if (remoteController.useToolCard4(-1, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
-                                    appendToTextArea("Carta utensile 4 utilizzata correttamente!");
-                                } else {
-                                    appendToTextArea("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-
-                                }
+                                checkBoolean(remoteController.useToolCard4(-1, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false), 4);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             clientController.request(new UseToolCard4Request(-1, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 4 utilizzata correttamente!");
-                            } else {
-                                appendToTextArea("Carta utensile 4 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 4);
                         }
 
                     } else {
@@ -1000,25 +967,17 @@ public class GameBoardHandler {
 
                 @Override
                 public void handle(MouseEvent event) {
-                    if (targetReserveIndexForTools != 9 && targetRoundForTools != 0 && targetDiceFromRoundForTools != 9) {
+                    if (targetReserveIndexForTools != GameBoardHandler.OUT_OF_RANGE && targetRoundForTools != GameBoardHandler.OUT_OF_RANGE && targetDiceFromRoundForTools != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
-                                if (remoteController.useToolCard5(-1, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false)) {
+                                checkBoolean(remoteController.useToolCard5(-1, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false), 5);
 
-                                    appendToTextArea("Carta utensile 5 utilizzata correttamente!");
-                                } else {
-                                    appendToTextArea("Carta utensile 5 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             clientController.request(new UseToolCard5Request(-1, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 5 utilizzata correttamente!");
-                            } else {
-                                appendToTextArea("Carta utensile 5 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 5);
                         }
                     } else {
                         appendToTextArea("Non hai scelto alcun dado dalla riserva o dal tracciato dei round!");
@@ -1048,16 +1007,11 @@ public class GameBoardHandler {
             useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (targetReserveIndexForTools != 9) {
+                    if (targetReserveIndexForTools != GameBoardHandler.OUT_OF_RANGE) {
                         //RMI
                         if (remoteController != null) {
                             try {
-
-                                if (remoteController.useToolCard6(-1, targetReserveIndexForTools, username, false)) {
-                                    appendToTextArea("Carta utensile 6 utilizzata correttamente!");
-                                } else {
-                                    appendToTextArea("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                                }
+                                checkBoolean(remoteController.useToolCard6(-1, targetReserveIndexForTools, username, false), 6);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
@@ -1065,11 +1019,7 @@ public class GameBoardHandler {
                         //SOCKET
                         else {
                             clientController.request(new UseToolCard6Request(-1, targetReserveIndexForTools, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 6 utilizzata correttamente!");
-                            } else {
-                                appendToTextArea("Carta utensile 6 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 6);
                         }
 
                     } else {
@@ -1091,12 +1041,8 @@ public class GameBoardHandler {
                     if (n == 7) {
                         if (remoteController != null) {
                             try {
-                                if (diceChosen == 9) {
-                                    if (remoteController.useToolCard7(-1, username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
-                                        appendToTextArea("Carta utensile 7 utilizzata correttamente!");
-                                    } else {
-                                        appendToTextArea("Carta utensile 7 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                                    }
+                                if (diceChosen == GameBoardHandler.OUT_OF_RANGE) {
+                                    checkBoolean(remoteController.useToolCard7(-1, username, false), 7);
                                 } else {
                                     appendToTextArea("Non puoi scegliere un dado prima di utilizzare questa carta utensile!");
                                 }
@@ -1105,30 +1051,19 @@ public class GameBoardHandler {
                             }
                         } else {
                             clientController.request(new UseToolCard7Request(-1, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 7 utilizzata correttamente!");
-                            } else {
-                                appendToTextArea("Carta utensile 7 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 7);
                         }
                     } else {
                         if (remoteController != null) {
                             try {
-                                if (remoteController.useToolCard8(-1, username, false)) { //VANNO SETTATI CORRETTAMENTE I PARAMETRI
-                                    appendToTextArea("Carta utensile 8 utilizzata correttamente!");
-                                } else {
-                                    appendToTextArea("Carta utensile 8 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                                }
+                                checkBoolean(remoteController.useToolCard8(-1, username, false), 8);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             clientController.request(new UseToolCard8Request(-1, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 8 utilizzata correttamente!");
-                            } else {
-                                appendToTextArea("Carta utensile 8 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 8);
+
                         }
                     }
                     resetToolValues();
@@ -1168,25 +1103,17 @@ public class GameBoardHandler {
                 public void handle(MouseEvent event) {
                     finalCoordinateX1 = tryParse(finalX1.getText());
                     finalCoordinateY1 = tryParse(finalY1.getText());
-                    if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetReserveIndexForTools != 9) {
+                    if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetReserveIndexForTools != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
-                                if (remoteController.useToolCard9(-1, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false)) {
-                                    appendToTextArea("Carta utensile 9 utilizzata correttamente!");
-                                } else {
-                                    appendToTextArea("Carta utensile 9 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                checkBoolean(remoteController.useToolCard9(-1, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false),9);
 
-                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             clientController.request(new UseToolCard9Request(-1, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 9 utilizzata correttamente!");
-                            } else {
-                                appendToTextArea("Carta utensile 9 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 9);
                         }
 
                     } else {
@@ -1215,16 +1142,12 @@ public class GameBoardHandler {
             useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (targetReserveIndexForTools != 9) {
+                    if (targetReserveIndexForTools != GameBoardHandler.OUT_OF_RANGE) {
                         //RMI
                         if (remoteController != null) {
                             try {
+                                checkBoolean(remoteController.useToolCard10(-1, targetReserveIndexForTools, username, false), 10);
 
-                                if (remoteController.useToolCard10(-1, targetReserveIndexForTools, username, false)) {
-                                    appendToTextArea("Carta utensile 10 utilizzata correttamente!");
-                                } else {
-                                    appendToTextArea("Carta utensile 10 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
@@ -1232,11 +1155,7 @@ public class GameBoardHandler {
                         //SOCKET
                         else {
                             clientController.request(new UseToolCard10Request(-1, targetReserveIndexForTools, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 10 utilizzata correttamente!");
-                            } else {
-                                appendToTextArea("Carta utensile 10 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 10);
                         }
 
                     } else {
@@ -1265,7 +1184,7 @@ public class GameBoardHandler {
             useButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (targetReserveIndexForTools != 9) {
+                    if (targetReserveIndexForTools != GameBoardHandler.OUT_OF_RANGE) {
                         //RMI
                         if (remoteController != null) {
                             try {
@@ -1363,62 +1282,31 @@ public class GameBoardHandler {
                     finalCoordinateX2 = tryParse(finalX2.getText());
                     finalCoordinateY2 = tryParse(finalY2.getText());
 
-                    System.out.println(targetDiceFromRoundForTools);
-                    System.out.println(targetRoundForTools);
-                    System.out.println(finalCoordinateX1);
-                    System.out.println(finalCoordinateY1);
-                    System.out.println(finalCoordinateX2);
-                    System.out.println(finalCoordinateY2);
-                    System.out.println(targetStartXForTools1);
-                    System.out.println(targetStartYForTools1);
-                    System.out.println(targetStartXForTools2);
-                    System.out.println(targetStartYForTools2);
-
-
-                    if (targetDiceFromRoundForTools != 9 && targetRoundForTools != 0 && finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 4 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 5 && targetStartXForTools1 != 4 && targetStartYForTools1 != 5 && targetStartXForTools2 != 4 && targetStartYForTools2 != 5) {
+                    if (targetDiceFromRoundForTools != GameBoardHandler.OUT_OF_RANGE && targetRoundForTools != GameBoardHandler.OUT_OF_RANGE && finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 4 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 5 && targetStartXForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartXForTools2 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools2 != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
 
 
-                                if (remoteController.useToolCard12(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false)) {
-                                    appendToTextArea("Carta utensile 12 utilizzata correttamente!");
-                                } else {
-                                    appendToTextArea("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                checkBoolean (remoteController.useToolCard12(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false),12);
 
-                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             clientController.request(new UseToolCard12Request(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 12 utilizzata correttamente per entrambi i dadi!");
-                            } else {
-                                appendToTextArea("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(),12);
                         }
 
-                    } else if (targetDiceFromRoundForTools != 9 && targetRoundForTools != 0 && finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetStartXForTools1 != 4 && targetStartYForTools1 != 5 && (finalCoordinateX2 == null || finalCoordinateY2 == null || 0 > finalCoordinateX2 || finalCoordinateX2 > 4 || 0 > finalCoordinateY2 || finalCoordinateY2 > 5 || targetStartXForTools2 == 4 || targetStartYForTools2 == 5)) {
+                    } else if (targetDiceFromRoundForTools != GameBoardHandler.OUT_OF_RANGE && targetRoundForTools != GameBoardHandler.OUT_OF_RANGE && finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetStartXForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools1 != GameBoardHandler.OUT_OF_RANGE && (finalCoordinateX2 == null || finalCoordinateY2 == null || 0 > finalCoordinateX2 || finalCoordinateX2 > 4 || 0 > finalCoordinateY2 || finalCoordinateY2 > 5 || targetStartXForTools2 == GameBoardHandler.OUT_OF_RANGE || targetStartYForTools2 == GameBoardHandler.OUT_OF_RANGE)) {
                         if (remoteController != null) {
                             try {
-
-
-                                if (remoteController.useToolCard12(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false)) {
-                                    appendToTextArea("Carta utensile 12 utilizzata correttamente per un solo dado!");
-                                } else {
-                                    appendToTextArea("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-
-                                }
+                                checkBoolean (remoteController.useToolCard12(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false),12);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             clientController.request(new UseToolCard12Request(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false));
-                            if (waitForToolEffectAppliedResponse()) {
-                                appendToTextArea("Carta utensile 12 utilizzata correttamente per un solo dado!");
-                            } else {
-                                appendToTextArea("Carta utensile 12 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
-                            }
+                            checkBoolean (waitForToolEffectAppliedResponse(),12);
                         }
                     } else {
                         appendToTextArea("Non hai scelto alcun dado dalla carta schema, non hai scelto un dado dal round track o non hai settato correttamente le coordinate!");
@@ -1547,11 +1435,75 @@ public class GameBoardHandler {
         }
 
         private Integer tryParse(String text) {
+
             try {
                 return Integer.parseInt(text);
             } catch (NumberFormatException e) {
                 return null;
             }
         }
-    }*/
+    }
+
+    private void checkBoolean(boolean done, int i) {
+        if (done) {
+            appendToTextArea("Carta utensile " + i + " utilizzata correttamente!");
+        } else {
+            appendToTextArea("Carta utensile " + i + " non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
+        }
+    }
+
+    private void setupSacrificeImageView() {
+        if (gameBoardHandlerSingle != null) {
+            sacrificeImageView = null;
+            sacrificeImageView = new ImageView();
+            sacrificeImageView.setImage(new Image(DICE_IMAGES_PATH + "white.png"));//SOLO UNA PROVA
+            sacrificeImageView.setFitWidth(70);
+            sacrificeImageView.setFitHeight(70);
+            sacrificeImageView.setLayoutX(63);
+            sacrificeImageView.setLayoutY(480);
+            gameBoard.getChildren().add(sacrificeImageView);
+            setupSacrificeTarget(sacrificeImageView);
+        }
+    }
+
+    public void passButtonClicked() {
+        resetToolValues();
+        if (gui.isMyTurn()) {
+            if (remoteController != null) {
+                try {
+                    remoteController.goThrough(username, single);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                clientController.request(new GoThroughRequest(username, single));
+            }
+        } else {
+            if (!single) {
+                appendToTextArea("Non è il tuo turno!");
+            }
+        }
+    }
+
+    public void quitClicked() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi davvero uscire?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Uscita");
+        alert.setHeaderText(null);
+        alert.setResizable(false);
+        alert.setGraphic(null);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.YES) {
+            window.close();
+            if (remoteController != null) {
+                try {
+                    remoteController.quitGame(username, false);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                clientController.request(new QuitGameRequest(username, false));
+            }
+            System.exit(0);
+        }
+    }
 }
