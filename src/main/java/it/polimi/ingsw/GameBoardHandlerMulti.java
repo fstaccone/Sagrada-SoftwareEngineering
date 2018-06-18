@@ -101,7 +101,7 @@ public class GameBoardHandlerMulti {
 
     public void init(Scene scene, Gui gui) {
         this.gui = gui;
-        gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null,gameBoard,toolPane,toolLabel,useButton);
+        gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null,gameBoard,toolPane,toolLabel,useButton,null);
         gameBoardHandler.init(scene, gui);
         Platform.runLater(() -> {
             label0.setText(gui.getUsername());

@@ -25,6 +25,8 @@ public class GameBoardHandlerSingle {
 
 
     @FXML
+    Label sacrificeLabel;
+    @FXML
     Label privObjLabel;
     @FXML
     Label pubObjLabel;
@@ -78,7 +80,7 @@ public class GameBoardHandlerSingle {
 
     public void init(Scene scene, Gui gui) {
         this.gui = gui;
-        gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this, gameBoard, toolPane, toolLabel, useButton);
+        gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this, gameBoard, toolPane, toolLabel, useButton,sacrificeLabel);
         gameBoardHandler.init(scene, gui);
         initializeToolMap();
         Platform.runLater(() -> {
@@ -147,6 +149,7 @@ public class GameBoardHandlerSingle {
     }
 
     public void setReserve(List<String> dicesList) {
+
         gameBoardHandler.setReserve(dicesList, reserve);
     }
 

@@ -94,9 +94,10 @@ public class GameBoardHandler {
     private AnchorPane gameBoard;
     private Pane toolPane;
     private Label toolLabel;
+    private Label sacrificeLabel;
     private Button useButton;
 
-    public GameBoardHandler(boolean single, GameBoardHandlerMulti gameBoardHandlerMulti, GameBoardHandlerSingle gameBoardHandlerSingle, AnchorPane gameBoard, Pane toolPane, Label toolLabel, Button useButton) {
+    public GameBoardHandler(boolean single, GameBoardHandlerMulti gameBoardHandlerMulti, GameBoardHandlerSingle gameBoardHandlerSingle, AnchorPane gameBoard, Pane toolPane, Label toolLabel, Button useButton, Label sacrificeLabel) {
         this.gameBoardHandlerMulti = gameBoardHandlerMulti;
         this.gameBoardHandlerSingle = gameBoardHandlerSingle;
         this.single = single;
@@ -104,7 +105,7 @@ public class GameBoardHandler {
         this.toolPane = toolPane;
         this.toolLabel = toolLabel;
         this.useButton = useButton;
-
+        this.sacrificeLabel = sacrificeLabel;
     }
 
 
@@ -297,7 +298,6 @@ public class GameBoardHandler {
             String name = gui.getToolCardsList().get(tool);
             name = name.replaceAll("tool", "");
             int number = Integer.parseInt(name);
-
             resetToolValues();
             new ToolContext(number);
         }
@@ -364,6 +364,8 @@ public class GameBoardHandler {
 
         if (gameBoardHandlerSingle != null) {
             sacrificeImageView = new ImageView();
+            sacrificeLabel = new Label();
+            sacrificeLabel.setVisible(false);
         }
         imageView1 = new ImageView();
         imageView2 = new ImageView();
@@ -653,6 +655,7 @@ public class GameBoardHandler {
         targetStartYForTools2 = OUT_OF_RANGE;
         partialRoundForTools = OUT_OF_RANGE;
         targetRoundForTools = OUT_OF_RANGE;
+        targetSacrificeDiceForTools = OUT_OF_RANGE;
         value11 = null;
         finalCoordinateX1 = null;
         finalCoordinateY1 = null;
@@ -674,8 +677,9 @@ public class GameBoardHandler {
         plus.setVisible(false);
         minus.setVisible(false);
         concludeButton.setVisible(false);
-        if(gameBoardHandlerSingle!=null) {
+        if (gameBoardHandlerSingle != null) {
             sacrificeImageView.setVisible(false);
+            sacrificeLabel.setVisible(false);
         }
     }
 
@@ -778,13 +782,11 @@ public class GameBoardHandler {
                         if (remoteController != null) {
                             try {
                                 if (gameBoardHandlerSingle != null) {
-                                    if (targetSacrificeDiceForTools != GameBoardHandler.OUT_OF_RANGE && targetSacrificeDiceForTools != targetReserveIndexForTools) {
-                                        checkBoolean(remoteController.useToolCard1(targetSacrificeDiceForTools, targetReserveIndexForTools, incrOrDecr, username, false), 1);
-                                    } else {
-                                        appendToTextArea("Non hai inserito alcun dado da sacrificare, o lo hai fatto in modo errato!\n");
+                                    if (sacrificeCheck() && targetSacrificeDiceForTools != targetReserveIndexForTools) {
+                                        checkBoolean(remoteController.useToolCard1(targetSacrificeDiceForTools, targetReserveIndexForTools, incrOrDecr, username, true), 1);
                                     }
                                 } else {
-                                    checkBoolean(remoteController.useToolCard1(-1, targetReserveIndexForTools, incrOrDecr, username, false), 1);
+                                    checkBoolean(remoteController.useToolCard1(OUT_OF_RANGE, targetReserveIndexForTools, incrOrDecr, username, false), 1);
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -793,13 +795,11 @@ public class GameBoardHandler {
                         //SOCKET
                         else {
                             if (gameBoardHandlerSingle != null) {
-                                if (targetSacrificeDiceForTools != GameBoardHandler.OUT_OF_RANGE && targetSacrificeDiceForTools != targetReserveIndexForTools) {
-                                    clientController.request(new UseToolCard1Request(targetSacrificeDiceForTools, targetReserveIndexForTools, incrOrDecr, username, false));
-                                } else {
-                                    appendToTextArea("Non hai inserito alcun dado da sacrificare, o lo hai fatto in modo errato!\n");
+                                if (sacrificeCheck() && targetSacrificeDiceForTools != targetReserveIndexForTools) {
+                                    clientController.request(new UseToolCard1Request(targetSacrificeDiceForTools, targetReserveIndexForTools, incrOrDecr, username, true));
                                 }
                             } else {
-                                clientController.request(new UseToolCard1Request(-1, targetReserveIndexForTools, incrOrDecr, username, false));
+                                clientController.request(new UseToolCard1Request(OUT_OF_RANGE, targetReserveIndexForTools, incrOrDecr, username, false));
                             }
                             checkBoolean(waitForToolEffectAppliedResponse(), 1);
                         }
@@ -812,6 +812,8 @@ public class GameBoardHandler {
         }
 
         private void createContext2or3(int n) {
+            setupSacrificeImageView();
+
             imageView1 = null;
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
@@ -846,12 +848,25 @@ public class GameBoardHandler {
                     if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetStartXForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools1 != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
-                                checkBoolean(remoteController.useToolCard2or3(-1, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false), n);
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        checkBoolean(remoteController.useToolCard2or3(targetSacrificeDiceForTools, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, true), n);
+                                    }
+                                } else {
+                                    checkBoolean(remoteController.useToolCard2or3(OUT_OF_RANGE, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false), n);
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard2or3Request(-1, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard2or3Request(targetSacrificeDiceForTools, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, true));
+                                }
+
+                            } else {
+                                clientController.request(new UseToolCard2or3Request(OUT_OF_RANGE, n, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, username, false));
+                            }
                             checkBoolean(waitForToolEffectAppliedResponse(), n);
                         }
                     } else {
@@ -864,6 +879,8 @@ public class GameBoardHandler {
         }
 
         private void createContext4() {
+            setupSacrificeImageView();
+
             imageView1 = null;
             imageView2 = null;
             toolLabel.setVisible(true);
@@ -920,15 +937,26 @@ public class GameBoardHandler {
                     if (finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 4 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 5 && targetStartXForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartXForTools2 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools2 != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
-                                checkBoolean(remoteController.useToolCard4(-1, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false), 4);
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        checkBoolean(remoteController.useToolCard4(targetSacrificeDiceForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, true), 4);
+                                    }
+                                } else {
+                                    checkBoolean(remoteController.useToolCard4(OUT_OF_RANGE, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false), 4);
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard4Request(-1, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard4Request(targetSacrificeDiceForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, true));
+                                }
+                            } else {
+                                clientController.request(new UseToolCard4Request(OUT_OF_RANGE, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
+                            }
                             checkBoolean(waitForToolEffectAppliedResponse(), 4);
                         }
-
                     } else {
                         appendToTextArea("Non hai scelto alcun dado dalla carta schema o non hai settato correttamente le coordinate!");
                     }
@@ -938,6 +966,8 @@ public class GameBoardHandler {
         }
 
         private void createContext5() {
+            setupSacrificeImageView();
+
             imageView1 = null;
             imageView2 = null;
             toolLabel.setVisible(true);
@@ -970,27 +1000,39 @@ public class GameBoardHandler {
                     if (targetReserveIndexForTools != GameBoardHandler.OUT_OF_RANGE && targetRoundForTools != GameBoardHandler.OUT_OF_RANGE && targetDiceFromRoundForTools != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
-                                checkBoolean(remoteController.useToolCard5(-1, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false), 5);
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        checkBoolean(remoteController.useToolCard5(targetSacrificeDiceForTools, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, true), 5);
+                                    }
+                                } else {
+                                    checkBoolean(remoteController.useToolCard5(OUT_OF_RANGE, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false), 5);
 
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard5Request(-1, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false));
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard5Request(targetSacrificeDiceForTools, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, true));
+                                }
+                            } else {
+                                clientController.request(new UseToolCard5Request(OUT_OF_RANGE, targetReserveIndexForTools, targetRoundForTools, targetDiceFromRoundForTools, username, false));
+                            }
                             checkBoolean(waitForToolEffectAppliedResponse(), 5);
                         }
                     } else {
                         appendToTextArea("Non hai scelto alcun dado dalla riserva o dal tracciato dei round!");
                     }
-
                     resetToolValues();
-
                 }
             });
 
         }
 
         private void createContext6() {
+            setupSacrificeImageView();
+
             imageView1 = null;
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
@@ -1011,17 +1053,28 @@ public class GameBoardHandler {
                         //RMI
                         if (remoteController != null) {
                             try {
-                                checkBoolean(remoteController.useToolCard6(-1, targetReserveIndexForTools, username, false), 6);
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck() && targetSacrificeDiceForTools != targetReserveIndexForTools) {
+                                        checkBoolean(remoteController.useToolCard6(targetSacrificeDiceForTools, targetReserveIndexForTools, username, true), 6);
+                                    }
+                                } else {
+                                    checkBoolean(remoteController.useToolCard6(OUT_OF_RANGE, targetReserveIndexForTools, username, false), 6);
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard6Request(-1, targetReserveIndexForTools, username, false));
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck() && targetSacrificeDiceForTools != targetReserveIndexForTools) {
+                                    clientController.request(new UseToolCard6Request(targetSacrificeDiceForTools, targetReserveIndexForTools, username, true));
+                                }
+                            } else {
+                                clientController.request(new UseToolCard6Request(OUT_OF_RANGE, targetReserveIndexForTools, username, false));
+                            }
                             checkBoolean(waitForToolEffectAppliedResponse(), 6);
                         }
-
                     } else {
                         appendToTextArea("Non hai scelto alcun dado dalla riserva!");
                     }
@@ -1031,6 +1084,8 @@ public class GameBoardHandler {
         }
 
         private void createContext7or8(int n) {
+            setupSacrificeImageView();
+
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
             useButton.setVisible(true);
@@ -1042,7 +1097,13 @@ public class GameBoardHandler {
                         if (remoteController != null) {
                             try {
                                 if (diceChosen == GameBoardHandler.OUT_OF_RANGE) {
-                                    checkBoolean(remoteController.useToolCard7(-1, username, false), 7);
+                                    if (gameBoardHandlerSingle != null) {
+                                        if (sacrificeCheck()) {
+                                            checkBoolean(remoteController.useToolCard7(targetSacrificeDiceForTools, username, true), 7);
+                                        }
+                                    } else {
+                                        checkBoolean(remoteController.useToolCard7(OUT_OF_RANGE, username, false), 7);
+                                    }
                                 } else {
                                     appendToTextArea("Non puoi scegliere un dado prima di utilizzare questa carta utensile!");
                                 }
@@ -1050,20 +1111,42 @@ public class GameBoardHandler {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard7Request(-1, username, false));
-                            checkBoolean(waitForToolEffectAppliedResponse(), 7);
+                            if (diceChosen == GameBoardHandler.OUT_OF_RANGE) {
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        clientController.request(new UseToolCard7Request(targetSacrificeDiceForTools, username, true));
+                                    }
+                                } else {
+                                    clientController.request(new UseToolCard7Request(OUT_OF_RANGE, username, false));
+                                }
+                                checkBoolean(waitForToolEffectAppliedResponse(), 7);
+                            } else {
+                                appendToTextArea("Non puoi scegliere un dado prima di utilizzare questa carta utensile!");
+                            }
                         }
                     } else {
                         if (remoteController != null) {
                             try {
-                                checkBoolean(remoteController.useToolCard8(-1, username, false), 8);
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        checkBoolean(remoteController.useToolCard8(targetSacrificeDiceForTools, username, true), 8);
+                                    }
+                                } else {
+                                    checkBoolean(remoteController.useToolCard8(OUT_OF_RANGE, username, false), 8);
+
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard8Request(-1, username, false));
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard8Request(targetSacrificeDiceForTools, username, true));
+                                }
+                            } else {
+                                clientController.request(new UseToolCard8Request(OUT_OF_RANGE, username, false));
+                            }
                             checkBoolean(waitForToolEffectAppliedResponse(), 8);
-
                         }
                     }
                     resetToolValues();
@@ -1072,6 +1155,8 @@ public class GameBoardHandler {
         }
 
         private void createContext9() {
+            setupSacrificeImageView();
+
             imageView1 = null;
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
@@ -1106,13 +1191,25 @@ public class GameBoardHandler {
                     if (finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetReserveIndexForTools != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
-                                checkBoolean(remoteController.useToolCard9(-1, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false),9);
-
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        checkBoolean(remoteController.useToolCard9(targetSacrificeDiceForTools, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, true), 9);
+                                    }
+                                }else{
+                                    checkBoolean(remoteController.useToolCard9(OUT_OF_RANGE, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false), 9);
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard9Request(-1, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false));
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard9Request(targetSacrificeDiceForTools, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, true));
+                                }
+                            }else{
+                                clientController.request(new UseToolCard9Request(OUT_OF_RANGE, targetReserveIndexForTools, finalCoordinateX1, finalCoordinateY1, username, false));
+
+                            }
                             checkBoolean(waitForToolEffectAppliedResponse(), 9);
                         }
 
@@ -1125,6 +1222,7 @@ public class GameBoardHandler {
         }
 
         private void createContext10() {
+            setupSacrificeImageView();
 
             imageView1 = null;
             toolLabel.setVisible(true);
@@ -1146,15 +1244,26 @@ public class GameBoardHandler {
                         //RMI
                         if (remoteController != null) {
                             try {
-                                checkBoolean(remoteController.useToolCard10(-1, targetReserveIndexForTools, username, false), 10);
-
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        checkBoolean(remoteController.useToolCard10(targetSacrificeDiceForTools, targetReserveIndexForTools, username, true), 10);
+                                    }
+                                }else{
+                                    checkBoolean(remoteController.useToolCard10(OUT_OF_RANGE, targetReserveIndexForTools, username, false), 10);
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard10Request(-1, targetReserveIndexForTools, username, false));
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard10Request(targetSacrificeDiceForTools, targetReserveIndexForTools, username, true));
+                                }
+                            }else{
+                                clientController.request(new UseToolCard10Request(OUT_OF_RANGE, targetReserveIndexForTools, username, false));
+                            }
                             checkBoolean(waitForToolEffectAppliedResponse(), 10);
                         }
 
@@ -1168,6 +1277,8 @@ public class GameBoardHandler {
         }
 
         private void createContext11() {
+            setupSacrificeImageView();
+
             imageView1 = null;
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
@@ -1188,13 +1299,22 @@ public class GameBoardHandler {
                         //RMI
                         if (remoteController != null) {
                             try {
-
-                                if (remoteController.useToolCard11(-1, targetReserveIndexForTools, username, false)) {
-                                    resetToolValues();
-                                    createContext11bis();
-
-                                } else {
-                                    appendToTextArea("Carta utensile 11 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        if (remoteController.useToolCard11(targetSacrificeDiceForTools, targetReserveIndexForTools, username, true)) {
+                                            resetToolValues();
+                                            createContext11bis();
+                                        } else {
+                                            appendToTextArea("Carta utensile 11 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                        }
+                                    }
+                                }else{
+                                    if (remoteController.useToolCard11(OUT_OF_RANGE, targetReserveIndexForTools, username, false)) {
+                                        resetToolValues();
+                                        createContext11bis();
+                                    } else {
+                                        appendToTextArea("Carta utensile 11 non applicata, occhio ai tuoi segnalini o a come va utizzata!");
+                                    }
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1202,7 +1322,13 @@ public class GameBoardHandler {
                         }
                         //SOCKET
                         else {
-                            clientController.request(new UseToolCard11Request(-1, targetReserveIndexForTools, username, false));
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard11Request(targetSacrificeDiceForTools, targetReserveIndexForTools, username, true));
+                                }
+                            }else{
+                                clientController.request(new UseToolCard11Request(OUT_OF_RANGE, targetReserveIndexForTools, username, false));
+                            }
                             if (waitForToolEffectAppliedResponse()) {
                                 resetToolValues();
                                 createContext11bis();
@@ -1219,6 +1345,8 @@ public class GameBoardHandler {
         }
 
         private void createContext12() {
+            setupSacrificeImageView();
+
             imageView1 = null;
             imageView2 = null;
             imageView3 = null;
@@ -1285,28 +1413,51 @@ public class GameBoardHandler {
                     if (targetDiceFromRoundForTools != GameBoardHandler.OUT_OF_RANGE && targetRoundForTools != GameBoardHandler.OUT_OF_RANGE && finalCoordinateX1 != null && finalCoordinateY1 != null && finalCoordinateX2 != null && finalCoordinateY2 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && 0 <= finalCoordinateX2 && finalCoordinateX2 < 4 && 0 <= finalCoordinateY2 && finalCoordinateY2 < 5 && targetStartXForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartXForTools2 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools2 != GameBoardHandler.OUT_OF_RANGE) {
                         if (remoteController != null) {
                             try {
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        checkBoolean(remoteController.useToolCard12(targetSacrificeDiceForTools, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, true), 12);
+                                    }
+                                }else{
+                                    checkBoolean(remoteController.useToolCard12(OUT_OF_RANGE, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false), 12);
 
-
-                                checkBoolean (remoteController.useToolCard12(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false),12);
-
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard12Request(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
-                            checkBoolean(waitForToolEffectAppliedResponse(),12);
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard12Request(targetSacrificeDiceForTools, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, true));
+
+                                }
+                            }else{
+                                clientController.request(new UseToolCard12Request(OUT_OF_RANGE, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, targetStartXForTools2, targetStartYForTools2, finalCoordinateX2, finalCoordinateY2, username, false));
+                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 12);
                         }
 
                     } else if (targetDiceFromRoundForTools != GameBoardHandler.OUT_OF_RANGE && targetRoundForTools != GameBoardHandler.OUT_OF_RANGE && finalCoordinateX1 != null && finalCoordinateY1 != null && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5 && targetStartXForTools1 != GameBoardHandler.OUT_OF_RANGE && targetStartYForTools1 != GameBoardHandler.OUT_OF_RANGE && (finalCoordinateX2 == null || finalCoordinateY2 == null || 0 > finalCoordinateX2 || finalCoordinateX2 > 4 || 0 > finalCoordinateY2 || finalCoordinateY2 > 5 || targetStartXForTools2 == GameBoardHandler.OUT_OF_RANGE || targetStartYForTools2 == GameBoardHandler.OUT_OF_RANGE)) {
                         if (remoteController != null) {
                             try {
-                                checkBoolean (remoteController.useToolCard12(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false),12);
+                                if (gameBoardHandlerSingle != null) {
+                                    if (sacrificeCheck()) {
+                                        checkBoolean(remoteController.useToolCard12(targetSacrificeDiceForTools, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, true), 12);
+                                    }
+                                }else{
+                                    checkBoolean(remoteController.useToolCard12(OUT_OF_RANGE, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false), 12);
+                                }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            clientController.request(new UseToolCard12Request(-1, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false));
-                            checkBoolean (waitForToolEffectAppliedResponse(),12);
+                            if (gameBoardHandlerSingle != null) {
+                                if (sacrificeCheck()) {
+                                    clientController.request(new UseToolCard12Request(targetSacrificeDiceForTools, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, true));
+                                }
+                            }else{
+                                clientController.request(new UseToolCard12Request(OUT_OF_RANGE, targetRoundForTools, targetDiceFromRoundForTools, targetStartXForTools1, targetStartYForTools1, finalCoordinateX1, finalCoordinateY1, -1, -1, -1, -1, username, false));
+                            }
+                            checkBoolean(waitForToolEffectAppliedResponse(), 12);
                         }
                     } else {
                         appendToTextArea("Non hai scelto alcun dado dalla carta schema, non hai scelto un dado dal round track o non hai settato correttamente le coordinate!");
@@ -1447,6 +1598,7 @@ public class GameBoardHandler {
     private void checkBoolean(boolean done, int i) {
         if (done) {
             appendToTextArea("Carta utensile " + i + " utilizzata correttamente!");
+
         } else {
             appendToTextArea("Carta utensile " + i + " non applicata, occhio ai tuoi segnalini o a come va utizzata!\n");
         }
@@ -1454,13 +1606,14 @@ public class GameBoardHandler {
 
     private void setupSacrificeImageView() {
         if (gameBoardHandlerSingle != null) {
+            sacrificeLabel.setVisible(true);
             sacrificeImageView = null;
             sacrificeImageView = new ImageView();
             sacrificeImageView.setImage(new Image(DICE_IMAGES_PATH + "white.png"));//SOLO UNA PROVA
             sacrificeImageView.setFitWidth(70);
             sacrificeImageView.setFitHeight(70);
             sacrificeImageView.setLayoutX(63);
-            sacrificeImageView.setLayoutY(480);
+            sacrificeImageView.setLayoutY(550);
             gameBoard.getChildren().add(sacrificeImageView);
             setupSacrificeTarget(sacrificeImageView);
         }
@@ -1504,6 +1657,15 @@ public class GameBoardHandler {
                 clientController.request(new QuitGameRequest(username, false));
             }
             System.exit(0);
+        }
+    }
+
+    private boolean sacrificeCheck() {
+        if (targetSacrificeDiceForTools != GameBoardHandler.OUT_OF_RANGE) {
+            return true;
+        } else {
+            appendToTextArea("Non hai inserito alcun dado da sacrificare, o lo hai fatto in modo errato!\n");
+            return false;
         }
     }
 }

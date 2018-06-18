@@ -99,6 +99,11 @@
                 <Font name="Courier New Bold" size="13.0" />
             </font>
         </Label>
+      <Label id="toolLabel" fx:id="sacrificeLabel" layoutX="33.0" layoutY="431.0" text="  dado da &#10;sacrificare:" textFill="WHITE">
+         <font>
+            <Font name="Courier New Bold" size="13.0" />
+         </font>
+      </Label>
     </Pane>
     <GridPane fx:id="toolPane2" hgap="8.0" layoutX="340.0" layoutY="343.0" prefHeight="240.0" prefWidth="325.0">
         <columnConstraints>
