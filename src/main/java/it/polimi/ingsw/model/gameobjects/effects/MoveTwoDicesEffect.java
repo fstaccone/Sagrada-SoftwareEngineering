@@ -11,9 +11,11 @@ import java.rmi.RemoteException;
 public class MoveTwoDicesEffect implements Effect {
 
     private Integer price;
+    private boolean used;
 
     public MoveTwoDicesEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
@@ -27,29 +29,32 @@ public class MoveTwoDicesEffect implements Effect {
         Dice dice2 = schema.removeDice(row2, column2);
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.YELLOW)&&dice1 != null && dice2 != null) {
-                int newRow1 = player.getFinalX1();
-                int newColumn1 = player.getFinalY1();
-                int newRow2 = player.getFinalX2();
-                int newColumn2 = player.getFinalY2();
-                if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
-                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                    return true;
+            if(!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.YELLOW) && dice1 != null && dice2 != null) {
+                    int newRow1 = player.getFinalX1();
+                    int newColumn1 = player.getFinalY1();
+                    int newRow2 = player.getFinalX2();
+                    int newColumn2 = player.getFinalY2();
+                    if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
+                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                        used=true;
+                        return true;
+                    } else {
+                        if (dice1.equals(schema.getDice(newRow1, newColumn1))) {
+                            schema.removeDice(newRow1, newColumn1);
+                        }
+                        if (dice2.equals(schema.getDice(newRow2, newColumn2))) {
+                            schema.removeDice(newRow2, newColumn2);
+                        }
+                        schema.putDiceBack(dice1, row1, column1);
+                        schema.putDiceBack(dice2, row2, column2);
+                        return false;
+                    }
                 } else {
-                    if (dice1.equals(schema.getDice(newRow1, newColumn1))) {
-                        schema.removeDice(newRow1, newColumn1);
-                    }
-                    if (dice2.equals(schema.getDice(newRow2, newColumn2))) {
-                        schema.removeDice(newRow2, newColumn2);
-                    }
-                    schema.putDiceBack(dice1, row1, column1);
-                    schema.putDiceBack(dice2, row2, column2);
                     return false;
                 }
-            } else {
-                return false;
-            }
+            }else return false;
         }
         //MULTIPLAYER
         else {

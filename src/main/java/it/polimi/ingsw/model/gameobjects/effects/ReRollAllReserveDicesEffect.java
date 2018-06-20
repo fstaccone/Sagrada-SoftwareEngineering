@@ -13,9 +13,11 @@ import java.rmi.RemoteException;
 public class ReRollAllReserveDicesEffect implements Effect {
 
     private Integer price;
+    private boolean used;
 
     public ReRollAllReserveDicesEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
@@ -25,14 +27,17 @@ public class ReRollAllReserveDicesEffect implements Effect {
 
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.BLUE) && player.getTurnsLeft() == 1) {
-                reserve.throwDices(reserve.removeAllDices());
-                match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                return true;
-            } else {
-                return false;
-            }
+            if(!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.BLUE) && player.getTurnsLeft() == 1) {
+                    reserve.throwDices(reserve.removeAllDices());
+                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                    used=true;
+                    return true;
+                } else {
+                    return false;
+                }
+            }else return false;
         }
         //MULTIPLAYER
         else {

@@ -11,9 +11,11 @@ import java.rmi.RemoteException;
 public class MoveDiceIgnoringValueRestrEffect implements Effect {
 
     private Integer price;
+    private boolean used;
 
     public MoveDiceIgnoringValueRestrEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
@@ -25,19 +27,22 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
         Dice dice = schema.getDice(row, column);
         //SINGLE
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.RED) &&dice != null) {
-                putDice(dice,schema,player,row,column);
-                if (dice.equals(schema.getWindow()[player.getFinalX1()][player.getFinalY1()].getDice())) {
-                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                    return true;
+            if(!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.RED) && dice != null) {
+                    putDice(dice, schema, player, row, column);
+                    if (dice.equals(schema.getWindow()[player.getFinalX1()][player.getFinalY1()].getDice())) {
+                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                        used=true;
+                        return true;
+                    } else {
+                        schema.putDiceBack(dice, row, column);
+                        return false;
+                    }
                 } else {
-                    schema.putDiceBack(dice, row, column);
                     return false;
                 }
-            } else {
-                return false;
-            }
+            }else return false;
 
         } //MULTIPLAYER
         else {
