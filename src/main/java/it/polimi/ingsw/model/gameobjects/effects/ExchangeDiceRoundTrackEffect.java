@@ -11,9 +11,11 @@ import java.rmi.RemoteException;
 public class ExchangeDiceRoundTrackEffect implements Effect {
 
     private Integer price;
+    private boolean used;
 
     public ExchangeDiceRoundTrackEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
@@ -21,18 +23,21 @@ public class ExchangeDiceRoundTrackEffect implements Effect {
         RoundTrack track = match.getBoard().getRoundTrack();
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.GREEN)&&player.getDice() >= 0 && player.getDice() < match.getBoard().getReserve().getDices().size()) {
-                Dice dice = match.getBoard().getReserve().getDices().remove(player.getDice());
-                dice = track.switchDice(dice, player.getRound(), player.getDiceChosenFromRound());
-                if (dice != null) {
-                    match.getBoard().getReserve().getDices().add(player.getDice(), dice);
-                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                    return true;
+            if (!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.GREEN) && player.getDice() >= 0 && player.getDice() < match.getBoard().getReserve().getDices().size()) {
+                    Dice dice = match.getBoard().getReserve().getDices().remove(player.getDice());
+                    dice = track.switchDice(dice, player.getRound(), player.getDiceChosenFromRound());
+                    if (dice != null) {
+                        match.getBoard().getReserve().getDices().add(player.getDice(), dice);
+                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                        used=true;
+                        return true;
+                    } else
+                        return false;
                 } else
                     return false;
-            } else
-                return false;
+            }else return false;
         }
         //MULTIPLAYER
         else {

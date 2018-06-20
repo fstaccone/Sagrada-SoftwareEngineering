@@ -14,24 +14,29 @@ import java.rmi.RemoteException;
 public class ChooseAnotherDiceEffect implements Effect {
 
     private Integer price;
+    private boolean used;
 
     public ChooseAnotherDiceEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
     public boolean applyEffect(Player player, Match match) {
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.RED)) {
-                match.setDiceAction(false);
-                player.setTurnsLeft(0);
-                match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                return true;
-            } else {
-                return false;
-            }
+            if(!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.RED)) {
+                    match.setDiceAction(false);
+                    player.setTurnsLeft(0);
+                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                    used=true;
+                    return true;
+                } else {
+                    return false;
+                }
+            }else return false;
         }
         //MULTIPLAYER
         else {

@@ -14,11 +14,13 @@ import java.rmi.RemoteException;
 public class UpsideDownDiceEffect implements Effect {
 
     private Integer price;
+    private boolean used;
     private MatchMultiplayer m;
     private PlayerMultiplayer p;
 
     public UpsideDownDiceEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
@@ -26,37 +28,46 @@ public class UpsideDownDiceEffect implements Effect {
         int value = match.getBoard().getReserve().getDices().get(player.getDice()).getValue();
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.GREEN)&&player.getDice() < match.getBoard().getReserve().getDices().size()) {
-                switch (value) {
-                    case 1:
-                        match.getBoard().getReserve().getDices().get(player.getDice()).setValue(6);
-                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        return true;
-                    case 2:
-                        match.getBoard().getReserve().getDices().get(player.getDice()).setValue(5);
-                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        return true;
-                    case 3:
-                        match.getBoard().getReserve().getDices().get(player.getDice()).setValue(4);
-                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        return true;
-                    case 4:
-                        match.getBoard().getReserve().getDices().get(player.getDice()).setValue(3);
-                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        return true;
-                    case 5:
-                        match.getBoard().getReserve().getDices().get(player.getDice()).setValue(2);
-                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        return true;
-                    case 6:
-                        match.getBoard().getReserve().getDices().get(player.getDice()).setValue(1);
-                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        return true;
-                    default:
-                        return false;
-                }
-            } else
+            if(!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.GREEN) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
+                    switch (value) {
+                        case 1:
+                            match.getBoard().getReserve().getDices().get(player.getDice()).setValue(6);
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                            used=true;
+                            return true;
+                        case 2:
+                            match.getBoard().getReserve().getDices().get(player.getDice()).setValue(5);
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                            used=true;
+                            return true;
+                        case 3:
+                            match.getBoard().getReserve().getDices().get(player.getDice()).setValue(4);
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                            used=true;
+                            return true;
+                        case 4:
+                            match.getBoard().getReserve().getDices().get(player.getDice()).setValue(3);
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                            used=true;
+                            return true;
+                        case 5:
+                            match.getBoard().getReserve().getDices().get(player.getDice()).setValue(2);
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                            used=true;
+                            return true;
+                        case 6:
+                            match.getBoard().getReserve().getDices().get(player.getDice()).setValue(1);
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                            used=true;
+                            return true;
+                        default:
+                            return false;
+                    }
+                } else
+                    return false;
+            }else
                 return false;
         }
         //MULTIPLAYER

@@ -14,11 +14,13 @@ import java.rmi.RemoteException;
 public class IncrDecrDiceValueEffect implements Effect {
 
     private Integer price;
+    private boolean used;
     private MatchMultiplayer m;
     private PlayerMultiplayer p;
 
     public IncrDecrDiceValueEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
@@ -29,28 +31,32 @@ public class IncrDecrDiceValueEffect implements Effect {
         int value = dice.getValue();
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.VIOLET) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
-                switch (plusOrMinus) {
-                    case "+":
-                        if (value != 6) {
-                            value = value + 1;
-                            match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
-                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            player.setDice(9);
-                            player.setChoice(null);
-                            return true;
-                        } else return false;
-                    case "-":
-                        if (value != 1) {
-                            value = value - 1;
-                            match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value);
-                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            return true;
-                        } else return false;
-                    default:
-                        return false;
-                }
+            if (!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.VIOLET) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
+                    switch (plusOrMinus) {
+                        case "+":
+                            if (value != 6) {
+                                value = value + 1;
+                                match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
+                                match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                                player.setDice(9);
+                                player.setChoice(null);
+                                used = true;
+                                return true;
+                            } else return false;
+                        case "-":
+                            if (value != 1) {
+                                value = value - 1;
+                                match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value);
+                                match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                                used = true;
+                                return true;
+                            } else return false;
+                        default:
+                            return false;
+                    }
+                } else return false;
             }else return false;
         }
         //MULTIPLAYER

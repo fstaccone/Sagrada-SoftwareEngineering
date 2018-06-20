@@ -11,9 +11,11 @@ import java.rmi.RemoteException;
 public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
 
     private Integer price;
+    private boolean used;
 
     public PlaceDiceNotAdjacentToAnotherEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
@@ -24,23 +26,26 @@ public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
         Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.YELLOW) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
-                if (!(schema.existsAdjacentDice(newRow, newColumn))) {
-                    schema.putDiceWithoutCheckPos(dice, newRow, newColumn);
-                    if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
-                        match.getBoard().getReserve().getDices().remove(player.getDice());
-                        match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        return true;
+            if(!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.YELLOW) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
+                    if (!(schema.existsAdjacentDice(newRow, newColumn))) {
+                        schema.putDiceWithoutCheckPos(dice, newRow, newColumn);
+                        if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
+                            match.getBoard().getReserve().getDices().remove(player.getDice());
+                            match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                            used=true;
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
                         return false;
                     }
                 } else {
                     return false;
                 }
-            } else {
-                return false;
-            }
+            }else return false;
         } else {
             //MULTIPLAYER
             PlayerMultiplayer p = (PlayerMultiplayer) player;

@@ -15,9 +15,11 @@ import java.util.Random;
 public class ReRollDiceEffect implements Effect {
 
     private Integer price;
+    private boolean used;
 
     public ReRollDiceEffect() {
         price = 1;
+        used=false;
     }
 
     @Override
@@ -26,13 +28,16 @@ public class ReRollDiceEffect implements Effect {
         int newValue = rand.nextInt(6) + 1;
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
-            if (sacrificeDice.getColor().equals(Colors.VIOLET)&&player.getDice() < match.getBoard().getReserve().getDices().size()) {
-                Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
-                dice.setValue(newValue);
-                match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                return true;
-            } else return false;
+            if(!used) {
+                Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
+                if (sacrificeDice.getColor().equals(Colors.VIOLET) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
+                    Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
+                    dice.setValue(newValue);
+                    match.getBoard().getReserve().getDices().remove(sacrificeDice);
+                    used=true;
+                    return true;
+                } else return false;
+            }else return false;
         }
         //MULTIPLAYER
         else {
