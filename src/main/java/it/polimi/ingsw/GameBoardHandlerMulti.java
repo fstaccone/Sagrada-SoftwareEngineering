@@ -7,10 +7,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,7 +104,7 @@ public class GameBoardHandlerMulti {
 
     public void init(Scene scene, Gui gui) {
         this.gui = gui;
-        gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null,gameBoard,toolPane,toolLabel,useButton,null);
+        gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null, gameBoard, toolPane, toolLabel, useButton, null);
         gameBoardHandler.init(scene, gui);
         Platform.runLater(() -> {
             label0.setText(gui.getUsername());
@@ -114,7 +117,7 @@ public class GameBoardHandlerMulti {
         });
     }
 
-    public void appendToTextArea(String s){
+    public void appendToTextArea(String s) {
         gameBoardHandler.appendToTextArea(s);
     }
 
@@ -127,7 +130,7 @@ public class GameBoardHandlerMulti {
         // todo: aggiungere altre azioni da compiere
     }
 
-    public void setWindowPatternCardImg(String imgURL){
+    public void setWindowPatternCardImg(String imgURL) {
         gameBoardHandler.setWindowPatternCardImg(imgURL);
     }
 
@@ -247,7 +250,7 @@ public class GameBoardHandlerMulti {
         }
     }
 
-    public void setReserve(List<String> dicesList){
+    public void setReserve(List<String> dicesList) {
         gameBoardHandler.setReserve(dicesList, reserve);
     }
 
@@ -255,7 +258,11 @@ public class GameBoardHandlerMulti {
 
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < rankingNames.size(); i++) {
-            s.append("- " + rankingNames.get(i) + "\t" + rankingValues.get(i) + "\n");
+            s.append("- ");
+            s.append(rankingNames.get(i));
+            s.append("\t");
+            s.append(rankingValues.get(i));
+            s.append("\n");
         }
 
         if (winner.equals(gui.getUsername())) {
@@ -344,7 +351,7 @@ public class GameBoardHandlerMulti {
         Platform.runLater(() -> myFavourTokensContainer.getChildren().add(myFavourTokens));
     }
 
-    public void setOtherFavorTokens(Pane pane, int value) {
+    private void setOtherFavorTokens(Pane pane, int value) {
         if (pane.getChildren() != null) {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
@@ -405,7 +412,7 @@ public class GameBoardHandlerMulti {
         }
     }
 
-    public void onRoundTrack(String track){
+    public void onRoundTrack(String track) {
         gameBoardHandler.onRoundTrack(track);
     }
 
@@ -415,7 +422,7 @@ public class GameBoardHandlerMulti {
         setSinglePublicCard(pubObjLabel, pubObjCard3, pubObjCard1, pubObjCard2, publicCards.get(2));
     }
 
-    private void setSinglePublicCard(Label label, ImageView main, ImageView other1, ImageView other2, String publicCard){
+    private void setSinglePublicCard(Label label, ImageView main, ImageView other1, ImageView other2, String publicCard) {
         Image publicObjCardImg1 = new Image(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png");
         main.setImage(publicObjCardImg1);
         main.setOnMouseEntered(event -> {
@@ -436,7 +443,7 @@ public class GameBoardHandlerMulti {
         });
     }
 
-    public void setMyWindow(WindowPatternCard window){
+    public void setMyWindow(WindowPatternCard window) {
         gameBoardHandler.setMySchemeCard(playerWindowPatternCard, window);
     }
 
@@ -446,7 +453,7 @@ public class GameBoardHandlerMulti {
         setSingleToolcard(tool2, tool0, tool1, toolCardsList.get(2));
     }
 
-    private void setSingleToolcard( Button main, Button other1, Button other2, String toolcard){
+    private void setSingleToolcard(Button main, Button other1, Button other2, String toolcard) {
         String url = GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png";
         Image cardImg = new Image(url);
 
@@ -480,6 +487,6 @@ public class GameBoardHandlerMulti {
 
     @FXML
     public void onQuitClicked() {
-       gameBoardHandler.quitClicked();
+        gameBoardHandler.quitClicked();
     }
 }
