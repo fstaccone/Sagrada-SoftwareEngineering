@@ -611,8 +611,8 @@ public class GameBoardHandler {
         minus.setVisible(false);
         concludeButton.setVisible(false);
         if (gameBoardHandlerSingle != null) {
-            sacrificeImageView.setVisible(false);
             sacrificeLabel.setVisible(false);
+            sacrificeImageView.setVisible(false);
         }
     }
 
@@ -1368,16 +1368,15 @@ public class GameBoardHandler {
         private void createContext11bis() {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
-            sacrificeLabel.setVisible(false);
             Colors color = null;
             if (rmiController != null) {
                 try {
-                    color = rmiController.askForDiceColor(username, false);
+                    color = rmiController.askForDiceColor(username, single);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             } else {
-                socketController.request(new DiceColorRequest(username, false));
+                socketController.request(new DiceColorRequest(username, single));
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -1424,40 +1423,40 @@ public class GameBoardHandler {
                 finalCoordinateX1 = tryParse(finalX1.getText());
                 finalCoordinateY1 = tryParse(finalY1.getText());
 
-                if (value11 != null && finalCoordinateX1 != null && finalCoordinateY1 != null && value11 > 0 && value11 < 7 && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5) {
-                    if (rmiController != null) {
-                        try {
-                            rmiController.setDiceValue(value11, username, false);//POTREBBE MANCARE CONTROLLO SU VALORE DADO
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            if (rmiController.placeDiceTool11(finalCoordinateX1, finalCoordinateY1, username, false)) {
+                    if (value11 != null && finalCoordinateX1 != null && finalCoordinateY1 != null && value11 > 0 && value11 < 7 && 0 <= finalCoordinateX1 && finalCoordinateX1 < 4 && 0 <= finalCoordinateY1 && finalCoordinateY1 < 5) {
+                        if (rmiController != null) {
+                            try {
+                                rmiController.setDiceValue(value11, username, single);
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                if (rmiController.placeDiceTool11(finalCoordinateX1, finalCoordinateY1, username, single)) {
+                                    appendToTextArea("Dado piazzato correttamente!");
+                                    concludeButton.setVisible(false);
+                                    resetToolValues();
+                                } else {
+                                    appendToTextArea("Non puoi piazzare lì il tuo dado! Scegli altre coordinate!");
+                                }
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            socketController.request(new SetDiceValueRequest(value11, username, single));
+                            socketController.request(new PlaceDiceTool11Request(finalCoordinateX1, finalCoordinateY1, username, single));
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                Thread.currentThread().interrupt();
+                            }
+                            if (socketController.isDicePlaced()) {
+                                socketController.setDicePlaced(false);//to reset the value
                                 appendToTextArea("Dado piazzato correttamente!");
-                                concludeButton.setVisible(false);
-                                resetToolValues();
                             } else {
                                 appendToTextArea("Non puoi piazzare lì il tuo dado! Scegli altre coordinate!");
                             }
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
                         }
-                    } else {
-                        socketController.request(new SetDiceValueRequest(value11, username, false));
-                        socketController.request(new PlaceDiceTool11Request(finalCoordinateX1, finalCoordinateY1, username, false));
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                            Thread.currentThread().interrupt();
-                        }
-                        if (socketController.isDicePlaced()) {
-                            socketController.setDicePlaced(false);//to reset the value
-                            appendToTextArea("Dado piazzato correttamente!");
-                        } else {
-                            appendToTextArea("Non puoi piazzare lì il tuo dado! Scegli altre coordinate!");
-                        }
-                    }
 
                 } else {
                     appendToTextArea("Non hai inserito un valore corretto oppure non hai settato correttamente le coordinate!");
@@ -1505,7 +1504,7 @@ public class GameBoardHandler {
             sacrificeLabel.setVisible(true);
             sacrificeImageView = null;
             sacrificeImageView = new ImageView();
-            sacrificeImageView.setImage(new Image(DICE_IMAGES_PATH + "white.png"));//SOLO UNA PROVA
+            sacrificeImageView.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
             sacrificeImageView.setFitWidth(70);
             sacrificeImageView.setFitHeight(70);
             sacrificeImageView.setLayoutX(63);
