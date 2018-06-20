@@ -105,7 +105,7 @@
          </font>
       </Label>
     </Pane>
-    <GridPane fx:id="toolPane2" hgap="8.0" layoutX="340.0" layoutY="343.0" prefHeight="240.0" prefWidth="325.0">
+    <GridPane fx:id="toolPane2" hgap="8.0" layoutX="375.0" layoutY="346.0" prefHeight="240.0" prefWidth="325.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -116,7 +116,7 @@
         <Button fx:id="tool3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" />
         <Button fx:id="tool4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" GridPane.columnIndex="1" />
     </GridPane>
-    <Label fx:id="toolCardsLabel" layoutX="423.0" layoutY="302.0" prefHeight="40.0" prefWidth="175.0" styleClass="labels" text=" CARTE UTENSILI" textFill="WHITE">
+    <Label fx:id="toolCardsLabel" layoutX="220.0" layoutY="537.0" prefHeight="49.0" prefWidth="109.0" styleClass="labels" text="  CARTE &#10; UTENSILI" textFill="WHITE">
         <font>
             <Font name="Courier New Bold" size="18.0" />
         </font>
