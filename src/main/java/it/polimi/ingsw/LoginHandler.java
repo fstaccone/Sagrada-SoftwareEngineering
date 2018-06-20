@@ -34,8 +34,8 @@ import java.util.ResourceBundle;
 
 public class LoginHandler implements Initializable {
 
-    private final static String GAME_NAME = "Lobby";
-    private final static String RESOURCES = "File:./src/main/java/it/polimi/ingsw/resources/";
+    private static final String GAME_NAME = "Lobby";
+    private static final String RESOURCES = "File:./src/main/java/it/polimi/ingsw/resources/";
     private transient Socket socket = null;
     private transient ClientController controllerSocket;
     private String username;

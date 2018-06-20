@@ -489,6 +489,7 @@ public class Gui {
         gameBoardHandlerSingle.setToolCards(toolCardsList);
         gameBoardHandlerSingle.setPrivateCards(privateCards.get(0), privateCards.get(1));
         gameBoardHandlerSingle.setPublicCards(publicCardsList);
+        gameBoardHandlerSingle.setReserve(dicesList);
     }
 
 }
