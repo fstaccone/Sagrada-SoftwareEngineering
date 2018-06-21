@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,19 +76,22 @@ public class GameBoardHandlerSingle {
     Pane reserve;
     @FXML
     Label playerName;
-  //  @FXML
+    @FXML
+    private Pane forPrivateCardChoice;
+    //  @FXML
     //ProgressIndicator timerIndicator;
 
 
     public void init(Scene scene, Gui gui) {
         this.gui = gui;
-        gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this, gameBoard, toolPane, toolLabel, useButton,sacrificeLabel);
+        gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this, gameBoard, toolPane, toolLabel, useButton, sacrificeLabel);
         gameBoardHandler.init(scene, gui);
         initializeToolMap();
         Platform.runLater(() -> {
             useButton.setVisible(false);
             toolLabel.setVisible(false);
             toolPane.setVisible(false);
+            forPrivateCardChoice.setVisible(false);
         });
     }
 
@@ -115,15 +117,6 @@ public class GameBoardHandlerSingle {
 
     public Pane getPlayerWindowPatternCard() {
         return playerWindowPatternCard;
-    }
-
-    /**
-     * the boolean dicePlaced is used to control if a dice has been placed during a turn.
-     * This method initialize dicePlaced to false. If the value is false, the player can place a dice
-     */
-    public void initializeActions() {
-        gui.setDicePlaced(false);
-        // todo: aggiungere altre azioni da compiere
     }
 
     public void setWindowPatternCardImg(String imgURL) {
@@ -204,7 +197,7 @@ public class GameBoardHandlerSingle {
         for (int i = 0; i < toolCardsList.size(); i++) {
             setSingleToolcard(toolCardsMap.get(i), toolCardsList.get(i));
         }
-        for(int i = toolCardsList.size(); i < 5; i++){
+        for (int i = toolCardsList.size(); i < 5; i++) {
             toolCardsMap.get(i).setDisable(true);
         }
     }
@@ -241,6 +234,48 @@ public class GameBoardHandlerSingle {
             }
             toolCardsLabel.setVisible(true);
         });
+    }
+
+    public void choosePrivateCard() {
+        forPrivateCardChoice.setVisible(true);
+        Button leftCard;
+        Button rightCard;
+        Label label;
+
+        label = new Label();
+        label.setText("Scegli la carta privata:");
+        label.setStyle("-fx-text-fill: white; -fx-background-color: #000096");
+        label.setLayoutY(160);
+        label.setLayoutX(1235);
+
+        leftCard = new Button();
+        leftCard.setText("Sinistra");
+        leftCard.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
+        leftCard.setLayoutX(1200);
+        leftCard.setLayoutY(200);
+        leftCard.setOnMouseClicked(event -> {
+        }); // todo: completare
+
+        rightCard = new Button();
+        rightCard.setText("Destra");
+        rightCard.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
+        rightCard.setLayoutX(1270);
+        rightCard.setLayoutY(200);
+        rightCard.setOnMouseClicked(event -> { // todo: completare
+        /*    if(gui.getControllerRmi() != null){
+                try {
+                    gui.getControllerRmi().choosePrivateCard(gui.getUsername(), 1);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        */
+        });
+
+        gameBoard.getChildren().add(label);
+        gameBoard.getChildren().add(leftCard);
+        gameBoard.getChildren().add(rightCard);
+
     }
 
     @FXML

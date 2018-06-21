@@ -127,14 +127,14 @@ public class Gui {
             //Solo per verifica
             turnClip.play();
             String multi = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
-            String single ="Round: " + round + "\tTurno: " + turn;
+            String single = "Round: " + round + "\tTurno: " + turn;
             if (gameBoardHandlerMulti != null) {
                 gameBoardHandlerMulti.appendToTextArea(multi);
                 gameBoardHandlerMulti.initializeActions();
             } else if (chooseCardHandlerMultiplayer != null) {
                 chooseCardHandlerMultiplayer.appendToTextArea(multi);
                 chooseCardHandlerMultiplayer.setTurn(true);
-            } else if(gameBoardHandlerSingle != null){
+            } else if (gameBoardHandlerSingle != null) {
                 gameBoardHandlerSingle.appendToTextArea(single);
             }
         } else {
@@ -492,4 +492,7 @@ public class Gui {
         gameBoardHandlerSingle.setReserve(dicesList);
     }
 
+    public void onChoosePrivateCard() {
+        gameBoardHandlerSingle.choosePrivateCard();
+    }
 }

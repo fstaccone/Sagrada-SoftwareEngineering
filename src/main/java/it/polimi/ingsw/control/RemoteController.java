@@ -38,6 +38,8 @@ public interface RemoteController extends Remote {
 
     Colors askForDiceColor(String name, boolean isSingle) throws RemoteException;
 
+    void choosePrivateCard(String username, int cardPosition) throws RemoteException;
+
     void setDiceValue(int value, String name, boolean isSingle) throws RemoteException;
 
     boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String username, boolean isSingle) throws RemoteException;

@@ -360,6 +360,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         return null;
     }
 
+    @Override
+    public Response handle(PrivateCardChosenRequest request) {
+        choosePrivateCard(request.getUsername(), request.getCardPosition());
+        return null;
+    }
+
+    public void choosePrivateCard(String username, int cardPosition) {
+        lobby.getSingleplayerMatches().get(username).setPrivateCardChosen(cardPosition);
+    }
+
 
     public void observeLobby(String name, LobbyObserver lobbyObserver) {
         lobby.observeLobbyRemote(name, lobbyObserver);

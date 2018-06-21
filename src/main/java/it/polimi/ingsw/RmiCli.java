@@ -134,4 +134,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         cli.onGameEndSingle(goal, points);
     }
 
+    @Override
+    public void onChoosePrivateCard() throws RemoteException {
+
+    }
+
 }

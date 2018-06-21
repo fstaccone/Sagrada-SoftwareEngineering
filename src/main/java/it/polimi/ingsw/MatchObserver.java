@@ -47,4 +47,6 @@ public interface MatchObserver extends Serializable, Remote {
     void onToolCardUsedByOthers(String name, int toolNumber) throws RemoteException;
 
     void onGameEndSingle(int goal, int points) throws RemoteException;
+
+    void onChoosePrivateCard() throws RemoteException;
 }

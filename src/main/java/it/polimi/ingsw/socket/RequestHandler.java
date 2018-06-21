@@ -50,4 +50,6 @@ public interface RequestHandler {
 
     Response handle(SetDiceValueRequest request);
 
+    Response handle(PrivateCardChosenRequest request);
+
 }

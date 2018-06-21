@@ -314,7 +314,16 @@ public class ClientController implements ResponseHandler {
         if (socketCli != null) {
             socketCli.getCli().onGameEndSingle(response.getTarget(), response.getPoints());
         } else {
-            //socketGui.getGui().onGameEndSingle(response.getTarget(), response.getPoints());
+            socketGui.getGui().onGameEndSingle(response.getTarget(), response.getPoints());
+        }
+    }
+
+    @Override
+    public void handle(ChoosePrivateCardResponse response) {
+        if(socketCli != null){
+            socketCli.getCli().onChoosePrivateCard();
+        } else {
+            socketGui.getGui().onChoosePrivateCard();
         }
     }
 

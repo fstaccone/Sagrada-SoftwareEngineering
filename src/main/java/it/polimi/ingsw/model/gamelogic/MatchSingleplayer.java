@@ -19,8 +19,9 @@ public class MatchSingleplayer extends Match implements Runnable {
     private TurnManagerSingleplayer turnManager;
     private MatchObserver observerRmi;
     private ObjectOutputStream observerSocket;
-    private int selectedPrivateCard; // con questo attributo si seleziona quale carta utilizzare per il calcolo del punteggio
+    private int selectedPrivateCard;
     private static final int MULTIPLIER_FOR_SINGLE = 3;
+    private boolean privateCardChosen;
 
     public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby, ObjectOutputStream socketOut) {
         super(lobby);
@@ -32,6 +33,7 @@ public class MatchSingleplayer extends Match implements Runnable {
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
         System.out.println("New singleplayer matchId: " + this.matchId);
         observerSocket = socketOut;
+        privateCardChosen = false;
         if (observerSocket != null) {
             startMatch();
         }
@@ -55,6 +57,10 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     public PlayerSingleplayer getPlayer() {
         return player;
+    }
+
+    public boolean isPrivateCardChosen() {
+        return privateCardChosen;
     }
 
     @Override
@@ -490,5 +496,13 @@ public class MatchSingleplayer extends Match implements Runnable {
     private void startMatch() {
         localThread = new Thread(this);
         localThread.start();
+    }
+
+    public void setPrivateCardChosen(int position){
+        privateCardChosen = true;
+        selectedPrivateCard = position;
+        synchronized (getLock()) {
+            getLock().notifyAll();
+        }
     }
 }

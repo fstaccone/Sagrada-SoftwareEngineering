@@ -60,4 +60,6 @@ public interface ResponseHandler {
     void handle(ToolCardUsedByOthersResponse response);
 
     void handle(GameEndSingleResponse response);
+
+    void handle(ChoosePrivateCardResponse response);
 }

@@ -225,9 +225,44 @@ public class TurnManagerSingleplayer implements Runnable {
         }
 
         if (match.getCurrentRound() >= NUM_ROUNDS) {
-            match.calculateFinalScore();
+            calculateScore();
         } else {
             turnManager();
+        }
+    }
+
+    private void calculateScore() {
+        if (match.getObserverRmi() != null) {
+            try {
+                match.getObserverRmi().onChoosePrivateCard();
+            } catch (RemoteException e) {
+                match.terminateMatch();
+                System.out.println("Match singleplayer interrotto");
+            }
+        } else {
+            try {
+                match.getObserverSocket().writeObject(new ChoosePrivateCardResponse());
+            } catch (IOException e) {
+                match.terminateMatch();
+                System.out.println("Match singleplayer interrotto");
+            }
+        }
+
+        waitForCardChoise();
+
+        match.calculateFinalScore();
+    }
+
+    private void waitForCardChoise() {
+        while (!(match.isPrivateCardChosen())) {
+            synchronized (match.getLock()) {
+                try {
+                    match.getLock().wait();
+                } catch (InterruptedException e) {
+                    match.terminateMatch();
+                    System.out.println("Match singleplayer interrotto");
+                }
+            }
         }
     }
 }

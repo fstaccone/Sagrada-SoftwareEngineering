@@ -42,6 +42,7 @@ public class Cli {
     private List<String> playersNames;
     private boolean windowChosen;
     private boolean single;
+    private boolean enablePrivateCardChoice;
 
     private static final String WELCOME = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@./@@@@@/*@@@@@@@@@@@@@@@\n" +
@@ -137,6 +138,7 @@ public class Cli {
         diceValueToBeSet = false;
         tool11DiceToBePlaced = false;
         stillPlaying = true;
+        enablePrivateCardChoice = false;
     }
 
     public void printWelcome() {
@@ -392,6 +394,12 @@ public class Cli {
         printer.flush();
 
         stillPlaying = false;
+    }
+
+    public void onChoosePrivateCard() {
+        enablePrivateCardChoice = true;
+        printer.println("Scegli la carta obiettivo privato da utilizzare per il calcolo del punteggio: digita il comando 'scp' seguito da 'sinistra' o 'destra' per scegliere la carta corrispondente");
+        printer.flush();
     }
 
     private class KeyboardHandler extends Thread {
@@ -746,6 +754,38 @@ public class Cli {
                                     } else {
                                         syntaxErrorPrint();
                                     }
+                                }
+                            }
+                            break;
+
+                            case "scp": {
+                                if (enablePrivateCardChoice && single) {
+                                    if (parts.length == 2) {
+                                        if (parts[1].equals("sinistra")) {
+                                            if (controllerRmi != null) {
+                                                controllerRmi.choosePrivateCard(username, 0); // left position is equal to 0 inside the arrayList that contains private cards
+                                            } else {
+                                                controllerSocket.request(new PrivateCardChosenRequest(username, 0));
+                                            }
+                                        } else if (parts[1].equals("destra")) {
+                                            if (controllerRmi != null) {
+                                                controllerRmi.choosePrivateCard(username, 1); // right position is equal to 1 inside the arrayList that contains private cards
+                                            } else {
+                                                controllerSocket.request(new PrivateCardChosenRequest(username, 1));
+                                            }
+                                        } else {
+                                            syntaxErrorPrint();
+                                        }
+                                    } else {
+                                        syntaxErrorPrint();
+                                    }
+                                } else {
+                                    if(single){
+                                        printer.println("Non è ancora il momento di scegliere la carta obiettivo privato!");
+                                    } else {
+                                        printer.println("Comando valido solo per le partite a giocatore singolo.");
+                                    }
+                                    printer.flush();
                                 }
                             }
                             break;

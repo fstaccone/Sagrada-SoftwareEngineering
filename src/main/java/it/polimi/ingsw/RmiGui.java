@@ -77,6 +77,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
+    public void onChoosePrivateCard() { gui.onChoosePrivateCard(); }
+
+    @Override
     public void onMyWindow(WindowPatternCard window) {
         gui.onMyWindow(window);
     }
