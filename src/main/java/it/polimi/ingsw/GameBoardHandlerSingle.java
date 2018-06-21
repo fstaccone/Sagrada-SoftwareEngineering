@@ -83,9 +83,6 @@ public class GameBoardHandlerSingle {
     Button leftCard;
     @FXML
     Button rightCard;
-    //  @FXML
-    //ProgressIndicator timerIndicator;
-
 
     public void init(Scene scene, Gui gui) {
         this.gui = gui;
@@ -253,53 +250,20 @@ public class GameBoardHandlerSingle {
         tool4.setDisable(true);
         gameBoardHandler.appendToTextArea("Sei giunto al termine della partita, nel riquadro a destra scegli" +
                 "quale carta obiettivo utilizzare per il calcolo del punteggio");
-        Platform.runLater(()->forPrivateCardChoice.setVisible(true));
-        /*Pane forPrivateCardChoise;
-        Button leftCard;
-        Button rightCard;
-        Label label;
-
-        forPrivateCardChoise = new Pane();
-        forPrivateCardChoise.setStyle("-fx-background-color: grey");
-        forPrivateCardChoise.setLayoutX(1075);
-        forPrivateCardChoise.setLayoutY(219);
-        forPrivateCardChoise.setPrefHeight(127);
-        forPrivateCardChoise.setPrefWidth(308);
-        // todo: settare le dimensioni
-
-        label = new Label();
-        label.setText("Scegli la carta privata:");
-        label.setStyle("-fx-text-fill: white; -fx-background-color: #000096");
-        label.setLayoutY(160);
-        label.setLayoutX(1235);
-
-        leftCard = new Button();
-        leftCard.setText("Sinistra");
-        leftCard.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
-        leftCard.setLayoutX(1200);
-        leftCard.setLayoutY(200);
-        */
-
+        Platform.runLater(() -> forPrivateCardChoice.setVisible(true));
 
         leftCard.setOnMouseClicked(event -> {
-            if(gui.getControllerRmi() != null){
+            if (gui.getControllerRmi() != null) {
                 try {
                     gui.getControllerRmi().choosePrivateCard(gui.getUsername(), 0);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             }
-        }); // todo: completare
+        });
 
-        /*
-        rightCard = new Button();
-        rightCard.setText("Destra");
-        rightCard.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
-        rightCard.setLayoutX(1270);
-        rightCard.setLayoutY(200);
-        */
         rightCard.setOnMouseClicked(event -> { // todo: completare
-            if(gui.getControllerRmi() != null){
+            if (gui.getControllerRmi() != null) {
                 try {
                     gui.getControllerRmi().choosePrivateCard(gui.getUsername(), 1);
                 } catch (RemoteException e) {
@@ -307,14 +271,6 @@ public class GameBoardHandlerSingle {
                 }
             }
         });
-
-        //QUESTO NON ERA COMMENTATO
-        /*
-        gameBoard.getChildren().add(forPrivateCardChoise);
-        gameBoard.getChildren().add(label);
-        gameBoard.getChildren().add(leftCard);
-        gameBoard.getChildren().add(rightCard);
-        */
     }
 
     @FXML
