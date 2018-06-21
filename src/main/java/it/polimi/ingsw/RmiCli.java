@@ -135,8 +135,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onChoosePrivateCard() throws RemoteException {
-
-    }
+    public void onChoosePrivateCard() { cli.onChoosePrivateCard(); }
 
 }

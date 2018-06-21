@@ -319,13 +319,15 @@ public class GameBoardHandlerMulti {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).equals(gui.getUsername())) {
                 myPosition.set(i);
-                label0.setText(players.get(i));
+                int finalI = i;
+                Platform.runLater(() -> label0.setText(players.get(finalI)));
                 break;
             }
         }
         /* assigns the name to the right label in order to show the correct flow clockwise */
         for (int i = 1; i < players.size(); i++) {
-            labels.get(i).setText(players.get((myPosition.get() + i) % players.size()));
+            int finalI = i;
+            Platform.runLater(() -> labels.get(finalI).setText(players.get((myPosition.get() + finalI) % players.size())));
         }
     }
 

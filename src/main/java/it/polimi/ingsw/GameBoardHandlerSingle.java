@@ -76,8 +76,6 @@ public class GameBoardHandlerSingle {
     Pane reserve;
     @FXML
     Label playerName;
-    @FXML
-    private Pane forPrivateCardChoice;
     //  @FXML
     //ProgressIndicator timerIndicator;
 
@@ -91,7 +89,6 @@ public class GameBoardHandlerSingle {
             useButton.setVisible(false);
             toolLabel.setVisible(false);
             toolPane.setVisible(false);
-            forPrivateCardChoice.setVisible(false);
         });
     }
 
@@ -237,10 +234,14 @@ public class GameBoardHandlerSingle {
     }
 
     public void choosePrivateCard() {
-        forPrivateCardChoice.setVisible(true);
+        Pane forPrivateCardChoise;
         Button leftCard;
         Button rightCard;
         Label label;
+
+        forPrivateCardChoise = new Pane();
+        forPrivateCardChoise.setStyle("-fx-background-color: grey");
+        // todo: settare le dimensioni
 
         label = new Label();
         label.setText("Scegli la carta privata:");
@@ -272,6 +273,7 @@ public class GameBoardHandlerSingle {
         */
         });
 
+        gameBoard.getChildren().add(forPrivateCardChoise);
         gameBoard.getChildren().add(label);
         gameBoard.getChildren().add(leftCard);
         gameBoard.getChildren().add(rightCard);
