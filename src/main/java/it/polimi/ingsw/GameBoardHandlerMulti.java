@@ -106,15 +106,14 @@ public class GameBoardHandlerMulti {
         this.gui = gui;
         gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null, gameBoard, toolPane, toolLabel, useButton, null);
         gameBoardHandler.init(scene, gui);
-        Platform.runLater(() -> {
-            label0.setText(gui.getUsername());
-            label1.setText(" ");
-            label2.setText(" ");
-            label3.setText(" ");
-            useButton.setVisible(false);
-            toolLabel.setVisible(false);
-            toolPane.setVisible(false);
-        });
+        Platform.runLater(() -> label0.setText(gui.getUsername()));
+        label1.setText(" ");
+        label2.setText(" ");
+        label3.setText(" ");
+        useButton.setVisible(false);
+        toolLabel.setVisible(false);
+        toolPane.setVisible(false);
+
     }
 
     public void appendToTextArea(String s) {
@@ -304,7 +303,7 @@ public class GameBoardHandlerMulti {
     public void initializeLabels(List<String> players) {
 
         //FOR RMI CONNECTION
-        if (gui.getControllerSocket() != null) {
+        if (gui.getControllerRmi() != null) {
             setLabels(players, label0);
         }
         //FOR SOCKET CONNECTION
@@ -319,15 +318,13 @@ public class GameBoardHandlerMulti {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).equals(gui.getUsername())) {
                 myPosition.set(i);
-                int finalI = i;
-                Platform.runLater(() -> label0.setText(players.get(finalI)));
+                label0.setText(players.get(i));
                 break;
             }
         }
         /* assigns the name to the right label in order to show the correct flow clockwise */
         for (int i = 1; i < players.size(); i++) {
-            int finalI = i;
-            Platform.runLater(() -> labels.get(finalI).setText(players.get((myPosition.get() + finalI) % players.size())));
+            labels.get(i).setText(players.get((myPosition.get() + i) % players.size()));
         }
     }
 
@@ -374,8 +371,10 @@ public class GameBoardHandlerMulti {
 
         for (String name : map.keySet()) {
             for (Label label : labelsList) {
+                System.out.println(label.getText());
                 if (label.getText().equals(name)) {
                     int a = Integer.parseInt(label.getId().substring(5, 6));
+                    System.out.println(a);
                     switch (a) {
                         case 1:
                             setOtherFavorTokens(favourTokensContainer1, map.get(name));

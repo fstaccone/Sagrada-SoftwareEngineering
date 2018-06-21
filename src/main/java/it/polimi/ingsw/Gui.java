@@ -442,6 +442,7 @@ public class Gui {
             }
         }
         gameBoardHandlerMulti.createLabelsMap();
+
         gameBoardHandlerMulti.createOtherLabelsList();
         gameBoardHandlerMulti.initializeLabels(players);
 
