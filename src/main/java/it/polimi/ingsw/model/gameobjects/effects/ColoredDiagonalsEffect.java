@@ -8,6 +8,12 @@ public class ColoredDiagonalsEffect implements Effect {
     public ColoredDiagonalsEffect() {
     }
 
+    /**
+     * Gives one point to the player for every dice diagonally adjacent to another of the same color in his scheme card.
+     * @param player is the player using the private objective card
+     * @param match is the player's current match
+     * @return
+     */
     @Override
     public boolean applyEffect(Player player, Match match) {
 
@@ -37,6 +43,15 @@ public class ColoredDiagonalsEffect implements Effect {
         return false;
     }
 
+    /**
+     * Checks if there's a diagonally adjacent dice of the chosen dice that also has the same color
+     * @param schema is the current scheme card
+     * @param color is the color of the chosen dice
+     * @param row is the row index of the chosen dice position
+     * @param column is the column index of the chosen dice position
+     * @param score is the player's current score
+     * @return the updated score
+     */
     public int lookForColor(Square[][] schema, Colors color, int row, int column, int score){
         Square upLeft = null;
         Square upRight = null;

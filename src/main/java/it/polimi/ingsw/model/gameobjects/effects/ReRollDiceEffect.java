@@ -17,11 +17,21 @@ public class ReRollDiceEffect implements Effect {
     private Integer price;
     private boolean used;
 
+    /**
+     * When initialized, the price of the tool card is set to 1
+     */
     public ReRollDiceEffect() {
         price = 1;
         used=false;
     }
 
+    /**
+     * This tool card allows the player to re roll a chosen dice in the reserve.
+     * @param player is the player that uses this tool card
+     * @param match is the player's current match
+     * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
+     * sacrifice, for multi player: enough favor tokens).
+     */
     @Override
     public boolean applyEffect(Player player, Match match) {
         Random rand = new Random();

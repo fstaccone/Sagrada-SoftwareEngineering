@@ -9,6 +9,12 @@ public class DarkShadesEffect implements Effect {
     public DarkShadesEffect() {
     }
 
+    /**
+     * Gives 2 points to the player for every set of dices with value 5 and 6 in his scheme card
+     * @param player is the player that uses this public objective card
+     * @param match is the player's current match
+     * @return
+     */
     @Override
     public boolean applyEffect(Player player, Match match) {
         Square[][] schema = player.getSchemeCard().getWindow();
