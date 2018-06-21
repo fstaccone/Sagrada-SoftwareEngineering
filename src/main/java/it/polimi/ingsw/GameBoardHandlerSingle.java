@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,12 @@ public class GameBoardHandlerSingle {
     Pane reserve;
     @FXML
     Label playerName;
+    @FXML
+    Pane forPrivateCardChoice;
+    @FXML
+    Button leftCard;
+    @FXML
+    Button rightCard;
     //  @FXML
     //ProgressIndicator timerIndicator;
 
@@ -89,6 +96,7 @@ public class GameBoardHandlerSingle {
             useButton.setVisible(false);
             toolLabel.setVisible(false);
             toolPane.setVisible(false);
+            forPrivateCardChoice.setVisible(false);
         });
     }
 
@@ -135,6 +143,7 @@ public class GameBoardHandlerSingle {
         }
         gameBoardHandler.appendToTextArea(s.toString());
         disableActionsOnGameBoard();
+        forPrivateCardChoice.setVisible(false);
     }
 
     private void disableActionsOnGameBoard() {
@@ -234,13 +243,28 @@ public class GameBoardHandlerSingle {
     }
 
     public void choosePrivateCard() {
-        Pane forPrivateCardChoise;
+
+        reserve.setDisable(true);
+        playerWindowPatternCard.setDisable(true);
+        tool0.setDisable(true);
+        tool1.setDisable(true);
+        tool2.setDisable(true);
+        tool3.setDisable(true);
+        tool4.setDisable(true);
+        gameBoardHandler.appendToTextArea("Sei giunto al termine della partita, nel riquadro a destra scegli" +
+                "quale carta obiettivo utilizzare per il calcolo del punteggio");
+        Platform.runLater(()->forPrivateCardChoice.setVisible(true));
+        /*Pane forPrivateCardChoise;
         Button leftCard;
         Button rightCard;
         Label label;
 
         forPrivateCardChoise = new Pane();
         forPrivateCardChoise.setStyle("-fx-background-color: grey");
+        forPrivateCardChoise.setLayoutX(1075);
+        forPrivateCardChoise.setLayoutY(219);
+        forPrivateCardChoise.setPrefHeight(127);
+        forPrivateCardChoise.setPrefWidth(308);
         // todo: settare le dimensioni
 
         label = new Label();
@@ -254,30 +278,43 @@ public class GameBoardHandlerSingle {
         leftCard.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
         leftCard.setLayoutX(1200);
         leftCard.setLayoutY(200);
+        */
+
+
         leftCard.setOnMouseClicked(event -> {
+            if(gui.getControllerRmi() != null){
+                try {
+                    gui.getControllerRmi().choosePrivateCard(gui.getUsername(), 0);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
         }); // todo: completare
 
+        /*
         rightCard = new Button();
         rightCard.setText("Destra");
         rightCard.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
         rightCard.setLayoutX(1270);
         rightCard.setLayoutY(200);
+        */
         rightCard.setOnMouseClicked(event -> { // todo: completare
-        /*    if(gui.getControllerRmi() != null){
+            if(gui.getControllerRmi() != null){
                 try {
                     gui.getControllerRmi().choosePrivateCard(gui.getUsername(), 1);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             }
-        */
         });
 
+        //QUESTO NON ERA COMMENTATO
+        /*
         gameBoard.getChildren().add(forPrivateCardChoise);
         gameBoard.getChildren().add(label);
         gameBoard.getChildren().add(leftCard);
         gameBoard.getChildren().add(rightCard);
-
+        */
     }
 
     @FXML
