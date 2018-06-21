@@ -433,10 +433,6 @@ public class Gui {
         gameBoardHandlerMulti.setPublicCards(publicCardsList);
         gameBoardHandlerMulti.setReserve(dicesList);
         gameBoardHandlerMulti.onRoundTrack(track);
-        gameBoardHandlerMulti.createLabelsMap();
-        gameBoardHandlerMulti.createOtherLabelsList();
-        gameBoardHandlerMulti.initializeLabels(players);
-
         if (!reconnection) {
             gameBoardHandlerMulti.appendToTextArea("Fai la tua prima mossa!");
         } else {
@@ -445,6 +441,10 @@ public class Gui {
                 gameBoardHandlerMulti.appendToTextArea("-" + toolcard + " " + toolcardsPrices.get(toolcard));
             }
         }
+        gameBoardHandlerMulti.createLabelsMap();
+        gameBoardHandlerMulti.createOtherLabelsList();
+        gameBoardHandlerMulti.initializeLabels(players);
+
 
         //FOR SOCKET CONNECTION
         if (controllerRmi == null) {
