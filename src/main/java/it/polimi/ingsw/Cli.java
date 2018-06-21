@@ -761,20 +761,24 @@ public class Cli {
                             case "scp": {
                                 if (enablePrivateCardChoice && single) {
                                     if (parts.length == 2) {
-                                        if (parts[1].equals("sinistra")) {
-                                            if (controllerRmi != null) {
-                                                controllerRmi.choosePrivateCard(username, 0); // left position is equal to 0 inside the arrayList that contains private cards
-                                            } else {
-                                                controllerSocket.request(new PrivateCardChosenRequest(username, 0));
-                                            }
-                                        } else if (parts[1].equals("destra")) {
-                                            if (controllerRmi != null) {
-                                                controllerRmi.choosePrivateCard(username, 1); // right position is equal to 1 inside the arrayList that contains private cards
-                                            } else {
-                                                controllerSocket.request(new PrivateCardChosenRequest(username, 1));
-                                            }
-                                        } else {
-                                            syntaxErrorPrint();
+                                        switch (parts[1]) {
+                                            case "sinistra":
+                                                if (controllerRmi != null) {
+                                                    controllerRmi.choosePrivateCard(username, 0); // left position is equal to 0 inside the arrayList that contains private cards
+                                                } else {
+                                                    controllerSocket.request(new PrivateCardChosenRequest(username, 0));
+                                                }
+                                                break;
+                                            case "destra":
+                                                if (controllerRmi != null) {
+                                                    controllerRmi.choosePrivateCard(username, 1); // right position is equal to 1 inside the arrayList that contains private cards
+                                                } else {
+                                                    controllerSocket.request(new PrivateCardChosenRequest(username, 1));
+                                                }
+                                                break;
+                                            default:
+                                                syntaxErrorPrint();
+                                                break;
                                         }
                                     } else {
                                         syntaxErrorPrint();

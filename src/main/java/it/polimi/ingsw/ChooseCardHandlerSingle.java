@@ -23,28 +23,20 @@ public class ChooseCardHandlerSingle implements Initializable {
 
     @FXML
     Button card0;
-
     @FXML
     Button card1;
-
     @FXML
     Button card2;
-
     @FXML
     Button card3;
-
     @FXML
     Button play;
-
     @FXML
     TextArea textArea;
-
     @FXML
     Button quit;
-
     @FXML
     ImageView privateObjCard0;
-
     @FXML
     ImageView privateObjCard1;
 
@@ -90,10 +82,6 @@ public class ChooseCardHandlerSingle implements Initializable {
 
     public String getImageUrl() {
         return parent.getImageUrl();
-    }
-
-    public void appendToTextArea(String s) {
-        parent.appendToTextArea(textArea, s);
     }
 
     public void welcome() {

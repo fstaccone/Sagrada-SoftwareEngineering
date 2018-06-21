@@ -31,7 +31,7 @@ public class GameBoardHandler {
     private GameBoardHandlerMulti gameBoardHandlerMulti;
     private GameBoardHandlerSingle gameBoardHandlerSingle;
 
-    protected static final String PRIVATE_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/";
+    private static final String PRIVATE_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/";
     protected static final String TOOLCARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/toolcards/";
     protected static final String DICE_IMAGES_PATH = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
     protected static final String PUBLIC_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/";
@@ -85,10 +85,6 @@ public class GameBoardHandler {
     private Stage window;
     private Gui gui;
     private int diceChosen;
-    //private List<String> reserveDices;
-    //private Map<String, Integer> otherFavorTokensMap;
-    //private Map<String, WindowPatternCard> otherSchemeCardsMap;
-    //private Map<Integer, Pane> favorTokensContainers = new HashMap<>();
     private GridPane schemeCard = new GridPane();
     private final boolean single;
 
@@ -297,7 +293,6 @@ public class GameBoardHandler {
         username = gui.getUsername();
         rmiController = gui.getControllerRmi();
         socketController = gui.getControllerSocket();
-        //otherSchemeCardsMap = gui.getOtherSchemeCardsMap();
         window = gui.getWindowStage();
 
         Platform.runLater(() -> {

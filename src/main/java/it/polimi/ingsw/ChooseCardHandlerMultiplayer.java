@@ -23,25 +23,18 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     @FXML
     Button card0;
-
     @FXML
     Button card1;
-
     @FXML
     Button card2;
-
     @FXML
     Button card3;
-
     @FXML
     Button play;
-
     @FXML
     TextArea textArea;
-
     @FXML
     Button quit;
-
     @FXML
     ImageView privateObjCard;
 
