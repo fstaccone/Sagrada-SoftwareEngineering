@@ -30,7 +30,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param difficulty difficulty chosen by the player
      * @param turnTime duration of every turn in milliseconds
      * @param lobby lobby that creates this match
-     * @param socketOut
+     * @param socketOut OutputObjectStream of the client (only if the connection is socket)
      */
     public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby, ObjectOutputStream socketOut) {
         super(lobby);

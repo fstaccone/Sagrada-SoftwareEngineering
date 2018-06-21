@@ -139,16 +139,25 @@ public class GameBoardHandlerSingle {
             s.append("\n\nNon hai vinto!");
         }
         gameBoardHandler.appendToTextArea(s.toString());
-        disableActionsOnGameBoard();
         forPrivateCardChoice.setVisible(false);
+        privObjCard0.setDisable(true);
+        privObjCard1.setDisable(true);
     }
 
     private void disableActionsOnGameBoard() {
-
+        reserve.setDisable(true);
+        playerWindowPatternCard.setDisable(true);
+        tool0.setDisable(true);
+        tool1.setDisable(true);
+        tool2.setDisable(true);
+        tool3.setDisable(true);
+        tool4.setDisable(true);
+        passButton.setDisable(true);
+        pubObjCard0.setDisable(true);
+        pubObjCard1.setDisable(true);
     }
 
     public void setReserve(List<String> dicesList) {
-
         gameBoardHandler.setReserve(dicesList, reserve);
     }
 
@@ -240,14 +249,7 @@ public class GameBoardHandlerSingle {
     }
 
     public void choosePrivateCard() {
-
-        reserve.setDisable(true);
-        playerWindowPatternCard.setDisable(true);
-        tool0.setDisable(true);
-        tool1.setDisable(true);
-        tool2.setDisable(true);
-        tool3.setDisable(true);
-        tool4.setDisable(true);
+        disableActionsOnGameBoard();
         gameBoardHandler.appendToTextArea("Sei giunto al termine della partita, nel riquadro a destra scegli" +
                 "quale carta obiettivo utilizzare per il calcolo del punteggio");
         Platform.runLater(() -> forPrivateCardChoice.setVisible(true));
@@ -262,7 +264,7 @@ public class GameBoardHandlerSingle {
             }
         });
 
-        rightCard.setOnMouseClicked(event -> { // todo: completare
+        rightCard.setOnMouseClicked(event -> {
             if (gui.getControllerRmi() != null) {
                 try {
                     gui.getControllerRmi().choosePrivateCard(gui.getUsername(), 1);
