@@ -189,9 +189,9 @@ public class Cli {
         this.myTurn = yourTurn;
         if (myTurn) {
             if (single) {
-                printer.println("\nRound: " + round + "\tTurno: " + turn + "\tInserisci un comando:     ~ ['h' for help]\n");
+                printer.println("\nRound: " + round + "\tTurno: " + turn + "\tInserisci un comando:     ~ ['a' per ricevere Aiuto]\n");
             } else {
-                printer.println("\nOra è il tuo turno! Round: " + round + "\tTurno: " + turn + "\tInserisci un comando:     ~ ['h' for help]\n");
+                printer.println("\nOra è il tuo turno! Round: " + round + "\tTurno: " + turn + "\tInserisci un comando:     ~ ['a' per ricevere Aiuto]\n");
             }
             tool11DiceToBePlaced = false;
             diceValueToBeSet = false;
@@ -209,7 +209,7 @@ public class Cli {
 
     public void onWindowChoice(List<String> windows) {
         int i = 0;
-        printer.println("Choose your window among the following                                        ~ [scs] + [number]\n");
+        printer.println("\nScegli la tua carta tra le disponibili:                                        ~ [scs] + [numero]\n");
         printer.flush();
         for (String s : windows) {
             printer.println(i++ + ") " + s + "\n");
@@ -218,7 +218,7 @@ public class Cli {
     }
 
     public void onAfterWindowChoice() {
-        printer.println("Adesso puoi utilizzare la tua carta schema                              ~ [reserve] per vedere i dadi disponibili\n");
+        printer.println("\nAdesso puoi utilizzare la tua carta schema                              ~ [riserva] per vedere i dadi disponibili\n");
         printer.flush();
     }
 
@@ -227,7 +227,7 @@ public class Cli {
     }
 
     public void onOtherTurn(String name) {
-        printer.println("Ora è il turno di " + name + "!");
+        printer.println("\nOra è il turno di " + name + "!");
         printer.flush();
     }
 
@@ -257,12 +257,12 @@ public class Cli {
     }
 
     public void onPlayerExit(String name) {
-        printer.println("Player " + name + " has left the game!");
+        printer.println("\nIl giocatore " + name + " è uscito dal gioco!");
         printer.flush();
     }
 
     public void onPlayerReconnection(String name) {
-        printer.println("Player " + name + " is now in game!");
+        printer.println("\nIl giocatore " + name + " è ora in gioco!");
         printer.flush();
     }
 
@@ -272,7 +272,7 @@ public class Cli {
      */
     public void onGameClosing() {
         if (stillPlaying) {
-            printer.println("Congratulazioni! Sei il vincitore. Sei rimasto da solo.");
+            printer.println("\nCongratulazioni! Sei il vincitore. Sei rimasto da solo.");
             printer.flush();
         }
         stillPlaying = false;
@@ -282,7 +282,7 @@ public class Cli {
      * print your private card
      */
     public void showPrivateCard() {
-        printer.println("Your private objective card:");
+        printer.println("\nI tuoi obiettivi privati:");
         printer.println(privateCard);
         printer.flush();
     }
@@ -291,7 +291,7 @@ public class Cli {
      * print public objective cards
      */
     public void showPublicCards() {
-        printer.println("Public objective cards:");
+        printer.println("\nObiettivi privati:");
 
         for (String s : publicCardsList) {
             printer.println(s);
@@ -341,7 +341,7 @@ public class Cli {
         this.otherSchemeCardsMap = otherSchemeCards;
         this.otherFavorTokensMap = otherTokens;
         this.windowChosen = schemeCardChosen;
-        printer.println("Aggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
+        printer.println("\nAggiornamento prezzi carte utensili:        (se vuoto prezzi=1)");
         for (String toolcard : toolcardsPrices.keySet()) {
             printer.println("-" + toolcard + " " + toolcardsPrices.get(toolcard));
         }
@@ -360,7 +360,7 @@ public class Cli {
     }
 
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
-        printer.println("Punteggio finale:");
+        printer.println("\nPunteggio finale:");
         for (int i = 0; i < rankingNames.size(); i++) {
             printer.println("- " + rankingNames.get(i) + "\t" + rankingValues.get(i));
         }
@@ -377,18 +377,18 @@ public class Cli {
     }
 
     public void onToolCardUsedByOthers(String name, int toolCardNumber) {
-        printer.println("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolCardNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
+        printer.println("\nIl giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolCardNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         printer.flush();
     }
 
     public void onGameEndSingle(int goal, int points) {
-        printer.println("Obiettivo da battere: \t" + goal);
+        printer.println("\nObiettivo da battere: \t" + goal);
         printer.println("Punteggio ottenuto: \t" + points);
 
         if (points > goal) {
-            printer.println("Complimenti, hai vinto!");
+            printer.println("Complimenti, hai vinto!\nDigita 'esci' per uscire.");
         } else {
-            printer.println("Non hai vinto!");
+            printer.println("Non hai vinto!\nDigita 'esci' per uscire.");
         }
 
         printer.flush();
@@ -398,7 +398,7 @@ public class Cli {
 
     public void onChoosePrivateCard() {
         enablePrivateCardChoice = true;
-        printer.println("Scegli la carta obiettivo privato da utilizzare per il calcolo del punteggio: digita il comando 'scp' seguito da 'sinistra' o 'destra' per scegliere la carta corrispondente");
+        printer.println("\nScegli la carta obiettivo privato da utilizzare per il calcolo del punteggio: digita il comando 'scp' seguito da 'sinistra' o 'destra' per scegliere la carta corrispondente");
         printer.flush();
     }
 
@@ -464,7 +464,7 @@ public class Cli {
                             break;
 
                             case "passa": {
-                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced) &&(!enablePrivateCardChoice)) {
                                     //RMI
                                     if (controllerRmi != null)
                                         controllerRmi.goThrough(username, single);
@@ -476,7 +476,7 @@ public class Cli {
                             break;
 
                             case "pd": {
-                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced)) {
+                                if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced) &&(!enablePrivateCardChoice)) {
                                     if (diceChosen != 9) {
                                         if (placeDiceParametersCheck(parts[1], parts[2])) {
                                             //RMI
@@ -593,7 +593,7 @@ public class Cli {
 
                             case "sacrifico": {
 
-                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
+                                if (windowChosenCheck(windowChosen) && single && !diceValueToBeSet && !tool11DiceToBePlaced &&(!enablePrivateCardChoice)) {
                                     if (parametersCardinalityCheck(2)) {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null) {
@@ -615,7 +615,7 @@ public class Cli {
                             break;
 
                             case "scs": {
-                                if (!windowChosen && !diceValueToBeSet && !tool11DiceToBePlaced) {
+                                if (!windowChosen && !diceValueToBeSet && !tool11DiceToBePlaced ) {
                                     if (parametersCardinalityCheck(2)) {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null) {
@@ -626,7 +626,7 @@ public class Cli {
                                                     //SOCKET
                                                 else
                                                     controllerSocket.request(new ChooseWindowRequest(username, toolNumber1, single));
-                                                printer.println("Carta scelta correttamente!");
+                                                printer.println("\nCarta scelta correttamente!");
                                                 printer.flush();
                                                 windowChosen = true;
                                             } else {
@@ -647,7 +647,7 @@ public class Cli {
 
                             case "sd": {
 
-                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced &&(!enablePrivateCardChoice)) {
                                     if (parametersCardinalityCheck(2)) {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null) {
@@ -715,7 +715,7 @@ public class Cli {
                             break;
 
                             case "usautensile": {
-                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced) {
+                                if (windowChosenCheck(windowChosen) && !diceValueToBeSet && !tool11DiceToBePlaced &&(!enablePrivateCardChoice)) {
                                     if (parts.length >= 2) {
                                         toolNumber1 = tryParse(parts[1]);
                                         if (toolNumber1 != null)
@@ -781,9 +781,9 @@ public class Cli {
                                     }
                                 } else {
                                     if(single){
-                                        printer.println("Non è ancora il momento di scegliere la carta obiettivo privato!");
+                                        printer.println("\nNon è ancora il momento di scegliere la carta obiettivo privato!");
                                     } else {
-                                        printer.println("Comando valido solo per le partite a giocatore singolo.");
+                                        printer.println("\nComando valido solo per le partite a giocatore singolo.");
                                     }
                                     printer.flush();
                                 }
@@ -791,8 +791,20 @@ public class Cli {
                             break;
 
                             default: {
-                                printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!");
-                                printer.flush();
+                                if(!stillPlaying){
+
+                                    if(command.equals("esci")){
+                                        System.exit(0);
+                                    }else{
+                                        printer.println("\nLa partita è terminata, scrivi 'esci' per uscire");
+                                        printer.flush();
+                                    }
+
+                                }
+                                else {
+                                    printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!");
+                                    printer.flush();
+                                }
                             }
                         }
                     } else {
@@ -870,7 +882,7 @@ public class Cli {
                             break;
 
                             default: {
-                                printer.println("\nWARNING: Wrong command. Insert 'h' command for help!");
+                                printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!");
                                 printer.flush();
                             }
                         }
@@ -883,13 +895,13 @@ public class Cli {
 
             String s = "";
             while (!s.equals("esci")) {
-                printer.println("La partita è terminata, scrivi 'esci' per uscire");
-                printer.flush();
                 try {
                     s = keyboard.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                printer.println("\nLa partita è terminata, scrivi 'esci' per uscire");
+                printer.flush();
             }
             System.exit(0);
         }
@@ -943,7 +955,7 @@ public class Cli {
         }
 
         private void showRoundTrack() {
-            printer.println("Di seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
+            printer.println("\nDi seguito il tracciato dei round: (vuoto se primo round) \n" + roundTrack);
             printer.flush();
         }
 
