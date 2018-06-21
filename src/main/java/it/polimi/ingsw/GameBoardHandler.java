@@ -343,8 +343,10 @@ public class GameBoardHandler {
         //Initializing the scheme card slots
         schemeCard.setGridLinesVisible(false);
         schemeCard.setPrefSize(334, 261);
-        schemeCard.setHgap(10);
-        schemeCard.setVgap(14);
+        Insets padding = new Insets(0,0,2,7);
+        schemeCard.setPadding(padding);
+        schemeCard.setHgap(3);
+        schemeCard.setVgap(5);
         schemeCard.setLayoutX(3);
         schemeCard.setLayoutY(5);
 
@@ -483,7 +485,7 @@ public class GameBoardHandler {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
         //GridPane schemeCard = new GridPane();
-        schemeCard.setGridLinesVisible(false);
+        /*schemeCard.setGridLinesVisible(true);
         schemeCard.setPrefSize(334, 261);
         schemeCard.setHgap(10);
         schemeCard.setVgap(14);
@@ -499,7 +501,7 @@ public class GameBoardHandler {
             RowConstraints rowConst = new RowConstraints();
             rowConst.setPercentHeight(100.0 / ROWS);
             schemeCard.getRowConstraints().add(rowConst);
-        }
+        }*/
         Platform.runLater(() -> pane.getChildren().add(schemeCard));
         Square[][] temp = window.getWindow();
         for (int i = 0; i < window.getRows(); i++) {
