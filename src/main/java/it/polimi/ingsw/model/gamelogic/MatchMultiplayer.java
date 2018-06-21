@@ -824,8 +824,9 @@ public class MatchMultiplayer extends Match implements Runnable {
                             lobby.disconnect(otherPlayer.getName());
                             System.out.println("Player " + p.getName() + " disconnected!");
                         }
+                    } else {
+                        notifyToSocketClient(otherPlayer, response);
                     }
-                    notifyToSocketClient(otherPlayer, response);
                 }
             }
         }
@@ -835,7 +836,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (socketObservers.get(player) != null) {
             try {
                 socketObservers.get(player).writeObject(response);
-                //socketObservers.get(player).reset();
+                socketObservers.get(player).reset();
             } catch (IOException e) {
                 lobby.disconnect(player.getName());
                 System.out.println("Player " + player.getName() + " disconnected!");

@@ -30,7 +30,6 @@ public class Gui {
     private boolean myTurn;
     private boolean reconnection;
 
-    // todo: come facciamo per il nome? Si potrebbe creare un' interfaccia
     private ChooseCardHandlerMultiplayer chooseCardHandlerMultiplayer;
     private ChooseCardHandlerSingle chooseCardHandlerSingle;
     private GameBoardHandlerMulti gameBoardHandlerMulti;
@@ -184,7 +183,7 @@ public class Gui {
             if (single) {
                 onAfterWindowChoiceSingleplayer();
             } else {
-                onAfterWindowChoiceMultiplayer(); // todo: controllare
+                onAfterWindowChoiceMultiplayer();
             }
         } else {
             if (single) {
@@ -250,7 +249,6 @@ public class Gui {
         stillPlaying = false;
     }
 
-    // todo: eventualmente cambiare il gameboardhandler se ne creiamo uno per il singleplayer
     public void onGameEndSingle(int goal, int points) {
         if (gameBoardHandlerSingle != null) {
             gameBoardHandlerSingle.showResultForSingle(goal, points);
@@ -388,7 +386,7 @@ public class Gui {
 
         } else {
             chooseCardHandlerMultiplayer.setPrivateCard(privateCards.get(0));
-            chooseCardHandlerMultiplayer.setWindows(windows); // todo: ripetuto per lo stesso motivo del nome
+            chooseCardHandlerMultiplayer.setWindows(windows);
         }
     }
 
@@ -447,7 +445,7 @@ public class Gui {
 
 
         //FOR SOCKET CONNECTION
-        if (controllerRmi == null) {
+        if (controllerSocket != null) {
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {

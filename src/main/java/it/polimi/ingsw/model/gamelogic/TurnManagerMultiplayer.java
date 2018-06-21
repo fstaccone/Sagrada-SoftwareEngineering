@@ -170,7 +170,7 @@ public class TurnManagerMultiplayer implements Runnable {
         nextRound();
     }
 
-    private void playFirstTurn() throws RemoteException, InterruptedException {
+    private void playFirstTurn() throws InterruptedException {
         for (int i = 0; i < match.getPlayers().size(); i++) {
 
             PlayerMultiplayer player = match.getPlayers().get(i);
@@ -183,7 +183,7 @@ public class TurnManagerMultiplayer implements Runnable {
         }
     }
 
-    private void playSecondTurn() throws RemoteException, InterruptedException {
+    private void playSecondTurn() throws InterruptedException {
 
         for (int i = match.getPlayers().size() - 1; i >= 0; i--) {
 

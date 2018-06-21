@@ -302,7 +302,7 @@ public class GameBoardHandler {
 
         Platform.runLater(() -> {
             window.setScene(scene);
-            window.setTitle("GameBoard");
+            window.setTitle("Sagrada");
             window.setResizable(true);
             window.show();
         });
