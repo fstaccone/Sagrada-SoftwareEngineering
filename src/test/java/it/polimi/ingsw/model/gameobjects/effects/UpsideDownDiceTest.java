@@ -65,6 +65,7 @@ public class UpsideDownDiceTest {
 
         // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
+        singleplayer = new PlayerSingleplayer("Archi");
         schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         toolCard = new ToolCard("Tampone Diamantato", "tool10");
@@ -113,45 +114,56 @@ public class UpsideDownDiceTest {
     }
 
     @Test
-    public void singlePlayer(){
-        singleplayer = new PlayerSingleplayer("Archi");
+    public void dice1() {
         singleplayer.setDice(0);
         singleplayer.setDiceToBeSacrificed(7);
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(6, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.BLUE, reserve.getDices().get(singleplayer.getDice()).getColor());
+    }
+
+    @Test
+    public void dice2() {
         singleplayer.setDice(1);
-        singleplayer.setDiceToBeSacrificed(8);
+        singleplayer.setDiceToBeSacrificed(7);
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(5, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.YELLOW, reserve.getDices().get(singleplayer.getDice()).getColor());
+    }
+    @Test
+    public void dice3() {
         singleplayer.setDice(2);
-        singleplayer.setDiceToBeSacrificed(8);
+        singleplayer.setDiceToBeSacrificed(7);
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(4, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.VIOLET, reserve.getDices().get(singleplayer.getDice()).getColor());
+    }
+    @Test
+    public void dice4() {
         singleplayer.setDice(3);
-        singleplayer.setDiceToBeSacrificed(8);
+        singleplayer.setDiceToBeSacrificed(7);
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(3, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.RED, reserve.getDices().get(singleplayer.getDice()).getColor());
+    }
+    @Test
+    public void dice5() {
         singleplayer.setDice(4);
-        singleplayer.setDiceToBeSacrificed(8);
+        singleplayer.setDiceToBeSacrificed(7);
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(2, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.GREEN, reserve.getDices().get(singleplayer.getDice()).getColor());
+    }
+    @Test
+    public void dice6() {
         singleplayer.setDice(5);
-        singleplayer.setDiceToBeSacrificed(8);
+        singleplayer.setDiceToBeSacrificed(7);
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(1, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.BLUE, reserve.getDices().get(singleplayer.getDice()).getColor());
         singleplayer.setDice(6);
-        singleplayer.setDiceToBeSacrificed(8);
+        singleplayer.setDiceToBeSacrificed(7);
         Assert.assertEquals(false, toolCard.useCard(singleplayer, matchSingleplayer));
-        singleplayer.setDice(4);
-        singleplayer.setDiceToBeSacrificed(8);
-        toolCard.useCard(singleplayer, matchSingleplayer);
-        Assert.assertEquals(5, reserve.getDices().get(singleplayer.getDice()).getValue());
-        Assert.assertEquals(Colors.GREEN, reserve.getDices().get(singleplayer.getDice()).getColor());
     }
+
 }

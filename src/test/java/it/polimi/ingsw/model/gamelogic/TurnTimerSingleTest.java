@@ -12,9 +12,8 @@ public class TurnTimerSingleTest {
 
     @Test
     public void TurnTimerSingle(){
-        Lobby l = new Lobby(10, 10);
-        ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
-        MatchSingleplayer m = new MatchSingleplayer(0, "archi", 1, 10, l, objectOutputStream);
+        Lobby l = new Lobby(10000, 100000);
+        MatchSingleplayer m = new MatchSingleplayer(0, "archi", 1, 10, l, null);
         TurnTimerSingle t = new TurnTimerSingle(m);
         t.run();
         Assert.assertNotNull(t);

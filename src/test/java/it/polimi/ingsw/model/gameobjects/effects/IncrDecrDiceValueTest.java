@@ -84,26 +84,29 @@ public class IncrDecrDiceValueTest {
         Assert.assertEquals(false, toolCard.useCard(player, match));
         player.setChoice("-");
         toolCard.useCard(player, match);
-        Assert.assertEquals(1, reserve.getDices().get(1).getValue());
+        Assert.assertEquals(6, reserve.getDices().get(0).getValue());
         player.setChoice("+");
         Assert.assertEquals(false, toolCard.useCard(player, match));
     }
 
     @Test
-    public void checkDiceSingle(){
+    public void incrDecrDiceValue6() {
         singleplayer.setChoice("+");
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(false, toolCard.useCard(singleplayer, matchSingleplayer));
         singleplayer.setChoice("-");
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(5, reserve.getDices().get(0).getValue());
+    }
+    @Test
+    public void incrDiceValue5() {
         singleplayer.setChoice("+");
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(6, reserve.getDices().get(0).getValue());
         singleplayer.setChoice("a");
         Assert.assertEquals(false, toolCard.useCard(singleplayer, matchSingleplayer));
-        singleplayer.setChoice("-");
+        player.setChoice("-");
         toolCard.useCard(singleplayer, matchSingleplayer);
-        Assert.assertEquals(1, reserve.getDices().get(1).getValue());
+        Assert.assertEquals(6, reserve.getDices().get(0).getValue());
     }
 }

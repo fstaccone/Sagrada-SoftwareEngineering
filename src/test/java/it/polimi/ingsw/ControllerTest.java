@@ -23,14 +23,14 @@ public class ControllerTest {
 
     @Test
     public void Controller() throws RemoteException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 10);
         Controller controller = new Controller(lobby);
         Assert.assertNotNull(controller);
     }
 
     @Test
     public void checkName() throws RemoteException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 10);
         Controller controller = new Controller(lobby);
         controller.addPlayer("Player");
         Assert.assertEquals(ConnectionStatus.CONNECTED, controller.checkName("Player"));
@@ -38,7 +38,7 @@ public class ControllerTest {
 
     @Test
     public void addPlayer() throws RemoteException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 10);
         Controller controller = new Controller(lobby);
         controller.addPlayer("CowboyBebop");
         Assert.assertEquals("CowboyBebop", lobby.getWaitingPlayers().get(0));
@@ -50,7 +50,7 @@ public class ControllerTest {
 
     @Test
     public void createMatch() throws RemoteException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 10);
         Controller controller = new Controller(lobby);
         controller.createMatch("Ancona",1,null);
         Assert.assertEquals(0, lobby.getSingleplayerMatches().get("Ancona").getMatchId());
@@ -58,7 +58,7 @@ public class ControllerTest {
 
     @Test
     public void goThrough() throws RemoteException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 100000);
         Controller controller = new Controller(lobby);
         controller.createMatch("Ancona",1,null);
         controller.goThrough("Ancona", true);
@@ -72,7 +72,7 @@ public class ControllerTest {
 
     @Test
     public void quitGame() throws RemoteException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 100000);
         Controller controller = new Controller(lobby);
         controller.createMatch("Ancona",1,null);
         controller.quitGame("Ancona", true);
@@ -89,7 +89,7 @@ public class ControllerTest {
 
     @Test
     public void askForDiceColor() throws RemoteException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 100000);
         Controller controller = new Controller(lobby);
         lobby.addToWaitingPlayers("Ancona");
         lobby.addToWaitingPlayers("Bagaladi");
@@ -101,7 +101,7 @@ public class ControllerTest {
 
     @Test
     public void setDiceValue() throws RemoteException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 100000);
         Controller controller = new Controller(lobby);
         lobby.addToWaitingPlayers("Ancona");
         lobby.addToWaitingPlayers("Bagaladi");
@@ -114,7 +114,7 @@ public class ControllerTest {
 
     @Test
     public void handle() throws IOException {
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 100000);
         Controller controller = new Controller(lobby);
         lobby.addToWaitingPlayers("Ancona");
         lobby.addToWaitingPlayers("Bagaladi");

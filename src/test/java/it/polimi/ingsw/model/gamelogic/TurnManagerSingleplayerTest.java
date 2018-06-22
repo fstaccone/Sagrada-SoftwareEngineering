@@ -2,21 +2,29 @@ package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
+import it.polimi.ingsw.socket.SocketHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ObjectOutputStream;
+import java.rmi.RemoteException;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TurnManagerSingleplayerTest {
 
     @Test
-    public void TurnManagerSingleplayer(){
-        Lobby l = new Lobby(10,10);
-        ObjectOutputStream o = mock(ObjectOutputStream.class);
-        MatchSingleplayer m = new MatchSingleplayer(0, "archi", 1, 10, l, o);
-        TurnManagerSingleplayer t = new TurnManagerSingleplayer(m, 10);
-        Assert.assertNotNull(t);
+    public void TurnManagerSingleplayer() throws RemoteException {
+        Lobby lobby = new Lobby(10, 10);
+        Controller c = new Controller(lobby);
+        SocketHandler socketHandler = mock(SocketHandler.class);
+        PlayerSingleplayer singleplayer = new PlayerSingleplayer("Archi");
+        lobby.createSingleplayerMatch("Archi", 1, socketHandler.getOut());
+        ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
+        when(socketHandler.getOut()).thenReturn(objectOutputStream);
+        Assert.assertNotNull(lobby.getSingleplayerMatches().get("Archi").getTurnManager());
     }
 }
