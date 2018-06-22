@@ -215,20 +215,20 @@ public class MatchMultiplayer extends Match implements Runnable {
         List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
-        List<String> privateCard= new ArrayList<>();
+        List<String> privateCard = new ArrayList<>();
         privateCard.add(p.getPrivateObjectiveCard().toString());
         String reserve = board.getReserve().getDices().toString();
         String roundTrack = board.getRoundTrack().toString();
         int myTokens = p.getNumFavorTokens();
-
-        String [][] schemeCard= new String[4][5];
+        String[][] schemeCard = new String[4][5];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++)
                 schemeCard[i][j] = p.getSchemeCard().getWindow()[i][j].toString();
         }
 
         Map<String, Integer> otherTokens = new HashMap<>();
-        Map<String, WindowPatternCard> otherSchemeCards = new HashMap<>();
+        Map<String, String[][]> otherSchemeCards = new HashMap<>();
+        Map<String, String> otherSchemeCardNamesMap = new HashMap<>();
         boolean schemeCardChosen = p.isSchemeCardSet();
 
         for (PlayerMultiplayer player : players) {
@@ -237,14 +237,24 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         }
         for (PlayerMultiplayer player : players) {
+            String [][]otherSchemeCard= new String[4][5];
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 5; j++)
+                    otherSchemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
+            }
             if (!player.getName().equals(name)) {
-                otherSchemeCards.put(player.getName(), player.getSchemeCard());
+                otherSchemeCards.put(player.getName(), otherSchemeCard);
+            }
+        }
+        for (PlayerMultiplayer player : players) {
+            if (!player.getName().equals(name)) {
+                otherSchemeCardNamesMap.put(player.getName(), player.getSchemeCard().getName());
             }
         }
 
         if (remoteObservers.get(p) != null) {
             try {
-                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard,p.getSchemeCard().getName(), otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices);
+                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, p.getSchemeCard().getName(), otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices);
                 remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), names);
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
@@ -252,7 +262,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         } else if (socketObservers.get(p) != null) {
             try {
-                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard,p.getSchemeCard().getName(), otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices));
+                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, p.getSchemeCard().getName(), otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices));
                 socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), names));
                 socketObservers.get(p).reset();
             } catch (IOException e) {
@@ -535,7 +545,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard2or3(int diceToBeSacrificed,int n, int startX, int startY, int finalX, int finalY, String name) {
+    public boolean useToolCard2or3(int diceToBeSacrificed, int n, int startX, int startY, int finalX, int finalY, String name) {
         if (!isToolAction()) {
             getPlayer(name).setStartX1(startX);
             getPlayer(name).setStartY1(startY);
@@ -557,7 +567,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard4(int diceToBeSacrificedd,int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
+    public boolean useToolCard4(int diceToBeSacrificedd, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
         if (!isToolAction()) {
             getPlayer(name).setStartX1(startX1);
             getPlayer(name).setStartY1(startY1);
@@ -583,7 +593,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard5(int diceToBeSacrificed,int diceChosen, int roundChosen, int diceChosenFromRound, String name) {
+    public boolean useToolCard5(int diceToBeSacrificed, int diceChosen, int roundChosen, int diceChosenFromRound, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             getPlayer(name).setRound(roundChosen);
@@ -616,7 +626,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard6(int diceToBeSacrificed,int diceChosen, String name) {
+    public boolean useToolCard6(int diceToBeSacrificed, int diceChosen, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(6, getPlayer(name), this);
@@ -635,7 +645,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard7(int diceToBeSacrificed,String name) {
+    public boolean useToolCard7(int diceToBeSacrificed, String name) {
         if (!isToolAction()) {
             boolean result = getBoard().findAndUseToolCard(7, getPlayer(name), this);
             reserveToBeUpdated(result);
@@ -653,7 +663,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard8(int diceToBeSacrificed,String name) {
+    public boolean useToolCard8(int diceToBeSacrificed, String name) {
         if (!isToolAction()) {
             boolean result = getBoard().findAndUseToolCard(8, getPlayer(name), this);
             tokensToBeUpdated(result, name);
@@ -667,8 +677,9 @@ public class MatchMultiplayer extends Match implements Runnable {
             return false;
         }
     }
+
     @Override
-    public boolean useToolCard9(int diceToBeSacrificed,int diceChosen, int finalX1, int finalY1, String name) {
+    public boolean useToolCard9(int diceToBeSacrificed, int diceChosen, int finalX1, int finalY1, String name) {
         if (!isToolAction() && !isDiceAction()) {
             getPlayer(name).setDice(diceChosen);
             getPlayer(name).setFinalX1(finalX1);
@@ -691,7 +702,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard10(int diceToBeSacrificed,int diceChosen, String name) {
+    public boolean useToolCard10(int diceToBeSacrificed, int diceChosen, String name) {
         if (!isToolAction()) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(10, getPlayer(name), this);
@@ -708,7 +719,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard11(int diceToBeSacrificed,int diceChosen, String name) {
+    public boolean useToolCard11(int diceToBeSacrificed, int diceChosen, String name) {
         if (!(isToolAction() || isDiceAction())) {
             getPlayer(name).setDice(diceChosen);
             boolean result = getBoard().findAndUseToolCard(11, getPlayer(name), this);
@@ -720,7 +731,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     @Override
-    public boolean useToolCard12(int diceToBeSacrificed,int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
+    public boolean useToolCard12(int diceToBeSacrificed, int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
         if (!isToolAction()) {
             getPlayer(name).setRound(roundFromTrack);
             getPlayer(name).setDiceChosenFromRound(diceInRound);
@@ -802,11 +813,11 @@ public class MatchMultiplayer extends Match implements Runnable {
     private void schemeCardsToBeUpdated(boolean result, String name) {
         PlayerMultiplayer p = getPlayer(name);
 
-        String [][] schemeCard= new String[4][5];
+        String[][] schemeCard = new String[4][5];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
                 schemeCard[i][j] = p.getSchemeCard().getWindow()[i][j].toString();
-                System.out.println("mm "+p.getSchemeCard().getWindow()[i][j].toString());
+                System.out.println("mm " + p.getSchemeCard().getWindow()[i][j].toString());
             }
         }
 
@@ -830,12 +841,12 @@ public class MatchMultiplayer extends Match implements Runnable {
                 }
             }
 
-            Response response = new OtherSchemeCardsResponse(p.getSchemeCard(), name);
+            Response response = new OtherSchemeCardsResponse(schemeCard, name, p.getSchemeCard().getName());
             for (PlayerMultiplayer otherPlayer : players) {
                 if (!otherPlayer.getName().equals(name)) {
                     if (remoteObservers.get(otherPlayer) != null) {
                         try {
-                            remoteObservers.get(otherPlayer).onOtherSchemeCards(p.getSchemeCard(), name);
+                            remoteObservers.get(otherPlayer).onOtherSchemeCards(schemeCard, name, p.getSchemeCard().getName());
                         } catch (RemoteException e) {
                             lobby.disconnect(otherPlayer.getName());
                             System.out.println("Player " + p.getName() + " disconnected!");

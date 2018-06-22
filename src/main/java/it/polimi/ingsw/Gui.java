@@ -1,7 +1,6 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.ClientController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -40,7 +39,8 @@ public class Gui {
     private List<String> privateCards;
     private List<String> publicCardsList;
     private Map<String, Integer> otherFavorTokensMap;
-    private Map<String, WindowPatternCard> otherSchemeCardsMap;
+    private Map<String, String[][]> otherSchemeCardsMap;
+    private Map<String, String> otherSchemeCardNamesMap;
     private List<String> players;
     private String[][] mySchemeCard;
     private int myTokens;
@@ -66,6 +66,7 @@ public class Gui {
 
         otherFavorTokensMap = new HashMap<>();
         otherSchemeCardsMap = new HashMap<>();
+        otherSchemeCardNamesMap = new HashMap<>();
         toolCardsList = new ArrayList<>();
         publicCardsList = new ArrayList<>();
         players = new ArrayList<>();
@@ -100,7 +101,7 @@ public class Gui {
         return dicesList;
     }
 
-    public Map<String, WindowPatternCard> getOtherSchemeCardsMap() {
+    public Map<String, String[][]> getOtherSchemeCardsMap() {
         return otherSchemeCardsMap;
     }
 
@@ -256,7 +257,7 @@ public class Gui {
         stillPlaying = false;
     }
 
-    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards, Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         reconnection = true;
         this.myTokens = myTokens;
         parseToolcards(toolcards);
@@ -269,6 +270,7 @@ public class Gui {
         onReserve(reserve);
         otherFavorTokensMap = otherTokens;
         otherSchemeCardsMap = otherSchemeCards;
+        this.otherSchemeCardNamesMap = otherSchemeCardNamesMap;
         this.toolcardsPrices = toolcardsPrices;
         if (schemeCardChosen) {
             mySchemeCard = schemeCard;
@@ -316,9 +318,10 @@ public class Gui {
         }
     }
 
-    public void onOtherSchemeCards(WindowPatternCard window, String name) {
+    public void onOtherSchemeCards(String[][] window, String name, String cardName) {
+        otherSchemeCardNamesMap.put(name, cardName);
         otherSchemeCardsMap.put(name, window);
-        if (gameBoardHandlerMulti != null) gameBoardHandlerMulti.onOtherSchemeCards(window, name);
+        if (gameBoardHandlerMulti != null) gameBoardHandlerMulti.onOtherSchemeCards(window, name, cardName);
     }
 
     public void onOtherTurn(String name) {
@@ -454,7 +457,7 @@ public class Gui {
             }
         }
         gameBoardHandlerMulti.initializeFavorTokens(otherFavorTokensMap);
-        gameBoardHandlerMulti.initializeSchemeCards(otherSchemeCardsMap);
+        gameBoardHandlerMulti.initializeSchemeCards(otherSchemeCardsMap, otherSchemeCardNamesMap);
     }
 
     public void onAfterWindowChoiceSingleplayer() {

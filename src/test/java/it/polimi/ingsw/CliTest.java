@@ -30,7 +30,7 @@ public class CliTest {
         cli.onMyFavorTokens(3);
         cli.showFavorTokens();
         cli.onOtherFavorTokens(4, "player2");
-        cli.onOtherSchemeCards(new AuroraSagradis(), "player2");
+        //cli.onOtherSchemeCards(new AuroraSagradis(), "player2");
         cli.onRoundTrack("0");
         List<String> windows = new ArrayList<>();
         windows.add(new AuroraSagradis().toString());

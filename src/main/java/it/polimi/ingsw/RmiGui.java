@@ -1,7 +1,6 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
@@ -60,7 +59,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onAfterWindowChoice() {
-        if(single)
+        if (single)
             gui.onAfterWindowChoiceSingleplayer();
         else
             gui.onAfterWindowChoiceMultiplayer();
@@ -77,7 +76,9 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onChoosePrivateCard() { gui.onChoosePrivateCard(); }
+    public void onChoosePrivateCard() {
+        gui.onChoosePrivateCard();
+    }
 
     @Override
     public void onMyWindow(String[][] window) {
@@ -95,8 +96,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onOtherSchemeCards(WindowPatternCard window, String name) {
-        gui.onOtherSchemeCards(window, name);
+    public void onOtherSchemeCards(String[][] window, String name, String cardName) {
+        gui.onOtherSchemeCards(window, name, cardName);
     }
 
     @Override
@@ -135,8 +136,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard,String schemeCardName, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
-        gui.onAfterReconnection(toolcards, publicCards, privateCards, reserve, roundTrack, myTokens, schemeCard,schemeCardName, otherTokens, otherSchemeCards, schemeCardChosen, toolcardsPrices);
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards, Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+        gui.onAfterReconnection(toolcards, publicCards, privateCards, reserve, roundTrack, myTokens, schemeCard, schemeCardName, otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolcardsPrices);
     }
 
     @Override

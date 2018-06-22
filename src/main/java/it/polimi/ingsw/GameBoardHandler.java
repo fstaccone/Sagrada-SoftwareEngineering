@@ -510,7 +510,6 @@ public class GameBoardHandler {
             for (int j = 0; j < 5; j++) {
                 String[] parts = window[i][j].split(",");
                 String temp=(parts[2].replaceAll(" ",""));
-
                 if ((temp.substring(0,temp.length()-2)).equals("null")) {
                     setImageInSlot(i, j);
                 } else {
@@ -688,7 +687,7 @@ public class GameBoardHandler {
             useButton.setVisible(true);
 
             imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));//SOLO UNA PROVA
+            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
             imageView1.setLayoutX(63);
@@ -971,7 +970,7 @@ public class GameBoardHandler {
             toolPane.setVisible(true);
             useButton.setVisible(true);
             imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));//SOLO UNA PROVA
+            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
             imageView1.setLayoutX(63);
