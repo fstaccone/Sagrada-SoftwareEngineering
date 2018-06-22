@@ -37,7 +37,6 @@ public class TurnManagerMultiplayer implements Runnable {
         this.timerExpired = true;
     }
 
-
     @Override
     public void run() {
         try {

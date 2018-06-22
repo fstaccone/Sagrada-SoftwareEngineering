@@ -403,7 +403,7 @@ public class Cli {
     }
 
     private class KeyboardHandler extends Thread {
-        String parts[];
+        String[] parts;
         Integer toolNumber1;
         Integer toolNumber2;
         Integer toolNumber3;
