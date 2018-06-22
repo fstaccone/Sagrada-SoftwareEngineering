@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.AuroraSagradis;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.Industria;
 import it.polimi.ingsw.socket.ClientController;
@@ -30,7 +31,14 @@ public class CliTest {
         cli.onMyFavorTokens(3);
         cli.showFavorTokens();
         cli.onOtherFavorTokens(4, "player2");
-        //cli.onOtherSchemeCards(new AuroraSagradis(), "player2");
+        WindowPatternCard card = new AuroraSagradis();
+        String[][] schemeCard = new String[4][5];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                schemeCard[i][j] = card.getWindow()[i][j].toString();
+            }
+        }
+        cli.onOtherSchemeCards(schemeCard, "player2");
         cli.onRoundTrack("0");
         List<String> windows = new ArrayList<>();
         windows.add(new AuroraSagradis().toString());
@@ -38,7 +46,14 @@ public class CliTest {
         cli.onWindowChoice(windows);
         cli.onYourTurn(true, "[1_blue,2_blue]", 1, 2);
         cli.onAfterWindowChoice();
-        //cli.onMyWindow(new Industria());
+        WindowPatternCard playerCard = new Industria();
+        String[][] playerSchemeCard = new String[4][5];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                playerSchemeCard[i][j] = playerCard.getWindow()[i][j].toString();
+            }
+        }
+        cli.onMyWindow(playerSchemeCard);
         cli.onOtherTurn("player2");
 
         List<String> cards = new ArrayList<>();
