@@ -28,7 +28,7 @@ public class Cli {
     private List<String> publicCardsList;
     private List<ToolCommand> toolCommands;
     private List<String> privateCard;
-    private WindowPatternCard mySchemeCard;
+    private String[][] mySchemeCard;
     private int myFavorTokens;
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
@@ -222,7 +222,7 @@ public class Cli {
         printer.flush();
     }
 
-    public void onMyWindow(WindowPatternCard window) {
+    public void onMyWindow(String[][] window) {
         this.mySchemeCard = window;
     }
 
@@ -326,7 +326,7 @@ public class Cli {
      * @param toolcardsPrices  is the price of tool cards at this state of the match
      */
     public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens,
-                                    WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards,
+                                    String[][] mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards,
                                     boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
@@ -355,7 +355,15 @@ public class Cli {
     }
 
     public void showMySchemeCard() {
-        printer.println("\nLa tua carta schema è: " + mySchemeCard + "\n");
+        printer.println("\nLa tua carta schema è: \n");
+        for(String row[]: mySchemeCard) {
+            printer.print("[");
+            for (String content : row) {
+                printer.print(content+",\t");
+            }
+            printer.print("]");
+            printer.println();
+        }
         printer.flush();
     }
 
@@ -806,7 +814,7 @@ public class Cli {
 
                                 }
                                 else {
-                                    printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!");
+                                    printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!\n");
                                     printer.flush();
                                 }
                             }

@@ -194,7 +194,7 @@ public class GameBoardHandlerSingle {
         });
     }
 
-    public void setMyWindow(WindowPatternCard window) {
+    public void setMyWindow(String[][]  window) {
         gameBoardHandler.setMySchemeCard(playerWindowPatternCard, window);
     }
 

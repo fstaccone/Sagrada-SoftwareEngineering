@@ -38,7 +38,7 @@ public class CliTest {
         cli.onWindowChoice(windows);
         cli.onYourTurn(true, "[1_blue,2_blue]", 1, 2);
         cli.onAfterWindowChoice();
-        cli.onMyWindow(new Industria());
+        //cli.onMyWindow(new Industria());
         cli.onOtherTurn("player2");
 
         List<String> cards = new ArrayList<>();

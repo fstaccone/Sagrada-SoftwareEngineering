@@ -344,10 +344,10 @@ public class WindowPatternCard implements Serializable{
         String newline = "\n";
 
         result.append(newline);
-        result.append("Name: ");
+        result.append("Nome: ");
         result.append(this.name);
         result.append(newline);
-        result.append("Difficulty: ");
+        result.append("Difficoltà: ");
         result.append(this.difficulty);
         result.append(newline);
         result.append("--------------------------");

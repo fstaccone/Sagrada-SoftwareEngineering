@@ -80,7 +80,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     public void onChoosePrivateCard() { gui.onChoosePrivateCard(); }
 
     @Override
-    public void onMyWindow(WindowPatternCard window) {
+    public void onMyWindow(String[][] window) {
         gui.onMyWindow(window);
     }
 
@@ -135,8 +135,8 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
-        gui.onAfterReconnection(toolcards, publicCards, privateCards, reserve, roundTrack, myTokens, schemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolcardsPrices);
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard,String schemeCardName, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+        gui.onAfterReconnection(toolcards, publicCards, privateCards, reserve, roundTrack, myTokens, schemeCard,schemeCardName, otherTokens, otherSchemeCards, schemeCardChosen, toolcardsPrices);
     }
 
     @Override

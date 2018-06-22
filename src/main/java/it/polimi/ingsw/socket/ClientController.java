@@ -285,7 +285,7 @@ public class ClientController implements ResponseHandler {
         if (socketCli != null) {
             socketCli.getCli().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen, response.toolcardsPrices);
         } else
-            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen, response.toolcardsPrices);
+            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard,response.schemeCardName, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen, response.toolcardsPrices);
     }
 
     @Override

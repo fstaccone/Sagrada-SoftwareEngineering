@@ -42,7 +42,7 @@ public class Gui {
     private Map<String, Integer> otherFavorTokensMap;
     private Map<String, WindowPatternCard> otherSchemeCardsMap;
     private List<String> players;
-    private WindowPatternCard mySchemeCard;
+    private String[][] mySchemeCard;
     private int myTokens;
     private boolean dicePlaced;
     private Map<String, Integer> toolcardsPrices;
@@ -256,7 +256,7 @@ public class Gui {
         stillPlaying = false;
     }
 
-    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, WindowPatternCard schemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         reconnection = true;
         this.myTokens = myTokens;
         parseToolcards(toolcards);
@@ -272,7 +272,7 @@ public class Gui {
         this.toolcardsPrices = toolcardsPrices;
         if (schemeCardChosen) {
             mySchemeCard = schemeCard;
-            String s = schemeCard.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+            String s = schemeCardName.toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
             playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
         }
     }
@@ -289,7 +289,7 @@ public class Gui {
         }
     }
 
-    public void onMyWindow(WindowPatternCard window) {
+    public void onMyWindow(String[][] window) {
         if (single) {
             if (gameBoardHandlerSingle != null) {
                 gameBoardHandlerSingle.setMyWindow(window);
