@@ -475,7 +475,7 @@ public class GameBoardHandler {
         });
     }
 
-    public void setMySchemeCard(Pane pane, WindowPatternCard window) {
+    public void setMySchemeCard(Pane pane, String[][] window) {
         if (pane.getChildren() != null) {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
@@ -505,12 +505,16 @@ public class GameBoardHandler {
         }
 
         Platform.runLater(() -> pane.getChildren().add(schemeCard));
-        Square[][] temp = window.getWindow();
-        for (int i = 0; i < window.getRows(); i++) {
-            for (int j = 0; j < window.getColumns(); j++) {
-                if (temp[i][j].occupiedSquare()) {
-                    String dice = temp[i][j].getDice().toString().toLowerCase();
-                    dice = dice.substring(1, dice.length() - 1).replace(" ", "_");
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                String[] parts = window[i][j].split(",");
+                String temp=(parts[2].replaceAll(" ",""));
+                if ((temp.substring(0,temp.length()-2)).equals("null")) {
+                    setImageInSlot(i, j);
+                } else {
+                    String dice = parts[2].toLowerCase();
+                    dice = dice.substring(2, dice.length() - 3).replace(" ", "_");
                     String url = DICE_IMAGES_PATH + dice + ".png";
                     Image img = new Image(url);
                     ImageView imgView = new ImageView(img);
@@ -523,8 +527,6 @@ public class GameBoardHandler {
                     int finalI = i;
                     int finalJ = j;
                     Platform.runLater(() -> schemeCard.add(imgView, finalJ, finalI));
-                } else {
-                    setImageInSlot(i, j);
                 }
             }
         }
@@ -685,7 +687,7 @@ public class GameBoardHandler {
             useButton.setVisible(true);
 
             imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));//SOLO UNA PROVA
+            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
             imageView1.setLayoutX(63);
@@ -968,7 +970,7 @@ public class GameBoardHandler {
             toolPane.setVisible(true);
             useButton.setVisible(true);
             imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));//SOLO UNA PROVA
+            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
             imageView1.setLayoutX(63);

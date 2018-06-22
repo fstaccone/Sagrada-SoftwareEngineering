@@ -1,7 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.gameobjects.Square;
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -153,20 +151,20 @@ public class GameBoardHandlerMulti {
         labels.put(3, label3);
     }
 
-    public void initializeSchemeCards(Map<String, WindowPatternCard> map) {
+    public void initializeSchemeCards(Map<String, String[][]> map, Map<String, String> namesMap) {
         for (String name : map.keySet()) {
             for (Label label : labelsList) {
                 if (label.getText().equals(name)) {
                     int a = Integer.parseInt(label.getId().substring(5, 6));
                     switch (a) {
                         case 1:
-                            setOtherSchemeCards(pane1, map.get(name));
+                            setOtherSchemeCards(pane1, map.get(name), namesMap.get(name));
                             break;
                         case 2:
-                            setOtherSchemeCards(pane2, map.get(name));
+                            setOtherSchemeCards(pane2, map.get(name), namesMap.get(name));
                             break;
                         case 3:
-                            setOtherSchemeCards(pane3, map.get(name));
+                            setOtherSchemeCards(pane3, map.get(name), namesMap.get(name));
                             break;
                     }
 
@@ -175,9 +173,9 @@ public class GameBoardHandlerMulti {
         }
     }
 
-    private void setOtherSchemeCards(Pane pane, WindowPatternCard window) {
+    private void setOtherSchemeCards(Pane pane, String[][] window, String cardName) {
         if (window != null) {//DA CONTROLLARE
-            String s = window.getName().toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
+            String s = cardName.toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
             String imgURL = GameBoardHandler.WINDOW_PATTERN_CARDS_PATH + s + ".png";
             BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
                     BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -208,12 +206,14 @@ public class GameBoardHandlerMulti {
         }
         Platform.runLater(() -> pane.getChildren().add(schemeCard));
         assert window != null;
-        Square[][] temp = window.getWindow();
-        for (int i = 0; i < window.getRows(); i++) {
-            for (int j = 0; j < window.getColumns(); j++) {
-                if (temp[i][j].occupiedSquare()) {
-                    String dice = temp[i][j].getDice().toString().toLowerCase();
-                    dice = dice.substring(1, dice.length() - 1).replace(" ", "_");
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                String[] parts = window[i][j].split(",");
+                String temp = (parts[2].replaceAll(" ", ""));
+                if (!((temp.substring(0, temp.length() - 2)).equals("null"))) {
+                    String dice = parts[2].toLowerCase();
+                    dice = dice.substring(2, dice.length() - 3).replace(" ", "_");
                     String url = GameBoardHandler.DICE_IMAGES_PATH + dice + ".png";
                     Image img = new Image(url);
                     ImageView imgView = new ImageView(img);
@@ -228,20 +228,20 @@ public class GameBoardHandlerMulti {
         }
     }
 
-    public void onOtherSchemeCards(WindowPatternCard window, String name) {
+    public void onOtherSchemeCards(String[][] window, String name, String cardName) {
 
         for (Label label : labelsList) {
             if (label.getText().equals(name)) {
                 int a = Integer.parseInt(label.getId().substring(5, 6));
                 switch (a) {
                     case 1:
-                        setOtherSchemeCards(pane1, window);
+                        setOtherSchemeCards(pane1, window, cardName);
                         break;
                     case 2:
-                        setOtherSchemeCards(pane2, window);
+                        setOtherSchemeCards(pane2, window, cardName);
                         break;
                     case 3:
-                        setOtherSchemeCards(pane3, window);
+                        setOtherSchemeCards(pane3, window, cardName);
                         break;
                 }
                 break;
@@ -275,7 +275,7 @@ public class GameBoardHandlerMulti {
     }
 
     public void onGameClosing() {
-        gameBoardHandler.appendToTextArea("Congratulazioni! Sei il vincitore. Sei rimasto da solo in gioco.\n\n Clicca su ESCI per terminare");
+        gameBoardHandler.appendToTextArea("Congratulazioni! Sei il vincitore. Sei rimasto da solo in gioco.\n\nClicca su ESCI per terminare");
         disableActionsOnGameBoard();
     }
 
@@ -445,7 +445,7 @@ public class GameBoardHandlerMulti {
         });
     }
 
-    public void setMyWindow(WindowPatternCard window) {
+    public void setMyWindow(String[][] window) {
         gameBoardHandler.setMySchemeCard(playerWindowPatternCard, window);
     }
 

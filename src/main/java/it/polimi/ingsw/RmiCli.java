@@ -59,7 +59,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onMyWindow(WindowPatternCard window) {
+    public void onMyWindow(String[][] window) {
         cli.onMyWindow(window);
     }
 
@@ -73,7 +73,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         cli.onOtherFavorTokens(value, name);
     }
 
-    public void onOtherSchemeCards(WindowPatternCard scheme, String name) {
+    public void onOtherSchemeCards(String[][] scheme, String name, String cardName) {
         cli.onOtherSchemeCards(scheme, name);
     }
 
@@ -118,9 +118,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
     }
 
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens,
-                                    WindowPatternCard mySchemeCard, Map<String, Integer> otherTokens, Map<String, WindowPatternCard> otherSchemeCards,
-                                    boolean schemeCardChosen, Map<String, Integer> toolCardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens, String[][] mySchemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards,Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolCardsPrices) {
         cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices);
     }
 

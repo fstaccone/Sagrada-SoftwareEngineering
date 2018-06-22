@@ -208,17 +208,24 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param result boolean giving information about the scheme card status.
      */
     private void schemeCardToBeUpdated(boolean result) {
+
+        String [][] schemeCard= new String[4][5];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++)
+                schemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
+        }
+
         if (result) {
             if (observerRmi != null) {
                 try {
-                    observerRmi.onMyWindow(player.getSchemeCard());
+                    observerRmi.onMyWindow(schemeCard);
                 } catch (RemoteException e) {
                     terminateMatch();
                     System.out.println("Match ended due to disconnection!");
                 }
             } else if (observerSocket != null) {
                 try {
-                    observerSocket.writeObject(new MyWindowResponse(player.getSchemeCard()));
+                    observerSocket.writeObject(new MyWindowResponse(schemeCard));
                     observerSocket.reset();
                 } catch (IOException e) {
                     terminateMatch();

@@ -5,9 +5,9 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class MyWindowResponse implements Response {
 
-    public WindowPatternCard window;
+    public String[][] window;
 
-    public MyWindowResponse(WindowPatternCard window) {
+    public MyWindowResponse(String[][] window) {
         this.window = window;
     }
 
