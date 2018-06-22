@@ -23,14 +23,14 @@ public class ClientController implements ResponseHandler {
     private SocketCli socketCli;
     private SocketGui socketGui;
     private Colors diceColor;
+    private boolean single;
 
-
-    public ClientController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler) {
+    public ClientController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler, boolean single) {
         this.in = in;
         this.out = out;
         this.loginHandler = loginHandler;
+        this.single=single;
     }
-
     public void request(Request request) {
         try {
             out.writeObject(request);
@@ -177,11 +177,15 @@ public class ClientController implements ResponseHandler {
     }
 
     @Override
-    public void handle(AfterWindowChoiseResponse response) {
+    public void handle(AfterWindowChoiceResponse response) {
         if (socketCli != null) {
             socketCli.getCli().onAfterWindowChoice();
-        } else
-            socketGui.getGui().onAfterWindowChoiceMultiplayer();
+        } else {
+                if(single)
+                    socketGui.getGui().onAfterWindowChoiceSingleplayer();
+                else
+                    socketGui.getGui().onAfterWindowChoiceMultiplayer();
+        }
     }
 
     @Override

@@ -37,7 +37,7 @@
             <font>
                 <Font name="Courier New Bold" size="18.0" />
             </font></Button>
-        <TextArea fx:id="textArea" layoutX="185.0" layoutY="24.0" prefHeight="69.0" prefWidth="630.0" />
+        <TextArea fx:id="textArea" layoutX="185.0" layoutY="24.0" prefHeight="69.0" prefWidth="630.0" editable="false" />
         <ImageView fx:id="privateObjCard0" fitHeight="364.0" fitWidth="239.0" layoutX="14.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true" />
         <Label layoutX="75.0" layoutY="137.0" prefHeight="37.0" prefWidth="336.0" text="LE TUE CARTE OBIETTIVO PRIVATO" textFill="WHITE" wrapText="true">
             <font>

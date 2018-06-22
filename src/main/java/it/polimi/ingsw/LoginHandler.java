@@ -337,7 +337,7 @@ public class LoginHandler implements Initializable {
             socket = new Socket(serverAddress, socketPort);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            controllerSocket = new ClientController(in, out, this);
+            controllerSocket = new ClientController(in, out, this, singleplayer);
             if (isCli && !singleplayer) {
                 waitingRoomCli.setClientController(controllerSocket);
             }

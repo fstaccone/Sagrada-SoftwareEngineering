@@ -190,7 +190,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             }
         } else if (observerSocket != null) {
             try {
-                observerSocket.writeObject(new AfterWindowChoiseResponse());
+                observerSocket.writeObject(new AfterWindowChoiceResponse());
                 observerSocket.reset();
             } catch (IOException e) {
                 terminateMatch();
@@ -333,7 +333,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param diceChosen Dice from the reserve whose value is modified.
      * @param incrOrDecr Choice made by the player.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String name) {
@@ -365,7 +365,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param finalX Row index of the chosen dice new position.
      * @param finalY Column index of the chosen dice new position.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard2or3(int diceToBeSacrificed, int n, int startX, int startY, int finalX, int finalY, String name) {
@@ -403,7 +403,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param finalX2 Row index of the second chosen dice new position.
      * @param finalY2 Column index of the second chosen dice new position.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard4(int diceToBeSacrificed, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
@@ -439,7 +439,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param roundChosen Round slot in the round track from which the player wants to take a dice.
      * @param diceChosenFromRound Position index of the chosen dice in the round slot.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard5(int diceToBeSacrificed, int diceChosen, int roundChosen, int diceChosenFromRound, String name) {
@@ -482,7 +482,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
      * @param diceChosen Dice from the reserve to re roll.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard6(int diceToBeSacrificed, int diceChosen, String name) {
@@ -508,7 +508,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * This tool card allows the player to re roll all the dices in the reserve.
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard7(int diceToBeSacrificed, String name) {
@@ -532,7 +532,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * This tool card allows the player to choose and place a second dice in his first turn.
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard8(int diceToBeSacrificed, String name) {
@@ -561,7 +561,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param finalX1 Row index of the chosen dice new position.
      * @param finalY1 Column index of the chosen dice new position.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard9(int diceToBeSacrificed, int diceChosen, int finalX1, int finalY1, String name) {
@@ -592,7 +592,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
      * @param diceChosen Dice from the reserve to put upside down.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard10(int diceToBeSacrificed, int diceChosen, String name) {
@@ -617,7 +617,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
      * @param diceChosen Dice from the reserve to put back in the dices bag.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard11(int diceToBeSacrificed, int diceChosen, String name) {
@@ -649,7 +649,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      * @param finalX2 Row index of the second chosen dice new position.
      * @param finalY2 Column index of the second chosen dice new position.
      * @param name Player's name.
-     * @return True if the player hasn't used other toll cards in this turn and the card effect is applied correctly.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
     public boolean useToolCard12(int diceToBeSacrificed, int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {

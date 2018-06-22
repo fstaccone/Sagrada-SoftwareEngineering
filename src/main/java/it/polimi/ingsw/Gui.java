@@ -488,6 +488,7 @@ public class Gui {
         gameBoardHandlerSingle.setPrivateCards(privateCards.get(0), privateCards.get(1));
         gameBoardHandlerSingle.setPublicCards(publicCardsList);
         gameBoardHandlerSingle.setReserve(dicesList);
+        gameBoardHandlerSingle.appendToTextArea("Fai la tua prima mossa!");
     }
 
     public void onChoosePrivateCard() {

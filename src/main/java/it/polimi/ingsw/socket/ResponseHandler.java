@@ -19,7 +19,7 @@ public interface ResponseHandler {
 
     void handle(MyWindowResponse response);
 
-    void handle(AfterWindowChoiseResponse response);
+    void handle(AfterWindowChoiceResponse response);
 
     void handle(InitializationResponse response);
 

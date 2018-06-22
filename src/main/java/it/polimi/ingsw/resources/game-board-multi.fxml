@@ -71,7 +71,7 @@
         </Label>
     </Pane>
 
-    <TextArea fx:id="textArea" layoutX="956.0" layoutY="27.0" prefHeight="144.0" prefWidth="427.0" wrapText="true"/>
+    <TextArea fx:id="textArea" layoutX="956.0" layoutY="27.0" prefHeight="144.0" prefWidth="427.0" wrapText="true" editable="false"/>
     <Button id="gameBoardQuit" fx:id="quit" layoutX="1258.0" layoutY="186.0" mnemonicParsing="false"
             onAction="#onQuitClicked" prefHeight="40.0" prefWidth="92.0" text="ESCI" textFill="WHITE">
         <font>

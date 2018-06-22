@@ -1484,6 +1484,8 @@ public class GameBoardHandler {
                             if (socketController.isDicePlaced()) {
                                 socketController.setDicePlaced(false);//to reset the value
                                 appendToTextArea("Dado piazzato correttamente!");
+                                concludeButton.setVisible(false);
+                                resetToolValues();
                             } else {
                                 appendToTextArea("Non puoi piazzare lì il tuo dado! Scegli altre coordinate!");
                             }
@@ -1497,7 +1499,7 @@ public class GameBoardHandler {
 
         private boolean waitForToolEffectAppliedResponse() {
             try {
-                Thread.sleep(1000); // todo: controllare, ha senso ancora?
+                Thread.sleep(500); // todo: controllare, ha senso ancora?
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
@@ -1532,7 +1534,7 @@ public class GameBoardHandler {
 
     private void checkBooleanSingle(boolean done, int i) {
         if (done) {
-            appendToTextArea("Carta utensile " + i + " utilizzata correttamente!");
+            appendToTextArea("Carta utensile " + i + " utilizzata correttamente! Non potrai più utilizzarla per il resto della partita!");
 
         } else {
             appendToTextArea("Carta utensile " + i + " non applicata, occhio a non averla già utilizzata o a come va utizzata!\n");

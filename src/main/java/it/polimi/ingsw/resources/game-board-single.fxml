@@ -13,7 +13,7 @@
     </stylesheets>
     <Pane fx:id="playerWindowPatternCard" layoutX="740.0" layoutY="559.0" prefHeight="300.0" prefWidth="340.0"/>
     <Pane id="reserve" fx:id="reserve" layoutX="768.0" layoutY="259.0" prefHeight="261.0" prefWidth="285.0"/>
-    <TextArea fx:id="textArea" layoutX="740.0" layoutY="27.0" prefHeight="127.0" prefWidth="340.0" wrapText="true"/>
+    <TextArea fx:id="textArea" layoutX="740.0" layoutY="27.0" prefHeight="127.0" prefWidth="340.0" wrapText="true" editable="false"/>
     <Pane fx:id="roundTrack" layoutX="257.0" layoutY="35.0" prefHeight="166.0" prefWidth="320.0"/>
     <Label layoutX="33.0" layoutY="10.0" prefHeight="31.0" prefWidth="220.0" text="TRACCIATO DEI ROUND:"
            textAlignment="CENTER" textFill="#251494">
