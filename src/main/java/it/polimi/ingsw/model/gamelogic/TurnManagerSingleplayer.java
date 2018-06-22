@@ -41,6 +41,7 @@ public class TurnManagerSingleplayer implements Runnable {
         } catch (InterruptedException e) {
             match.terminateMatch();
             System.out.println("Match singleplayer interrotto");
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -248,12 +249,12 @@ public class TurnManagerSingleplayer implements Runnable {
             }
         }
 
-        waitForCardChoise();
+        waitForCardChoice();
 
         match.calculateFinalScore();
     }
 
-    private void waitForCardChoise() {
+    private void waitForCardChoice() {
         while (!(match.isPrivateCardChosen())) {
             synchronized (match.getLock()) {
                 try {
@@ -261,6 +262,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 } catch (InterruptedException e) {
                     match.terminateMatch();
                     System.out.println("Match singleplayer interrotto");
+                    Thread.currentThread().interrupt();
                 }
             }
         }

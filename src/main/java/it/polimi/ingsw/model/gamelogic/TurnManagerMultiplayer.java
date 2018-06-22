@@ -46,6 +46,7 @@ public class TurnManagerMultiplayer implements Runnable {
             match.terminateMatch();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         } catch (RemoteException e) {
             e.printStackTrace();
             System.out.println("Remote exception from TurnManagerMultiplayer");
