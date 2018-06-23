@@ -14,10 +14,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
 
 public class ControllerTest {
 
@@ -74,7 +77,8 @@ public class ControllerTest {
     public void quitGame() throws RemoteException {
         Lobby lobby = new Lobby(100000, 100000);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
+        controller.createMatch("Ancona",1,objectOutputStream);
         controller.quitGame("Ancona", true);
         Assert.assertEquals(0, lobby.getSingleplayerMatches().size());
         lobby.addToWaitingPlayers("Ancona");
