@@ -75,16 +75,16 @@ public class LobbyTest {
     @Test
     public void addPlayer(){
         Lobby lobby = new Lobby(10, 10);
-        lobby.addPlayer("CowboyBebop");
+        lobby.addToWaitingPlayers("CowboyBebop");
         Assert.assertEquals("CowboyBebop", lobby.getWaitingPlayers().get(0));
     }
 
     @Test
     public void startMatch(){
         Lobby lobby = new Lobby(1000000, 10);
-        lobby.addPlayer("Archi");
-        lobby.addPlayer("Bovalino");
-        lobby.addPlayer("Condofuri");
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.addToWaitingPlayers("Condofuri");
         lobby.startMatch();
         Assert.assertEquals("Archi", lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getName());
         Assert.assertEquals("Bovalino", lobby.getMultiplayerMatches().get("Condofuri").getPlayer("Bovalino").getName());
@@ -95,9 +95,9 @@ public class LobbyTest {
     @Test
     public void disconnect(){
         Lobby lobby = new Lobby(10000000, 10);
-        lobby.addPlayer("Archi");
-        lobby.addPlayer("Bovalino");
-        lobby.addPlayer("Condofuri");
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.addToWaitingPlayers("Condofuri");
         lobby.startMatch();
         lobby.disconnect("Bovalino");
         Assert.assertEquals(ConnectionStatus.DISCONNECTED, lobby.checkName("Bovalino"));
@@ -106,9 +106,9 @@ public class LobbyTest {
     @Test
     public void reconnect(){
         Lobby lobby = new Lobby(1000000000, 10);
-        lobby.addPlayer("Archi");
-        lobby.addPlayer("Bovalino");
-        lobby.addPlayer("Condofuri");
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.addToWaitingPlayers("Condofuri");
         lobby.startMatch();
         System.out.println("numero1 " + lobby.getMultiplayerMatches().get("Bovalino").getPlayers().size());
         lobby.disconnect("Bovalino");

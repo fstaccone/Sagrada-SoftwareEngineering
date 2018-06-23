@@ -252,6 +252,7 @@ public class TurnManagerSingleplayer implements Runnable {
         waitForCardChoice();
 
         match.calculateFinalScore();
+
     }
 
     private void waitForCardChoice() {

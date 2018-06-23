@@ -43,7 +43,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public void addPlayer(String name) {
         this.lobby.addUsername(name);
-        this.lobby.addPlayer(name);
+        this.lobby.addToWaitingPlayers(name);
     }
 
     @Override

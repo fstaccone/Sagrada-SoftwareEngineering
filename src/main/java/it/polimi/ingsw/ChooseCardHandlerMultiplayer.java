@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
 public class ChooseCardHandlerMultiplayer implements Initializable {
 
     private ChooseCardHandler parent;
+    private boolean exit;
 
     @FXML
     Button card0;
@@ -42,11 +43,16 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         parent = new ChooseCardHandler(false, false);
         parent.initialize(card0, card1, card2, card3);
+        exit = false;
     }
 
     @FXML
     public void onQuitClicked() throws RemoteException {
-        parent.onQuitClicked();
+        if(!exit) {
+            parent.onQuitClicked();
+        } else {
+            parent.terminateGame();
+        }
     }
 
     @FXML
@@ -110,4 +116,20 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
         Image privateObjCardImg = new Image(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard + ".png");
         privateObjCard.setImage(privateObjCardImg);
     }
+
+    public void onGameClosing() {
+        parent.appendToTextArea(textArea, "Congratulazioni! Sei il vincitore. Sei rimasto da solo in gioco.\n\nClicca su ESCI per terminare");
+        disableActionsOnBoard();
+        exit = true;
+    }
+
+    private void disableActionsOnBoard(){
+        card0.setDisable(true);
+        card1.setDisable(true);
+        card2.setDisable(true);
+        card3.setDisable(true);
+        play.setDisable(true);
+        privateObjCard.setDisable(true);
+    }
+
 }

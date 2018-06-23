@@ -42,7 +42,6 @@ public class TurnManagerMultiplayer implements Runnable {
         try {
             initializeClients();
             turnManager();
-            match.terminateMatch();
         } catch (InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();

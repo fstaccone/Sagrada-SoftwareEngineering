@@ -140,7 +140,6 @@ public class Gui {
         } else {
             if (chooseCardHandlerMultiplayer != null) {
                 chooseCardHandlerMultiplayer.setTurn(false);
-                gameBoardHandlerMulti.initializeActions();
             }
         }
     }
@@ -238,7 +237,11 @@ public class Gui {
 
     public void onGameClosing() {
         if (stillPlaying) {
-            gameBoardHandlerMulti.onGameClosing();//da fare anche su choosecardhandler
+            if (gameBoardHandlerMulti != null) {
+                gameBoardHandlerMulti.onGameClosing();
+            } else if(chooseCardHandlerMultiplayer != null){
+                chooseCardHandlerMultiplayer.onGameClosing();
+            }
         }
         stillPlaying = false;
     }

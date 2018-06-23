@@ -1590,12 +1590,12 @@ public class GameBoardHandler {
             window.close();
             if (rmiController != null) {
                 try {
-                    rmiController.quitGame(username, false);
+                    rmiController.quitGame(username, single);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             } else {
-                socketController.request(new QuitGameRequest(username, false));
+                socketController.request(new QuitGameRequest(username, single));
             }
             System.exit(0);
         }

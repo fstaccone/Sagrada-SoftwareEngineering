@@ -226,35 +226,43 @@ public class Lobby {
                 match.goThrough();
             }
 
-            // to check if the game must be closed
+            // check if the game must be closed
             if (match.checkConnection() < 2) {
-                for (PlayerMultiplayer player : match.getPlayers()) {
-                    if (!player.getName().equals(name) && player.getStatus().equals(ConnectionStatus.CONNECTED)) {
-                        match.setStillPlaying(false);
-                        // notifies to the player he is the only still in game
-                        if (match.getRemoteObservers().get(player) != null) {
-                            try {
-                                if(!match.getTurnManagerMultiplayer().isTimerExpired()){
-                                    match.getTurnManagerMultiplayer().setTimerExpiredTrue();
-                                }
-                                match.getRemoteObservers().get(player).onGameClosing();
-
-                            } catch (RemoteException e) {
-                                System.out.println("Partita terminata!");
-                            }
-                            match.getRemoteObservers().remove(player);
-                        } else {
-                            match.getSocketObservers().get(player).writeObject(new ClosingGameResponse());
-                            match.getSocketObservers().get(player).reset();
-                            match.getSocketObservers().remove(player);
-
-                        }
-                    }
-                }
+                notifyAndRemoveObservers(name);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("From Lobby: problem in disconnecting player " + name + "!");
+        }
+    }
+
+    public void removeMatchMultiplayer(String name) {
+        for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
+            removeUsername(p.getName());
+            multiplayerMatches.remove(p.getName());
+        }
+    }
+
+    private void notifyAndRemoveObservers(String name) throws IOException {
+        MatchMultiplayer match;
+        match = multiplayerMatches.get(name);
+        for (PlayerMultiplayer player : match.getPlayers()) {
+            if (!player.getName().equals(name) && player.getStatus().equals(ConnectionStatus.CONNECTED)) {
+                match.setStillPlaying(false);
+                // notifies to the player he is the only still in game
+                if (match.getRemoteObservers().get(player) != null) {
+                    if (!match.getTurnManagerMultiplayer().isTimerExpired()) {
+                        match.getTurnManagerMultiplayer().setTimerExpiredTrue();
+                    }
+                    match.getRemoteObservers().get(player).onGameClosing();
+                    match.getRemoteObservers().remove(player);
+                } else {
+                    match.getSocketObservers().get(player).writeObject(new ClosingGameResponse());
+                    match.getSocketObservers().get(player).reset();
+                    match.getSocketObservers().remove(player);
+                }
+            }
         }
     }
 
@@ -313,7 +321,7 @@ public class Lobby {
         multiplayerMatches.get(name).afterReconnection(name);
     }
 
-    void addToWaitingPlayers(String name) {
+    public void addToWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
 
             waitingPlayers.add(name);
@@ -405,7 +413,6 @@ public class Lobby {
         remoteObservers.put(name, lobbyObserver);
     }
 
-
     public void observeMatchRemote(String username, MatchObserver observer, boolean single) {
         if (single) {
             singleplayerMatches.get(username).observeMatchRemote(observer);
@@ -422,19 +429,6 @@ public class Lobby {
         return remoteObservers;
     }
 
-    // check if there is a still alive match in which the player must be put todo: potrebbe non servire più
-    public void addPlayer(String name) {
-        /*if (multiplayerMatches.get(name) != null) {
-            for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
-                if (p.getName().equals(name)) {
-                    p.setStatus(ConnectionStatus.CONNECTED);
-                }
-            }
-        } else {*/
-        addToWaitingPlayers(name);
-        // }
-    }
-
     public ConnectionStatus checkName(String name) {
         if (!takenUsernames.keySet().contains(name)) {
             return ConnectionStatus.ABSENT;
@@ -442,6 +436,4 @@ public class Lobby {
             return takenUsernames.get(name);
         }
     }
-
-
 }

@@ -43,8 +43,8 @@ public class ChooseCardHandler {
 
     private Stage window;
 
-    private RemoteController remoteController;
-    private ClientController clientController;
+    private RemoteController controllerRmi;
+    private ClientController controllerSocket;
 
     protected String username;
     private String imgURL;
@@ -65,10 +65,10 @@ public class ChooseCardHandler {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
-            if (remoteController != null)
-                remoteController.quitGame(username, single);
+            if (controllerRmi != null)
+                controllerRmi.quitGame(username, single);
             else
-                clientController.request(new QuitGameRequest(username, single));
+                controllerSocket.request(new QuitGameRequest(username, single));
             System.exit(0);
         }
     }
@@ -102,10 +102,10 @@ public class ChooseCardHandler {
                     default:
                         imgURL = null;
                 }
-                if (remoteController != null)
-                    remoteController.chooseWindow(username, choice, single);
+                if (controllerRmi != null)
+                    controllerRmi.chooseWindow(username, choice, single);
                 else
-                    clientController.request(new ChooseWindowRequest(username, choice, single));
+                    controllerSocket.request(new ChooseWindowRequest(username, choice, single));
             }
         } else {
             appendToTextArea(textArea, "Aspetta il tuo turno per scegliere la carta!");
@@ -114,8 +114,8 @@ public class ChooseCardHandler {
 
     //Initializing
     public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, ClientController clientController, String username) {
-        this.remoteController = remoteController;
-        this.clientController = clientController;
+        this.controllerRmi = remoteController;
+        this.controllerSocket = clientController;
         this.username = username;
         window = windowFromGui;
         Platform.runLater(() -> {
@@ -196,5 +196,13 @@ public class ChooseCardHandler {
 
     public void welcome(TextArea textArea) {
         appendToTextArea(textArea, "Benvenuto in questa nuova partita di Sagrada. Buon divertimento!");
+    }
+
+    public void terminateGame(){
+        if(controllerRmi != null){
+            //controllerRmi.removeMatch(username);
+        } else if(controllerSocket != null){
+            //controllerSocket.request(new TerminateMatchRequest(username));
+        }
     }
 }

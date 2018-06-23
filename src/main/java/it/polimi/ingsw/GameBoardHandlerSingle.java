@@ -1,6 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
+import it.polimi.ingsw.socket.requests.PrivateCardChosenRequest;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -194,7 +194,7 @@ public class GameBoardHandlerSingle {
         });
     }
 
-    public void setMyWindow(String[][]  window) {
+    public void setMyWindow(String[][] window) {
         gameBoardHandler.setMySchemeCard(playerWindowPatternCard, window);
     }
 
@@ -261,6 +261,8 @@ public class GameBoardHandlerSingle {
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+            } else if (gui.getControllerSocket() != null) {
+                gui.getControllerSocket().request(new PrivateCardChosenRequest(gui.getUsername(), 0));
             }
         });
 
@@ -271,6 +273,8 @@ public class GameBoardHandlerSingle {
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+            } else if (gui.getControllerSocket() != null) {
+                gui.getControllerSocket().request(new PrivateCardChosenRequest(gui.getUsername(), 1));
             }
         });
     }

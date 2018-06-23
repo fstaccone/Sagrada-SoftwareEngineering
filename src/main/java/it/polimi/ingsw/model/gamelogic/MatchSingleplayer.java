@@ -14,7 +14,6 @@ import java.rmi.RemoteException;
 public class MatchSingleplayer extends Match implements Runnable {
 
     private int matchId;
-    private String clientIdentifier;
     private PlayerSingleplayer player;
     private TurnManagerSingleplayer turnManager;
     private MatchObserver observerRmi;
@@ -36,7 +35,6 @@ public class MatchSingleplayer extends Match implements Runnable {
         super(lobby);
         this.matchId = matchId;
         this.decksContainer = new DecksContainer(1, difficulty);
-        this.clientIdentifier = name;
         this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
         board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
@@ -330,6 +328,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     @Override
     public void terminateMatch() {
         lobby.removeMatchSingleplayer(player.getName());
+        localThread.interrupt();
     }
 
     /**

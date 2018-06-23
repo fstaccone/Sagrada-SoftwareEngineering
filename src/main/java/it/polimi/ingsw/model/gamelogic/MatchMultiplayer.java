@@ -237,7 +237,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         }
         for (PlayerMultiplayer player : players) {
-            String [][]otherSchemeCard= new String[4][5];
+            String[][] otherSchemeCard = new String[4][5];
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 5; j++)
                     otherSchemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
@@ -869,11 +869,11 @@ public class MatchMultiplayer extends Match implements Runnable {
                 System.out.println("Player " + player.getName() + " disconnected!");
             }
         }
-
     }
 
     @Override
     public void terminateMatch() {
-
+        lobby.removeMatchMultiplayer(players.get(0).getName());
+        localThread.interrupt();
     }
 }
