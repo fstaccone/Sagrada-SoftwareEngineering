@@ -6,10 +6,14 @@ import java.util.List;
 
 public class ProposeWindowResponse implements Response {
 
-    public List<String> list;
+    private List<String> list;
 
     public ProposeWindowResponse(List<String> list) {
         this.list = list;
+    }
+
+    public List<String> getList() {
+        return list;
     }
 
     @Override

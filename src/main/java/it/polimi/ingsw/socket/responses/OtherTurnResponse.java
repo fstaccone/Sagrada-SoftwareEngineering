@@ -4,10 +4,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class OtherTurnResponse implements Response {
 
-    public String name;
+    private String name;
 
     public OtherTurnResponse(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

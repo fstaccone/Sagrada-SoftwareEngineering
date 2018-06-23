@@ -5,14 +5,26 @@ import it.polimi.ingsw.socket.responses.Response;
 
 public class ChooseWindowRequest implements Request {
 
-    public String username;
-    public int value;
-    public boolean single;
+    private String username;
+    private int value;
+    private boolean single;
 
     public ChooseWindowRequest(String username, int value, boolean single) {
         this.username = username;
         this.value = value;
         this.single = single;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public boolean isSingle() {
+        return single;
     }
 
     @Override

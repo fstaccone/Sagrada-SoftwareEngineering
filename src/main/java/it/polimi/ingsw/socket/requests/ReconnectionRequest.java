@@ -5,10 +5,14 @@ import it.polimi.ingsw.socket.responses.Response;
 
 public class ReconnectionRequest implements Request {
 
-    public String username;
+    private String username;
 
     public ReconnectionRequest(String username) {
         this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

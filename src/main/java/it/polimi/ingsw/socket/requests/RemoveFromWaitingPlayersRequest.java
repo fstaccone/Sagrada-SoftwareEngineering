@@ -4,10 +4,15 @@ import it.polimi.ingsw.socket.RequestHandler;
 import it.polimi.ingsw.socket.responses.Response;
 
 public class RemoveFromWaitingPlayersRequest implements Request {
-    public final String name;
+
+    private final String name;
 
     public RemoveFromWaitingPlayersRequest(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

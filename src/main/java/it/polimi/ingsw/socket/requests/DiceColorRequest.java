@@ -6,12 +6,20 @@ import it.polimi.ingsw.socket.responses.Response;
 
 public class DiceColorRequest implements Request {
 
-    public String name;
-    public boolean isSingle;
+    private String name;
+    private boolean isSingle;
 
     public DiceColorRequest(String name, boolean isSingle) {
         this.name = name;
         this.isSingle = isSingle;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isSingle() {
+        return isSingle;
     }
 
     @Override

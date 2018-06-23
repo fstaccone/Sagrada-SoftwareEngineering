@@ -5,11 +5,11 @@ import it.polimi.ingsw.socket.responses.Response;
 
 public class PlaceDiceRequest implements Request {
 
-    public int diceChosen;
-    public int coordinateX;
-    public int coordinateY;
-    public String username;
-    public boolean single;
+    private int diceChosen;
+    private int coordinateX;
+    private int coordinateY;
+    private String username;
+    private boolean single;
 
     public PlaceDiceRequest(int diceChosen, int coordinateX, int coordinateY, String username, boolean single) {
         this.diceChosen = diceChosen;
@@ -17,6 +17,26 @@ public class PlaceDiceRequest implements Request {
         this.coordinateY = coordinateY;
         this.username = username;
         this.single = single;
+    }
+
+    public int getDiceChosen() {
+        return diceChosen;
+    }
+
+    public int getCoordinateX() {
+        return coordinateX;
+    }
+
+    public int getCoordinateY() {
+        return coordinateY;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean isSingle() {
+        return single;
     }
 
     @Override

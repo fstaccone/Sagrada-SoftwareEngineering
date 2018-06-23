@@ -223,140 +223,140 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public Response handle(CheckUsernameRequest request) {
-        return new NameAlreadyTakenResponse(checkName(request.username));
+        return new NameAlreadyTakenResponse(checkName(request.getUsername()));
     }
 
     @Override
     public Response handle(CreateMatchRequest request) {
-        createMatch(request.username, request.difficulty, socketHandlers.remove(0).getOut());
+        createMatch(request.getUsername(), request.getDifficulty(), socketHandlers.remove(0).getOut());
         return null;
     }
 
     @Override
     public Response handle(AddPlayerRequest request) {
-        lobby.getSocketObservers().put(request.username, socketHandlers.remove(0).getOut());
-        addPlayer(request.username);
+        lobby.getSocketObservers().put(request.getUsername(), socketHandlers.remove(0).getOut());
+        addPlayer(request.getUsername());
         return null;
     }
 
     @Override
     public Response handle(RemoveFromWaitingPlayersRequest request) {
-        lobby.getSocketObservers().remove(request.name);
-        lobby.removeFromWaitingPlayers(request.name);
+        lobby.getSocketObservers().remove(request.getName());
+        lobby.removeFromWaitingPlayers(request.getName());
         return null;
     }
 
     @Override
     public Response handle(GoThroughRequest request) {
-        goThrough(request.username, request.singlePlayer);
+        goThrough(request.getUsername(), request.isSinglePlayer());
         return null;
     }
 
     @Override
     public Response handle(ChooseWindowRequest request) {
-        chooseWindow(request.username, request.value, request.single);
+        chooseWindow(request.getUsername(), request.getValue(), request.isSingle());
         return null;
     }
 
     @Override
     public Response handle(PlaceDiceRequest request) {
-        placeDice(request.diceChosen, request.coordinateX, request.coordinateY, request.username, request.single);
+        placeDice(request.getDiceChosen(), request.getCoordinateX(), request.getCoordinateY(), request.getUsername(), request.isSingle());
         return null;
     }
 
     @Override
     public Response handle(PlaceDiceTool11Request request) {
-        boolean placed = placeDiceTool11(request.coordinateX, request.coordinateY, request.username, request.single);
+        boolean placed = placeDiceTool11(request.getCoordinateX(), request.getCoordinateY(), request.getUsername(), request.isSingle());
         return new DicePlacedResponse(placed);
     }
 
     @Override
     public Response handle(UseToolCard1Request request) {
-        boolean effectApplied = useToolCard1(request.diceToBeSacrificed, request.diceChosen, request.IncrOrDecr, request.username, request.isSingle);
+        boolean effectApplied = useToolCard1(request.getDiceToBeSacrificed(), request.getDiceChosen(), request.getIncrOrDecr(), request.getUsername(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard2or3Request request) {
-        boolean effectApplied = useToolCard2or3(request.diceToBeSacrificed, request.n, request.startX, request.startY, request.finalX, request.finalY, request.username, request.isSingle);
+        boolean effectApplied = useToolCard2or3(request.getDiceToBeSacrificed(), request.getN(), request.getStartX(), request.getStartY(), request.getFinalX(), request.getFinalY(), request.getUsername(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard4Request request) {
-        boolean effectApplied = useToolCard4(request.diceToBeSacrificed, request.startX1, request.startY1, request.finalX1, request.finalY1, request.startX2, request.startY2, request.finalX2, request.finalY2, request.username, request.isSingle);
+        boolean effectApplied = useToolCard4(request.getDiceToBeSacrificed(), request.getStartX1(), request.getStartY1(), request.getFinalX1(), request.getFinalY1(), request.getStartX2(), request.getStartY2(), request.getFinalX2(), request.getFinalY2(), request.getUsername(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard5Request request) {
-        boolean effectApplied = useToolCard5(request.diceToBeSacrificed, request.diceChosen, request.roundChosen, request.diceChosenFromRound, request.name, request.isSingle);
+        boolean effectApplied = useToolCard5(request.getDiceToBeSacrificed(), request.getDiceChosen(), request.getRoundChosen(), request.getDiceChosenFromRound(), request.getName(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     public Response handle(UseToolCard6Request request) {
-        boolean effectApplied = useToolCard6(request.diceToBeSacrificed, request.diceChosen, request.username, request.isSingle);
+        boolean effectApplied = useToolCard6(request.getDiceToBeSacrificed(), request.getDiceChosen(), request.getUsername(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard7Request request) {
-        boolean effectApplied = useToolCard7(request.diceToBeSacrificed,request.username, request.isSingle);
+        boolean effectApplied = useToolCard7(request.getDiceToBeSacrificed(),request.getUsername(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard8Request request) {
-        boolean effectApplied = useToolCard8(request.diceToBeSacrificed,request.name, request.single);
+        boolean effectApplied = useToolCard8(request.getDiceToBeSacrificed(),request.getName(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard9Request request) {
-        boolean effectApplied = useToolCard9(request.diceToBeSacrificed,request.diceChosen, request.finalX, request.finalY, request.username, request.isSingle);
+        boolean effectApplied = useToolCard9(request.getDiceToBeSacrificed(),request.getDiceChosen(), request.getFinalX(), request.getFinalY(), request.getUsername(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard10Request request) {
-        boolean effectApplied = useToolCard10(request.diceToBeSacrificed,request.diceChosen, request.username, request.isSingle);
+        boolean effectApplied = useToolCard10(request.getDiceToBeSacrificed(),request.getDiceChosen(), request.getUsername(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard11Request request) {
-        boolean effectApplied = useToolCard11(request.diceToBeSacrificed,request.diceChosen, request.username, request.isSingle);
+        boolean effectApplied = useToolCard11(request.getDiceToBeSacrificed(),request.getDiceChosen(), request.getUsername(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(UseToolCard12Request request) {
-        boolean effectApplied = useToolCard12(request.diceToBeSacrificed,request.roundFromTrack, request.diceInRound, request.startX1, request.startY1, request.finalX1, request.finalY1, request.startX2, request.startY2, request.finalX2, request.finalY2, request.name, request.isSingle);
+        boolean effectApplied = useToolCard12(request.getDiceToBeSacrificed(),request.getRoundFromTrack(), request.getDiceInRound(), request.getStartX1(), request.getStartY1(), request.getFinalX1(), request.getFinalY1(), request.getStartX2(), request.getStartY2(), request.getFinalX2(), request.getFinalY2(), request.getName(), request.isSingle());
         return new ToolCardEffectAppliedResponse(effectApplied);
     }
 
     @Override
     public Response handle(QuitGameRequest request) {
-        quitGame(request.name, request.single);
+        quitGame(request.getName(), request.isSingle());
         return null;
     }
 
     @Override
     public Response handle(ReconnectionRequest request) {
-        lobby.getSocketObservers().put(request.username, socketHandlers.remove(0).getOut());
-        reconnect(request.username);
+        lobby.getSocketObservers().put(request.getUsername(), socketHandlers.remove(0).getOut());
+        reconnect(request.getUsername());
         return null;
     }
 
     @Override
     public Response handle(DiceColorRequest request) {
-        Colors color = askForDiceColor(request.name, request.isSingle);
+        Colors color = askForDiceColor(request.getName(), request.isSingle());
         return new DiceColorResponse(color);
     }
 
     @Override
     public Response handle(SetDiceValueRequest request) {
-        setDiceValue(request.value, request.name, request.isSingle);
+        setDiceValue(request.getValue(), request.getName(), request.isSingle());
         return null;
     }
 

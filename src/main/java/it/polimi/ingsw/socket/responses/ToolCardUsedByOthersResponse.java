@@ -4,12 +4,20 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class ToolCardUsedByOthersResponse implements Response {
 
-    public String name;
-    public int toolCardNumber;
+    private String name;
+    private int toolCardNumber;
 
     public ToolCardUsedByOthersResponse(String name, int toolCardNumber) {
         this.name = name;
         this.toolCardNumber = toolCardNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getToolCardNumber() {
+        return toolCardNumber;
     }
 
     @Override

@@ -4,10 +4,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class PlayerExitGameResponse implements Response {
 
-    public String name;
+    private String name;
 
     public PlayerExitGameResponse(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

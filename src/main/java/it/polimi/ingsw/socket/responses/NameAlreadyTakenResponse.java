@@ -4,10 +4,15 @@ import it.polimi.ingsw.ConnectionStatus;
 import it.polimi.ingsw.socket.ResponseHandler;
 
 public class NameAlreadyTakenResponse implements Response {
-    public ConnectionStatus status;
+
+    private ConnectionStatus status;
 
     public NameAlreadyTakenResponse(ConnectionStatus status) {
         this.status = status;
+    }
+
+    public ConnectionStatus getStatus() {
+        return status;
     }
 
     @Override

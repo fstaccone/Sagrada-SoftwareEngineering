@@ -82,12 +82,12 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(NameAlreadyTakenResponse response) {
-        this.nameStatus = response.status;
+        this.nameStatus = response.getStatus();
     }
 
     @Override
     public void handle(DiceColorResponse response) {
-        this.diceColor = response.diceColor;
+        this.diceColor = response.getDiceColor();
     }
 
     @Override
@@ -117,17 +117,17 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(PlayerExitRoomResponse response) {
         if (loginHandler.isCli())
-            loginHandler.getWaitingRoomCli().onPlayerExit(response.name);
+            loginHandler.getWaitingRoomCli().onPlayerExit(response.getName());
         else
-            loginHandler.getWaitingScreenHandler().onPlayerExit(response.name);
+            loginHandler.getWaitingScreenHandler().onPlayerExit(response.getName());
     }
 
     @Override
     public void handle(LastPlayerRoomResponse response) {
         if (loginHandler.isCli())
-            loginHandler.getWaitingRoomCli().onLastPlayer(response.name);
+            loginHandler.getWaitingRoomCli().onLastPlayer(response.getName());
         else
-            loginHandler.getWaitingScreenHandler().onLastPlayer(response.name);
+            loginHandler.getWaitingScreenHandler().onLastPlayer(response.getName());
     }
 
 
@@ -139,8 +139,8 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(RoundTrackResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onRoundTrack(response.roundTrack);
-        } else socketGui.getGui().onRoundTrack(response.roundTrack);
+            socketCli.getCli().onRoundTrack(response.getRoundTrack());
+        } else socketGui.getGui().onRoundTrack(response.getRoundTrack());
     }
 
     @Override
@@ -163,16 +163,16 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(ReserveResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onReserve(response.reserve);
-        } else socketGui.getGui().onReserve(response.reserve);
+            socketCli.getCli().onReserve(response.getReserve());
+        } else socketGui.getGui().onReserve(response.getReserve());
     }
 
     @Override
     public void handle(MyWindowResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onMyWindow(response.window);
+            socketCli.getCli().onMyWindow(response.getWindow());
         } else {
-            socketGui.getGui().onMyWindow(response.window);
+            socketGui.getGui().onMyWindow(response.getWindow());
         }
     }
 
@@ -199,27 +199,27 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(OtherTurnResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onOtherTurn(response.name);
+            socketCli.getCli().onOtherTurn(response.getName());
         } else {
-            socketGui.getGui().onOtherTurn(response.name);
+            socketGui.getGui().onOtherTurn(response.getName());
         }
     }
 
     @Override
     public void handle(UpdateReserveResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onReserve(response.string);
-        } else socketGui.getGui().onReserve(response.string);
+            socketCli.getCli().onReserve(response.getString());
+        } else socketGui.getGui().onReserve(response.getString());
     }
 
     @Override
     public void handle(DicePlacedResponse response) {
-        dicePlaced = response.done;
+        dicePlaced = response.isDone();
     }
 
     @Override
     public void handle(ToolCardEffectAppliedResponse response) {
-        effectApplied = response.effectApplied;
+        effectApplied = response.isEffectApplied();
     }
 
     @Override
@@ -232,8 +232,8 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(PlayerExitGameResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onPlayerExit(response.name);
-        } else socketGui.getGui().onPlayerExit(response.name);
+            socketCli.getCli().onPlayerExit(response.getName());
+        } else socketGui.getGui().onPlayerExit(response.getName());
     }
 
     @Override
@@ -246,27 +246,27 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(MyFavorTokensResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onMyFavorTokens(response.value);
+            socketCli.getCli().onMyFavorTokens(response.getValue());
         } else {
-            socketGui.getGui().onMyFavorTokens(response.value);
+            socketGui.getGui().onMyFavorTokens(response.getValue());
         }
     }
 
     @Override
     public void handle(OtherFavorTokensResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onOtherFavorTokens(response.value, response.name);
+            socketCli.getCli().onOtherFavorTokens(response.getValue(), response.getName());
         } else {
-            socketGui.getGui().onOtherFavorTokens(response.value, response.name);
+            socketGui.getGui().onOtherFavorTokens(response.getValue(), response.getName());
         }
     }
 
     @Override
     public void handle(OtherSchemeCardsResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onOtherSchemeCards(response.scheme, response.name);
+            socketCli.getCli().onOtherSchemeCards(response.getScheme(), response.getName());
         } else {
-            socketGui.getGui().onOtherSchemeCards(response.scheme, response.name, response.cardName);
+            socketGui.getGui().onOtherSchemeCards(response.getScheme(), response.getName(), response.getCardName());
         }
     }
 
@@ -283,16 +283,16 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(AfterReconnectionResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard, response.otherTokens, response.otherSchemeCards, response.schemeCardChosen, response.toolcardsPrices);
+            socketCli.getCli().onAfterReconnection(response.getToolcards(), response.getPublicCards(), response.getPrivateCard(), response.getReserve(), response.getRoundTrack(), response.getMyTokens(), response.getSchemeCard(), response.getOtherTokens(), response.getOtherSchemeCards(), response.isSchemeCardChosen(), response.getToolcardsPrices());
         } else
-            socketGui.getGui().onAfterReconnection(response.toolcards, response.publicCards, response.privateCard, response.reserve, response.roundTrack, response.myTokens, response.schemeCard,response.schemeCardName, response.otherTokens, response.otherSchemeCards,response.otherSchemeCardNamesMap, response.schemeCardChosen, response.toolcardsPrices);
+            socketGui.getGui().onAfterReconnection(response.getToolcards(), response.getPublicCards(), response.getPrivateCard(), response.getReserve(), response.getRoundTrack(), response.getMyTokens(), response.getSchemeCard(),response.getSchemeCardName(), response.getOtherTokens(), response.getOtherSchemeCards(),response.getOtherSchemeCardNamesMap(), response.isSchemeCardChosen(), response.getToolcardsPrices());
     }
 
     @Override
     public void handle(ProposeWindowResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onWindowChoice(response.list);
-        } else socketGui.getGui().onWindowChoice(response.list);
+            socketCli.getCli().onWindowChoice(response.getList());
+        } else socketGui.getGui().onWindowChoice(response.getList());
     }
 
     @Override
@@ -307,9 +307,9 @@ public class ClientController implements ResponseHandler {
     @Override
     public void handle(ToolCardUsedByOthersResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onToolCardUsedByOthers(response.name, response.toolCardNumber);
+            socketCli.getCli().onToolCardUsedByOthers(response.getName(), response.getToolCardNumber());
         } else {
-            socketGui.getGui().onToolCardUsedByOthers(response.name, response.toolCardNumber);
+            socketGui.getGui().onToolCardUsedByOthers(response.getName(), response.getToolCardNumber());
         }
     }
 

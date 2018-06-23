@@ -126,7 +126,7 @@ public class ControllerTest {
         Assert.assertEquals(4, lobby.getMultiplayerMatches().get("Ancona").getPlayer("Ancona").getDiceFromBag().getValue());
         DiceColorRequest diceColorRequest = new DiceColorRequest("Ancona", false);
         DiceColorResponse diceColorResponse = (DiceColorResponse) controller.handle(diceColorRequest);
-        Assert.assertEquals(Colors.BLUE, diceColorResponse.diceColor);
+        Assert.assertEquals(Colors.BLUE, diceColorResponse.getDiceColor());
     }
 
 

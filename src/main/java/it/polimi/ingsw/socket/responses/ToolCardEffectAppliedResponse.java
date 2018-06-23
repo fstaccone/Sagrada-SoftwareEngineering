@@ -4,10 +4,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class ToolCardEffectAppliedResponse implements Response {
 
-    public boolean effectApplied;
+    private boolean effectApplied;
 
     public ToolCardEffectAppliedResponse(boolean effectApplied) {
         this.effectApplied = effectApplied;
+    }
+
+    public boolean isEffectApplied() {
+        return effectApplied;
     }
 
     @Override

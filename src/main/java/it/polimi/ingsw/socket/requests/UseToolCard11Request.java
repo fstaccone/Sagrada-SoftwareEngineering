@@ -5,10 +5,10 @@ import it.polimi.ingsw.socket.responses.Response;
 
 public class UseToolCard11Request implements Request {
 
-    public int diceChosen;
-    public String username;
-    public boolean isSingle;
-    public int diceToBeSacrificed;
+    private int diceChosen;
+    private String username;
+    private boolean isSingle;
+    private int diceToBeSacrificed;
 
     public UseToolCard11Request(int diceToBeSacrificed,int diceChosen, String username, boolean isSingle) {
         this.diceChosen = diceChosen;
@@ -17,6 +17,21 @@ public class UseToolCard11Request implements Request {
         this.diceToBeSacrificed=diceToBeSacrificed;
     }
 
+    public int getDiceChosen() {
+        return diceChosen;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean isSingle() {
+        return isSingle;
+    }
+
+    public int getDiceToBeSacrificed() {
+        return diceToBeSacrificed;
+    }
 
     @Override
     public Response handleRequest(RequestHandler handler) {

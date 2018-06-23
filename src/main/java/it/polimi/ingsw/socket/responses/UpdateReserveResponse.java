@@ -4,10 +4,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class UpdateReserveResponse implements Response {
 
-    public String string;
+    private String string;
 
     public UpdateReserveResponse(String string) {
         this.string = string;
+    }
+
+    public String getString() {
+        return string;
     }
 
     @Override

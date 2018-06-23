@@ -4,10 +4,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class DicePlacedResponse implements Response {
 
-    public boolean done;
+    private boolean done;
 
     public DicePlacedResponse(boolean done) {
         this.done = done;
+    }
+
+    public boolean isDone() {
+        return done;
     }
 
     @Override

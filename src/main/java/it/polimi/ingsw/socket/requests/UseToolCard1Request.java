@@ -5,11 +5,11 @@ import it.polimi.ingsw.socket.responses.Response;
 
 public class UseToolCard1Request implements Request {
 
-    public int diceChosen;
-    public String IncrOrDecr;
-    public String username;
-    public boolean isSingle;
-    public int diceToBeSacrificed;
+    private int diceChosen;
+    private String IncrOrDecr;
+    private String username;
+    private boolean isSingle;
+    private int diceToBeSacrificed;
 
     public UseToolCard1Request(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String username, boolean isSingle) {
         this.diceChosen = diceChosen;
@@ -17,6 +17,26 @@ public class UseToolCard1Request implements Request {
         this.username = username;
         this.isSingle = isSingle;
         this.diceToBeSacrificed = diceToBeSacrificed;
+    }
+
+    public int getDiceChosen() {
+        return diceChosen;
+    }
+
+    public String getIncrOrDecr() {
+        return IncrOrDecr;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean isSingle() {
+        return isSingle;
+    }
+
+    public int getDiceToBeSacrificed() {
+        return diceToBeSacrificed;
     }
 
     @Override

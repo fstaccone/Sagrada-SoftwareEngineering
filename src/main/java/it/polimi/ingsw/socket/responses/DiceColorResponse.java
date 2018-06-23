@@ -5,10 +5,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class DiceColorResponse implements Response {
 
-    public Colors diceColor;
+    private Colors diceColor;
 
     public DiceColorResponse(Colors color) {
         this.diceColor = color;
+    }
+
+    public Colors getDiceColor() {
+        return diceColor;
     }
 
     @Override

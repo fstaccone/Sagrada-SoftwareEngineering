@@ -4,11 +4,15 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class MyFavorTokensResponse implements Response {
 
-    public int value;
+    private int value;
 
 
     public MyFavorTokensResponse(int value) {
         this.value = value;
+    }
+
+    public int getValue() {
+        return value;
     }
 
     @Override

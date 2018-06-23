@@ -4,10 +4,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class LastPlayerRoomResponse implements Response {
 
-    public String name;
+    private String name;
 
     public LastPlayerRoomResponse(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

@@ -5,10 +5,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class MyWindowResponse implements Response {
 
-    public String[][] window;
+    private String[][] window;
 
     public MyWindowResponse(String[][] window) {
         this.window = window;
+    }
+
+    public String[][] getWindow() {
+        return window;
     }
 
     @Override

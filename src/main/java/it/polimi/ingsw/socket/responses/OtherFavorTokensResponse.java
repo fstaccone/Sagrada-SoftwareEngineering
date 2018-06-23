@@ -4,12 +4,20 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class OtherFavorTokensResponse implements Response {
 
-    public int value;
-    public String name;
+    private int value;
+    private String name;
 
     public OtherFavorTokensResponse(int value, String name) {
         this.value = value;
         this.name = name;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

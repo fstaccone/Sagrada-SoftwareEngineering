@@ -4,10 +4,14 @@ import it.polimi.ingsw.socket.ResponseHandler;
 
 public class ReserveResponse implements Response {
 
-    public String reserve;
+    private String reserve;
 
     public ReserveResponse(String reserve) {
         this.reserve = reserve;
+    }
+
+    public String getReserve() {
+        return reserve;
     }
 
     @Override

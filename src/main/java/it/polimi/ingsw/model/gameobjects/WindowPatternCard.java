@@ -1,9 +1,8 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
-public class WindowPatternCard implements Serializable{
+public class WindowPatternCard {
 
     private String name;
     private int difficulty; //difficulty is a value between 3 and 6

@@ -5,12 +5,20 @@ import it.polimi.ingsw.socket.responses.Response;
 
 public class GoThroughRequest implements Request {
 
-    public String username;
-    public boolean singlePlayer;
+    private String username;
+    private boolean singlePlayer;
 
     public GoThroughRequest(String username, boolean singlePlayer) {
         this.username = username;
         this.singlePlayer = singlePlayer;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean isSinglePlayer() {
+        return singlePlayer;
     }
 
     @Override
