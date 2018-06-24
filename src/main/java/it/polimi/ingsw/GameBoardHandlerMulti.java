@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.socket.requests.TerminateMatchRequest;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,7 @@ public class GameBoardHandlerMulti {
     private Gui gui;
     private Map<Integer, Label> labels = new HashMap<>();
     private List<Label> labelsList = new ArrayList<>();
+    private boolean exit;
 
     @FXML
     Label privObjLabel;
@@ -111,6 +114,7 @@ public class GameBoardHandlerMulti {
         useButton.setVisible(false);
         toolLabel.setVisible(false);
         toolPane.setVisible(false);
+        exit = false;
 
     }
 
@@ -270,6 +274,8 @@ public class GameBoardHandlerMulti {
             s.append(winner.toUpperCase());
             s.append(" è il vincitore!\n");
         }
+        exit = true;
+
         gameBoardHandler.appendToTextArea(s.toString());
         disableActionsOnGameBoard();
     }
@@ -277,6 +283,7 @@ public class GameBoardHandlerMulti {
     public void onGameClosing() {
         gameBoardHandler.appendToTextArea("Congratulazioni! Sei il vincitore. Sei rimasto da solo in gioco.\n\nClicca su ESCI per terminare");
         disableActionsOnGameBoard();
+        exit = true;
     }
 
 
@@ -489,6 +496,10 @@ public class GameBoardHandlerMulti {
 
     @FXML
     public void onQuitClicked() {
-        gameBoardHandler.quitClicked();
+        if (exit) {
+            gameBoardHandler.terminateGame();
+        } else {
+            gameBoardHandler.quitClicked();
+        }
     }
 }

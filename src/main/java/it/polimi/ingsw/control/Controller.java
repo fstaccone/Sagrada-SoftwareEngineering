@@ -220,6 +220,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         }
     }
 
+    @Override
+    public void removeMatch(String name) {
+        lobby.removeFromMatchMulti(name);
+    }
+
 
     @Override
     public Response handle(CheckUsernameRequest request) {
@@ -363,6 +368,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
     @Override
     public Response handle(PrivateCardChosenRequest request) {
         choosePrivateCard(request.getUsername(), request.getCardPosition());
+        return null;
+    }
+
+    @Override
+    public Response handle(TerminateMatchRequest request) {
+        lobby.removeFromMatchMulti(request.getName());
         return null;
     }
 

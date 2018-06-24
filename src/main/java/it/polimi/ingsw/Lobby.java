@@ -229,6 +229,7 @@ public class Lobby {
             // check if the game must be closed
             if (match.checkConnection() < 2) {
                 notifyAndRemoveObservers(name);
+                removeDisconnectedPlayers(name);
             }
 
         } catch (Exception e) {
@@ -237,11 +238,24 @@ public class Lobby {
         }
     }
 
-    public void removeMatchMultiplayer(String name) {
+    /**
+     * remove the names of disconnected players from the map multiplayerMatches and from takenUsernames
+     *
+     * @param name is the name of one player of the match considered in this action
+     */
+    private void removeDisconnectedPlayers(String name) {
         for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
-            removeUsername(p.getName());
-            multiplayerMatches.remove(p.getName());
+            if (p.getStatus().equals(ConnectionStatus.DISCONNECTED)) {
+                removeFromMatchMulti(p.getName());
+                removeUsername(p.getName());
+            }
         }
+    }
+
+
+    public void removeFromMatchMulti(String name) {
+        multiplayerMatches.remove(name);
+        removeUsername(name);
     }
 
     private void notifyAndRemoveObservers(String name) throws IOException {
@@ -250,14 +264,14 @@ public class Lobby {
         for (PlayerMultiplayer player : match.getPlayers()) {
             if (!player.getName().equals(name) && player.getStatus().equals(ConnectionStatus.CONNECTED)) {
                 match.setStillPlaying(false);
+                if (!match.getTurnManagerMultiplayer().isTimerExpired()) {
+                    match.getTurnManagerMultiplayer().setTimerExpiredTrue();
+                }
                 // notifies to the player he is the only still in game
                 if (match.getRemoteObservers().get(player) != null) {
-                    if (!match.getTurnManagerMultiplayer().isTimerExpired()) {
-                        match.getTurnManagerMultiplayer().setTimerExpiredTrue();
-                    }
                     match.getRemoteObservers().get(player).onGameClosing();
                     match.getRemoteObservers().remove(player);
-                } else {
+                } else if ((match.getSocketObservers().get(player) != null)) {
                     match.getSocketObservers().get(player).writeObject(new ClosingGameResponse());
                     match.getSocketObservers().get(player).reset();
                     match.getSocketObservers().remove(player);

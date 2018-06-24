@@ -63,4 +63,6 @@ public interface RemoteController extends Remote {
     boolean useToolCard11(int diceToBeSacrificed,int diceChosen, String username, boolean isSingle) throws RemoteException;
 
     boolean useToolCard12(int diceToBeSacrificed,int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name, boolean isSingle) throws RemoteException;
+
+    void removeMatch(String name) throws RemoteException;
 }

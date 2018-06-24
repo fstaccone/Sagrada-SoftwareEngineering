@@ -873,7 +873,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     @Override
     public void terminateMatch() {
-        lobby.removeMatchMultiplayer(players.get(0).getName());
+        lobby.removeFromMatchMulti(players.get(0).getName());
         localThread.interrupt();
     }
 }

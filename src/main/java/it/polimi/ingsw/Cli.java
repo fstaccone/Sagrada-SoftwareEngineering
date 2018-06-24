@@ -1027,7 +1027,11 @@ public class Cli {
             //RMI
             if (controllerRmi != null) {
                 try {
-                    controllerRmi.quitGame(username, single);
+                    if(!stillPlaying && !single){
+                        controllerRmi.removeMatch(username);
+                    } else {
+                        controllerRmi.quitGame(username, single);
+                    }
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -1035,7 +1039,11 @@ public class Cli {
             }
             //SOCKET
             else {
-                controllerSocket.request(new QuitGameRequest(username, single));
+                if(!stillPlaying && !single) {
+                    controllerSocket.request(new TerminateMatchRequest(username));
+                } else {
+                    controllerSocket.request(new QuitGameRequest(username, single));
+                }
                 System.exit(0);
             }
         }

@@ -52,4 +52,6 @@ public interface RequestHandler {
 
     Response handle(PrivateCardChosenRequest request);
 
+    Response handle(TerminateMatchRequest request);
+
 }

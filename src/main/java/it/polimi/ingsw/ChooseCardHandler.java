@@ -4,6 +4,7 @@ import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.socket.ClientController;
 import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
 import it.polimi.ingsw.socket.requests.QuitGameRequest;
+import it.polimi.ingsw.socket.requests.TerminateMatchRequest;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -199,10 +200,16 @@ public class ChooseCardHandler {
     }
 
     public void terminateGame(){
+        window.close();
         if(controllerRmi != null){
-            //controllerRmi.removeMatch(username);
+            try {
+                controllerRmi.removeMatch(username);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         } else if(controllerSocket != null){
-            //controllerSocket.request(new TerminateMatchRequest(username));
+            controllerSocket.request(new TerminateMatchRequest(username));
         }
+        System.exit(0);
     }
 }
