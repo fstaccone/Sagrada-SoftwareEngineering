@@ -174,8 +174,8 @@ public class LoginHandler implements Initializable {
 
 
     private void onClosing() throws RemoteException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Exit");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Sei sicuro di voler uscire?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Uscita");
         alert.setHeaderText(null);
         alert.setResizable(false);
         alert.setGraphic(null);
@@ -277,7 +277,7 @@ public class LoginHandler implements Initializable {
             // views' creation and input for the model to create the Player
             if (isGui && !singleplayer) {
                 window.setScene(waiting);
-                window.setTitle("Waiting room");
+                window.setTitle("Sala d'attesa");
                 window.setResizable(false);
                 window.show();
             }
@@ -320,7 +320,7 @@ public class LoginHandler implements Initializable {
             if (isCli && !singleplayer)
                 waitingRoomCli.setController(controllerRmi);
         } catch (NotBoundException e) {
-            System.out.println("A client can't get the controllerRmi's reference");
+            System.out.println("A client can't get the controller Rmi's reference");
             e.printStackTrace();
             //} catch (MalformedURLException e) {
             //    e.printStackTrace();

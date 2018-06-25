@@ -247,7 +247,6 @@ public class Lobby {
         for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
             if (p.getStatus().equals(ConnectionStatus.DISCONNECTED)) {
                 removeFromMatchMulti(p.getName());
-                //removeUsername(p.getName());
             }
         }
     }
@@ -273,7 +272,7 @@ public class Lobby {
                     match.getRemoteObservers().remove(player);
                 } else if ((match.getSocketObservers().get(player) != null)) {
                     match.getSocketObservers().get(player).writeObject(new ClosingGameResponse());
-                    match.getSocketObservers().get(player).reset();
+                    //match.getSocketObservers().get(player).reset();
                     match.getSocketObservers().remove(player);
                 }
             }

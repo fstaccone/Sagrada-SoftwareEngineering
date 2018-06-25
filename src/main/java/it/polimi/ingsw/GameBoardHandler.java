@@ -268,7 +268,7 @@ public class GameBoardHandler {
                 if (tempY == null) tempY = 0;
                 int coordinateX = tempX;
                 int coordinateY = tempY;
-                appendToTextArea("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
+                appendToTextArea("Vuoi posizionare il dado nella posizione: " + coordinateX + "," + coordinateY);
                 if (rmiController != null) {
                     try {
                         if (rmiController.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
@@ -312,7 +312,8 @@ public class GameBoardHandler {
         Platform.runLater(() -> {
             window.setScene(scene);
             window.setTitle("Sagrada");
-            window.setResizable(true);
+            window.setResizable(false);
+            window.setOnCloseRequest(event ->quitClicked());
             window.show();
         });
 
