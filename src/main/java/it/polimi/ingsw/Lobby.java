@@ -247,7 +247,7 @@ public class Lobby {
         for (PlayerMultiplayer p : multiplayerMatches.get(name).getPlayers()) {
             if (p.getStatus().equals(ConnectionStatus.DISCONNECTED)) {
                 removeFromMatchMulti(p.getName());
-                removeUsername(p.getName());
+                //removeUsername(p.getName());
             }
         }
     }

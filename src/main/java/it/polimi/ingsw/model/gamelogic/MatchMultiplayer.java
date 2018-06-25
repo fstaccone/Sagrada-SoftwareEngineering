@@ -211,50 +211,72 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     public void afterReconnection(String name) {
+        System.out.println("214 MM");
         PlayerMultiplayer p = getPlayer(name);
+        System.out.println("216 MM");
         List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
+        System.out.println("216 MM");
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
+        System.out.println("216 MM");
         String publicCards = decksContainer.getPublicObjectiveCardDeck().getPickedCards().toString();
+        System.out.println("216 MM");
         List<String> privateCard = new ArrayList<>();
+        System.out.println("216 MM");
         privateCard.add(p.getPrivateObjectiveCard().toString());
+        System.out.println("216 MM");
         String reserve = board.getReserve().getDices().toString();
+        System.out.println("216 MM");
         String roundTrack = board.getRoundTrack().toString();
+        System.out.println("216 MM");
         int myTokens = p.getNumFavorTokens();
-        String[][] schemeCard = new String[4][5];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++)
-                schemeCard[i][j] = p.getSchemeCard().getWindow()[i][j].toString();
+        System.out.println("216 MM");
+        String[][] schemeCard = null;
+        String schemeCardName = null;
+        if(p.getSchemeCard()!=null) {
+            schemeCard = new String[4][5];
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 5; j++)
+                    schemeCard[i][j] = p.getSchemeCard().getWindow()[i][j].toString();
+            }
+            schemeCardName = p.getSchemeCard().getName();
         }
-
+        System.out.println("Dopo schemeCard");
         Map<String, Integer> otherTokens = new HashMap<>();
+        System.out.println("216 MM");
         Map<String, String[][]> otherSchemeCards = new HashMap<>();
+        System.out.println("216 MM");
         Map<String, String> otherSchemeCardNamesMap = new HashMap<>();
+        System.out.println("216 MM");
         boolean schemeCardChosen = p.isSchemeCardSet();
-
+        System.out.println("246 MM");
         for (PlayerMultiplayer player : players) {
             if (!player.getName().equals(name)) {
                 otherTokens.put(player.getName(), player.getNumFavorTokens());
             }
         }
+        System.out.println("246 MM");
         for (PlayerMultiplayer player : players) {
             String[][] otherSchemeCard = new String[4][5];
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 5; j++)
-                    otherSchemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
+            if (!player.getName().equals(name)) {
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 5; j++)
+                        otherSchemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
+                }
             }
             if (!player.getName().equals(name)) {
                 otherSchemeCards.put(player.getName(), otherSchemeCard);
             }
         }
+        System.out.println("246 MM");
         for (PlayerMultiplayer player : players) {
             if (!player.getName().equals(name)) {
                 otherSchemeCardNamesMap.put(player.getName(), player.getSchemeCard().getName());
             }
         }
-
+        System.out.println("Prima dell'if size: " + socketObservers.size());
         if (remoteObservers.get(p) != null) {
             try {
-                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, p.getSchemeCard().getName(), otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices);
+                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, schemeCardName, otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices);
                 remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), names);
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
@@ -262,7 +284,8 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         } else if (socketObservers.get(p) != null) {
             try {
-                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, p.getSchemeCard().getName(), otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices));
+                System.out.println("265 MM");
+                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, schemeCardName, otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices));
                 socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), names));
                 socketObservers.get(p).reset();
             } catch (IOException e) {

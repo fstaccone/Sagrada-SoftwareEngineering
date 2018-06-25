@@ -2,8 +2,12 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Dice;
+import it.polimi.ingsw.model.gameobjects.ToolCard;
+import it.polimi.ingsw.model.gameobjects.windowpatterncards.Firelight;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.AddPlayerRequest;
 import it.polimi.ingsw.socket.requests.DiceColorRequest;
@@ -18,7 +22,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 
@@ -132,6 +138,98 @@ public class ControllerTest {
         DiceColorResponse diceColorResponse = (DiceColorResponse) controller.handle(diceColorRequest);
         Assert.assertEquals(Colors.BLUE, diceColorResponse.getDiceColor());
     }
+
+    @Test
+    public void chooseWindow() throws RemoteException {
+        Lobby lobby = new Lobby(100000, 10);
+        Controller controller = new Controller(lobby);
+        controller.createMatch("Ancona",1,null);
+        lobby.getSingleplayerMatches().get("Ancona").windowsToBeProposed();
+        controller.chooseWindow("Ancona", 0, true);
+        Assert.assertNotNull(lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard());
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.startMatch();
+        lobby.getMultiplayerMatches().get("Archi").windowsToBeProposed();
+        controller.chooseWindow("Archi", 0, false);
+        Assert.assertNotNull(lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard());
+    }
+
+    @Test
+    public void placeDice() throws RemoteException {
+        Lobby lobby = new Lobby(100000, 1000);
+        Controller controller = new Controller(lobby);
+        controller.createMatch("Ancona",1,null);
+        lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
+        List<Dice> dices = new ArrayList<>();
+        Dice d = new Dice(Colors.BLUE);
+        dices.add(d);
+        lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().throwDices(dices);
+        controller.placeDice(0, 1, 0, "Ancona", true);
+        Assert.assertEquals(Colors.BLUE, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getWindow()[1][0].getDice().getColor());
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.startMatch();
+        lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setSchemeCard(new Firelight());
+        lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().throwDices(dices);
+        controller.placeDice(0, 1, 0, "Archi", false);
+        Assert.assertEquals(Colors.BLUE, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getWindow()[1][0].getDice().getColor());
+    }
+
+    @Test
+    public void placeDiceTool11() throws RemoteException {
+        Lobby lobby = new Lobby(100000, 1000);
+        Controller controller = new Controller(lobby);
+        controller.createMatch("Ancona",1,null);
+        lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
+        Dice d = new Dice(Colors.BLUE);
+        d.setValue(3);
+        lobby.getSingleplayerMatches().get("Ancona").getPlayer().setDiceFromBag(d);
+        Assert.assertEquals(Colors.BLUE, controller.askForDiceColor("Ancona",true));
+        controller.setDiceValue(4, "Ancona", true);
+        Assert.assertEquals(4, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getDiceFromBag().getValue());
+        controller.placeDiceTool11(1,0,"Ancona", true);
+        Assert.assertEquals(Colors.BLUE, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getWindow()[1][0].getDice().getColor());
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.startMatch();
+        lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setSchemeCard(new Firelight());
+        lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setDiceFromBag(d);
+        controller.placeDiceTool11(1,0,"Archi", false);
+        Assert.assertEquals(Colors.BLUE, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getWindow()[1][0].getDice().getColor());
+    }
+
+    @Test
+    public void useToolCard1() throws RemoteException {
+        Lobby lobby = new Lobby(100000, 1000);
+        Controller controller = new Controller(lobby);
+        //Single player
+        controller.createMatch("Ancona",1,null);
+        lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
+        List<Dice> dices = new ArrayList<>();
+        Dice d = new Dice(Colors.BLUE);
+        Dice d1 = new Dice(Colors.VIOLET);
+        d.setValue(3);
+        d1.setValue(4);
+        dices.add(d);
+        dices.add(d1);
+        lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().throwDices(dices);
+        lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(0).setValue(4);
+        lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Pinza Sgrossatrice", "tool1"));
+        controller.useToolCard1(1, 0, "+", "Ancona", true);
+        Assert.assertEquals(5, lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(0).getValue());
+        //Multi player
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Archi2");
+        lobby.startMatch();
+        lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setSchemeCard(new Firelight());
+        lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().throwDices(dices);
+        lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().get(0).setValue(4);
+        lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Pinza Sgrossatrice", "tool1"));
+        controller.useToolCard1(1, 0, "+", "Archi", false);
+        Assert.assertEquals(5, lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().get(0).getValue());
+    }
+
 
 
 

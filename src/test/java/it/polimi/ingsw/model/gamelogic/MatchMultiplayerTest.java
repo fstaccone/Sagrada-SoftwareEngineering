@@ -4,9 +4,7 @@ import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.Firelight;
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.RipplesOfLight;
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.WaterOfLife;
+import it.polimi.ingsw.model.gameobjects.windowpatterncards.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -78,8 +76,6 @@ public class MatchMultiplayerTest {
         Lobby lobby = new Lobby(10, 10);
         MatchMultiplayer matchMultiplayer = new MatchMultiplayer(0, clients, 10, socketsOut, lobby);
         matchMultiplayer.getPlayer("Archi").setSchemeCard(new Firelight());
-        matchMultiplayer.getPlayer("Archi").setSchemeCard(new Firelight());
-        List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
         d.setValue(3);
         matchMultiplayer.getPlayer("Archi").setDiceFromBag(d);
@@ -403,5 +399,100 @@ public class MatchMultiplayerTest {
         Assert.assertFalse(matchMultiplayer.useToolCard12(0,1,0,0,0,2,1,2,0,0,1,"Archi"));
     }
 
+    @Test
+    public void setWindowPatternCard(){
+        List<String> clients = new ArrayList<>();
+        clients.add("Archi");
+        clients.add("Archi2");
+        Map<String, ObjectOutputStream> socketsOut = new HashMap<>();
+        Lobby lobby = new Lobby(10, 10);
+        MatchMultiplayer matchMultiplayer = new MatchMultiplayer(0, clients, 10, socketsOut, lobby);
+        matchMultiplayer.windowsToBeProposed();
+        WindowPatternCard schemeCard = matchMultiplayer.getWindowsProposed().get(0);
+        matchMultiplayer.setWindowPatternCard("Archi", 0);
+        Assert.assertEquals(schemeCard, matchMultiplayer.getPlayer("Archi").getSchemeCard());
+    }
+
+    @Test
+    public void calculateFinalScore(){
+        List<String> clients = new ArrayList<>();
+        clients.add("Archi");
+        clients.add("Archi2");
+        Map<String, ObjectOutputStream> socketsOut = new HashMap<>();
+        Lobby lobby = new Lobby(10, 10);
+        MatchMultiplayer matchMultiplayer = new MatchMultiplayer(0, clients, 10, socketsOut, lobby);
+        matchMultiplayer.getPlayer("Archi").setSchemeCard(new Firelight());
+        matchMultiplayer.getPlayer("Archi").setNumFavorTokens(4);
+        matchMultiplayer.getPlayer("Archi").setPrivateObjectiveCard(new PrivateObjectiveCard(Colors.RED));
+        matchMultiplayer.getPlayer("Archi2").setSchemeCard(new SymphonyOfLight());
+        matchMultiplayer.getPlayer("Archi2").setNumFavorTokens(4);
+        matchMultiplayer.getPlayer("Archi2").setPrivateObjectiveCard(new PrivateObjectiveCard(Colors.BLUE));
+        List<Dice> dices = new ArrayList<>();
+        Dice d = new Dice(Colors.BLUE);
+        Dice d1 = new Dice(Colors.RED);
+        Dice d2 = new Dice(Colors.YELLOW);
+        Dice d3 = new Dice(Colors.RED);
+        dices.add(d);
+        dices.add(d1);
+        dices.add(d2);
+        dices.add(d3);
+        matchMultiplayer.getBoard().getReserve().throwDices(dices);
+        matchMultiplayer.getBoard().getReserve().getDices().get(0).setValue(4);
+        matchMultiplayer.getBoard().getReserve().getDices().get(1).setValue(4);
+        matchMultiplayer.placeDice("Archi",1,1,0);
+        matchMultiplayer.setDiceAction(false);
+        matchMultiplayer.placeDice("Archi2",0,0,1);
+        System.out.println(matchMultiplayer.getPlayer("Archi").getSchemeCard().toString());
+        System.out.println(matchMultiplayer.getPlayer("Archi2").getSchemeCard().toString());
+        matchMultiplayer.calculateFinalScore();
+        Assert.assertEquals(-11, matchMultiplayer.getPlayer("Archi").getPoints());
+        Assert.assertEquals(-11, matchMultiplayer.getPlayer("Archi2").getPoints());
+    }
+
+    //TODO: QUESTO TEST LANCIA ECCEZIONE
+    @Test
+    public void afterReconnection(){
+        Lobby lobby = new Lobby(10, 10);
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Archi2");
+        lobby.addToWaitingPlayers("Archi3");
+        lobby.startMatch();
+        lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setSchemeCard(new Firelight());
+        lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setNumFavorTokens(4);
+        lobby.getMultiplayerMatches().get("Archi2").getPlayer("Archi2").setSchemeCard(new SymphonyOfLight());
+        lobby.getMultiplayerMatches().get("Archi2").getPlayer("Archi2").setNumFavorTokens(4);
+        lobby.getMultiplayerMatches().get("Archi3").getPlayer("Archi3").setSchemeCard(new ChromaticSplendor());
+        lobby.getMultiplayerMatches().get("Archi3").getPlayer("Archi3").setNumFavorTokens(4);
+        lobby.getMultiplayerMatches().get("Archi3").getPlayer("Archi3").setPrivateObjectiveCard(new PrivateObjectiveCard(Colors.BLUE));
+        List<Dice> dices = new ArrayList<>();
+        Dice d = new Dice(Colors.BLUE);
+        Dice d1 = new Dice(Colors.RED);
+        Dice d2 = new Dice(Colors.YELLOW);
+        Dice d3 = new Dice(Colors.RED);
+        dices.add(d);
+        dices.add(d1);
+        dices.add(d2);
+        dices.add(d3);
+        lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().throwDices(dices);
+        List<Dice> list0 = new LinkedList<>();
+        Dice d00 = new Dice(Colors.RED);
+        d00.setValue(1);
+        list0.add(d00);
+        List<Dice> list1 = new LinkedList<>();
+        Dice d10 = new Dice(Colors.YELLOW);
+        d10.setValue(5);
+        list1.add(d10);
+        Dice d11 = new Dice(Colors.BLUE);
+        d11.setValue(2);
+        list1.add(d11);
+        lobby.getMultiplayerMatches().get("Archi").getBoard().getRoundTrack().putDices(list0, 0);
+        lobby.getMultiplayerMatches().get("Archi").getBoard().getRoundTrack().putDices(list1, 1);
+        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi3", 0, 0, 0);
+        lobby.getMultiplayerMatches().get("Archi").setDiceAction(false);
+        lobby.disconnect("Archi3");
+        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 0, 1, 0 );
+        lobby.getMultiplayerMatches().get("Archi2").placeDice("Archi2", 0, 0, 1 );
+        lobby.getMultiplayerMatches().get("Archi").afterReconnection("Archi3");
+    }
 
 }

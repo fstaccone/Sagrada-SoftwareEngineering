@@ -350,11 +350,11 @@ public class GameBoardHandler {
         playerWindowPatternCard.setBackground(new Background(myBI));
 
         //Initializing the scheme card slots
-        schemeCard.setGridLinesVisible(false);
-        schemeCard.setPrefSize(334, 261);
-        Insets padding = new Insets(0, 0, 2, 7);
+        schemeCard.setGridLinesVisible(true);
+        schemeCard.setPrefSize(334, 263);
+        Insets padding = new Insets(0, 0, 0, 5);
         schemeCard.setPadding(padding);
-        schemeCard.setHgap(3);
+        schemeCard.setHgap(4);
         schemeCard.setVgap(5);
         schemeCard.setLayoutX(3);
         schemeCard.setLayoutY(5);
@@ -496,11 +496,11 @@ public class GameBoardHandler {
 
         schemeCard = new GridPane();
 
-        schemeCard.setGridLinesVisible(false);
-        schemeCard.setPrefSize(334, 261);
-        Insets padding = new Insets(0, 0, 2, 7);
+        schemeCard.setGridLinesVisible(true);
+        schemeCard.setPrefSize(334, 263);
+        Insets padding = new Insets(0, 0, 0, 5);
         schemeCard.setPadding(padding);
-        schemeCard.setHgap(3);
+        schemeCard.setHgap(4);
         schemeCard.setVgap(5);
         schemeCard.setLayoutX(3);
         schemeCard.setLayoutY(5);
@@ -916,6 +916,8 @@ public class GameBoardHandler {
         private void createContext5() {
             setupSacrificeImageView();
 
+            appendToTextArea("Stai cercando di usare la carta utensile 5." +
+                    " Trascina nel riquadro in alto il dado della riserva e in basso quello del tracciato dei round ");
             imageView1 = null;
             imageView2 = null;
             toolLabel.setVisible(true);

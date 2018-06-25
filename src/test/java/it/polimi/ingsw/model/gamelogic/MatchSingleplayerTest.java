@@ -56,6 +56,7 @@ public class MatchSingleplayerTest {
         MatchSingleplayer matchSingleplayer = new MatchSingleplayer(0, "Archi", 1, 10, lobby, null);
         matchSingleplayer.getPlayer().setSchemeCard(new Firelight());
         matchSingleplayer.getPlayer().setPrivateObjectiveCards(list1);
+        matchSingleplayer.setPrivateCardChosen(0);
         matchSingleplayer.calculateFinalScore();
         Assert.assertEquals(-60, matchSingleplayer.getPlayer().getPoints());
     }
