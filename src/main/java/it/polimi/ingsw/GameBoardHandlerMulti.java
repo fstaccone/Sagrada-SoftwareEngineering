@@ -336,7 +336,7 @@ public class GameBoardHandlerMulti {
     }
 
     public void setPrivateCard(String privateCard) {
-        gameBoardHandler.setSinglePrivateCard(privObjLabel, privateObjCard, privateCard);
+        gameBoardHandler.setSinglePrivateCard(privObjLabel, privateObjCard,null, privateCard);
     }
 
     public void setFavourTokens(int value) {
@@ -435,7 +435,7 @@ public class GameBoardHandlerMulti {
         Image publicObjCardImg1 = new Image(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png");
         main.setImage(publicObjCardImg1);
         main.setOnMouseEntered(event -> {
-            main.setTranslateX(40);
+            main.setTranslateX(-10);
             main.setTranslateY(-60);
             main.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
             other1.setVisible(false);

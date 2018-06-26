@@ -392,12 +392,15 @@ public class GameBoardHandler {
 
     private EventHandler<MouseEvent> windowPatternCardSlotSelected = event -> windowPatternCardSlotSelected((ImageView) event.getSource());
 
-    public void setSinglePrivateCard(Label privObjLabel, ImageView card, String privateCard) {
+    public void setSinglePrivateCard(Label privObjLabel, ImageView card, ImageView other, String privateCard) {
         Image privateObjCardImg = new Image(GameBoardHandler.PRIVATE_CARDS_PATH + privateCard + ".png");
         card.setImage(privateObjCardImg);
 
         card.setOnMouseEntered(event -> {
             privObjLabel.setVisible(false);
+            if(other!=null) {
+                other.setVisible(false);
+            }
             card.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
             card.setTranslateX(-10);
             card.setTranslateY(-70);
@@ -405,6 +408,9 @@ public class GameBoardHandler {
 
         card.setOnMouseExited(event -> {
             privObjLabel.setVisible(true);
+            if(other!=null) {
+                other.setVisible(true);
+            }
             card.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
             card.setTranslateX(0);
             card.setTranslateY(0);
