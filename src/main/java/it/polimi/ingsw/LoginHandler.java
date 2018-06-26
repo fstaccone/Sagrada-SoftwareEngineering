@@ -140,7 +140,7 @@ public class LoginHandler implements Initializable {
             showAlertWarning("Nome non valido!", "Inserisci uno username con almeno un carattere");
         } else {
             if (isCli && !singleplayer) {
-                waitingRoomCli = new WaitingRoomCli(this, window, username, isRmi);
+                waitingRoomCli = new WaitingRoomCli(this, window);
                 connectionSetup(null);
             } else if (isGui && !singleplayer) {
 
@@ -317,8 +317,6 @@ public class LoginHandler implements Initializable {
 
             controllerRmi = (RemoteController) Naming.lookup(("//" + serverAddress + "/" + GAME_NAME));
 
-            if (isCli && !singleplayer)
-                waitingRoomCli.setController(controllerRmi);
         } catch (NotBoundException e) {
             System.out.println("A client can't get the controller Rmi's reference");
             e.printStackTrace();
@@ -338,9 +336,7 @@ public class LoginHandler implements Initializable {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
             controllerSocket = new ClientController(in, out, this, singleplayer);
-            if (isCli && !singleplayer) {
-                waitingRoomCli.setClientController(controllerSocket);
-            }
+
         } catch (SocketException e) {
             System.out.println("Unable to create socket connection");
         } //finally { socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM}

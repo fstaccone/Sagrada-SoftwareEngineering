@@ -29,7 +29,6 @@ public class CliTest {
         names.add("player2");
         cli.onGameStarted(names);
         cli.onMyFavorTokens(3);
-        cli.showFavorTokens();
         cli.onOtherFavorTokens(4, "player2");
         WindowPatternCard card = new AuroraSagradis();
         String[][] schemeCard = new String[4][5];
@@ -61,11 +60,6 @@ public class CliTest {
 
         cli.onInitialization("[tool0:AAAA,tool1:BBBB,tool2:CCCC]", "[pc1,pc2,pc3]", cards, names);
         cli.onPlayerReconnection("player2");
-        cli.showFavorTokens();
-        cli.showMySchemeCard();
-        cli.showPrivateCard();
-        cli.showPublicCards();
-        cli.showToolCards();
         Assert.assertEquals("username", cli.getUsername());
         cli.onPlayerExit("player2");
         cli.onPlayerReconnection("player2");
