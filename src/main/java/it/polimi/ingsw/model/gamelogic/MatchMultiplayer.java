@@ -220,17 +220,20 @@ public class MatchMultiplayer extends Match implements Runnable {
         String reserve = board.getReserve().getDices().toString();
         String roundTrack = board.getRoundTrack().toString();
         int myTokens = p.getNumFavorTokens();
-        String[][] schemeCard = new String[4][5];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++)
-                schemeCard[i][j] = p.getSchemeCard().getWindow()[i][j].toString();
+        String[][] schemeCard = null;
+        String schemeCardName = null;
+        if(p.getSchemeCard()!=null) {
+            schemeCard = new String[4][5];
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 5; j++)
+                    schemeCard[i][j] = p.getSchemeCard().getWindow()[i][j].toString();
+            }
+            schemeCardName = p.getSchemeCard().getName();
         }
-
         Map<String, Integer> otherTokens = new HashMap<>();
         Map<String, String[][]> otherSchemeCards = new HashMap<>();
         Map<String, String> otherSchemeCardNamesMap = new HashMap<>();
         boolean schemeCardChosen = p.isSchemeCardSet();
-
         for (PlayerMultiplayer player : players) {
             if (!player.getName().equals(name)) {
                 otherTokens.put(player.getName(), player.getNumFavorTokens());
@@ -238,23 +241,22 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
         for (PlayerMultiplayer player : players) {
             String[][] otherSchemeCard = new String[4][5];
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 5; j++)
-                    otherSchemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
-            }
             if (!player.getName().equals(name)) {
-                otherSchemeCards.put(player.getName(), otherSchemeCard);
-            }
-        }
-        for (PlayerMultiplayer player : players) {
-            if (!player.getName().equals(name)) {
-                otherSchemeCardNamesMap.put(player.getName(), player.getSchemeCard().getName());
+                if(player.getSchemeCard()!=null) {
+                    for (int i = 0; i < 4; i++) {
+                        for (int j = 0; j < 5; j++)
+                            otherSchemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
+                    }
+                    otherSchemeCards.put(player.getName(), otherSchemeCard);
+                    otherSchemeCardNamesMap.put(player.getName(), player.getSchemeCard().getName());
+                }
             }
         }
 
+
         if (remoteObservers.get(p) != null) {
             try {
-                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, p.getSchemeCard().getName(), otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices);
+                remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, schemeCardName, otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices);
                 remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), names);
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
@@ -262,7 +264,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         } else if (socketObservers.get(p) != null) {
             try {
-                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, p.getSchemeCard().getName(), otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices));
+                socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, schemeCardName, otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices));
                 socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), names));
                 socketObservers.get(p).reset();
             } catch (IOException e) {
@@ -817,7 +819,6 @@ public class MatchMultiplayer extends Match implements Runnable {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
                 schemeCard[i][j] = p.getSchemeCard().getWindow()[i][j].toString();
-                System.out.println("mm " + p.getSchemeCard().getWindow()[i][j].toString());
             }
         }
 

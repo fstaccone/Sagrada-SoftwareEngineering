@@ -63,7 +63,20 @@ public class Cli {
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" +
             "\nBenvenuto in questo fantastico gioco, ";
 
-    private static final String RULES = ("Da decidere se in italiano o in inglese");
+    private static final String RULES = ("\nSiete artisti in competizione tra loro per creare la\n" +
+            "vetrata più spettacolare della Sagrada Familia. I\n" +
+            "vostri frammenti di vetro sono rappresentati da dadi,\n" +
+            "caratterizzati da un colore e da una sfumaturache\n" +
+            "è indicata dal loro valore numerico (più basso è il\n" +
+            "valore più la sfumatura è chiara).\n" +
+            "Ad ogni round i giocatori, a turno, scelgono dadi da una\n" +
+            "riserva comune e li piazzando sulle proprie finestre. I\n" +
+            "giocatori devono piazzare seguendo le restrizioni della\n" +
+            "propria Carta Schema e non possono piazzare dadi\n" +
+            "adiacenti con lo stesso colore o valore.\n" +
+            "Dopo 10 round i giocatori ottengono punti in funzione\n" +
+            "degli obiettivi pubblici e privati che hanno raggiunto e il\n" +
+            "giocatore con più punti è il vincitore!");
 
     private static final String HELP_IN_TURN_MULTI = (
             "\n 'passa'                                     per passare il turno al prossimo giocatore " +
@@ -118,6 +131,14 @@ public class Cli {
             "\nATTENZIONE: Richiesta di gioco non valida. Non stai rispettando le regole della carta utensile!\n"); //STAMPATO ANCHE SE PROVI A MODIFICARE DADO NELLA RISERVA OUT OF BOUND , si può migliorare
 
 
+    /**
+     * Initializes the Cli
+     *
+     * @param username         is the name of the player who is the owner of this view
+     * @param controllerRmi    is the server side controller used by this view (if it uses Rmi connection) to contact the model
+     * @param controllerSocket is the client side controller used by this view (if it uses Socket connection) to contact the model
+     * @param single           is a boolean used to let Cli understand if it is singleplayer or not
+     */
     public Cli(String username, RemoteController controllerRmi, ClientController controllerSocket, boolean single) {
         this.username = username;
         this.controllerRmi = controllerRmi;
@@ -140,52 +161,79 @@ public class Cli {
         enablePrivateCardChoice = false;
     }
 
-    public void printWelcome() {
-        printer.println(WELCOME + username + "!\n");
-    }
-
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Prints the welcome string
+     */
+    public void printWelcome() {
+        printer.println(WELCOME + username + "!\n");
+    }
+
+    /**
+     * Notify used to update this Cli's owner favor tokens; it is propagated from RmiCli and ClientController
+     *
+     * @param value is the current number of favor tokens
+     */
     public void onMyFavorTokens(int value) {
         this.myFavorTokens = value;
     }
 
+    /**
+     * Notify used to update this Cli's owner map about other players and their favor tokens; it is propagated from RmiCli and ClientController
+     *
+     * @param value is the current number of tokens that player
+     * @param name  is the name of that player
+     */
     public void onOtherFavorTokens(int value, String name) {
         this.otherFavorTokensMap.put(name, value);
     }
 
+    /**
+     * Notify used to update this Cli's owner map about other players and their scheme cards; it is propagated from RmiCli and ClientController
+     *
+     * @param scheme is the current scheme card of that  player
+     * @param name   is the name of that player
+     */
     public void onOtherSchemeCards(String[][] scheme, String name) {
         this.otherSchemeCardsMap.put(name, scheme);
     }
 
+    /**
+     * Notify used to update this Cli's owner about the beginning of the match; it is propagated from RmiCli and ClientController
+     *
+     * @param names is the names of the opponents
+     */
     public void onGameStarted(List<String> names) {
-
         if (names != null) {
             playersNames = names;
             printNames();
         }
     }
 
-    private void printNames() {
-        printer.println("\nI tuoi avversari sono:\n");
-        for (String name : playersNames) {
-            if (!name.equals(username)) {
-                printer.println("-" + name);
-            }
-        }
-        printer.println();
-        printer.flush();
-    }
-
+    /**
+     * Notify used to update this Cli's owner map about the current state of the round track; it is propagated from RmiCli and ClientController
+     *
+     * @param roundTrack is the string representing the current round track
+     */
     public void onRoundTrack(String roundTrack) {
         this.roundTrack = roundTrack;
     }
 
-    public void onYourTurn(boolean yourTurn, String string, int round, int turn) {
-        if (string != null)
-            onReserve(string);
+
+    /**
+     * Notify used to update this Cli's owner about the turn management; it is propagated from RmiCli and ClientController
+     *
+     * @param yourTurn is true if it is the turn of this Cli's owner
+     * @param reserve  is the string representing the current reserve state
+     * @param round    is the current number of round
+     * @param turn     is the current number of turn
+     */
+    public void onYourTurn(boolean yourTurn, String reserve, int round, int turn) {
+        if (reserve != null)
+            onReserve(reserve);
         this.myTurn = yourTurn;
         if (myTurn) {
             if (single) {
@@ -200,37 +248,68 @@ public class Cli {
         printer.flush();
     }
 
-    public void onReserve(String string) {
-        String dicesString = string.substring(1, string.length() - 1);
+    /**
+     * Notify used to update this Cli's owner about the reserve state; it is propagated from RmiCli and ClientController
+     *
+     * @param reserve is the string representing the current reserve state
+     */
+    public void onReserve(String reserve) {
+        String dicesString = reserve.substring(1, reserve.length() - 1);
         dicesList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
                 .collect(Collectors.toList());
     }
 
-    public void onWindowChoice(List<String> windows) {
+    /**
+     * Notify used to update this Cli's owner about the scheme cards proposed to him; it is propagated from RmiCli and ClientController
+     *
+     * @param schemeCards is the list of strings representing the proposed scheme cards
+     */
+    public void onWindowChoice(List<String> schemeCards) {
         int i = 0;
         printer.println("\nScegli la tua carta tra le disponibili:                                        ~ [scs] + [numero]\n");
         printer.flush();
-        for (String s : windows) {
+        for (String s : schemeCards) {
             printer.println(i++ + ") " + s + "\n");
             printer.flush();
         }
     }
 
+    /**
+     * Notify used to update this Cli's owner about the scheme card choice; it is propagated from RmiCli and ClientController
+     */
     public void onAfterWindowChoice() {
         printer.println("\nAdesso puoi utilizzare la tua carta schema                              ~ [riserva] per vedere i dadi disponibili\n");
         printer.flush();
     }
 
-    public void onMyWindow(String[][] window) {
-        this.mySchemeCard = window;
+    /**
+     * Notify used to update this Cli's owner about his scheme card current state; it is propagated from RmiCli and ClientController
+     *
+     * @param schemeCard is the string representing this Cli's owner scheme card
+     */
+    public void onMyWindow(String[][] schemeCard) {
+        this.mySchemeCard = schemeCard;
     }
 
+    /**
+     * Notify used to update this Cli's owner about the turn management; it is propagated from RmiCli and ClientController
+     *
+     * @param name is the name of the current owner of the turn
+     */
     public void onOtherTurn(String name) {
         printer.println("\nOra è il turno di " + name + "!");
         printer.flush();
     }
 
+    /**
+     * Notify used to update this Cli's owner about the game initialization; it is propagated from RmiCli and ClientController
+     *
+     * @param toolcards   is the string representing this tool cards available in the match
+     * @param publicCards is the string representing this public cards available in the match
+     * @param privateCard is the string representing this this Cli's owner private card in the match
+     * @param players     is the list of strings each one representing one opponent
+     */
     public void onInitialization(String toolcards, String publicCards, List<String> privateCard, List<String> players) {
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
@@ -238,29 +317,21 @@ public class Cli {
         this.playersNames = players;
     }
 
-    private void parsePublicCards(String publicCards) {
-        String cards = publicCards.substring(1, publicCards.length() - 1);
-        publicCardsList = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
-    }
-
-    private void parseToolcards(String toolcards) {
-        String cards = toolcards.substring(1, toolcards.length() - 1);
-        toolCardsList = Pattern.compile(", ")
-                .splitAsStream(cards)
-                .collect(Collectors.toList());
-
-        for (String card : toolCardsList) {
-            String[] strings = card.split(":");
-            int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
-            this.toolCommands.add(new ToolCommand(i, this.printer, this.controllerRmi, this.controllerSocket, this.username, this.single));
-        }
-    }
-
+    /**
+     * Notify used to update this Cli's owner about the exit of an opponent; it is propagated from RmiCli and ClientController
+     *
+     * @param name is the name of the opponent who has left the game
+     */
     public void onPlayerExit(String name) {
         printer.println("\nIl giocatore " + name + " è uscito dal gioco!\n");
         printer.flush();
     }
 
+    /**
+     * Notify used to update this Cli's owner about the reconnection of an opponent; it is propagated from RmiCli and ClientController
+     *
+     * @param name is the name of the opponent who has joined the game again
+     */
     public void onPlayerReconnection(String name) {
         printer.println("\nIl giocatore " + name + " è ora in gioco!\n");
         printer.flush();
@@ -268,7 +339,7 @@ public class Cli {
 
 
     /**
-     * if you become the only in game due to disconnection of other players, you are the winner
+     * Notify used to tell this Cli's owner if he becomes the only player in game due to disconnection of other players, in this case he is the winner
      */
     public void onGameClosing() {
         if (stillPlaying) {
@@ -278,40 +349,9 @@ public class Cli {
         stillPlaying = false;
     }
 
-    /**
-     * print your private card
-     */
-    public void showPrivateCard() {
-        printer.println("\nI tuoi obiettivi privati:");
-        printer.println(privateCard);
-        printer.flush();
-    }
 
     /**
-     * print public objective cards
-     */
-    public void showPublicCards() {
-        printer.println("\nObiettivi privati:");
-
-        for (String s : publicCardsList) {
-            printer.println(s);
-        }
-        printer.flush();
-    }
-
-    /**
-     * print toolcards
-     */
-    public void showToolCards() {
-        printer.println("\nDi seguito trovi tutte le carte utensili:          ~ ['utensile' + 'numero' per capire come usare la carta utensile che vuoi utilizzare]\n");
-        for (String s : toolCardsList) {
-            printer.println("- " + s);
-        }
-        printer.flush();
-    }
-
-    /**
-     * update the state of the match in case of reconnection
+     * Notify used to tell this Cli's owner about the state of the match in case of his reconnection; it is propagated from RmiCli and ClientController
      *
      * @param toolcards        are the drawn tool cards
      * @param publicCards      are the drawn public cards
@@ -348,26 +388,13 @@ public class Cli {
         printer.flush();
     }
 
-
-    public void showFavorTokens() {
-        printer.println("\nAl momento hai " + myFavorTokens + " segnalini.\n");
-        printer.flush();
-    }
-
-    public void showMySchemeCard() {
-        printer.println("\nLa tua carta schema è: \n");
-        for (String row[] : mySchemeCard) {
-            printer.print("[");
-            for (String content : row) {
-                printer.print(content + ",\t");
-            }
-            printer.print("]");
-            printer.println();
-        }
-        printer.println("");
-        printer.flush();
-    }
-
+    /**
+     * Notify used to tell this Cli's owner that the match is finished; it is propagated from RmiCli and ClientController
+     *
+     * @param winner        is the name of the winner
+     * @param rankingNames  is the list of strings representing the names of the opponents
+     * @param rankingValues is the list of integers representing the rankings of the opponents
+     */
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
         printer.println("\nPunteggio finale:");
         for (int i = 0; i < rankingNames.size(); i++) {
@@ -385,11 +412,23 @@ public class Cli {
         stillPlaying = false;
     }
 
+    /**
+     * Notify used to tell this Cli's owner that a tool card has been used for the first time; it is propagated from RmiCli and ClientController
+     *
+     * @param name           is the name of the player who has used the tool card
+     * @param toolCardNumber is the number of the tool card used
+     */
     public void onToolCardUsedByOthers(String name, int toolCardNumber) {
         printer.println("\nIl giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolCardNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         printer.flush();
     }
 
+    /**
+     * Notify used to tell this Cli's owner that the match is finished; it is propagated from RmiCli and ClientController
+     *
+     * @param goal   is the value that the player has to achieve to win
+     * @param points is the actual ranking of this Cli's owner
+     */
     public void onGameEndSingle(int goal, int points) {
         printer.println("\nObiettivo da battere: \t" + goal);
         printer.println("Punteggio ottenuto: \t" + points);
@@ -405,10 +444,42 @@ public class Cli {
         stillPlaying = false;
     }
 
+    /**
+     * Notify used to tell this Cli's owner that he has to choose a private card in case of singleplayer match; it is propagated from RmiCli and ClientController
+     */
     public void onChoosePrivateCard() {
         enablePrivateCardChoice = true;
         printer.println("\nScegli la carta obiettivo privato da utilizzare per il calcolo del punteggio: digita il comando 'scp' seguito da 'sinistra' o 'destra' per scegliere la carta corrispondente");
         printer.flush();
+    }
+
+    private void printNames() {
+        printer.println("\nI tuoi avversari sono:\n");
+        for (String name : playersNames) {
+            if (!name.equals(username)) {
+                printer.println("-" + name);
+            }
+        }
+        printer.println();
+        printer.flush();
+    }
+
+    private void parsePublicCards(String publicCards) {
+        String cards = publicCards.substring(1, publicCards.length() - 1);
+        publicCardsList = Pattern.compile(", ").splitAsStream(cards).collect(Collectors.toList());
+    }
+
+    private void parseToolcards(String toolcards) {
+        String cards = toolcards.substring(1, toolcards.length() - 1);
+        toolCardsList = Pattern.compile(", ")
+                .splitAsStream(cards)
+                .collect(Collectors.toList());
+
+        for (String card : toolCardsList) {
+            String[] strings = card.split(":");
+            int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
+            this.toolCommands.add(new ToolCommand(i, this.printer, this.controllerRmi, this.controllerSocket, this.username, this.single));
+        }
     }
 
     private class KeyboardHandler extends Thread {
@@ -436,16 +507,9 @@ public class Cli {
                     if (myTurn || single) {
                         switch (parts[0]) {
 
-                            case "aiuto": {
-                                printer.println("\nInserisci un comando valido tra i seguenti:          ('+' sta per SPAZIO)");
-                                if (single) {
-                                    printer.println(HELP_SINGLE);
-                                } else {
-                                    printer.println(HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
-                                }
-                                printer.flush();
-                            }
-                            break;
+                            case "aiuto":
+                                printGeneralHelp();
+                                break;
 
                             case "avversari":
                                 printNames();
@@ -540,30 +604,15 @@ public class Cli {
                                 choosePrivateCard();
                                 break;
 
-                            default: {
-                                if (!stillPlaying) {
-
-                                    if (command.equals("esci")) {
-                                        System.exit(0);
-                                    } else {
-                                        printer.println("\nLa partita è terminata, scrivi 'esci' per uscire");
-                                        printer.flush();
-                                    }
-
-                                } else {
-                                    printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!\n");
-                                    printer.flush();
-                                }
-                            }
+                            default:
+                                defaultManagement(command);
                         }
                     } else {
                         switch (parts[0]) {
 
-                            case "aiuto": {
-                                printer.println("\nInserisci un comando valido tra i seguenti               ('+' means SPACE)" + HELP_GENERAL_MULTI);
-                                printer.flush();
-                            }
-                            break;
+                            case "aiuto":
+                                printSpecificHelp();
+                                break;
 
                             case "avversari":
                                 printNames();
@@ -654,6 +703,62 @@ public class Cli {
             System.exit(0);
         }
 
+        private void printGeneralHelp() {
+            printer.println("\nInserisci un comando valido tra i seguenti:          ('+' sta per SPAZIO)");
+            if (single) {
+                printer.println(HELP_SINGLE);
+            } else {
+                printer.println(HELP_IN_TURN_MULTI + HELP_GENERAL_MULTI);
+            }
+            printer.flush();
+        }
+
+        private void printSpecificHelp() {
+            printer.println("\nInserisci un comando valido tra i seguenti               ('+' means SPACE)" + HELP_GENERAL_MULTI);
+            printer.flush();
+        }
+
+        private void showFavorTokens() {
+            printer.println("\nAl momento hai " + myFavorTokens + " segnalini.\n");
+            printer.flush();
+        }
+
+        private void showMySchemeCard() {
+            printer.println("\nLa tua carta schema è: \n");
+            for (String row[] : mySchemeCard) {
+                printer.print("[");
+                for (String content : row) {
+                    printer.print(content + ",\t");
+                }
+                printer.print("]");
+                printer.println();
+            }
+            printer.println("");
+            printer.flush();
+        }
+
+        private void showPrivateCard() {
+            printer.println("\nI tuoi obiettivi privati:");
+            printer.println(privateCard);
+            printer.flush();
+        }
+
+        private void showPublicCards() {
+            printer.println("\nObiettivi privati:");
+            for (String s : publicCardsList) {
+                printer.println(s);
+            }
+            printer.flush();
+        }
+
+        private void showToolCards() {
+            printer.println("\nDi seguito trovi tutte le carte utensili:          ~ ['utensile' + 'numero' per capire come usare la carta utensile che vuoi utilizzare]\n");
+            for (String s : toolCardsList) {
+                printer.println("- " + s);
+            }
+            printer.flush();
+        }
+
         private void goThrough() {
             if (windowChosenCheck(windowChosen) && diceValueToBeSetCheck(diceValueToBeSet) && tool11DiceToBePlacedCheck(tool11DiceToBePlaced) && (!enablePrivateCardChoice)) {
                 //RMI
@@ -680,7 +785,7 @@ public class Cli {
                                 if (controllerRmi.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
                                     printer.println("\nBen fatto! Il dado è stato piazzato correttamente!\n");
                                     printer.flush();
-                                    diceChosen = 9; //ro reset the value
+                                    diceChosen = 9; //to reset the value
                                 } else {
                                     printer.println("\nATTENZIONE: Stai provando a piazzare un dado dove non dovresti, o stai provando a piazzare un altro dado nel turno!");
                                     printer.flush();
@@ -901,6 +1006,22 @@ public class Cli {
             }
         }
 
+        private void defaultManagement(String command) {
+            if (!stillPlaying) {
+
+                if (command.equals("esci")) {
+                    System.exit(0);
+                } else {
+                    printer.println("\nLa partita è terminata, scrivi 'esci' per uscire");
+                    printer.flush();
+                }
+
+            } else {
+                printer.println("\nATTENZIONE: Comando errato. Digita 'aiuto'!\n");
+                printer.flush();
+            }
+        }
+
         private void choosePrivateCard() {
             if (enablePrivateCardChoice && single) {
                 if (parts.length == 2) {
@@ -966,7 +1087,6 @@ public class Cli {
             }
         }
 
-
         private void showSchemeCards() {
 
             for (String name : otherSchemeCardsMap.keySet()) {
@@ -1027,7 +1147,7 @@ public class Cli {
             //RMI
             if (controllerRmi != null) {
                 try {
-                    if(!stillPlaying && !single){
+                    if (!stillPlaying && !single) {
                         controllerRmi.removeMatch(username);
                     } else {
                         controllerRmi.quitGame(username, single);
@@ -1039,7 +1159,7 @@ public class Cli {
             }
             //SOCKET
             else {
-                if(!stillPlaying && !single) {
+                if (!stillPlaying && !single) {
                     controllerSocket.request(new TerminateMatchRequest(username));
                 } else {
                     controllerSocket.request(new QuitGameRequest(username, single));

@@ -13,13 +13,12 @@ import java.net.URL;
 
 public class Login extends Application {
     private Stage window;
-    private LoginHandler loginHandler;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         window = primaryStage;
-        loginHandler = new LoginHandler();
+        LoginHandler loginHandler = new LoginHandler();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/login-sagrada.fxml"));
         Parent root = fxmlLoader.load();

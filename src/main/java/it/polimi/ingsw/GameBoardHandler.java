@@ -268,7 +268,7 @@ public class GameBoardHandler {
                 if (tempY == null) tempY = 0;
                 int coordinateX = tempX;
                 int coordinateY = tempY;
-                appendToTextArea("Vuoi posizionare il dado: " + diceChosen + "nella posizione: " + coordinateX + "," + coordinateY);
+                appendToTextArea("Vuoi posizionare il dado nella posizione: " + coordinateX + "," + coordinateY);
                 if (rmiController != null) {
                     try {
                         if (rmiController.placeDice(diceChosen, coordinateX, coordinateY, username, single)) {
@@ -312,7 +312,8 @@ public class GameBoardHandler {
         Platform.runLater(() -> {
             window.setScene(scene);
             window.setTitle("Sagrada");
-            window.setResizable(true);
+            window.setResizable(false);
+            window.setOnCloseRequest(event ->quitClicked());
             window.show();
         });
 
@@ -350,11 +351,11 @@ public class GameBoardHandler {
         playerWindowPatternCard.setBackground(new Background(myBI));
 
         //Initializing the scheme card slots
-        schemeCard.setGridLinesVisible(false);
-        schemeCard.setPrefSize(334, 261);
-        Insets padding = new Insets(0, 0, 2, 7);
+        schemeCard.setGridLinesVisible(true);
+        schemeCard.setPrefSize(334, 263);
+        Insets padding = new Insets(0, 0, 0, 5);
         schemeCard.setPadding(padding);
-        schemeCard.setHgap(3);
+        schemeCard.setHgap(4);
         schemeCard.setVgap(5);
         schemeCard.setLayoutX(3);
         schemeCard.setLayoutY(5);
@@ -391,12 +392,15 @@ public class GameBoardHandler {
 
     private EventHandler<MouseEvent> windowPatternCardSlotSelected = event -> windowPatternCardSlotSelected((ImageView) event.getSource());
 
-    public void setSinglePrivateCard(Label privObjLabel, ImageView card, String privateCard) {
+    public void setSinglePrivateCard(Label privObjLabel, ImageView card, ImageView other, String privateCard) {
         Image privateObjCardImg = new Image(GameBoardHandler.PRIVATE_CARDS_PATH + privateCard + ".png");
         card.setImage(privateObjCardImg);
 
         card.setOnMouseEntered(event -> {
             privObjLabel.setVisible(false);
+            if(other!=null) {
+                other.setVisible(false);
+            }
             card.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
             card.setTranslateX(-10);
             card.setTranslateY(-70);
@@ -404,6 +408,9 @@ public class GameBoardHandler {
 
         card.setOnMouseExited(event -> {
             privObjLabel.setVisible(true);
+            if(other!=null) {
+                other.setVisible(true);
+            }
             card.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
             card.setTranslateX(0);
             card.setTranslateY(0);
@@ -496,11 +503,11 @@ public class GameBoardHandler {
 
         schemeCard = new GridPane();
 
-        schemeCard.setGridLinesVisible(false);
-        schemeCard.setPrefSize(334, 261);
-        Insets padding = new Insets(0, 0, 2, 7);
+        schemeCard.setGridLinesVisible(true);
+        schemeCard.setPrefSize(334, 263);
+        Insets padding = new Insets(0, 0, 0, 5);
         schemeCard.setPadding(padding);
-        schemeCard.setHgap(3);
+        schemeCard.setHgap(4);
         schemeCard.setVgap(5);
         schemeCard.setLayoutX(3);
         schemeCard.setLayoutY(5);
@@ -916,6 +923,8 @@ public class GameBoardHandler {
         private void createContext5() {
             setupSacrificeImageView();
 
+            appendToTextArea("Stai cercando di usare la carta utensile 5." +
+                    " Trascina nel riquadro in alto il dado della riserva e in basso quello del tracciato dei round ");
             imageView1 = null;
             imageView2 = null;
             toolLabel.setVisible(true);

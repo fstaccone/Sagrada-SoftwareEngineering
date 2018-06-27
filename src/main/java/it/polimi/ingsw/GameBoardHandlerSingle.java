@@ -162,8 +162,8 @@ public class GameBoardHandlerSingle {
     }
 
     public void setPrivateCards(String privateCard1, String privateCard2) {
-        gameBoardHandler.setSinglePrivateCard(privObjLabel, privObjCard0, privateCard1);
-        gameBoardHandler.setSinglePrivateCard(privObjLabel, privObjCard1, privateCard2);
+        gameBoardHandler.setSinglePrivateCard(privObjLabel, privObjCard0, privObjCard1, privateCard1);
+        gameBoardHandler.setSinglePrivateCard(privObjLabel, privObjCard1, privObjCard0, privateCard2);
     }
 
     public void onRoundTrack(String track) {
@@ -179,7 +179,7 @@ public class GameBoardHandlerSingle {
         Image publicObjCardImg1 = new Image(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png");
         main.setImage(publicObjCardImg1);
         main.setOnMouseEntered(event -> {
-            main.setTranslateX(40);
+            main.setTranslateX(-10);
             main.setTranslateY(-60);
             main.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
             other1.setVisible(false);

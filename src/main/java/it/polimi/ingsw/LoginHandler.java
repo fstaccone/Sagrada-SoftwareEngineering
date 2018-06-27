@@ -140,7 +140,7 @@ public class LoginHandler implements Initializable {
             showAlertWarning("Nome non valido!", "Inserisci uno username con almeno un carattere");
         } else {
             if (isCli && !singleplayer) {
-                waitingRoomCli = new WaitingRoomCli(this, window, username, isRmi);
+                waitingRoomCli = new WaitingRoomCli(this, window);
                 connectionSetup(null);
             } else if (isGui && !singleplayer) {
 
@@ -174,8 +174,8 @@ public class LoginHandler implements Initializable {
 
 
     private void onClosing() throws RemoteException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want to exit?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Exit");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Sei sicuro di voler uscire?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Uscita");
         alert.setHeaderText(null);
         alert.setResizable(false);
         alert.setGraphic(null);
@@ -277,7 +277,7 @@ public class LoginHandler implements Initializable {
             // views' creation and input for the model to create the Player
             if (isGui && !singleplayer) {
                 window.setScene(waiting);
-                window.setTitle("Waiting room");
+                window.setTitle("Sala d'attesa");
                 window.setResizable(false);
                 window.show();
             }
@@ -317,10 +317,8 @@ public class LoginHandler implements Initializable {
 
             controllerRmi = (RemoteController) Naming.lookup(("//" + serverAddress + "/" + GAME_NAME));
 
-            if (isCli && !singleplayer)
-                waitingRoomCli.setController(controllerRmi);
         } catch (NotBoundException e) {
-            System.out.println("A client can't get the controllerRmi's reference");
+            System.out.println("A client can't get the controller Rmi's reference");
             e.printStackTrace();
             //} catch (MalformedURLException e) {
             //    e.printStackTrace();
@@ -338,9 +336,7 @@ public class LoginHandler implements Initializable {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
             controllerSocket = new ClientController(in, out, this, singleplayer);
-            if (isCli && !singleplayer) {
-                waitingRoomCli.setClientController(controllerSocket);
-            }
+
         } catch (SocketException e) {
             System.out.println("Unable to create socket connection");
         } //finally { socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM}

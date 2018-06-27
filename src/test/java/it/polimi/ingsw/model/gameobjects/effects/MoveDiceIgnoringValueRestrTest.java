@@ -41,7 +41,6 @@ public class MoveDiceIgnoringValueRestrTest {
         Dice d = new Dice(Colors.RED);
         d.setValue(4);
         list.add(d);
-        list.add(d);
 
         Dice dy = new Dice(Colors.YELLOW);
         dy.setValue(2);
@@ -55,9 +54,10 @@ public class MoveDiceIgnoringValueRestrTest {
         Dice db = new Dice(Colors.BLUE);
         db.setValue(2);
 
-        Dice dv = mock(Dice.class);
-        when(dv.getValue()).thenReturn(3);
-        when(dv.getColor()).thenReturn(Colors.VIOLET);
+        Dice dv = new Dice(Colors.VIOLET);
+        dv.setValue(3);
+
+        list.add(dr);
 
         player.getSchemeCard().putFirstDice(dy, 0, 0);
         player.getSchemeCard().putDice(dg, 1, 0);
@@ -96,12 +96,30 @@ public class MoveDiceIgnoringValueRestrTest {
         toolCard.useCard(player, match);
         System.out.println(player.getSchemeCard().toString());
         Assert.assertEquals(2, player.getSchemeCard().getWindow()[1][2].getDice().getValue());
+        player.setStartX1(1);
+        player.setStartY1(0);
+        player.setFinalX1(2);
+        player.setFinalY1(2);
+        toolCard.useCard(player, match);
+        Assert.assertEquals(5, singleplayer.getSchemeCard().getWindow()[1][0].getDice().getValue());
     }
 
     @Test
-    public void singleplayer(){
+    public void singleplayerPutDiceInNewPosition(){
         toolCard.useCard(singleplayer, matchSingleplayer);
         System.out.println(singleplayer.getSchemeCard().toString());
         Assert.assertEquals(2, singleplayer.getSchemeCard().getWindow()[1][2].getDice().getValue());
+    }
+
+    @Test
+    public void singleplayerPutDiceBack() {
+        singleplayer.setDiceToBeSacrificed(0);
+        singleplayer.setStartX1(1);
+        singleplayer.setStartY1(0);
+        singleplayer.setFinalX1(2);
+        singleplayer.setFinalY1(2);
+        toolCard.useCard(singleplayer, matchSingleplayer);
+        System.out.println(singleplayer.getSchemeCard().toString());
+        Assert.assertEquals(5, singleplayer.getSchemeCard().getWindow()[1][0].getDice().getValue());
     }
 }

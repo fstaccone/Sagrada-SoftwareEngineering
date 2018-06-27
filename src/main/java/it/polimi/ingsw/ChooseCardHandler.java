@@ -57,7 +57,7 @@ public class ChooseCardHandler {
         card3.setDisable(true);
     }
 
-    public void onQuitClicked() throws RemoteException {
+    public void onQuitClicked()  {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confermi di voler abbandonare la partita?", ButtonType.YES, ButtonType.NO);
         alert.setTitle("Abbandona");
         alert.setHeaderText(null);
@@ -66,8 +66,13 @@ public class ChooseCardHandler {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
             window.close();
-            if (controllerRmi != null)
-                controllerRmi.quitGame(username, single);
+            if (controllerRmi != null) {
+                try {
+                    controllerRmi.quitGame(username, single);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
             else
                 controllerSocket.request(new QuitGameRequest(username, single));
             System.exit(0);
@@ -123,6 +128,7 @@ public class ChooseCardHandler {
             window.setScene(sceneFromGui);
             window.setTitle("Scelta della carta schema");
             window.setResizable(false);
+            window.setOnCloseRequest(event->onQuitClicked());
             window.show();
         });
     }
