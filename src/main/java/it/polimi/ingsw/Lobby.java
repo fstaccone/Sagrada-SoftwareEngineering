@@ -450,4 +450,12 @@ public class Lobby {
             return takenUsernames.get(name);
         }
     }
+
+    public void deleteDisconnectedClients(List<String> players){
+        for(String player : players){
+            if(takenUsernames.get(player).equals(ConnectionStatus.DISCONNECTED)){
+                removeFromMatchMulti(player);
+            }
+        }
+    }
 }

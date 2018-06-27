@@ -366,6 +366,7 @@ public class TurnManagerMultiplayer implements Runnable {
         if (match.getCurrentRound() >= NUM_ROUNDS) {
             match.calculateFinalScore();
             match.setStillPlaying(false);
+            match.deleteDisconnectedClients();
         } else {
             this.turnManager();
         }

@@ -871,6 +871,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    public void deleteDisconnectedClients(){
+        lobby.deleteDisconnectedClients(players.stream().map(Player::getName).collect(Collectors.toList()));
+    }
+
     @Override
     public void terminateMatch() {
         lobby.removeFromMatchMulti(players.get(0).getName());
