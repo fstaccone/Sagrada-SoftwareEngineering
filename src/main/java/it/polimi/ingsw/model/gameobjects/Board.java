@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
+import it.polimi.ingsw.model.gamelogic.Player;
 
 import java.util.List;
 import java.util.Map;

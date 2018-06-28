@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
+import it.polimi.ingsw.model.gamelogic.PlayerSingleplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import org.junit.Assert;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.socket.responses;
 
 import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.socket.ResponseHandler;
+import it.polimi.ingsw.control.ResponseHandler;
 
 public class DiceColorResponse implements Response {
 

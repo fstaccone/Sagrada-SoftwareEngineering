@@ -1,8 +1,8 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.socket.requests.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -78,7 +78,7 @@ public class GameBoardHandler {
     private Button concludeButton;
 
     private RemoteController rmiController;
-    private ClientController socketController;
+    private SocketController socketController;
     private String username;
     private Stage window;
     private Gui gui;

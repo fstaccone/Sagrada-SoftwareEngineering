@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.socket.requests.PrivateCardChosenRequest;
 import javafx.application.Platform;

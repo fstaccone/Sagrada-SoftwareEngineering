@@ -1,5 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.gui;
 
+import it.polimi.ingsw.view.LobbyObserver;
+import it.polimi.ingsw.view.LoginHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,18 +1,16 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
+import it.polimi.ingsw.model.gamelogic.Lobby;
+import it.polimi.ingsw.view.LobbyObserver;
+import it.polimi.ingsw.view.MatchObserver;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.mockito.Mockito.mock;

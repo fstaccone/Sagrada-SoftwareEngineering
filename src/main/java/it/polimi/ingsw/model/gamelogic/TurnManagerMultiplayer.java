@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.ConnectionStatus;
-import it.polimi.ingsw.MatchObserver;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
+import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.*;
 

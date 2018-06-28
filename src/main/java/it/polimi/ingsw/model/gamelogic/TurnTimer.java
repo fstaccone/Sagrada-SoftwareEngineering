@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
-
 import java.util.TimerTask;
 
 public class TurnTimer extends TimerTask {

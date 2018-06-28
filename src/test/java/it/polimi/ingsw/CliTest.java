@@ -1,10 +1,12 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.AuroraSagradis;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.Industria;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.control.SocketController;
+import it.polimi.ingsw.view.cli.Cli;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,8 +22,8 @@ public class CliTest {
     public void Cli() throws IOException {
         Lobby lobby = new Lobby(10, 10);
         Controller controller = new Controller(lobby);
-        ClientController clientController = mock(ClientController.class);
-        Cli cli = new Cli("username", controller, clientController, false);
+        SocketController socketController = mock(SocketController.class);
+        Cli cli = new Cli("username", controller, socketController, false);
         Assert.assertNotNull(cli);
         cli.printWelcome();
         List<String> names = new ArrayList<>();

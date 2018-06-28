@@ -1,11 +1,13 @@
 package it.polimi.ingsw.socket;
 
+import it.polimi.ingsw.control.SocketController;
+
 public class SocketListener implements Runnable {
 
-    private ClientController clientController;
+    private SocketController clientController;
 
-    public SocketListener(ClientController clientController) {
-        this.clientController = clientController;
+    public SocketListener(SocketController socketController) {
+        this.clientController = socketController;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
+import it.polimi.ingsw.model.gamelogic.PlayerSingleplayer;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.SymphonyOfLight;
 import org.junit.Assert;
 import org.junit.Test;
 

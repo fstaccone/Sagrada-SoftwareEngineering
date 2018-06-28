@@ -1,4 +1,8 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gamelogic;
+
+import it.polimi.ingsw.model.gameobjects.Colors;
+import it.polimi.ingsw.model.gameobjects.PrivateObjectiveCard;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 import java.util.ArrayList;
 import java.util.List;

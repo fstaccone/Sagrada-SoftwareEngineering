@@ -1,4 +1,8 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gamelogic;
+
+import it.polimi.ingsw.model.gameobjects.Colors;
+import it.polimi.ingsw.model.gameobjects.Dice;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 public abstract class Player {
     protected final String name;
@@ -69,7 +73,7 @@ public abstract class Player {
         return pointsByPrivateObjective;
     }
 
-    void setPointsByPrivateObjective(int pointsByPrivateObjective) {
+    public void setPointsByPrivateObjective(int pointsByPrivateObjective) {
         this.pointsByPrivateObjective = pointsByPrivateObjective;
     }
 

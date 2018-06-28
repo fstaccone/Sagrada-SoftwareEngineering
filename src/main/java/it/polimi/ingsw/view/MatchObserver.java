@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 

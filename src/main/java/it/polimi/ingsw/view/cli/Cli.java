@@ -1,23 +1,20 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.socket.requests.*;
 
 import java.io.*;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Cli {
 
     private String username;
-    private ClientController controllerSocket;
+    private SocketController controllerSocket;
     private RemoteController controllerRmi;
     private boolean myTurn;
     private final PrintWriter printer;
@@ -139,7 +136,7 @@ public class Cli {
      * @param controllerSocket is the client side controller used by this view (if it uses Socket connection) to contact the model
      * @param single           is a boolean used to let Cli understand if it is singleplayer or not
      */
-    public Cli(String username, RemoteController controllerRmi, ClientController controllerSocket, boolean single) {
+    public Cli(String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
         this.username = username;
         this.controllerRmi = controllerRmi;
         this.controllerSocket = controllerSocket;
@@ -173,7 +170,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner favor tokens; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner favor tokens; it is propagated from RmiCli and SocketController
      *
      * @param value is the current number of favor tokens
      */
@@ -182,7 +179,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner map about other players and their favor tokens; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner map about other players and their favor tokens; it is propagated from RmiCli and SocketController
      *
      * @param value is the current number of tokens that player
      * @param name  is the name of that player
@@ -192,7 +189,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner map about other players and their scheme cards; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner map about other players and their scheme cards; it is propagated from RmiCli and SocketController
      *
      * @param scheme is the current scheme card of that  player
      * @param name   is the name of that player
@@ -202,7 +199,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about the beginning of the match; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the beginning of the match; it is propagated from RmiCli and SocketController
      *
      * @param names is the names of the opponents
      */
@@ -214,7 +211,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner map about the current state of the round track; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner map about the current state of the round track; it is propagated from RmiCli and SocketController
      *
      * @param roundTrack is the string representing the current round track
      */
@@ -224,7 +221,7 @@ public class Cli {
 
 
     /**
-     * Notify used to update this Cli's owner about the turn management; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the turn management; it is propagated from RmiCli and SocketController
      *
      * @param yourTurn is true if it is the turn of this Cli's owner
      * @param reserve  is the string representing the current reserve state
@@ -249,7 +246,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about the reserve state; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the reserve state; it is propagated from RmiCli and SocketController
      *
      * @param reserve is the string representing the current reserve state
      */
@@ -261,7 +258,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about the scheme cards proposed to him; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the scheme cards proposed to him; it is propagated from RmiCli and SocketController
      *
      * @param schemeCards is the list of strings representing the proposed scheme cards
      */
@@ -276,7 +273,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about the scheme card choice; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the scheme card choice; it is propagated from RmiCli and SocketController
      */
     public void onAfterWindowChoice() {
         printer.println("\nAdesso puoi utilizzare la tua carta schema                              ~ [riserva] per vedere i dadi disponibili\n");
@@ -284,7 +281,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about his scheme card current state; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about his scheme card current state; it is propagated from RmiCli and SocketController
      *
      * @param schemeCard is the string representing this Cli's owner scheme card
      */
@@ -293,7 +290,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about the turn management; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the turn management; it is propagated from RmiCli and SocketController
      *
      * @param name is the name of the current owner of the turn
      */
@@ -303,7 +300,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about the game initialization; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the game initialization; it is propagated from RmiCli and SocketController
      *
      * @param toolcards   is the string representing this tool cards available in the match
      * @param publicCards is the string representing this public cards available in the match
@@ -318,7 +315,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about the exit of an opponent; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the exit of an opponent; it is propagated from RmiCli and SocketController
      *
      * @param name is the name of the opponent who has left the game
      */
@@ -328,7 +325,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to update this Cli's owner about the reconnection of an opponent; it is propagated from RmiCli and ClientController
+     * Notify used to update this Cli's owner about the reconnection of an opponent; it is propagated from RmiCli and SocketController
      *
      * @param name is the name of the opponent who has joined the game again
      */
@@ -351,7 +348,7 @@ public class Cli {
 
 
     /**
-     * Notify used to tell this Cli's owner about the state of the match in case of his reconnection; it is propagated from RmiCli and ClientController
+     * Notify used to tell this Cli's owner about the state of the match in case of his reconnection; it is propagated from RmiCli and SocketController
      *
      * @param toolcards        are the drawn tool cards
      * @param publicCards      are the drawn public cards
@@ -389,7 +386,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to tell this Cli's owner that the match is finished; it is propagated from RmiCli and ClientController
+     * Notify used to tell this Cli's owner that the match is finished; it is propagated from RmiCli and SocketController
      *
      * @param winner        is the name of the winner
      * @param rankingNames  is the list of strings representing the names of the opponents
@@ -413,7 +410,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to tell this Cli's owner that a tool card has been used for the first time; it is propagated from RmiCli and ClientController
+     * Notify used to tell this Cli's owner that a tool card has been used for the first time; it is propagated from RmiCli and SocketController
      *
      * @param name           is the name of the player who has used the tool card
      * @param toolCardNumber is the number of the tool card used
@@ -424,7 +421,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to tell this Cli's owner that the match is finished; it is propagated from RmiCli and ClientController
+     * Notify used to tell this Cli's owner that the match is finished; it is propagated from RmiCli and SocketController
      *
      * @param goal   is the value that the player has to achieve to win
      * @param points is the actual ranking of this Cli's owner
@@ -445,7 +442,7 @@ public class Cli {
     }
 
     /**
-     * Notify used to tell this Cli's owner that he has to choose a private card in case of singleplayer match; it is propagated from RmiCli and ClientController
+     * Notify used to tell this Cli's owner that he has to choose a private card in case of singleplayer match; it is propagated from RmiCli and SocketController
      */
     public void onChoosePrivateCard() {
         enablePrivateCardChoice = true;
@@ -873,7 +870,7 @@ public class Cli {
                 if (playersNames.contains(parts[1])) {
                     if (otherSchemeCardsMap.containsKey(parts[1])) {
                         printer.println("\nDi seguito la carta schema del tuo avversario " + parts[1].toUpperCase() + ":");
-                        printer.println(otherSchemeCardsMap.get(parts[1]).toString());
+                        printer.println(Arrays.toString(otherSchemeCardsMap.get(parts[1])));
                         printer.flush();
                     } else {
                         printer.println("\nATTENZIONE:Il giocatore " + parts[1].toUpperCase() + " non è un tuo avversario!");

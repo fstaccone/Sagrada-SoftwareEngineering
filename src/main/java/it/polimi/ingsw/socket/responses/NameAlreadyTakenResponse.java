@@ -1,7 +1,7 @@
 package it.polimi.ingsw.socket.responses;
 
-import it.polimi.ingsw.ConnectionStatus;
-import it.polimi.ingsw.socket.ResponseHandler;
+import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
+import it.polimi.ingsw.control.ResponseHandler;
 
 public class NameAlreadyTakenResponse implements Response {
 

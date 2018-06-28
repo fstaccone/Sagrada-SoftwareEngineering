@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.model.gameobjects.Bag;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;

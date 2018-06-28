@@ -1,7 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.cli;
 
-import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.view.LobbyObserver;
+import it.polimi.ingsw.view.LoginHandler;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 

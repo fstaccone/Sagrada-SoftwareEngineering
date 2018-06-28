@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.Lobby;
-import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
-import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
 import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;

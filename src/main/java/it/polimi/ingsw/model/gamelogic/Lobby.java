@@ -1,9 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
-import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
-import it.polimi.ingsw.model.gamelogic.MatchStarter;
-import it.polimi.ingsw.model.gameobjects.PlayerMultiplayer;
+import it.polimi.ingsw.view.LobbyObserver;
+import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;

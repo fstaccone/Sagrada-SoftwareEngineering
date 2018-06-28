@@ -1,9 +1,9 @@
-package it.polimi.ingsw.socket;
+package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.ConnectionStatus;
-import it.polimi.ingsw.LoginHandler;
-import it.polimi.ingsw.SocketCli;
-import it.polimi.ingsw.SocketGui;
+import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
+import it.polimi.ingsw.view.LoginHandler;
+import it.polimi.ingsw.view.cli.SocketCli;
+import it.polimi.ingsw.view.gui.SocketGui;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.socket.requests.Request;
 import it.polimi.ingsw.socket.responses.*;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class ClientController implements ResponseHandler {
+public class SocketController implements ResponseHandler {
 
     private ConnectionStatus nameStatus = ConnectionStatus.ABSENT;
     private boolean dicePlaced = false;
@@ -25,7 +25,7 @@ public class ClientController implements ResponseHandler {
     private Colors diceColor;
     private boolean single;
 
-    public ClientController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler, boolean single) {
+    public SocketController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler, boolean single) {
         this.in = in;
         this.out = out;
         this.loginHandler = loginHandler;

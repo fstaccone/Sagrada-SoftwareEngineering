@@ -1,7 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.control.SocketController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -51,8 +51,8 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
         parent.onPlayClicked(play, textArea);
     }
 
-    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, ClientController clientController, String username) {
-        parent.init(windowFromGui, sceneFromGui, remoteController, clientController, username);
+    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
+        parent.init(windowFromGui, sceneFromGui, remoteController, socketController, username);
         quit.setOnMouseClicked(event -> {
             event.consume();
             if (!exit) {

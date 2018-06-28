@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import java.net.URL?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.LoginHandler">
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.LoginHandler">
 
     <Label layoutX="238.0" layoutY="270.0" text="NOME UTENTE" />
 
@@ -37,7 +37,7 @@
    <TextField fx:id="difficultyInput" id="serverAddressInput" layoutX="127.0" layoutY="561.0" prefHeight="26.0" prefWidth="221.0" promptText="Digita un valore tra 1 e 5" />
 
     <stylesheets>
-        <URL value="@style.css" />
+        <URL value="@css/style.css" />
     </stylesheets>
 
 </AnchorPane>

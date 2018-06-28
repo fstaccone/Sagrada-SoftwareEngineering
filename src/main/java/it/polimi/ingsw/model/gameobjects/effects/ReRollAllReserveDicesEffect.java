@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gamelogic.Player;
+import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;

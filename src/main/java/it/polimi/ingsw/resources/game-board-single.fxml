@@ -7,9 +7,9 @@
 <?import java.net.URL?>
 <AnchorPane fx:id="gameBoard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="875.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.GameBoardHandlerSingle">
+            fx:controller="it.polimi.ingsw.view.gui.GameBoardHandlerSingle">
     <stylesheets>
-        <URL value="@game-board-style.css"/>
+        <URL value="@css/game-board-style.css"/>
     </stylesheets>
     <Pane fx:id="playerWindowPatternCard" layoutX="740.0" layoutY="559.0" prefHeight="300.0" prefWidth="340.0"/>
     <Pane id="reserve" fx:id="reserve" layoutX="768.0" layoutY="259.0" prefHeight="261.0" prefWidth="285.0"/>

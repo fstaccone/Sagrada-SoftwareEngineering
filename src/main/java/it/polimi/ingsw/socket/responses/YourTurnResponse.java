@@ -1,6 +1,6 @@
 package it.polimi.ingsw.socket.responses;
 
-import it.polimi.ingsw.socket.ResponseHandler;
+import it.polimi.ingsw.control.ResponseHandler;
 
 public class YourTurnResponse implements Response {
 

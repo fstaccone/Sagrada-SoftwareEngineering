@@ -1,9 +1,9 @@
 package it.polimi.ingsw.control;
 
 
-import it.polimi.ingsw.ConnectionStatus;
-import it.polimi.ingsw.LobbyObserver;
-import it.polimi.ingsw.MatchObserver;
+import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
+import it.polimi.ingsw.view.LobbyObserver;
+import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Colors;
 
 import java.io.ObjectOutputStream;

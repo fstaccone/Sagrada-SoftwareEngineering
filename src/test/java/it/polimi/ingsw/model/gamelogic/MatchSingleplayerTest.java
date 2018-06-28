@@ -1,26 +1,20 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.Lobby;
-import it.polimi.ingsw.MatchObserver;
-import it.polimi.ingsw.Server;
+import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.Firelight;
 import it.polimi.ingsw.socket.SocketHandler;
-import it.polimi.ingsw.socket.responses.GameStartedResponse;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 import static org.mockito.Mockito.when;
 
 public class MatchSingleplayerTest {

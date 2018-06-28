@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view;
 
 import java.io.Serializable;
 import java.rmi.Remote;

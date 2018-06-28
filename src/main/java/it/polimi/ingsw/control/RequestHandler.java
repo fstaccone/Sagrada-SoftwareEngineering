@@ -1,4 +1,4 @@
-package it.polimi.ingsw.socket;
+package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.socket.requests.*;
 import it.polimi.ingsw.socket.responses.Response;

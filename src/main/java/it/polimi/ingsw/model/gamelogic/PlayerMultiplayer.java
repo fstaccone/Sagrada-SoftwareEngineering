@@ -1,6 +1,7 @@
-package it.polimi.ingsw.model.gameobjects;
+package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.ConnectionStatus;
+import it.polimi.ingsw.model.gameobjects.PrivateObjectiveCard;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
 public class PlayerMultiplayer extends Player {
     private int numFavorTokens;

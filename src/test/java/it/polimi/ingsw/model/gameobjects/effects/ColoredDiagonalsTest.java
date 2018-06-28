@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gamelogic.Player;
+import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 import org.junit.Assert;

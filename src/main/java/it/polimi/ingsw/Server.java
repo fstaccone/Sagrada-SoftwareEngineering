@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.socket.SocketHandler;
 
 import java.io.FileNotFoundException;
@@ -18,7 +19,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
-    private static final String serverConfig = "./src/main/java/it/polimi/ingsw/server.config";
+    private static final String SERVER_CONFIG = "./src/main/java/it/polimi/ingsw/server.config";
     private static int socketPort;
     private static String lobbyName;
     private static int waitingTime;
@@ -29,7 +30,7 @@ public class Server {
     public static void main(String[] args) throws IOException {
 
         //read configuration file
-        readServerConfig(serverConfig);
+        readServerConfig(SERVER_CONFIG);
 
         Lobby lobby = new Lobby(waitingTime, turnTime);
         Controller controller = new Controller(lobby);

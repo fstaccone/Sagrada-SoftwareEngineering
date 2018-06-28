@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
-import it.polimi.ingsw.model.gameobjects.Player;
+import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 import java.util.ArrayList;

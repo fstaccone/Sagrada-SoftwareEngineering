@@ -1,7 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.control.SocketController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,7 +22,7 @@ public class Gui {
 
     private String username;
     private RemoteController controllerRmi;
-    private ClientController controllerSocket;
+    private SocketController controllerSocket;
     private Stage windowStage;
     private boolean stillPlaying;
 
@@ -53,7 +53,7 @@ public class Gui {
     private String playerSchemeCardImageURL;
     private AudioClip turnClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/turn.mp3");
 
-    public Gui(Stage fromLogin, String username, RemoteController controllerRmi, ClientController controllerSocket, boolean single) {
+    public Gui(Stage fromLogin, String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
         this.username = username;
         this.controllerRmi = controllerRmi;
         this.controllerSocket = controllerSocket;
@@ -85,7 +85,7 @@ public class Gui {
         return controllerRmi;
     }
 
-    public ClientController getControllerSocket() {
+    public SocketController getControllerSocket() {
         return controllerSocket;
     }
 

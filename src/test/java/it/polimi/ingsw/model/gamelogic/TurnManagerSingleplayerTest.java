@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.Lobby;
-import it.polimi.ingsw.MatchObserver;
 import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.model.gameobjects.PlayerSingleplayer;
 import it.polimi.ingsw.socket.SocketHandler;
 import org.junit.Assert;
 import org.junit.Test;

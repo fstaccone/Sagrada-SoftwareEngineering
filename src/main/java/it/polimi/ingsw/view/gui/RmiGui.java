@@ -1,5 +1,6 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.gui;
 
+import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.control.RemoteController;
 import javafx.stage.Stage;
 

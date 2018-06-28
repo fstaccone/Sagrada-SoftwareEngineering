@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.Lobby;
-import it.polimi.ingsw.MatchObserver;
-import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.*;
 import org.junit.Assert;

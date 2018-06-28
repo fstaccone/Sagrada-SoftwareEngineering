@@ -1,7 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.socket.requests.*;
 
 import java.io.PrintWriter;
@@ -14,12 +14,12 @@ public class ToolCommand {
     private RemoteController controller;
     private String name;
     private boolean single;
-    private ClientController clientController;
+    private SocketController socketController;
 
-    public ToolCommand(int i, PrintWriter printer, RemoteController controller, ClientController clientController, String name, boolean isSingle) { //DA SOSTITUIRE PRINTER CON CONTROLLER
+    public ToolCommand(int i, PrintWriter printer, RemoteController controller, SocketController socketController, String name, boolean isSingle) { //DA SOSTITUIRE PRINTER CON CONTROLLER
         this.i = i;
         this.controller = controller;
-        this.clientController = clientController;
+        this.socketController = socketController;
         this.printer = printer;
         this.name = name;
         this.single = isSingle;
@@ -104,7 +104,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard1Request(diceToBeSacrificed, diceFromReserve, incrOrDecr, name, single));
+            socketController.request(new UseToolCard1Request(diceToBeSacrificed, diceFromReserve, incrOrDecr, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -122,7 +122,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard2or3Request(diceToBeSacrificed, n, startX, startY, finalX, finalY, name, single));
+            socketController.request(new UseToolCard2or3Request(diceToBeSacrificed, n, startX, startY, finalX, finalY, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -138,7 +138,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard4Request(diceToBeSacrificed, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name, single));
+            socketController.request(new UseToolCard4Request(diceToBeSacrificed, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -154,7 +154,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard5Request(diceToBeSacrificed, diceFromReserve, roundFromTrack, diceInRound, name, single));
+            socketController.request(new UseToolCard5Request(diceToBeSacrificed, diceFromReserve, roundFromTrack, diceInRound, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -170,7 +170,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard6Request(diceToBeSacrificed, diceChosen, name, single));
+            socketController.request(new UseToolCard6Request(diceToBeSacrificed, diceChosen, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -186,7 +186,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard7Request(diceToBeSacrificed,name, single));
+            socketController.request(new UseToolCard7Request(diceToBeSacrificed,name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -202,7 +202,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard8Request(diceToBeSacrificed,name, single));
+            socketController.request(new UseToolCard8Request(diceToBeSacrificed,name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -219,7 +219,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard9Request(diceToBeSacrificed,diceFromReserve, finalX, finalY, name, single));
+            socketController.request(new UseToolCard9Request(diceToBeSacrificed,diceFromReserve, finalX, finalY, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -236,7 +236,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard10Request(diceToBeSacrificed,diceFromReserve, name, single));
+            socketController.request(new UseToolCard10Request(diceToBeSacrificed,diceFromReserve, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -253,7 +253,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard11Request(diceToBeSacrificed,diceFromReserve, name, single));
+            socketController.request(new UseToolCard11Request(diceToBeSacrificed,diceFromReserve, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -270,7 +270,7 @@ public class ToolCommand {
         }
         //SOCKET
         else {
-            clientController.request(new UseToolCard12Request(diceToBeSacrificed,roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name, single));
+            socketController.request(new UseToolCard12Request(diceToBeSacrificed,roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name, single));
             return waitForToolEffectAppliedResponse();
         }
         return false;
@@ -283,8 +283,8 @@ public class ToolCommand {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }
-        if (clientController.isEffectApplied()) {
-            clientController.setEffectApplied(false);//to reset the value
+        if (socketController.isEffectApplied()) {
+            socketController.setEffectApplied(false);//to reset the value
             return true;
         } else {
             return false;

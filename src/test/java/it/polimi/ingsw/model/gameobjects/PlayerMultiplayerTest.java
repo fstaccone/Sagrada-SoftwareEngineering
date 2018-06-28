@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import it.polimi.ingsw.ConnectionStatus;
+import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
+import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.Comitas;
 import org.junit.Assert;
 import org.junit.Test;

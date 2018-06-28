@@ -1,13 +1,20 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view;
 
 
+import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.socket.SocketListener;
 import it.polimi.ingsw.socket.requests.AddPlayerRequest;
 import it.polimi.ingsw.socket.requests.CheckUsernameRequest;
 import it.polimi.ingsw.socket.requests.CreateMatchRequest;
 import it.polimi.ingsw.socket.requests.RemoveFromWaitingPlayersRequest;
+import it.polimi.ingsw.view.cli.RmiCli;
+import it.polimi.ingsw.view.cli.SocketCli;
+import it.polimi.ingsw.view.cli.WaitingRoomCli;
+import it.polimi.ingsw.view.gui.RmiGui;
+import it.polimi.ingsw.view.gui.SocketGui;
+import it.polimi.ingsw.view.gui.WaitingScreenHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -37,7 +44,7 @@ public class LoginHandler implements Initializable {
     private static final String GAME_NAME = "Lobby";
     private static final String RESOURCES = "File:./src/main/java/it/polimi/ingsw/resources/";
     private transient Socket socket = null;
-    private transient ClientController controllerSocket;
+    private transient SocketController controllerSocket;
     private String username;
     private Stage window;
     private transient boolean isRmi;
@@ -336,7 +343,7 @@ public class LoginHandler implements Initializable {
             socket = new Socket(serverAddress, socketPort);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            controllerSocket = new ClientController(in, out, this, singleplayer);
+            controllerSocket = new SocketController(in, out, this, singleplayer);
 
         } catch (SocketException e) {
             System.out.println("Unable to create socket connection");

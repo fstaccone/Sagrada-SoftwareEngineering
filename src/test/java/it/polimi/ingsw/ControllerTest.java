@@ -1,30 +1,23 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Lobby;
+import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
+import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
-import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.model.gameobjects.ToolCard;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.Firelight;
-import it.polimi.ingsw.socket.SocketHandler;
-import it.polimi.ingsw.socket.requests.AddPlayerRequest;
 import it.polimi.ingsw.socket.requests.DiceColorRequest;
 import it.polimi.ingsw.socket.requests.SetDiceValueRequest;
 import it.polimi.ingsw.socket.responses.DiceColorResponse;
-import it.polimi.ingsw.socket.responses.Response;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 

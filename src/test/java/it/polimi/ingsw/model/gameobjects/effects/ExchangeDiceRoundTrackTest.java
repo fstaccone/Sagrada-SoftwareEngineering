@@ -2,13 +2,14 @@ package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.MatchSingleplayer;
+import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
+import it.polimi.ingsw.model.gamelogic.PlayerSingleplayer;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.AuroraSagradis;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

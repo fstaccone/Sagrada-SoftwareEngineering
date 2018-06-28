@@ -1,7 +1,6 @@
 package it.polimi.ingsw.socket.responses;
 
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
-import it.polimi.ingsw.socket.ResponseHandler;
+import it.polimi.ingsw.control.ResponseHandler;
 
 import java.util.List;
 import java.util.Map;

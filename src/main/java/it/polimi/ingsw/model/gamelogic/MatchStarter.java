@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.Lobby;
 import it.polimi.ingsw.socket.responses.CheckConnectionResponse;
-import it.polimi.ingsw.socket.responses.MatchStartedResponse;
 
 import java.io.IOException;
 import java.rmi.RemoteException;

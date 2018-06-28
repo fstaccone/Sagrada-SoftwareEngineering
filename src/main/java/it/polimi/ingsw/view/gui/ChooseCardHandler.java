@@ -1,7 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.socket.ClientController;
+import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
 import it.polimi.ingsw.socket.requests.QuitGameRequest;
 import it.polimi.ingsw.socket.requests.TerminateMatchRequest;
@@ -42,7 +42,7 @@ public class ChooseCardHandler {
     private Stage window;
 
     private RemoteController controllerRmi;
-    private ClientController controllerSocket;
+    private SocketController controllerSocket;
 
     protected String username;
     private String imgURL;
@@ -116,9 +116,9 @@ public class ChooseCardHandler {
     }
 
     //Initializing
-    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, ClientController clientController, String username) {
+    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
         this.controllerRmi = remoteController;
-        this.controllerSocket = clientController;
+        this.controllerSocket = socketController;
         this.username = username;
         window = windowFromGui;
         Platform.runLater(() -> {
@@ -140,7 +140,7 @@ public class ChooseCardHandler {
         for (String s : windows) {
             BufferedReader reader = new BufferedReader(new StringReader(s));
             try {
-                reader.readLine();
+                s = reader.readLine(); //ignored line
                 s = reader.readLine();
             } catch (IOException e) {
                 e.printStackTrace();

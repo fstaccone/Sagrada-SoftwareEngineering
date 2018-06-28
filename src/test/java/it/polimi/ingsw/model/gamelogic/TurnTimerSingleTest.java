@@ -1,10 +1,7 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.Lobby;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.ObjectOutputStream;
 
 import static org.mockito.Mockito.mock;
 

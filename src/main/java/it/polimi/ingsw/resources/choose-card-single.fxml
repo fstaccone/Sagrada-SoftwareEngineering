@@ -6,9 +6,9 @@
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
 <AnchorPane id="choose-card-window" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.ChooseCardHandlerSingle">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.ChooseCardHandlerSingle">
     <stylesheets>
-        <URL value="@game-board-style.css"/>
+        <URL value="@css/game-board-style.css"/>
     </stylesheets>
     <Label layoutX="344.0" text="SCEGLI LA TUA CARTA SCHEMA" textFill="WHITE">
         <font>
