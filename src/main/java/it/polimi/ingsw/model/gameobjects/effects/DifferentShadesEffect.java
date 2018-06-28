@@ -4,15 +4,17 @@ import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
-public class DifferentShadesEffect implements Effect{
-    private final int pointsToBeAssigned=5;
+public class DifferentShadesEffect implements Effect {
+    private final int pointsToBeAssigned = 5;
+
     public DifferentShadesEffect() {
     }
 
     /**
      * Gives 5 points to the player for every set of dices with all the 5 different values in his scheme card
+     *
      * @param caller is the player that uses this public objective card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return
      */
     @Override
@@ -25,10 +27,10 @@ public class DifferentShadesEffect implements Effect{
         int foursCounter = 0;
         int fivesCounter = 0;
         int sixCounter = 0;
-        for(Square[] row : schema){
-            for(Square square : row){
+        for (Square[] row : schema) {
+            for (Square square : row) {
                 int val = 0;
-                if(square.getDice()!=null)
+                if (square.getDice() != null)
                     val = square.getDice().getValue();
                 switch (val) {
                     case 1:
@@ -54,13 +56,13 @@ public class DifferentShadesEffect implements Effect{
                 }
             }
         }
-        int[] counters ={onesCounter, twosCounter, threesCounter, foursCounter, fivesCounter, sixCounter};
+        int[] counters = {onesCounter, twosCounter, threesCounter, foursCounter, fivesCounter, sixCounter};
         int min = counters[0];
-        for(int counter : counters) {
+        for (int counter : counters) {
             if (counter <= min)
                 min = counter;
         }
-        temp = temp + min*pointsToBeAssigned;
+        temp = temp + min * pointsToBeAssigned;
         caller.setPoints(temp);
         return false;
     }

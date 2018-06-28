@@ -18,15 +18,16 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
      */
     public MoveTwoDicesColorRoundTrackEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * This tool card allows the player to move up to 2 dices in his scheme card. These dices must have the same color
      * of a dice in the round track.
      * The player has to consider all placement rules.
+     *
      * @param player is the player that uses this tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
      * sacrifice, for multi player: enough favor tokens) and the chosen dices have the same color of the dice from the
      * round track and are placed correctly in the scheme card.
@@ -47,7 +48,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
         }
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if(!used) {
+            if (!used) {
                 Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
                 if (sacrificeDice.getColor().equals(Colors.BLUE) && dice1 != null && dice2 != null && dice1.getColor().equals(color) && dice2.getColor().equals(color)) {
                     int newRow1 = player.getFinalX1();
@@ -58,7 +59,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                     schema.removeDice(row2, column2);
                     if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
                         match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        used=true;
+                        used = true;
                         return true;
                     } else {
                         if (dice1.equals(schema.getDice(newRow1, newColumn1))) {
@@ -78,7 +79,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                     schema.removeDice(row1, column1);
                     if (schema.putDice(dice1, newRow1, newColumn1)) {
                         match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        used=true;
+                        used = true;
                         return true;
                     }
                     return true;
@@ -86,7 +87,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                     schema.putDiceBack(dice1, row1, column1);
                     return false;
                 }
-            }else return false;
+            } else return false;
         }
         //MULTIPLAYER
         else {

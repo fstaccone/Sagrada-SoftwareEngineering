@@ -23,14 +23,15 @@ public class IncrDecrDiceValueEffect implements Effect {
      */
     public IncrDecrDiceValueEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * This tool card allows the player to increment or decrement by 1 the value of a chosen dice in the reserve.
      * The player can't increment the value of a dice with value 6 and can't decrement the value of a dice with value 1.
+     *
      * @param player is the player that uses this tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
      * sacrifice, for multi player: enough favor tokens) and the player uses the tool card in the correct way.
      */
@@ -68,7 +69,7 @@ public class IncrDecrDiceValueEffect implements Effect {
                             return false;
                     }
                 } else return false;
-            }else return false;
+            } else return false;
         }
         //MULTIPLAYER
         else {
@@ -76,35 +77,35 @@ public class IncrDecrDiceValueEffect implements Effect {
             m = (MatchMultiplayer) match;
             if (p.getNumFavorTokens() >= price) {
                 if (player.getDice() < match.getBoard().getReserve().getDices().size()) {
-                        switch (plusOrMinus) {
-                            case "+":
-                                if (value != 6) {
-                                    value = value + 1;
-                                    match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
-                                    p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                                    if (price.equals(1)) {
-                                        notifyToOthers();
-                                        price = 2;
-                                        m.getToolCardsPrices().put("Carta utensile 1: ", price);
-                                    }
-                                    return true;
-                                } else return false;
+                    switch (plusOrMinus) {
+                        case "+":
+                            if (value != 6) {
+                                value = value + 1;
+                                match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
+                                p.setNumFavorTokens(p.getNumFavorTokens() - price);
+                                if (price.equals(1)) {
+                                    notifyToOthers();
+                                    price = 2;
+                                    m.getToolCardsPrices().put("Carta utensile 1: ", price);
+                                }
+                                return true;
+                            } else return false;
 
-                            case "-":
-                                if (value != 1) {
-                                    value = value - 1;
-                                    match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value);
-                                    p.setNumFavorTokens(p.getNumFavorTokens() - price);
-                                    if (price == 1) {
-                                        notifyToOthers();
-                                        price = 2;
-                                    }
-                                    return true;
-                                } else return false;
+                        case "-":
+                            if (value != 1) {
+                                value = value - 1;
+                                match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value);
+                                p.setNumFavorTokens(p.getNumFavorTokens() - price);
+                                if (price == 1) {
+                                    notifyToOthers();
+                                    price = 2;
+                                }
+                                return true;
+                            } else return false;
 
-                            default:
-                                return false;
-                        }
+                        default:
+                            return false;
+                    }
                 } else return false;
             } else return false;
         }

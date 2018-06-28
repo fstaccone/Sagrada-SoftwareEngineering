@@ -18,14 +18,15 @@ public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
      */
     public PlaceDiceNotAdjacentToAnotherEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * This tool card allows the player to place one chosen dice from the reserve anywhere in his scheme card.
      * The new dice must not have any adjacent dice and the player has to consider all constraints.
+     *
      * @param player is the player that uses this tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
      * sacrifice, for multi player: enough favor tokens) and the chosen dice is placed correctly in the new position.
      */
@@ -37,7 +38,7 @@ public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
         Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if(!used) {
+            if (!used) {
                 Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
                 if (sacrificeDice.getColor().equals(Colors.YELLOW) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
                     if (!(schema.existsAdjacentDice(newRow, newColumn))) {
@@ -45,7 +46,7 @@ public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
                         if (dice.equals(schema.getWindow()[newRow][newColumn].getDice())) {
                             match.getBoard().getReserve().getDices().remove(player.getDice());
                             match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            used=true;
+                            used = true;
                             return true;
                         } else {
                             return false;
@@ -56,7 +57,7 @@ public class PlaceDiceNotAdjacentToAnotherEffect implements Effect {
                 } else {
                     return false;
                 }
-            }else return false;
+            } else return false;
         } else {
             //MULTIPLAYER
             PlayerMultiplayer p = (PlayerMultiplayer) player;

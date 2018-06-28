@@ -22,13 +22,14 @@ public class ReRollDiceEffect implements Effect {
      */
     public ReRollDiceEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * This tool card allows the player to re roll a chosen dice in the reserve.
+     *
      * @param player is the player that uses this tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
      * sacrifice, for multi player: enough favor tokens).
      */
@@ -38,16 +39,16 @@ public class ReRollDiceEffect implements Effect {
         int newValue = rand.nextInt(6) + 1;
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if(!used) {
+            if (!used) {
                 Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
                 if (sacrificeDice.getColor().equals(Colors.VIOLET) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
                     Dice dice = match.getBoard().getReserve().getDices().get(player.getDice());
                     dice.setValue(newValue);
                     match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                    used=true;
+                    used = true;
                     return true;
                 } else return false;
-            }else return false;
+            } else return false;
         }
         //MULTIPLAYER
         else {

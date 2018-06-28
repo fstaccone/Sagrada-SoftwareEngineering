@@ -21,32 +21,33 @@ public class ChooseAnotherDiceEffect implements Effect {
      */
     public ChooseAnotherDiceEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * If the preliminary conditions are satisfied (enough favor tokens for multi player, correct dice to sacrifice
      * for single player), the player is allowed to choose and place a second dice in his first turn
+     *
      * @param player is the player that uses the tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the preliminary conditions are satisfied, false otherwise
      */
     @Override
     public boolean applyEffect(Player player, Match match) {
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if(!used) {
+            if (!used) {
                 Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
                 if (sacrificeDice.getColor().equals(Colors.RED)) {
                     match.setDiceAction(false);
                     player.setTurnsLeft(0);
                     match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                    used=true;
+                    used = true;
                     return true;
                 } else {
                     return false;
                 }
-            }else return false;
+            } else return false;
         }
         //MULTIPLAYER
         else {

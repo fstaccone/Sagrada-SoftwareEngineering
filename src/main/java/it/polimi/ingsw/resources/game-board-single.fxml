@@ -35,8 +35,7 @@
         </font>
     </Button>
     <!-- onAction="#onQuitClicked" da inserire dentro button !-->
-    <Button id="gameBoardQuit" fx:id="quit" layoutX="1248.0" layoutY="27.0" mnemonicParsing="false"
-            onAction="#onQuitClicked" prefHeight="40.0" prefWidth="92.0" text="ESCI" textFill="WHITE">
+    <Button id="gameBoardQuit" fx:id="quit" layoutX="1248.0" layoutY="27.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="92.0" text="ESCI" textFill="WHITE">
         <font>
             <Font name="Courier New Bold" size="18.0"/>
         </font>

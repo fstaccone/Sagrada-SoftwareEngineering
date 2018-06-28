@@ -18,14 +18,15 @@ public class MoveTwoDicesEffect implements Effect {
      */
     public MoveTwoDicesEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * This tool card allows the player to move exactly 2 dices in his scheme card.
      * The player has to consider all placement rules.
+     *
      * @param player is the player that uses this tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
      * sacrifice, for multi player: enough favor tokens) and the chosen dices are placed correctly in their new
      * positions.
@@ -41,7 +42,7 @@ public class MoveTwoDicesEffect implements Effect {
         Dice dice2 = schema.removeDice(row2, column2);
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if(!used) {
+            if (!used) {
                 Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
                 if (sacrificeDice.getColor().equals(Colors.YELLOW) && dice1 != null && dice2 != null) {
                     int newRow1 = player.getFinalX1();
@@ -50,7 +51,7 @@ public class MoveTwoDicesEffect implements Effect {
                     int newColumn2 = player.getFinalY2();
                     if (schema.putDice(dice1, newRow1, newColumn1) && schema.putDice(dice2, newRow2, newColumn2)) {
                         match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        used=true;
+                        used = true;
                         return true;
                     } else {
                         if (dice1.equals(schema.getDice(newRow1, newColumn1))) {
@@ -66,7 +67,7 @@ public class MoveTwoDicesEffect implements Effect {
                 } else {
                     return false;
                 }
-            }else return false;
+            } else return false;
         }
         //MULTIPLAYER
         else {

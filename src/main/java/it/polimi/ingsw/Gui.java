@@ -129,12 +129,14 @@ public class Gui {
             String multi = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
             String single = "Round: " + round + "\tTurno: " + turn;
             if (gameBoardHandlerMulti != null) {
+                gameBoardHandlerMulti.resetToolValues();
                 gameBoardHandlerMulti.appendToTextArea(multi);
                 gameBoardHandlerMulti.initializeActions();
             } else if (chooseCardHandlerMultiplayer != null) {
                 chooseCardHandlerMultiplayer.appendToTextArea(multi);
                 chooseCardHandlerMultiplayer.setTurn(true);
             } else if (gameBoardHandlerSingle != null) {
+                gameBoardHandlerSingle.resetToolValues();
                 gameBoardHandlerSingle.appendToTextArea(single);
             }
         } else {
@@ -239,7 +241,7 @@ public class Gui {
         if (stillPlaying) {
             if (gameBoardHandlerMulti != null) {
                 gameBoardHandlerMulti.onGameClosing();
-            } else if(chooseCardHandlerMultiplayer != null){
+            } else if (chooseCardHandlerMultiplayer != null) {
                 chooseCardHandlerMultiplayer.onGameClosing();
             }
         }

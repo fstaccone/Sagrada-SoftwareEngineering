@@ -47,17 +47,16 @@ public class ChooseCardHandlerSingle implements Initializable {
     }
 
     @FXML
-    public void onQuitClicked() throws RemoteException {
-        parent.onQuitClicked();
-    }
-
-    @FXML
     public void onPlayClicked() throws RemoteException {
         parent.onPlayClicked(play, textArea);
     }
 
     public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, ClientController clientController, String username) {
         parent.init(windowFromGui, sceneFromGui, remoteController, clientController, username);
+        quit.setOnMouseClicked(event -> {
+            event.consume();
+            parent.onQuitClicked();
+        });
     }
 
     public void chosen0(MouseEvent mouseEvent) {

@@ -23,14 +23,15 @@ public class UpsideDownDiceEffect implements Effect {
      */
     public UpsideDownDiceEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * This tool card allows the player to put a chosen dice from the reserve upside down.
      * It means that if the dice value is 6, after using the tool card it'll be 1, if it's 5, it'll be 2 and so on.
+     *
      * @param player is the player that uses this tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
      * sacrifice, for multi player: enough favor tokens) and the chosen dice from the reserve has a value between
      * 1 and 6.
@@ -40,46 +41,46 @@ public class UpsideDownDiceEffect implements Effect {
         int value = match.getBoard().getReserve().getDices().get(player.getDice()).getValue();
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if(!used) {
+            if (!used) {
                 Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
                 if (sacrificeDice.getColor().equals(Colors.GREEN) && player.getDice() < match.getBoard().getReserve().getDices().size()) {
                     switch (value) {
                         case 1:
                             match.getBoard().getReserve().getDices().get(player.getDice()).setValue(6);
                             match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            used=true;
+                            used = true;
                             return true;
                         case 2:
                             match.getBoard().getReserve().getDices().get(player.getDice()).setValue(5);
                             match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            used=true;
+                            used = true;
                             return true;
                         case 3:
                             match.getBoard().getReserve().getDices().get(player.getDice()).setValue(4);
                             match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            used=true;
+                            used = true;
                             return true;
                         case 4:
                             match.getBoard().getReserve().getDices().get(player.getDice()).setValue(3);
                             match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            used=true;
+                            used = true;
                             return true;
                         case 5:
                             match.getBoard().getReserve().getDices().get(player.getDice()).setValue(2);
                             match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            used=true;
+                            used = true;
                             return true;
                         case 6:
                             match.getBoard().getReserve().getDices().get(player.getDice()).setValue(1);
                             match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                            used=true;
+                            used = true;
                             return true;
                         default:
                             return false;
                     }
                 } else
                     return false;
-            }else
+            } else
                 return false;
         }
         //MULTIPLAYER

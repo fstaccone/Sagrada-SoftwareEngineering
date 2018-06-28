@@ -5,14 +5,16 @@ import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class LightShadesEffect implements Effect {
-    private final int pointsToBeAssigned=2;
+    private final int pointsToBeAssigned = 2;
+
     public LightShadesEffect() {
     }
 
     /**
      * Gives 2 points to the player for every set of dices with value 1 and 2 in his scheme card
+     *
      * @param player is the player that uses this public objective card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return
      */
     @Override
@@ -21,23 +23,23 @@ public class LightShadesEffect implements Effect {
         int temp = player.getPoints();
         int onesCounter = 0;
         int twosCounter = 0;
-        for(Square[] row : schema){
-            for(Square square : row){
+        for (Square[] row : schema) {
+            for (Square square : row) {
                 int val = 0;
-                if(square.getDice()!=null)
+                if (square.getDice() != null)
                     val = square.getDice().getValue();
-                if(val==1)
+                if (val == 1)
                     onesCounter++;
-                    System.out.println(onesCounter);
-                if(val==2)
+                System.out.println(onesCounter);
+                if (val == 2)
                     twosCounter++;
                 System.out.println(onesCounter);
 
             }
         }
-        if(onesCounter<=twosCounter)
-            temp = temp + onesCounter*pointsToBeAssigned;
-        else temp = temp + twosCounter*pointsToBeAssigned;
+        if (onesCounter <= twosCounter)
+            temp = temp + onesCounter * pointsToBeAssigned;
+        else temp = temp + twosCounter * pointsToBeAssigned;
         player.setPoints(temp);
         return false;
     }

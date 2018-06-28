@@ -18,14 +18,15 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
      */
     public MoveDiceIgnoringValueRestrEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * This tool card allows the player to move a dice in his scheme card ignoring value restriction.
      * The player has to consider all other placement rules.
+     *
      * @param player is the player that uses this tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
      * sacrifice, for multi player: enough favor tokens) and the chosen dice is placed correctly in the new position.
      */
@@ -38,13 +39,13 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
         Dice dice = schema.getDice(row, column);
         //SINGLE
         if (player.getDiceToBeSacrificed() != 9) {
-            if(!used) {
+            if (!used) {
                 Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
                 if (sacrificeDice.getColor().equals(Colors.RED) && dice != null) {
                     putDice(dice, schema, player, row, column);
                     if (dice.equals(schema.getWindow()[player.getFinalX1()][player.getFinalY1()].getDice())) {
                         match.getBoard().getReserve().getDices().remove(sacrificeDice);
-                        used=true;
+                        used = true;
                         return true;
                     } else {
                         schema.putDiceBack(dice, row, column);
@@ -53,7 +54,7 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
                 } else {
                     return false;
                 }
-            }else return false;
+            } else return false;
 
         } //MULTIPLAYER
         else {
@@ -61,7 +62,7 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
             MatchMultiplayer m = (MatchMultiplayer) match;
             if (p.getNumFavorTokens() >= price) {
                 if (dice != null) {
-                    putDice(dice,schema,player,row,column);
+                    putDice(dice, schema, player, row, column);
                     if (dice.equals(schema.getWindow()[p.getFinalX1()][p.getFinalY1()].getDice())) {
                         p.setNumFavorTokens(p.getNumFavorTokens() - price);
                         if (price.equals(1)) {
@@ -101,13 +102,14 @@ public class MoveDiceIgnoringValueRestrEffect implements Effect {
 
     /**
      * Places the dice in the player's scheme card.
-     * @param dice is the dice to move
+     *
+     * @param dice   is the dice to move
      * @param schema is the player's scheme card
      * @param player is the player that uses this tool card
-     * @param row is the row index of the dice new position in the scheme card
+     * @param row    is the row index of the dice new position in the scheme card
      * @param column is the column index of the dice new position in the scheme card
      */
-    private void putDice(Dice dice, WindowPatternCard schema, Player player, int row, int column){
+    private void putDice(Dice dice, WindowPatternCard schema, Player player, int row, int column) {
         int newRow = player.getFinalX1();
         int newColumn = player.getFinalY1();
         schema.removeDice(row, column);

@@ -47,21 +47,20 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
     }
 
     @FXML
-    public void onQuitClicked() throws RemoteException {
-        if(!exit) {
-            parent.onQuitClicked();
-        } else {
-            parent.terminateGame();
-        }
-    }
-
-    @FXML
     public void onPlayClicked() throws RemoteException {
         parent.onPlayClicked(play, textArea);
     }
 
     public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, ClientController clientController, String username) {
         parent.init(windowFromGui, sceneFromGui, remoteController, clientController, username);
+        quit.setOnMouseClicked(event -> {
+            event.consume();
+            if (!exit) {
+                parent.onQuitClicked();
+            } else {
+                parent.terminateGame();
+            }
+        });
     }
 
     public void chosen0(MouseEvent mouseEvent) {
@@ -123,7 +122,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
         exit = true;
     }
 
-    private void disableActionsOnBoard(){
+    private void disableActionsOnBoard() {
         card0.setDisable(true);
         card1.setDisable(true);
         card2.setDisable(true);

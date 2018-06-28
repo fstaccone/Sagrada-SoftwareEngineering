@@ -1,20 +1,22 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
-import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gamelogic.Match;
+import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class ColorsVarietyEffect implements Effect {
-    private final int pointsToBeAssigned=4;
+    private final int pointsToBeAssigned = 4;
+
     public ColorsVarietyEffect() {
 
     }
 
     /**
      * Gives the player 4 points for every set of dices of the 5 different colors in his scheme card
+     *
      * @param caller is the player that uses this public objective card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return
      */
     @Override
@@ -26,10 +28,10 @@ public class ColorsVarietyEffect implements Effect {
         int blueCounter = 0;
         int violetCounter = 0;
         int greenCounter = 0;
-        for(Square[] row : schema){
-            for(Square square : row){
+        for (Square[] row : schema) {
+            for (Square square : row) {
                 Colors color = Colors.NONE;
-                if(square.getDice()!=null)
+                if (square.getDice() != null)
                     color = square.getDice().getColor();
                 switch (color) {
                     case BLUE:
@@ -52,13 +54,13 @@ public class ColorsVarietyEffect implements Effect {
                 }
             }
         }
-        int[] counters ={blueCounter, redCounter, greenCounter, violetCounter, yellowCounter};
+        int[] counters = {blueCounter, redCounter, greenCounter, violetCounter, yellowCounter};
         int min = counters[0];
-        for(int counter : counters) {
+        for (int counter : counters) {
             if (counter <= min)
                 min = counter;
         }
-        temp = temp + min*pointsToBeAssigned;
+        temp = temp + min * pointsToBeAssigned;
         caller.setPoints(temp);
         return false;
     }

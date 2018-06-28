@@ -174,7 +174,8 @@ public class LoginHandler implements Initializable {
 
 
     private void onClosing() throws RemoteException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Sei sicuro di voler uscire?", ButtonType.YES, ButtonType.NO);
+        ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Sei sicuro di voler uscire?", yes, ButtonType.NO);
         alert.setTitle("Uscita");
         alert.setHeaderText(null);
         alert.setResizable(false);

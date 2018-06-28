@@ -93,7 +93,15 @@ public class GameBoardHandlerSingle {
             useButton.setVisible(false);
             toolLabel.setVisible(false);
             toolPane.setVisible(false);
+            gui.getWindowStage().setOnCloseRequest(event -> {
+                event.consume();
+                gameBoardHandler.quitClicked();
+            });
             forPrivateCardChoice.setVisible(false);
+            quit.setOnMouseClicked(event -> {
+                event.consume();
+                gameBoardHandler.quitClicked();
+            });
         });
     }
 
@@ -284,8 +292,7 @@ public class GameBoardHandlerSingle {
         gameBoardHandler.passButtonClicked();
     }
 
-    @FXML
-    public void onQuitClicked() {
-        gameBoardHandler.quitClicked();
+    public void resetToolValues() {
+        gameBoardHandler.resetToolValues();
     }
 }

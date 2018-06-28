@@ -1,6 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.socket.requests.TerminateMatchRequest;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +112,22 @@ public class GameBoardHandlerMulti {
         useButton.setVisible(false);
         toolLabel.setVisible(false);
         toolPane.setVisible(false);
+        gui.getWindowStage().setOnCloseRequest(event -> {
+            if (exit) {
+                gameBoardHandler.terminateGame();
+            } else {
+                event.consume();
+                gameBoardHandler.quitClicked();
+            }
+        });
+        quit.setOnMouseClicked(event -> {
+            if (exit) {
+                gameBoardHandler.terminateGame();
+            } else {
+                event.consume();
+                gameBoardHandler.quitClicked();
+            }
+        });
         exit = false;
 
     }
@@ -336,7 +350,7 @@ public class GameBoardHandlerMulti {
     }
 
     public void setPrivateCard(String privateCard) {
-        gameBoardHandler.setSinglePrivateCard(privObjLabel, privateObjCard,null, privateCard);
+        gameBoardHandler.setSinglePrivateCard(privObjLabel, privateObjCard, null, privateCard);
     }
 
     public void setFavourTokens(int value) {
@@ -494,12 +508,7 @@ public class GameBoardHandlerMulti {
         gameBoardHandler.passButtonClicked();
     }
 
-    @FXML
-    public void onQuitClicked() {
-        if (exit) {
-            gameBoardHandler.terminateGame();
-        } else {
-            gameBoardHandler.quitClicked();
-        }
+    public void resetToolValues() {
+        gameBoardHandler.resetToolValues();
     }
 }

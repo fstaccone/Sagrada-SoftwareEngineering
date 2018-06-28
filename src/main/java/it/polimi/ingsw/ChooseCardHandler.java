@@ -7,10 +7,7 @@ import it.polimi.ingsw.socket.requests.QuitGameRequest;
 import it.polimi.ingsw.socket.requests.TerminateMatchRequest;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -24,7 +21,7 @@ import java.util.List;
 
 public class ChooseCardHandler {
 
-    public ChooseCardHandler( boolean single, boolean myTurn) {
+    public ChooseCardHandler(boolean single, boolean myTurn) {
         this.single = single;
         choice = ChooseCardHandler.OUT_OF_RANGE;
         this.myTurn = myTurn;
@@ -57,8 +54,9 @@ public class ChooseCardHandler {
         card3.setDisable(true);
     }
 
-    public void onQuitClicked()  {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confermi di voler abbandonare la partita?", ButtonType.YES, ButtonType.NO);
+    public void onQuitClicked() {
+        ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confermi di voler abbandonare la partita?", yes, ButtonType.NO);
         alert.setTitle("Abbandona");
         alert.setHeaderText(null);
         alert.setResizable(false);
@@ -72,8 +70,7 @@ public class ChooseCardHandler {
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-            }
-            else
+            } else
                 controllerSocket.request(new QuitGameRequest(username, single));
             System.exit(0);
         }
@@ -128,7 +125,6 @@ public class ChooseCardHandler {
             window.setScene(sceneFromGui);
             window.setTitle("Scelta della carta schema");
             window.setResizable(false);
-            window.setOnCloseRequest(event->onQuitClicked());
             window.show();
         });
     }
@@ -205,15 +201,15 @@ public class ChooseCardHandler {
         appendToTextArea(textArea, "Benvenuto in questa nuova partita di Sagrada. Buon divertimento!");
     }
 
-    public void terminateGame(){
+    public void terminateGame() {
         window.close();
-        if(controllerRmi != null){
+        if (controllerRmi != null) {
             try {
                 controllerRmi.removeMatch(username);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-        } else if(controllerSocket != null){
+        } else if (controllerSocket != null) {
             controllerSocket.request(new TerminateMatchRequest(username));
         }
         System.exit(0);

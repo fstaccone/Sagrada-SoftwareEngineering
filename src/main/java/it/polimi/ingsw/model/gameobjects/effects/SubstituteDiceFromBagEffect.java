@@ -21,15 +21,16 @@ public class SubstituteDiceFromBagEffect implements Effect {
      */
     public SubstituteDiceFromBagEffect() {
         price = 1;
-        used=false;
+        used = false;
     }
 
     /**
      * This tool card allows the player to put a dice of the reserve back in the dices bag, and get a new dice from the
      * bag. (The player will then have to choose the value of the new dice and, if possible, place it in his scheme
      * card)
+     *
      * @param player is the player that uses this tool card
-     * @param match is the player's current match
+     * @param match  is the player's current match
      * @return true if the tool card prerequisites are satisfied (for single player: correct color of the dice to
      * sacrifice, for multi player: enough favor tokens) and an existing dice is chosen from the reserve.
      */
@@ -37,7 +38,7 @@ public class SubstituteDiceFromBagEffect implements Effect {
     public boolean applyEffect(Player player, Match match) {
         //SINGLEPLAYER
         if (player.getDiceToBeSacrificed() != 9) {
-            if(!used) {
+            if (!used) {
                 Dice sacrificeDice = match.getBoard().getReserve().getDices().get(player.getDiceToBeSacrificed());
                 if (sacrificeDice.getColor().equals(Colors.VIOLET)) {
                     Dice dice = match.getBoard().getReserve().getDices().remove(player.getDice());
@@ -52,7 +53,7 @@ public class SubstituteDiceFromBagEffect implements Effect {
                     } else
                         return false;
                 } else return false;
-            }else return false;
+            } else return false;
         }
         //MULTIPLAYER
         else {

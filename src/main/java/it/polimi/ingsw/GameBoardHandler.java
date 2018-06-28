@@ -308,12 +308,10 @@ public class GameBoardHandler {
         rmiController = gui.getControllerRmi();
         socketController = gui.getControllerSocket();
         window = gui.getWindowStage();
-
         Platform.runLater(() -> {
             window.setScene(scene);
             window.setTitle("Sagrada");
             window.setResizable(false);
-            window.setOnCloseRequest(event ->quitClicked());
             window.show();
         });
 
@@ -398,7 +396,7 @@ public class GameBoardHandler {
 
         card.setOnMouseEntered(event -> {
             privObjLabel.setVisible(false);
-            if(other!=null) {
+            if (other != null) {
                 other.setVisible(false);
             }
             card.setStyle("-fx-scale-x: 2.0;-fx-scale-y: 2.0");
@@ -408,7 +406,7 @@ public class GameBoardHandler {
 
         card.setOnMouseExited(event -> {
             privObjLabel.setVisible(true);
-            if(other!=null) {
+            if (other != null) {
                 other.setVisible(true);
             }
             card.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
@@ -600,7 +598,7 @@ public class GameBoardHandler {
     }
 
 
-    private void resetToolValues() {
+    public void resetToolValues() {
         partialReserveIndexForTools = OUT_OF_RANGE;
         targetReserveIndexForTools = OUT_OF_RANGE;
         partialDiceFromRoundForTools = OUT_OF_RANGE;
@@ -1500,7 +1498,7 @@ public class GameBoardHandler {
                         socketController.request(new SetDiceValueRequest(value11, username, single));
                         socketController.request(new PlaceDiceTool11Request(finalCoordinateX1, finalCoordinateY1, username, single));
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(200);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                             Thread.currentThread().interrupt();
@@ -1601,13 +1599,14 @@ public class GameBoardHandler {
     }
 
     public void quitClicked() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi davvero uscire?", ButtonType.YES, ButtonType.NO);
+        ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi davvero uscire?", yes, ButtonType.NO);
         alert.setTitle("Uscita");
         alert.setHeaderText(null);
         alert.setResizable(false);
         alert.setGraphic(null);
         alert.showAndWait();
-        if (alert.getResult() == ButtonType.YES) {
+        if (alert.getResult() == yes) {
             window.close();
             if (rmiController != null) {
                 try {
