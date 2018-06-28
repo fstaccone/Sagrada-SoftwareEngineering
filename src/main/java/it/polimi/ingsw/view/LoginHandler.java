@@ -137,7 +137,7 @@ public class LoginHandler implements Initializable {
 
     @FXML
     private void playClicked() throws Exception {
-        AudioClip audioClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/button.mp3");
+        AudioClip audioClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/button.mp3");
         audioClip.play();
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         readInput();

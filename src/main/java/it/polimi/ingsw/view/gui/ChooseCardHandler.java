@@ -27,8 +27,8 @@ public class ChooseCardHandler {
         this.myTurn = myTurn;
     }
 
-    protected static final String WINDOWS_URL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
-    protected static final String PRIVATE_CARDS_URL = "File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/";
+    protected static final String WINDOWS_URL = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/window_pattern_cards/";
+    protected static final String PRIVATE_CARDS_URL = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/private_objective_cards/";
     protected static final int OUT_OF_RANGE = 5;
 
     protected int choice;
@@ -62,7 +62,7 @@ public class ChooseCardHandler {
         alert.setResizable(false);
         alert.setGraphic(null);
         alert.showAndWait();
-        if (alert.getResult() == ButtonType.YES) {
+        if (alert.getResult() == yes) {
             window.close();
             if (controllerRmi != null) {
                 try {

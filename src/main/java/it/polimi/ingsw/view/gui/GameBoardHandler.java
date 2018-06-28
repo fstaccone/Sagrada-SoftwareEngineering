@@ -29,13 +29,13 @@ public class GameBoardHandler {
     private GameBoardHandlerMulti gameBoardHandlerMulti;
     private GameBoardHandlerSingle gameBoardHandlerSingle;
 
-    private static final String PRIVATE_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/private_objective_cards/";
-    protected static final String TOOLCARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/toolcards/";
-    protected static final String DICE_IMAGES_PATH = "File:./src/main/java/it/polimi/ingsw/resources/dices/dice_";
-    protected static final String PUBLIC_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/public_objective_cards/";
-    protected static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/other/favour.png";
-    protected static final String WINDOW_PATTERN_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/";
-    private static final String TRANSPARENT_IMAGE_URL = "File:./src/main/java/it/polimi/ingsw/resources/other/transparent.png";
+    private static final String PRIVATE_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/private_objective_cards/";
+    protected static final String TOOLCARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/toolcards/";
+    protected static final String DICE_IMAGES_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/dices/dice_";
+    protected static final String PUBLIC_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/public_objective_cards/";
+    protected static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/other/favour.png";
+    protected static final String WINDOW_PATTERN_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/window_pattern_cards/";
+    private static final String TRANSPARENT_IMAGE_URL = "File:./src/main/java/it/polimi/ingsw/resources/images/other/transparent.png";
     private static final int OUT_OF_RANGE = -1;
     private static final int COLUMNS = 5;
     private static final int ROWS = 4;

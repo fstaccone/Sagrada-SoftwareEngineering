@@ -51,7 +51,7 @@ public class Gui {
     private boolean single;
 
     private String playerSchemeCardImageURL;
-    private AudioClip turnClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/turn.mp3");
+    private AudioClip turnClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/turn.mp3");
 
     public Gui(Stage fromLogin, String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
         this.username = username;
@@ -280,7 +280,7 @@ public class Gui {
         if (schemeCardChosen) {
             mySchemeCard = schemeCard;
             String s = schemeCardName.toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-            playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/window_pattern_card/" + s + ".png";
+            playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/window_pattern_cards/" + s + ".png";
         }
     }
 
@@ -385,7 +385,7 @@ public class Gui {
     }
 
     public void onWindowChoice(List<String> windows) {
-        AudioClip cardsClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/cards.mp3");
+        AudioClip cardsClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/cards.mp3");
         cardsClip.play();
 
         if (single) {
@@ -407,7 +407,7 @@ public class Gui {
 
     public void onAfterWindowChoiceMultiplayer() {
 
-        AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/dices.mp3");
+        AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/dices.mp3");
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
         try {
@@ -467,7 +467,7 @@ public class Gui {
 
     public void onAfterWindowChoiceSingleplayer() {
 
-        AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/dices.mp3");
+        AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/dices.mp3");
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
         try {

@@ -1,5 +1,5 @@
 .root {
-    -fx-background-image: url("sagrada2.jpg");
+    -fx-background-image: url("File:./src/main/java/it/polimi/ingsw/resources/images/other/sagrada-login.jpg");
     -fx-background-size: cover;
     -fx-font-family: "Courier New";
 }
@@ -29,7 +29,7 @@
 }
 
 #waiting {
-    -fx-background-image: url("waiting.jpg");
+    -fx-background-image: url("File:./src/main/java/it/polimi/ingsw/resources/images/other/waiting.jpg");
     -fx-background-size: cover;
     -fx-font-family: "Algeria";
 }

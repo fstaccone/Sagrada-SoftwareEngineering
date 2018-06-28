@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
@@ -35,13 +36,14 @@ public class Login extends Application {
     }
 
     private void onClosing() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi veramente uscire?", ButtonType.YES, ButtonType.NO);
+        ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi veramente uscire?", yes, ButtonType.NO);
         alert.setTitle("Uscita");
         alert.setHeaderText(null);
         alert.setResizable(false);
         alert.setGraphic(null);
         alert.showAndWait();
-        if (alert.getResult() == ButtonType.YES) {
+        if (alert.getResult() == yes) {
             window.close();
             System.exit(1);
         }

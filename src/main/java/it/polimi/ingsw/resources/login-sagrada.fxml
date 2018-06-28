@@ -37,7 +37,7 @@
    <TextField fx:id="difficultyInput" id="serverAddressInput" layoutX="127.0" layoutY="561.0" prefHeight="26.0" prefWidth="221.0" promptText="Digita un valore tra 1 e 5" />
 
     <stylesheets>
-        <URL value="@css/style.css" />
+        <URL value="@css/login-style.css" />
     </stylesheets>
 
 </AnchorPane>
