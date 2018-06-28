@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 rmiregistry \
     -J-Djava.rmi.server.logCalls=true \

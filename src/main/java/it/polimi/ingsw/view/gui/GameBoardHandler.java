@@ -1,8 +1,8 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.control.SocketController;
+import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.socket.requests.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -40,12 +40,10 @@ public class GameBoardHandler {
     private static final int COLUMNS = 5;
     private static final int ROWS = 4;
 
-    private int partialStartXForTools1 = GameBoardHandler.OUT_OF_RANGE;
-    private int partialStartYForTools1 = GameBoardHandler.OUT_OF_RANGE;
+    private int partialStartXForTools = GameBoardHandler.OUT_OF_RANGE;
+    private int partialStartYForTools = GameBoardHandler.OUT_OF_RANGE;
     private int targetStartXForTools1 = GameBoardHandler.OUT_OF_RANGE;
     private int targetStartYForTools1 = GameBoardHandler.OUT_OF_RANGE;
-    private int partialStartXForTools2 = GameBoardHandler.OUT_OF_RANGE;
-    private int partialStartYForTools2 = GameBoardHandler.OUT_OF_RANGE;
     private int targetStartXForTools2 = GameBoardHandler.OUT_OF_RANGE;
     private int targetStartYForTools2 = GameBoardHandler.OUT_OF_RANGE;
     private int partialRoundForTools = GameBoardHandler.OUT_OF_RANGE;
@@ -66,7 +64,6 @@ public class GameBoardHandler {
     private TextField finalY1;
     private TextField finalX2;
     private TextField finalY2;
-    private int pickedDices = 0;
 
     /* Useful for contexts */
     private ImageView sacrificeImageView;
@@ -107,13 +104,10 @@ public class GameBoardHandler {
     private void setupSchemeCardSource(ImageView source) {
         source.setOnMouseEntered(event -> source.setCursor(Cursor.HAND));
         source.setOnDragDetected(event -> {
-            if (pickedDices == 0) {
-                partialStartXForTools1 = GridPane.getRowIndex(source);
-                partialStartYForTools1 = GridPane.getColumnIndex(source);
-            } else {
-                partialStartXForTools2 = GridPane.getRowIndex(source);
-                partialStartYForTools2 = GridPane.getColumnIndex(source);
-            }
+
+            partialStartXForTools = GridPane.getRowIndex(source);
+            partialStartYForTools = GridPane.getColumnIndex(source);
+
             Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putImage(source.getImage());
@@ -186,7 +180,7 @@ public class GameBoardHandler {
         });
     }
 
-    private void setupSchemeCardTarget(ImageView target) {
+    private void setupSchemeCardTarget1(ImageView target) {
 
         target.setOnDragOver(event -> {
             if (event.getDragboard().hasImage()) {
@@ -198,14 +192,26 @@ public class GameBoardHandler {
         target.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             target.setImage(db.getImage());
-            if (pickedDices == 0) {
-                targetStartXForTools1 = partialStartXForTools1;
-                targetStartYForTools1 = partialStartYForTools1;
-                pickedDices = 1;
-            } else {
-                targetStartXForTools2 = partialStartXForTools2;
-                targetStartYForTools2 = partialStartYForTools2;
+            targetStartXForTools1 = partialStartXForTools;
+            targetStartYForTools1 = partialStartYForTools;
+            event.consume();
+        });
+    }
+
+    private void setupSchemeCardTarget2(ImageView target) {
+
+        target.setOnDragOver(event -> {
+            if (event.getDragboard().hasImage()) {
+                event.acceptTransferModes(TransferMode.MOVE);
             }
+            event.consume();
+        });
+
+        target.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            target.setImage(db.getImage());
+            targetStartXForTools2 = partialStartXForTools;
+            targetStartYForTools2 = partialStartYForTools;
             event.consume();
         });
     }
@@ -603,13 +609,11 @@ public class GameBoardHandler {
         targetReserveIndexForTools = OUT_OF_RANGE;
         partialDiceFromRoundForTools = OUT_OF_RANGE;
         targetDiceFromRoundForTools = OUT_OF_RANGE;
-        partialStartXForTools1 = OUT_OF_RANGE;
+        partialStartXForTools = OUT_OF_RANGE;
         targetStartXForTools1 = OUT_OF_RANGE;
-        partialStartYForTools1 = OUT_OF_RANGE;
+        partialStartYForTools = OUT_OF_RANGE;
         targetStartYForTools1 = OUT_OF_RANGE;
-        partialStartXForTools2 = OUT_OF_RANGE;
         targetStartXForTools2 = OUT_OF_RANGE;
-        partialStartYForTools2 = OUT_OF_RANGE;
         targetStartYForTools2 = OUT_OF_RANGE;
         partialRoundForTools = OUT_OF_RANGE;
         targetRoundForTools = OUT_OF_RANGE;
@@ -620,7 +624,6 @@ public class GameBoardHandler {
         finalCoordinateX2 = null;
         finalCoordinateY2 = null;
         incrOrDecr = null;
-        pickedDices = 0;
         imageView1.setVisible(false);
         imageView2.setVisible(false);
         imageView3.setVisible(false);
@@ -794,7 +797,7 @@ public class GameBoardHandler {
             gameBoard.getChildren().add(imageView1);
             gameBoard.getChildren().add(finalX1);
             gameBoard.getChildren().add(finalY1);
-            setupSchemeCardTarget(imageView1);
+            setupSchemeCardTarget1(imageView1);
 
             useButton.setOnMouseClicked(event -> {
                 finalCoordinateX1 = tryParse(finalX1.getText());
@@ -878,8 +881,8 @@ public class GameBoardHandler {
             gameBoard.getChildren().add(finalY1);
             gameBoard.getChildren().add(finalX2);
             gameBoard.getChildren().add(finalY2);
-            setupSchemeCardTarget(imageView1);
-            setupSchemeCardTarget(imageView2);
+            setupSchemeCardTarget1(imageView1);
+            setupSchemeCardTarget2(imageView2);
 
             useButton.setOnMouseClicked(event -> {
                 finalCoordinateX1 = tryParse(finalX1.getText());
@@ -1342,8 +1345,8 @@ public class GameBoardHandler {
             gameBoard.getChildren().add(finalX2);
             gameBoard.getChildren().add(finalY2);
             setupRoundTrackTarget(imageView3);
-            setupSchemeCardTarget(imageView1);
-            setupSchemeCardTarget(imageView2);
+            setupSchemeCardTarget1(imageView1);
+            setupSchemeCardTarget2(imageView2);
 
 
             useButton.setOnMouseClicked(event -> {
@@ -1543,6 +1546,7 @@ public class GameBoardHandler {
                 return null;
             }
         }
+
     }
 
     private void checkBooleanMulti(boolean done, int i) {

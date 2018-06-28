@@ -10,7 +10,6 @@ public class GameStartedResponse implements Response {
     private List<String> names;
 
     public GameStartedResponse(boolean windowChosen, List<String> names) {
-        System.out.println("13 GameStartedResponse");
         this.windowChosen = windowChosen;
         this.names = names;
     }
