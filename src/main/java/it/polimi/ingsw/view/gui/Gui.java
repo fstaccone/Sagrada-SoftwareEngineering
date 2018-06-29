@@ -5,12 +5,11 @@ import it.polimi.ingsw.control.SocketController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +50,7 @@ public class Gui {
     private boolean single;
 
     private String playerSchemeCardImageURL;
-    private AudioClip turnClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/turn.mp3");
+    private AudioClip turnClip = Applet.newAudioClip(getClass().getResource("/sounds/turn.mp3"));
 
     public Gui(Stage fromLogin, String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
         this.username = username;
@@ -199,11 +198,7 @@ public class Gui {
     private void initializeChooseCardSingle() {
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = null;
-        try {
-            fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/choose-card-single.fxml"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        fxmlLoader.setLocation(getClass().getResource("/choose-card-single.fxml"));
         try {
             root = fxmlLoader.load();
         } catch (IOException e) {
@@ -219,11 +214,7 @@ public class Gui {
     private void initializeChooseCardMulti() {
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = null;
-        try {
-            fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/choose-card-multiplayer.fxml"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        fxmlLoader.setLocation(getClass().getResource("/choose-card-multiplayer.fxml"));
         try {
             root = fxmlLoader.load();
         } catch (IOException e) {
@@ -385,7 +376,7 @@ public class Gui {
     }
 
     public void onWindowChoice(List<String> windows) {
-        AudioClip cardsClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/cards.mp3");
+        AudioClip cardsClip = Applet.newAudioClip(getClass().getResource("/sounds/cards.mp3"));
         cardsClip.play();
 
         if (single) {
@@ -407,14 +398,10 @@ public class Gui {
 
     public void onAfterWindowChoiceMultiplayer() {
 
-        AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/dices.mp3");
+        AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.mp3"));
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
-        try {
-            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board-multi.fxml"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        fx.setLocation(getClass().getResource("/game-board-multi.fxml"));
         Parent root = null;
         try {
             root = fx.load();
@@ -467,14 +454,10 @@ public class Gui {
 
     public void onAfterWindowChoiceSingleplayer() {
 
-        AudioClip dicesClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/dices.mp3");
+        AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.mp3"));
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
-        try {
-            fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/game-board-single.fxml"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        fx.setLocation(getClass().getResource("/game-board-single.fxml"));
         Parent root = null;
         try {
             root = fx.load();

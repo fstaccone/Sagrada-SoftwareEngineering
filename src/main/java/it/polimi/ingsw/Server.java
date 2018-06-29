@@ -4,9 +4,7 @@ import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.socket.SocketHandler;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.Naming;
@@ -19,7 +17,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
-    private static final String SERVER_CONFIG = "./src/main/java/it/polimi/ingsw/server.config";
+    private static final String SERVER_CONFIG = "/server.config";
     private static int socketPort;
     private static String lobbyName;
     private static int waitingTime;
@@ -71,11 +69,14 @@ public class Server {
 
         //try-catch-finally to guarantee rightness of fileReader's closure after use
         try {
-            fileReader = new FileReader(serverConfig);
+
+            BufferedReader bufferedReader= new BufferedReader(new InputStreamReader(Server.class.getResourceAsStream(serverConfig)));
+            System.out.println(bufferedReader);
+            //fileReader = new FileReader(serverConfig);
 
             //try-finally to guarantee rightness of scanner's closure after use
             try {
-                scanner = new Scanner(fileReader);
+                scanner = new Scanner(bufferedReader);
 
                 //lecture of values added to the valuesMap
                 while (scanner.hasNextLine()) {
@@ -100,9 +101,8 @@ public class Server {
                     scanner.close();
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
+        }
+         finally {
             if (fileReader != null) {
                 try {
                     fileReader.close();

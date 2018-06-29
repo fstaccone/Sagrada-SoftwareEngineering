@@ -1,9 +1,9 @@
 package it.polimi.ingsw.view;
 
 
-import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.control.SocketController;
+import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
 import it.polimi.ingsw.socket.SocketListener;
 import it.polimi.ingsw.socket.requests.AddPlayerRequest;
 import it.polimi.ingsw.socket.requests.CheckUsernameRequest;
@@ -22,10 +22,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
-import javafx.scene.media.AudioClip;
+
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -42,7 +46,6 @@ import java.util.ResourceBundle;
 public class LoginHandler implements Initializable {
 
     private static final String GAME_NAME = "Lobby";
-    private static final String RESOURCES = "File:./src/main/java/it/polimi/ingsw/resources/";
     private transient Socket socket = null;
     private transient SocketController controllerSocket;
     private String username;
@@ -137,7 +140,8 @@ public class LoginHandler implements Initializable {
 
     @FXML
     private void playClicked() throws Exception {
-        AudioClip audioClip = new AudioClip("File:./src/main/java/it/polimi/ingsw/resources/sounds/button.mp3");
+
+        AudioClip audioClip = Applet.newAudioClip(getClass().getResource("/sounds/button.au"));
         audioClip.play();
         playButton.setEffect(new DropShadow(10, 0, 0, Color.BLUE));
         readInput();
@@ -152,7 +156,7 @@ public class LoginHandler implements Initializable {
             } else if (isGui && !singleplayer) {
 
                 FXMLLoader fx = new FXMLLoader();
-                fx.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/waiting-for-players.fxml"));
+                fx.setLocation(getClass().getResource("/waiting-for-players.fxml"));
                 Scene waiting = new Scene(fx.load());
 
                 //CONTROLLER
@@ -297,11 +301,7 @@ public class LoginHandler implements Initializable {
 
     private void loadAndShowGuiSingle() {
         FXMLLoader fx = new FXMLLoader();
-        try {
-            fx.setLocation(new URL(RESOURCES + "choose-card-single.fxml"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        fx.setLocation(getClass().getResource("/choose-card-single.fxml"));
         Scene chooseCard = null;
         try {
             chooseCard = new Scene(fx.load());

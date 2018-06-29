@@ -22,7 +22,7 @@ public class Login extends Application {
         window = primaryStage;
         LoginHandler loginHandler = new LoginHandler();
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(new URL("File:./src/main/java/it/polimi/ingsw/resources/login-sagrada.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/login-sagrada.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

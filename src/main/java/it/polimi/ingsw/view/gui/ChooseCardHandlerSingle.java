@@ -88,9 +88,9 @@ public class ChooseCardHandlerSingle implements Initializable {
     }
 
     public void setPrivateCard(String privateCard0, String privateCard1) {
-        Image image0 = new Image(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard0 + ".png");
+        Image image0 = new Image(getClass().getResourceAsStream(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard0 + ".png"));
         privateObjCard0.setImage(image0);
-        Image image1 = new Image(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard1 + ".png");
+        Image image1 = new Image(getClass().getResourceAsStream(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard1 + ".png"));
         privateObjCard1.setImage(image1);
     }
 

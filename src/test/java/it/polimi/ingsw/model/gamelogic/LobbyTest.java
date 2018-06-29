@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model.gamelogic;
 
 import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.model.gamelogic.ConnectionStatus;

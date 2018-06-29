@@ -194,8 +194,7 @@ public class GameBoardHandlerMulti {
     private void setOtherSchemeCards(Pane pane, String[][] window, String cardName) {
         if (window != null) {//DA CONTROLLARE
             String s = cardName.toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-            String imgURL = GameBoardHandler.WINDOW_PATTERN_CARDS_PATH + s + ".png";
-            BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 220, 192, false, true),
+            BackgroundImage myBI = new BackgroundImage(new Image(getClass().getResourceAsStream(GameBoardHandler.WINDOW_PATTERN_CARDS_PATH + s + ".png"), 220, 192, false, true),
                     BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                     BackgroundSize.DEFAULT);
             pane.setBackground(new Background(myBI));
@@ -232,8 +231,7 @@ public class GameBoardHandlerMulti {
                 if (!((temp.substring(0, temp.length() - 2)).equals("null"))) {
                     String dice = parts[2].toLowerCase();
                     dice = dice.substring(2, dice.length() - 3).replace(" ", "_");
-                    String url = GameBoardHandler.DICE_IMAGES_PATH + dice + ".png";
-                    Image img = new Image(url);
+                    Image img = new Image(getClass().getResourceAsStream(GameBoardHandler.DICE_IMAGES_PATH + dice + ".png"));
                     ImageView imgView = new ImageView(img);
                     imgView.setFitWidth(40);
                     imgView.setFitHeight(40);
@@ -360,7 +358,7 @@ public class GameBoardHandlerMulti {
 
         GridPane myFavourTokens = new GridPane();
         myFavourTokens.setPrefSize(40, 240);
-        Image img = new Image(GameBoardHandler.FAVOR_TOKEN_PATH);
+        Image img = new Image(getClass().getResourceAsStream(GameBoardHandler.FAVOR_TOKEN_PATH));
         for (int i = 0; i < value; i++) {
             ImageView imgView = new ImageView(img);
             imgView.setFitWidth(40);
@@ -377,7 +375,7 @@ public class GameBoardHandlerMulti {
         }
         GridPane myFavourTokens = new GridPane();
         myFavourTokens.setPrefSize(40, 240);
-        Image img = new Image(GameBoardHandler.FAVOR_TOKEN_PATH);
+        Image img = new Image(getClass().getResourceAsStream(GameBoardHandler.FAVOR_TOKEN_PATH));
         for (int i = 0; i < value; i++) {
             ImageView imgView = new ImageView(img);
             imgView.setFitWidth(40);
@@ -446,7 +444,7 @@ public class GameBoardHandlerMulti {
     }
 
     private void setSinglePublicCard(Label label, ImageView main, ImageView other1, ImageView other2, String publicCard) {
-        Image publicObjCardImg1 = new Image(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png");
+        Image publicObjCardImg1 = new Image(getClass().getResourceAsStream(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png"));
         main.setImage(publicObjCardImg1);
         main.setOnMouseEntered(event -> {
             main.setTranslateX(-10);
@@ -477,8 +475,8 @@ public class GameBoardHandlerMulti {
     }
 
     private void setSingleToolcard(Button main, Button other1, Button other2, String toolcard) {
-        String url = GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png";
-        Image cardImg = new Image(url);
+        ;
+        Image cardImg = new Image(getClass().getResourceAsStream(GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png"));
 
         ImageView cardView = new ImageView(cardImg);
         cardView.setFitWidth(158);

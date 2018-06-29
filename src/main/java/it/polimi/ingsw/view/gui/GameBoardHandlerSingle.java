@@ -184,7 +184,7 @@ public class GameBoardHandlerSingle {
     }
 
     private void setSinglePublicCard(Label label, ImageView main, ImageView other1, String publicCard) {
-        Image publicObjCardImg1 = new Image(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png");
+        Image publicObjCardImg1 = new Image(getClass().getResourceAsStream(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png"));
         main.setImage(publicObjCardImg1);
         main.setOnMouseEntered(event -> {
             main.setTranslateX(-10);
@@ -223,8 +223,7 @@ public class GameBoardHandlerSingle {
     }
 
     private void setSingleToolcard(Button main, String toolcard) {
-        String url = GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png";
-        Image cardImg = new Image(url);
+        Image cardImg = new Image(getClass().getResourceAsStream(GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png"));
 
         ImageView cardView = new ImageView(cardImg);
         cardView.setFitWidth(158);

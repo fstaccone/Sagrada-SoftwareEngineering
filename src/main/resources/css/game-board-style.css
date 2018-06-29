@@ -1,11 +1,11 @@
 #gameBoard {
-    -fx-background-image: url("File:./src/main/java/it/polimi/ingsw/resources/images/other/sagrada-background.jpg");
+    -fx-background-image: url("/images/other/sagrada-background.jpg");
     -fx-background-size: cover;
 }
 
 /* Per prova in game-board-single */
 .sampleCard {
-    -fx-background-image: url("File:./src/main/java/it/polimi/ingsw/resources/images/cards/private_objective_cards/blue.png");
+    -fx-background-image: url("/images/cards/private_objective_cards/blue.png");
     -fx-background-size: cover;
 }
 
@@ -38,12 +38,12 @@
 }
 
 #reserve {
-    -fx-background-image: url("File:./src/main/java/it/polimi/ingsw/resources/images/other/reserve.png");
+    -fx-background-image: url("/images/other/reserve.png");
     -fx-background-size: cover;
 }
 
 #choose-card-window {
-    -fx-background-image: url("File:./src/main/java/it/polimi/ingsw/resources/images/other/wood.png");
+    -fx-background-image: url("/images/other/wood.png");
     -fx-background-size: cover;
 }
 

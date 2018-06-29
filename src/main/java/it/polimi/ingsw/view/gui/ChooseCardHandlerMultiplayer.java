@@ -112,7 +112,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
     }
 
     public void setPrivateCard(String privateCard) {
-        Image privateObjCardImg = new Image(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard + ".png");
+        Image privateObjCardImg = new Image(getClass().getResourceAsStream(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard + ".png"));
         privateObjCard.setImage(privateObjCardImg);
     }
 

@@ -29,13 +29,13 @@ public class GameBoardHandler {
     private GameBoardHandlerMulti gameBoardHandlerMulti;
     private GameBoardHandlerSingle gameBoardHandlerSingle;
 
-    private static final String PRIVATE_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/private_objective_cards/";
-    protected static final String TOOLCARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/toolcards/";
-    protected static final String DICE_IMAGES_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/dices/dice_";
-    protected static final String PUBLIC_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/public_objective_cards/";
-    protected static final String FAVOR_TOKEN_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/other/favour.png";
-    protected static final String WINDOW_PATTERN_CARDS_PATH = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/window_pattern_cards/";
-    private static final String TRANSPARENT_IMAGE_URL = "File:./src/main/java/it/polimi/ingsw/resources/images/other/transparent.png";
+    private static final String PRIVATE_CARDS_PATH = "/images/cards/private_objective_cards/";
+    protected static final String TOOLCARDS_PATH = "/images/cards/toolcards/";
+    protected static final String DICE_IMAGES_PATH = "/images/dices/dice_";
+    protected static final String PUBLIC_CARDS_PATH = "/images/cards/public_objective_cards/";
+    protected static final String FAVOR_TOKEN_PATH = "/images/other/favour.png";
+    protected static final String WINDOW_PATTERN_CARDS_PATH = "/images/cards/window_pattern_cards/";
+    private static final String TRANSPARENT_IMAGE_URL = "/images/other/transparent.png";
     private static final int OUT_OF_RANGE = -1;
     private static final int COLUMNS = 5;
     private static final int ROWS = 4;
@@ -386,7 +386,7 @@ public class GameBoardHandler {
     }
 
     private void setImageInSlot(int row, int col) {
-        Image img = new Image(TRANSPARENT_IMAGE_URL);
+        Image img = new Image(getClass().getResourceAsStream(TRANSPARENT_IMAGE_URL));
         ImageView imgView = new ImageView(img);
         imgView.setFitWidth(58);
         imgView.setFitHeight(55);
@@ -397,7 +397,7 @@ public class GameBoardHandler {
     private EventHandler<MouseEvent> windowPatternCardSlotSelected = event -> windowPatternCardSlotSelected((ImageView) event.getSource());
 
     public void setSinglePrivateCard(Label privObjLabel, ImageView card, ImageView other, String privateCard) {
-        Image privateObjCardImg = new Image(GameBoardHandler.PRIVATE_CARDS_PATH + privateCard + ".png");
+        Image privateObjCardImg = new Image(getClass().getResourceAsStream(PRIVATE_CARDS_PATH + privateCard + ".png"));
         card.setImage(privateObjCardImg);
 
         card.setOnMouseEntered(event -> {
@@ -450,8 +450,7 @@ public class GameBoardHandler {
         int col = 0;
         int id = 0;
         for (String dice : dicesList) {
-            String url = DICE_IMAGES_PATH + dice + ".png";
-            Image diceImg = new Image(url);
+            Image diceImg = new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + dice + ".png"));
             ImageView diceView = new ImageView(diceImg);
             diceView.setFitWidth(70);
             diceView.setFitHeight(70);
@@ -540,8 +539,7 @@ public class GameBoardHandler {
                 } else {
                     String dice = parts[2].toLowerCase();
                     dice = dice.substring(2, dice.length() - 3).replace(" ", "_");
-                    String url = DICE_IMAGES_PATH + dice + ".png";
-                    Image img = new Image(url);
+                    Image img = new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + dice + ".png"));
                     ImageView imgView = new ImageView(img);
                     imgView.setFitWidth(58);
                     imgView.setFitHeight(55);
@@ -586,8 +584,7 @@ public class GameBoardHandler {
                 int j = 0;
                 while (m.find()) {
                     String dice = (m.group(0).substring(1, m.group(0).length() - 1).toLowerCase().replaceAll(" ", "_"));
-                    String url = DICE_IMAGES_PATH + dice + ".png";
-                    Image img = new Image(url);
+                    Image img = new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + dice + ".png"));
                     ImageView imgView = new ImageView(img);
                     imgView.setFitWidth(30);
                     imgView.setFitHeight(30);
@@ -699,6 +696,24 @@ public class GameBoardHandler {
             }
         }
 
+        private void setImageView1(int y){
+            imageView1 = new ImageView();
+            imageView1.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "white.png")));
+            imageView1.setFitWidth(70);
+            imageView1.setFitHeight(70);
+            imageView1.setLayoutX(63);
+            imageView1.setLayoutY(y);
+        }
+
+        private void setImageView2(int y){
+            imageView2 = new ImageView();
+            imageView2.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "white.png")));
+            imageView2.setFitWidth(70);
+            imageView2.setFitHeight(70);
+            imageView2.setLayoutX(63);
+            imageView2.setLayoutY(y);
+        }
+
         private void createContext1() {
 
             setupSacrificeImageView();
@@ -707,14 +722,7 @@ public class GameBoardHandler {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
             useButton.setVisible(true);
-
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(250);
-
+            setImageView1(250);
             plus = new Button();
             plus.setText("+");
             plus.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
@@ -778,13 +786,7 @@ public class GameBoardHandler {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
             useButton.setVisible(true);
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(250);
-
+            setImageView1(250);
             finalX1 = new TextField();
             finalY1 = new TextField();
             finalX1.setMaxWidth(30);
@@ -845,18 +847,8 @@ public class GameBoardHandler {
             toolPane.setVisible(true);
             useButton.setVisible(true);
 
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(180);
-            imageView2 = new ImageView();
-            imageView2.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView2.setFitWidth(70);
-            imageView2.setFitHeight(70);
-            imageView2.setLayoutX(63);
-            imageView2.setLayoutY(350);
+            setImageView1(180);
+            setImageView2(350);
 
             finalX1 = new TextField();
             finalY1 = new TextField();
@@ -931,20 +923,8 @@ public class GameBoardHandler {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
             useButton.setVisible(true);
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(180);
-
-            imageView2 = new ImageView();
-            imageView2.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView2.setFitWidth(70);
-            imageView2.setFitHeight(70);
-            imageView2.setLayoutX(63);
-            imageView2.setLayoutY(300);
-
+            setImageView1(180);
+            setImageView2(300);
             gameBoard.getChildren().add(imageView1);
             gameBoard.getChildren().add(imageView2);
 
@@ -993,12 +973,7 @@ public class GameBoardHandler {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
             useButton.setVisible(true);
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(250);
+            setImageView1(250);
             gameBoard.getChildren().add(imageView1);
             setupReserveTarget(imageView1);
 
@@ -1117,12 +1092,7 @@ public class GameBoardHandler {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
             useButton.setVisible(true);
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(250);
+            setImageView1(250);
 
             finalX1 = new TextField();
             finalY1 = new TextField();
@@ -1181,12 +1151,7 @@ public class GameBoardHandler {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
             useButton.setVisible(true);
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(250);
+            setImageView1(250);
             gameBoard.getChildren().add(imageView1);
             setupReserveTarget(imageView1);
 
@@ -1235,12 +1200,7 @@ public class GameBoardHandler {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
             useButton.setVisible(true);
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(250);
+            setImageView1(250);
             gameBoard.getChildren().add(imageView1);
             setupReserveTarget(imageView1);
 
@@ -1302,23 +1262,13 @@ public class GameBoardHandler {
             toolPane.setVisible(true);
             useButton.setVisible(true);
             imageView3 = new ImageView();
-            imageView3.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
+            imageView3.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "white.png")));
             imageView3.setFitWidth(70);
             imageView3.setFitHeight(70);
             imageView3.setLayoutX(63);
             imageView3.setLayoutY(140);
-            imageView1 = new ImageView();
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(240);
-            imageView2 = new ImageView();
-            imageView2.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
-            imageView2.setFitWidth(70);
-            imageView2.setFitHeight(70);
-            imageView2.setLayoutX(63);
-            imageView2.setLayoutY(360);
+            setImageView1(240);
+            setImageView2(360);
 
             finalX1 = new TextField();
             finalY1 = new TextField();
@@ -1442,7 +1392,7 @@ public class GameBoardHandler {
             imageView1.setFitHeight(70);
             imageView1.setLayoutX(63);
             imageView1.setLayoutY(250);
-            imageView1.setImage(new Image(DICE_IMAGES_PATH + color + ".png"));
+            imageView1.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + color + ".png")));
             concludeButton = new Button();
             concludeButton.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
             concludeButton.setText("Concludi");
@@ -1573,7 +1523,7 @@ public class GameBoardHandler {
             sacrificeLabel.setVisible(true);
             sacrificeImageView = null;
             sacrificeImageView = new ImageView();
-            sacrificeImageView.setImage(new Image(DICE_IMAGES_PATH + "white.png"));
+            sacrificeImageView.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "white.png")));
             sacrificeImageView.setFitWidth(70);
             sacrificeImageView.setFitHeight(70);
             sacrificeImageView.setLayoutX(63);

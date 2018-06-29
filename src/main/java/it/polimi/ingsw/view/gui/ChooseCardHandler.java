@@ -27,8 +27,8 @@ public class ChooseCardHandler {
         this.myTurn = myTurn;
     }
 
-    protected static final String WINDOWS_URL = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/window_pattern_cards/";
-    protected static final String PRIVATE_CARDS_URL = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/private_objective_cards/";
+    protected static final String WINDOWS_URL = "/images/cards/window_pattern_cards/";
+    protected static final String PRIVATE_CARDS_URL = "/images/cards/private_objective_cards/";
     protected static final int OUT_OF_RANGE = 5;
 
     protected int choice;
@@ -151,28 +151,28 @@ public class ChooseCardHandler {
 
         //Initializing card 0
         url0 = imageURLs.get(0);
-        Image cardImg0 = new Image(url0);
+        Image cardImg0 = new Image(getClass().getResourceAsStream(url0));
         ImageView cardView0 = new ImageView(cardImg0);
         cardView0.setFitWidth(220);
         cardView0.setFitHeight(192);
         Platform.runLater(() -> card0.setGraphic(cardView0));
         //Initializing card 1
         url1 = imageURLs.get(1);
-        Image cardImg1 = new Image(url1);
+        Image cardImg1 = new Image(getClass().getResourceAsStream(url1));
         ImageView cardView1 = new ImageView(cardImg1);
         cardView1.setFitWidth(220);
         cardView1.setFitHeight(192);
         Platform.runLater(() -> card1.setGraphic(cardView1));
         //Initializing card 2
         url2 = imageURLs.get(2);
-        Image cardImg2 = new Image(url2);
+        Image cardImg2 = new Image(getClass().getResourceAsStream(url2));
         ImageView cardView2 = new ImageView(cardImg2);
         cardView2.setFitWidth(220);
         cardView2.setFitHeight(192);
         Platform.runLater(() -> card2.setGraphic(cardView2));
         //Initializing card 3
         url3 = imageURLs.get(3);
-        Image cardImg3 = new Image(url3);
+        Image cardImg3 = new Image(getClass().getResourceAsStream(url3));
         ImageView cardView3 = new ImageView(cardImg3);
         cardView3.setFitWidth(220);
         cardView3.setFitHeight(192);
