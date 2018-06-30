@@ -208,7 +208,7 @@ public class TurnManagerSingleplayer implements Runnable {
         if (match.getObserverRmi() != null) {
             try {
                 match.getObserverRmi().onRoundTrack(match.getBoard().getRoundTrack().toString());
-                match.getObserverRmi().onReserve(match.getBoard().getReserve().toString());
+                match.getObserverRmi().onReserve(match.getBoard().getReserve().getDices().toString());
             } catch (RemoteException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrotto");
@@ -217,7 +217,7 @@ public class TurnManagerSingleplayer implements Runnable {
             try {
                 match.getObserverSocket().writeObject(new RoundTrackResponse(match.getBoard().getRoundTrack().toString()));
                 match.getObserverSocket().reset();
-                match.getObserverSocket().writeObject(new ReserveResponse(match.getBoard().getReserve().toString()));
+                match.getObserverSocket().writeObject(new ReserveResponse(match.getBoard().getReserve().getDices().toString()));
                 match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
