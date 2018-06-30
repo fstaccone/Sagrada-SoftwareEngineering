@@ -11,9 +11,12 @@ import it.polimi.ingsw.model.gameobjects.windowpatterncards.Firelight;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.RipplesOfLight;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.AddPlayerRequest;
+import it.polimi.ingsw.socket.requests.CheckUsernameRequest;
 import it.polimi.ingsw.socket.requests.DiceColorRequest;
 import it.polimi.ingsw.socket.requests.SetDiceValueRequest;
 import it.polimi.ingsw.socket.responses.DiceColorResponse;
+import it.polimi.ingsw.socket.responses.NameAlreadyTakenResponse;
+import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.view.gui.RmiGui;
 import it.polimi.ingsw.view.gui.WaitingScreenHandler;
@@ -777,6 +780,22 @@ public class ControllerTest {
         controller.handle(request);
     }
     */
+
+    @Test
+    public void handleCheckUsernameRequest() throws RemoteException {
+        Lobby lobby = new Lobby(1000, 1000);
+        Controller controller = new Controller(lobby);
+        lobby.addUsername("Archi");
+        lobby.addUsername("Archi2");
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Archi2");
+        lobby.startMatch();
+        CheckUsernameRequest checkUsernameRequest = new CheckUsernameRequest("Archi");
+        Response response = controller.handle(checkUsernameRequest);
+        NameAlreadyTakenResponse response1 = (NameAlreadyTakenResponse)response;
+        ConnectionStatus connectionStatus = response1.getStatus();
+        Assert.assertEquals(ConnectionStatus.CONNECTED, connectionStatus);
+    }
 
 
 
