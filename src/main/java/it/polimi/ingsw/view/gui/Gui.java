@@ -274,7 +274,7 @@ public class Gui {
         if (schemeCardChosen) {
             mySchemeCard = schemeCard;
             String s = schemeCardName.toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-            playerSchemeCardImageURL = "File:./src/main/java/it/polimi/ingsw/resources/images/cards/window_pattern_cards/" + s + ".png";
+            playerSchemeCardImageURL = "File:./src/main/resources/images/cards/window_pattern_cards/" + s + ".png";
         }
     }
 

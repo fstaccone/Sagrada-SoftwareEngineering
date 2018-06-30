@@ -355,7 +355,7 @@ public class GameBoardHandler {
         playerWindowPatternCard.setBackground(new Background(myBI));
 
         //Initializing the scheme card slots
-        schemeCard.setGridLinesVisible(true);
+        schemeCard.setGridLinesVisible(false);
         schemeCard.setPrefSize(334, 263);
         Insets padding = new Insets(0, 0, 0, 5);
         schemeCard.setPadding(padding);
@@ -506,7 +506,7 @@ public class GameBoardHandler {
 
         schemeCard = new GridPane();
 
-        schemeCard.setGridLinesVisible(true);
+        schemeCard.setGridLinesVisible(false);
         schemeCard.setPrefSize(334, 263);
         Insets padding = new Insets(0, 0, 0, 5);
         schemeCard.setPadding(padding);

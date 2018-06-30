@@ -347,12 +347,12 @@ public class TurnManagerMultiplayer implements Runnable {
             }
         }
 
-        Response reserveResponse = new ReserveResponse(match.getBoard().getReserve().toString());
+        Response reserveResponse = new ReserveResponse(match.getBoard().getReserve().getDices().toString());
 
         for (PlayerMultiplayer player : match.getPlayers()) {
             if (getObserverRmi(player) != null)
                 try {
-                    getObserverRmi(player).onReserve(match.getBoard().getReserve().toString());
+                    getObserverRmi(player).onReserve(match.getBoard().getReserve().getDices().toString());
                 } catch (RemoteException e) {
                     match.getLobby().disconnect(player.getName());
                 }
