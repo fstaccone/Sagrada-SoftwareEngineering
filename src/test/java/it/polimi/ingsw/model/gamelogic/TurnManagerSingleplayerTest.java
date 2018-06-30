@@ -16,9 +16,7 @@ public class TurnManagerSingleplayerTest {
     @Test
     public void TurnManagerSingleplayer() throws RemoteException {
         Lobby lobby = new Lobby(10, 10);
-        Controller c = new Controller(lobby);
         SocketHandler socketHandler = mock(SocketHandler.class);
-        PlayerSingleplayer singleplayer = new PlayerSingleplayer("Archi");
         lobby.createSingleplayerMatch("Archi", 1, socketHandler.getOut());
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         when(socketHandler.getOut()).thenReturn(objectOutputStream);

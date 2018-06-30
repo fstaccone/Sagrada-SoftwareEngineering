@@ -3,10 +3,12 @@ package it.polimi.ingsw.model.gamelogic;
 import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.*;
+import it.polimi.ingsw.view.gui.RmiGui;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ObjectOutputStream;
+import java.rmi.RemoteException;
 import java.util.*;
 
 import static org.mockito.Mockito.mock;
@@ -417,8 +419,8 @@ public class MatchMultiplayerTest {
         clients.add("Archi");
         clients.add("Archi2");
         Map<String, ObjectOutputStream> socketsOut = new HashMap<>();
-        Lobby lobby = new Lobby(10, 10);
-        MatchMultiplayer matchMultiplayer = new MatchMultiplayer(0, clients, 10, socketsOut, lobby);
+        Lobby lobby = new Lobby(10000, 10000);
+        MatchMultiplayer matchMultiplayer = new MatchMultiplayer(0, clients, 10000, socketsOut, lobby);
         matchMultiplayer.getPlayer("Archi").setSchemeCard(new Firelight());
         matchMultiplayer.getPlayer("Archi").setNumFavorTokens(4);
         matchMultiplayer.getPlayer("Archi").setPrivateObjectiveCard(new PrivateObjectiveCard(Colors.RED));
@@ -447,14 +449,19 @@ public class MatchMultiplayerTest {
         Assert.assertEquals(-11, matchMultiplayer.getPlayer("Archi2").getPoints());
     }
 
-    //TODO: QUESTO TEST LANCIA ECCEZIONE
     @Test
     public void afterReconnection(){
-        Lobby lobby = new Lobby(10, 10);
+        Lobby lobby = new Lobby(100000, 100000);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
         lobby.addToWaitingPlayers("Archi3");
         lobby.startMatch();
+        RmiGui rmiGui = mock(RmiGui.class);
+        RmiGui rmiGui2 = mock(RmiGui.class);
+        RmiGui rmiGui3 = mock(RmiGui.class);
+        lobby.getMultiplayerMatches().get("Archi").observeMatchRemote(rmiGui, "Archi");
+        lobby.getMultiplayerMatches().get("Archi").observeMatchRemote(rmiGui2, "Archi2");
+        lobby.getMultiplayerMatches().get("Archi").observeMatchRemote(rmiGui3, "Archi3");
         lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setSchemeCard(new Firelight());
         lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setNumFavorTokens(4);
         lobby.getMultiplayerMatches().get("Archi2").getPlayer("Archi2").setSchemeCard(new SymphonyOfLight());
@@ -491,6 +498,38 @@ public class MatchMultiplayerTest {
         lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 0, 1, 0 );
         lobby.getMultiplayerMatches().get("Archi2").placeDice("Archi2", 0, 0, 1 );
         lobby.getMultiplayerMatches().get("Archi").afterReconnection("Archi3");
+    }
+
+    @Test
+    public void deleteDisconnectedClients(){
+        Lobby lobby = new Lobby(10000000, 1000000);
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Archi2");
+        lobby.addToWaitingPlayers("Archi3");
+        lobby.startMatch();
+        lobby.addUsername("Archi");
+        lobby.addUsername("Archi2");
+        lobby.addUsername("Archi3");
+        lobby.disconnect("Archi2");
+        lobby.getMultiplayerMatches().get("Archi").deleteDisconnectedClients();
+        Assert.assertNull(lobby.getMultiplayerMatches().get("Archi2"));
+    }
+
+    @Test
+    public void terminateMatch() throws RemoteException {
+        Lobby lobby = new Lobby(1000, 10000);
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Archi2");
+        lobby.addToWaitingPlayers("Archi3");
+        lobby.startMatch();
+        RmiGui rmiGui = mock(RmiGui.class);
+        RmiGui rmiGui2 = mock(RmiGui.class);
+        RmiGui rmiGui3 = mock(RmiGui.class);
+        lobby.getMultiplayerMatches().get("Archi").observeMatchRemote(rmiGui, "Archi");
+        lobby.getMultiplayerMatches().get("Archi").observeMatchRemote(rmiGui2, "Archi2");
+        lobby.getMultiplayerMatches().get("Archi").observeMatchRemote(rmiGui3, "Archi3");
+        lobby.getMultiplayerMatches().get("Archi").terminateMatch();
+        Assert.assertNull(lobby.getMultiplayerMatches().get("Archi"));
     }
 
 }

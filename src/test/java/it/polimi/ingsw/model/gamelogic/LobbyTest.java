@@ -11,7 +11,9 @@ import org.junit.Test;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.mock;
 
@@ -148,6 +150,47 @@ public class LobbyTest {
         LobbyObserver observer = mock(LobbyObserver.class);
         lobby.observeLobbyRemote("Archi", observer);
         Assert.assertTrue(lobby.getRemoteObservers().keySet().contains("Archi"));
+    }
+
+    @Test
+    public void removeFromMatchMulti(){
+        Lobby lobby = new Lobby(1000000, 10);
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.addToWaitingPlayers("Condofuri");
+        lobby.startMatch();
+        lobby.removeFromMatchMulti("Condofuri");
+        Assert.assertNull(lobby.getMultiplayerMatches().get("Condofuri"));
+    }
+
+    @Test
+    public void removeDisconnectedPlayers(){
+        Lobby lobby = new Lobby(1000000, 10);
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.addToWaitingPlayers("Condofuri");
+        lobby.startMatch();
+        lobby.disconnect("Condofuri");
+        lobby.disconnect("Archi");
+        Assert.assertNull(lobby.getMultiplayerMatches().get("Condofuri"));
+        Assert.assertNull(lobby.getMultiplayerMatches().get("Archi"));
+    }
+
+    @Test
+    public void deleteDisconnectedClients(){
+        Lobby lobby = new Lobby(1000000, 10);
+        lobby.addToWaitingPlayers("Archi");
+        lobby.addUsername("Archi");
+        lobby.addToWaitingPlayers("Bovalino");
+        lobby.addUsername("Bovalino");
+        lobby.addToWaitingPlayers("Condofuri");
+        lobby.addUsername("Condofuri");
+        lobby.startMatch();
+        lobby.disconnect("Condofuri");
+        List<String> players = new ArrayList<>();
+        players.add("Condofuri");
+        lobby.deleteDisconnectedClients(players);
+        Assert.assertNull(lobby.getMultiplayerMatches().get("Condofuri"));
     }
 
 }
