@@ -111,7 +111,11 @@ public class LoginHandler implements Initializable {
 
     @FXML
     private void singleplayerMarked() {
-        singlePlayerCheckmark.setSelected(true);
+        if(singlePlayerCheckmark.isSelected()){
+            singlePlayerCheckmark.setSelected(true);
+        } else {
+            singlePlayerCheckmark.setSelected(false);
+        }
     }
 
     @FXML

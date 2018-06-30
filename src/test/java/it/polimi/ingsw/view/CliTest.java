@@ -29,7 +29,7 @@ public class CliTest {
         List<String> names = new ArrayList<>();
         names.add("username");
         names.add("player2");
-        cli.onGameStarted(names);
+        cli.onGameStarted(names, 10000);
         cli.onMyFavorTokens(3);
         cli.onOtherFavorTokens(4, "player2");
         WindowPatternCard card = new AuroraSagradis();

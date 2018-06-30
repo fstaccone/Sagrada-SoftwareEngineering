@@ -177,25 +177,27 @@ public class Gui {
         }
     }
 
-    public void onGameStarted(Boolean windowChosen, List<String> names) {
+    public void onGameStarted(Boolean windowChosen, List<String> names, int turnTime) {
         players = names;
 
         if (windowChosen) {
             if (single) {
                 onAfterWindowChoiceSingleplayer();
+                notifyTimerSingle(turnTime);
             } else {
                 onAfterWindowChoiceMultiplayer();
+                notifyTimerMulti(turnTime);
             }
         } else {
             if (single) {
-                initializeChooseCardSingle();
+                initializeChooseCardSingle(turnTime);
             } else {
-                initializeChooseCardMulti();
+                initializeChooseCardMulti(turnTime);
             }
         }
     }
 
-    private void initializeChooseCardSingle() {
+    private void initializeChooseCardSingle(int turnTime) {
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = null;
         fxmlLoader.setLocation(getClass().getResource("/choose-card-single.fxml"));
@@ -208,10 +210,10 @@ public class Gui {
         assert root != null;
         Scene scene = new Scene(root);
         chooseCardHandlerSingle.init(windowStage, scene, controllerRmi, controllerSocket, username);
-        chooseCardHandlerSingle.welcome();
+        chooseCardHandlerSingle.welcome(turnTime);
     }
 
-    private void initializeChooseCardMulti() {
+    private void initializeChooseCardMulti(int turnTime) {
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = null;
         fxmlLoader.setLocation(getClass().getResource("/choose-card-multiplayer.fxml"));
@@ -224,8 +226,9 @@ public class Gui {
         assert root != null;
         Scene scene = new Scene(root);
         chooseCardHandlerMultiplayer.init(windowStage, scene, controllerRmi, controllerSocket, username);
-        chooseCardHandlerMultiplayer.welcome();
+        chooseCardHandlerMultiplayer.welcome(turnTime);
         chooseCardHandlerMultiplayer.showOpponents(players);
+        chooseCardHandlerMultiplayer.appendToTextArea("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare!");
     }
 
     public void onGameClosing() {
@@ -452,6 +455,10 @@ public class Gui {
         gameBoardHandlerMulti.initializeSchemeCards(otherSchemeCardsMap, otherSchemeCardNamesMap);
     }
 
+    private void notifyTimerMulti(int turnTime){
+        gameBoardHandlerMulti.appendToTextArea("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare!");
+    }
+
     public void onAfterWindowChoiceSingleplayer() {
 
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.mp3"));
@@ -480,6 +487,11 @@ public class Gui {
         gameBoardHandlerSingle.setPublicCards(publicCardsList);
         gameBoardHandlerSingle.setReserve(dicesList);
         gameBoardHandlerSingle.appendToTextArea("Fai la tua prima mossa!");
+    }
+
+    private void notifyTimerSingle(int turnTime){
+        gameBoardHandlerSingle.appendToTextArea("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare!");
+
     }
 
     public void onChoosePrivateCard() {

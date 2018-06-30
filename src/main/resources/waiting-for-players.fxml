@@ -5,13 +5,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import java.net.URL?>
 
-<AnchorPane id="waiting" prefHeight="350.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.WaitingScreenHandler">
-<stylesheets>
-<URL value="@css/login-style.css" />
-</stylesheets>
-   <children>
-      <Label layoutX="163.0" layoutY="78.0" prefHeight="45.0" prefWidth="450.0" text="Benvenuto nella sala d'attesa di Sagrada!" />
-      <TextArea id="text" fx:id="text" editable="false" layoutX="125.0" layoutY="141.0" prefHeight="69.0" prefWidth="450.0" />
-      <TextArea id="log" fx:id="log" editable="false" layoutX="84.0" layoutY="248.0" prefHeight="45.0" prefWidth="534.0" text="In caso di uscita di un giocatore, riceverai una notifica qui: ..." />
-   </children>
+<AnchorPane id="waiting" prefHeight="350.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.WaitingScreenHandler">
+   <stylesheets>
+      <URL value="@css/login-style.css"/>
+   </stylesheets>
+   <Label layoutX="163.0" layoutY="78.0" prefHeight="45.0" prefWidth="450.0"
+          text="Benvenuto nella sala d'attesa di Sagrada!"/>
+   <TextArea id="text" fx:id="text" editable="false" layoutX="125.0" layoutY="141.0" prefHeight="69.0"
+             prefWidth="450.0"/>
+   <TextArea id="log" fx:id="log" editable="false" layoutX="84.0" layoutY="248.0" prefHeight="45.0" prefWidth="534.0"
+             text="In caso di uscita di un giocatore, riceverai una notifica qui: ..."/>
 </AnchorPane>

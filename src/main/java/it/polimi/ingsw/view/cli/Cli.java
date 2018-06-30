@@ -203,10 +203,12 @@ public class Cli {
      *
      * @param names is the names of the opponents
      */
-    public void onGameStarted(List<String> names) {
+    public void onGameStarted(List<String> names, int turnTime) {
         if (names != null) {
             playersNames = names;
             printNames();
+            printer.println("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare! ");
+            printer.flush();
         }
     }
 

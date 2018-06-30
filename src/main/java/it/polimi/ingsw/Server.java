@@ -71,7 +71,6 @@ public class Server {
         try {
 
             BufferedReader bufferedReader= new BufferedReader(new InputStreamReader(Server.class.getResourceAsStream(serverConfig)));
-            System.out.println(bufferedReader);
             //fileReader = new FileReader(serverConfig);
 
             //try-finally to guarantee rightness of scanner's closure after use
@@ -103,7 +102,7 @@ public class Server {
             }
         }
          finally {
-            if (fileReader != null) {
+            if (fileReader != null) {// todo: fix
                 try {
                     fileReader.close();
                 } catch (IOException e) {

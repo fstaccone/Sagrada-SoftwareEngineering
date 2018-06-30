@@ -29,6 +29,6 @@ public class Dice implements Serializable{
 
     @Override
     public String toString(){
-        return "[" + value + " " + color + "]";
+        return "[" + value + " " + color.getDescription() + "]";
     }
 }

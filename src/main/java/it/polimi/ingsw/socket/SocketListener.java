@@ -13,7 +13,7 @@ public class SocketListener implements Runnable {
     @Override
     public void run() {
         while (clientController != null) {
-            clientController.nextResponse().handleResponse(clientController);
+           clientController.nextResponse().handleResponse(clientController);
         }
     }
 }

@@ -98,21 +98,6 @@ public class SocketController implements ResponseHandler {
         } else {
             loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.getWaitingPlayers());
         }
-
-        // todo: cancellare se non serve e rimuovere anche unique dalla risposta
-        //if (response.name != null) {
-        //if (!response.unique) {
-        //   if (loginHandler.isCli())
-        //       loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-        //   else
-        //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-        //} else {
-        //  if (loginHandler.isCli())
-        //      loginHandler.getWaitingRoomCli().onWaitingPlayers(response.waitingPlayers);
-        //  else
-        //      loginHandler.getWaitingScreenHandler().onWaitingPlayers(response.waitingPlayers);
-        //  }
-        // }
     }
 
     @Override
@@ -147,9 +132,9 @@ public class SocketController implements ResponseHandler {
     @Override
     public void handle(GameStartedResponse response) {
         if (socketCli != null) {
-            socketCli.getCli().onGameStarted(response.getNames());
+            socketCli.getCli().onGameStarted(response.getNames(), response.getTurnTime());
         } else {
-            socketGui.getGui().onGameStarted(response.isWindowChosen(), response.getNames());
+            socketGui.getGui().onGameStarted(response.isWindowChosen(), response.getNames(), response.getTurnTime());
         }
     }
 

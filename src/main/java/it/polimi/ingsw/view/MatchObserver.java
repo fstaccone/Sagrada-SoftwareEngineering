@@ -1,7 +1,5 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
-
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -34,7 +32,7 @@ public interface MatchObserver extends Serializable, Remote {
 
     void onPlayerReconnection(String name) throws RemoteException;
 
-    void onGameStarted(boolean windowChosen, List<String> names) throws RemoteException;
+    void onGameStarted(boolean windowChosen, List<String> names, int turnTime) throws RemoteException;
 
     void onGameClosing() throws RemoteException;
 

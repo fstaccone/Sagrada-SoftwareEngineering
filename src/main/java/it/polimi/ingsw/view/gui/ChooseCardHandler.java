@@ -197,8 +197,9 @@ public class ChooseCardHandler {
         this.choice = choice;
     }
 
-    public void welcome(TextArea textArea) {
+    public void welcome(TextArea textArea, int turnTime) {
         appendToTextArea(textArea, "Benvenuto in questa nuova partita di Sagrada. Buon divertimento!");
+        appendToTextArea(textArea, "Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare!");
     }
 
     public void terminateGame() {

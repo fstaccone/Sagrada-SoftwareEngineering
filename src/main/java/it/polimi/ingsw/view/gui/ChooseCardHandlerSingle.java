@@ -83,8 +83,8 @@ public class ChooseCardHandlerSingle implements Initializable {
         return parent.getImageUrl();
     }
 
-    public void welcome() {
-        parent.welcome(textArea);
+    public void welcome(int turnTime) {
+        parent.welcome(textArea, turnTime);
     }
 
     public void setPrivateCard(String privateCard0, String privateCard1) {

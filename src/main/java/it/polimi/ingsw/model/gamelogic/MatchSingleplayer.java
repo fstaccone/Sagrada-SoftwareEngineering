@@ -19,6 +19,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     private int selectedPrivateCard;
     private static final int MULTIPLIER_FOR_SINGLE = 3;
     private boolean privateCardChosen;
+    private int turnTime;
 
     /**
      *
@@ -32,6 +33,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby, ObjectOutputStream socketOut) {
         super(lobby);
         this.matchId = matchId;
+        this.turnTime = turnTime;
         this.decksContainer = new DecksContainer(1, difficulty);
         this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
@@ -144,14 +146,14 @@ public class MatchSingleplayer extends Match implements Runnable {
 
         if (observerRmi != null) {
             try {
-                observerRmi.onGameStarted(player.isSchemeCardSet(), null);
+                observerRmi.onGameStarted(player.isSchemeCardSet(), null, turnTime);
             } catch (RemoteException e) {
                 terminateMatch();
                 System.out.println("Match singleplayer interrotto");
             }
         } else if (observerSocket != null) {
             try {
-                observerSocket.writeObject(new GameStartedResponse(player.isSchemeCardSet(), null));
+                observerSocket.writeObject(new GameStartedResponse(player.isSchemeCardSet(), null, turnTime));
                 observerSocket.reset();
             } catch (IOException e) {
                 terminateMatch();
