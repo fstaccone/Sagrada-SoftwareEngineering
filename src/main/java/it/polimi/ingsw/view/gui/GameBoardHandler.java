@@ -1385,14 +1385,14 @@ public class GameBoardHandler {
                 color = socketController.getDiceColor();
             }
             if (color != null) {
-                appendToTextArea("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.toString() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!");
+                appendToTextArea("Carta utensile 11 utilizzata correttamente! Il dado da te selezionato è stato inserito nel sacchetto! Ora puoi scegliere il valore del nuovo dado del colore  " + color.getDescription().toLowerCase() + " e piazzarlo! Se non concludi l'operazione ti verrà comunque addebitato il prezzo dei segnalini in quanto hai modificato lo stato della partita!");
             }
             imageView1 = new ImageView();
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
             imageView1.setLayoutX(63);
             imageView1.setLayoutY(250);
-            imageView1.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + color + ".png")));
+            imageView1.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + color.getDescription().toLowerCase() + ".png")));
             concludeButton = new Button();
             concludeButton.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
             concludeButton.setText("Concludi");
