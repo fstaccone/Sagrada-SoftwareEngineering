@@ -31,7 +31,7 @@ public class GameBoardHandler {
 
     private static final String PRIVATE_CARDS_PATH = "/images/cards/private_objective_cards/";
     protected static final String TOOLCARDS_PATH = "/images/cards/toolcards/";
-    protected static final String DICE_IMAGES_PATH = "/images/dices/dice_";
+    protected static final String DICE_IMAGES_PATH = "/images/dices/";
     protected static final String PUBLIC_CARDS_PATH = "/images/cards/public_objective_cards/";
     protected static final String FAVOR_TOKEN_PATH = "/images/other/favour.png";
     protected static final String WINDOW_PATTERN_CARDS_PATH = "/images/cards/window_pattern_cards/";
@@ -696,18 +696,18 @@ public class GameBoardHandler {
             }
         }
 
-        private void setImageView1(int y){
+        private void setImageView1(int y) {
             imageView1 = new ImageView();
-            imageView1.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "white.png")));
+            imageView1.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "bianco.png")));
             imageView1.setFitWidth(70);
             imageView1.setFitHeight(70);
             imageView1.setLayoutX(63);
             imageView1.setLayoutY(y);
         }
 
-        private void setImageView2(int y){
+        private void setImageView2(int y) {
             imageView2 = new ImageView();
-            imageView2.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "white.png")));
+            imageView2.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "bianco.png")));
             imageView2.setFitWidth(70);
             imageView2.setFitHeight(70);
             imageView2.setLayoutX(63);
@@ -1262,7 +1262,7 @@ public class GameBoardHandler {
             toolPane.setVisible(true);
             useButton.setVisible(true);
             imageView3 = new ImageView();
-            imageView3.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "white.png")));
+            imageView3.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "bianco.png")));
             imageView3.setFitWidth(70);
             imageView3.setFitHeight(70);
             imageView3.setLayoutX(63);
@@ -1523,7 +1523,7 @@ public class GameBoardHandler {
             sacrificeLabel.setVisible(true);
             sacrificeImageView = null;
             sacrificeImageView = new ImageView();
-            sacrificeImageView.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "white.png")));
+            sacrificeImageView.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "bianco.png")));
             sacrificeImageView.setFitWidth(70);
             sacrificeImageView.setFitHeight(70);
             sacrificeImageView.setLayoutX(63);
