@@ -79,8 +79,9 @@ public class TurnManagerSingleplayer implements Runnable {
 
         currentTurn = 2;
         // turn two
-        playTurn();
-
+        if (match.getPlayer().getTurnsLeft() > 0) {
+            playTurn();
+        }
         nextRound();
 
     }
