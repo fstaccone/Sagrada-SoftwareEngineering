@@ -4,10 +4,12 @@ import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.socket.SocketHandler;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -24,8 +26,6 @@ public class Server {
     private static String lobbyName;
     private static int waitingTime;
     private static int turnTime;
-    private static ServerSocket serverSocket;
-    private static ExecutorService threadPool;
 
     public static void main(String[] args) throws IOException {
 
@@ -47,16 +47,18 @@ public class Server {
         }
 
         //start Socket connection
-        serverSocket = new ServerSocket(socketPort);
-        threadPool = Executors.newCachedThreadPool();
-        System.out.println("Socket server online on port " + socketPort);
+        ExecutorService threadPool;
+        try (ServerSocket serverSocket = new ServerSocket(socketPort)) {
+            threadPool = Executors.newCachedThreadPool();
+            System.out.println("Socket server online on port " + socketPort);
 
-        while (serverSocket != null) {
-            Socket Socket = serverSocket.accept();
-            System.out.println("New socket connection: " + Socket.getRemoteSocketAddress());
-            threadPool.submit(new SocketHandler(Socket, controller));
+            while (serverSocket != null) {
+                Socket Socket = serverSocket.accept();
+                System.out.println("New socket connection: " + Socket.getRemoteSocketAddress());
+                threadPool.submit(new SocketHandler(Socket, controller));
+            }
+            serverSocket.close();
         }
-        serverSocket.close();
         threadPool.shutdown();
     }
 
@@ -69,49 +71,36 @@ public class Server {
         String line;
         HashMap<String, String> valuesMap = new HashMap<>();
 
-        //try-catch-finally to guarantee rightness of fileReader's closure after use
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(Server.class.getResourceAsStream(serverConfig)));
+
+        //try-finally to guarantee rightness of scanner's closure after use
         try {
+            scanner = new Scanner(bufferedReader);
 
-            BufferedReader bufferedReader= new BufferedReader(new InputStreamReader(Server.class.getResourceAsStream(serverConfig)));
-            //fileReader = new FileReader(serverConfig);
-
-            //try-finally to guarantee rightness of scanner's closure after use
-            try {
-                scanner = new Scanner(bufferedReader);
-
-                //lecture of values added to the valuesMap
-                while (scanner.hasNextLine()) {
-                    line = scanner.nextLine();
-                    if (line.isEmpty()) {
-                        continue;
-                    }
-                    //try-finally to guarantee rightness of lineParser's closure
-                    try {
-                        lineParser = new Scanner(line);
-                        valuesMap.put(lineParser.next(), lineParser.next());
-                    } finally {
-                        if (lineParser != null) {
-                            lineParser.close();
-                        }
-                    }
-
+            //lecture of values added to the valuesMap
+            while (scanner.hasNextLine()) {
+                line = scanner.nextLine();
+                if (line.isEmpty()) {
+                    continue;
                 }
-
-            } finally {
-                if (scanner != null) {
-                    scanner.close();
-                }
-            }
-        }
-         finally {
-            if (fileReader != null) {// todo: fix
+                //try-finally to guarantee rightness of lineParser's closure
                 try {
-                    fileReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    lineParser = new Scanner(line);
+                    valuesMap.put(lineParser.next(), lineParser.next());
+                } finally {
+                    if (lineParser != null) {
+                        lineParser.close();
+                    }
                 }
+
+            }
+
+        } finally {
+            if (scanner != null) {
+                scanner.close();
             }
         }
+
 
         //values assignment from map to server's attributes
         configValues(valuesMap);

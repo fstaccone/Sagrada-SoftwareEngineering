@@ -13,7 +13,12 @@ public class SocketListener implements Runnable {
     @Override
     public void run() {
         while (clientController != null) {
-           clientController.nextResponse().handleResponse(clientController);
+            try {
+                clientController.nextResponse().handleResponse(clientController);
+            } catch (NullPointerException e){
+                System.out.println("Problema connessione server.");
+                System.exit(0);
+            }
         }
     }
 }
