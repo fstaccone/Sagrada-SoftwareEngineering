@@ -25,8 +25,6 @@ public interface ResponseHandler {
 
     void handle(OtherTurnResponse response);
 
-    void handle(UpdateReserveResponse response);
-
     void handle(DicePlacedResponse response);
 
     void handle(ToolCardEffectAppliedResponse response);

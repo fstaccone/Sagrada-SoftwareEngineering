@@ -294,4 +294,8 @@ public class GameBoardHandlerSingle {
     public void resetToolValues() {
         gameBoardHandler.resetToolValues();
     }
+
+    public void setDiceChosenOutOfRange(){
+        gameBoardHandler.setDiceChosenOutOfRange();
+    }
 }

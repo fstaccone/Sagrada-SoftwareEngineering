@@ -244,7 +244,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                 }
             } else if (observerSocket != null) {
                 try {
-                    observerSocket.writeObject(new UpdateReserveResponse(board.getReserve().getDices().toString()));
+                    observerSocket.writeObject(new ReserveResponse(board.getReserve().getDices().toString()));
                     observerSocket.reset();
                 } catch (IOException e) {
                     terminateMatch();

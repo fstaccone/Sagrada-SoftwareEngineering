@@ -22,7 +22,6 @@ public class ReserveTest {
         dicesToThrow.add(new Dice(Colors.RED));
         dicesToThrow.add(new Dice(Colors.BLUE));
         reserve.throwDices(dicesToThrow);
-        System.out.println(reserve.toString());
         Dice d1 = reserve.chooseDice(0);
         Dice d2 = reserve.chooseDice(0);
         Dice d3 = reserve.chooseDice(0);

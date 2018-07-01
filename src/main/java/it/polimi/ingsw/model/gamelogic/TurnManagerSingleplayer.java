@@ -126,7 +126,7 @@ public class TurnManagerSingleplayer implements Runnable {
         } else if (match.getObserverSocket() != null) {
             try {
                 match.getObserverSocket().writeObject(new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn));
-                match.getObserverSocket().reset();
+                //match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrupted");

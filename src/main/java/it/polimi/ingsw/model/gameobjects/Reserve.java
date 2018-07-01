@@ -29,22 +29,6 @@ public class Reserve {
 
     public List<Dice> getDices() { return dices; }
 
-    @Override
-    public String toString() {
-
-        StringBuilder s;
-        s = new StringBuilder();
-        s.append("This is the state of the RESERVE:\n");
-        for (int i = 0; i < dices.size(); i++) {
-            s.append(i);
-            s.append(") ");
-            s.append(dices.get(i).toString());
-            s.append("\n");
-        }
-
-        return s.toString();
-    }
-
     /**
      * Takes a dice from the reserve
      * @param index is the index of the dice the player wants to pick

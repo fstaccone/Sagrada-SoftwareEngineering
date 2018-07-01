@@ -289,7 +289,7 @@ public class GameBoardHandler {
                 } else {
                     socketController.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(300);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         Thread.currentThread().interrupt();
@@ -340,7 +340,7 @@ public class GameBoardHandler {
     }
 
     public void setWindowPatternCardImg(String imgURL) {
-        BackgroundImage myBI = new BackgroundImage(new Image(imgURL, 340, 300, false, true),
+        BackgroundImage myBI = new BackgroundImage(new Image(getClass().getResourceAsStream(imgURL), 340, 300, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
 
@@ -480,7 +480,8 @@ public class GameBoardHandler {
                 int i = Integer.parseInt(source);
                 source = gui.getDicesList().get(i);
                 diceChosen = i;
-                appendToTextArea("Hai scelto il dado: " + source + " pos: " + i);
+                String[] parts = source.split("_");
+                appendToTextArea("Hai scelto il dado: " + parts[0] + " " + parts[1] +". Completa il piazzamento con un click su una casella della carta schema!");
             }
         }
     };
@@ -1378,7 +1379,7 @@ public class GameBoardHandler {
             } else {
                 socketController.request(new DiceColorRequest(username, single));
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
@@ -1452,7 +1453,7 @@ public class GameBoardHandler {
                         socketController.request(new SetDiceValueRequest(value11, username, single));
                         socketController.request(new PlaceDiceTool11Request(finalCoordinateX1, finalCoordinateY1, username, single));
                         try {
-                            Thread.sleep(200);
+                            Thread.sleep(300);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                             Thread.currentThread().interrupt();
@@ -1475,7 +1476,7 @@ public class GameBoardHandler {
 
         private boolean waitForToolEffectAppliedResponse() {
             try {
-                Thread.sleep(500); // todo: controllare, ha senso ancora?
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
@@ -1535,6 +1536,7 @@ public class GameBoardHandler {
     }
 
     public void passButtonClicked() {
+        diceChosen = OUT_OF_RANGE;
         resetToolValues();
         if (gui.isMyTurn()) {
             if (rmiController != null) {
@@ -1583,5 +1585,9 @@ public class GameBoardHandler {
             appendToTextArea("Non hai inserito alcun dado da sacrificare, o lo hai fatto in modo errato!\n");
             return false;
         }
+    }
+
+    public void setDiceChosenOutOfRange() {
+        diceChosen = OUT_OF_RANGE;
     }
 }

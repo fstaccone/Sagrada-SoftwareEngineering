@@ -192,14 +192,7 @@ public class SocketController implements ResponseHandler {
         }
     }
 
-    @Override
-    public void handle(UpdateReserveResponse response) {
-        if (socketCli != null) {
-            socketCli.getCli().onReserve(response.getString());
-        } else {
-            socketGui.getGui().onReserve(response.getString());
-        }
-    }
+
 
     @Override
     public void handle(DicePlacedResponse response) {

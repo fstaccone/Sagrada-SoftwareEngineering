@@ -390,10 +390,8 @@ public class GameBoardHandlerMulti {
 
         for (String name : map.keySet()) {
             for (Label label : labelsList) {
-                System.out.println(label.getText());
                 if (label.getText().equals(name)) {
                     int a = Integer.parseInt(label.getId().substring(5, 6));
-                    System.out.println(a);
                     switch (a) {
                         case 1:
                             setOtherFavorTokens(favourTokensContainer1, map.get(name));
@@ -508,5 +506,9 @@ public class GameBoardHandlerMulti {
 
     public void resetToolValues() {
         gameBoardHandler.resetToolValues();
+    }
+
+    public void setDiceChosenOutOfRange(){
+        gameBoardHandler.setDiceChosenOutOfRange();
     }
 }

@@ -25,62 +25,62 @@ public class ToolCommand {
         this.single = isSingle;
         switch (i) {
             case 1: {
-                this.parametersNeeded = "Pinza Sgrossatrice: \n- It allows you to Increment('+1') or Decrement('-1') the value of a the dice you choose from the Reserve;\n- You cannot Increment a 6 or Decrement a 1;\n- To use the toolcard you want, insert the following command :\n\n                                      ' usetool [number of the toolcard] [number of the dice in the reserve] [+]or[-]'\n";
+                this.parametersNeeded = "Pinza Sgrossatrice: \nPer usare questa carta, digita :                                      ' usautensile 1 [numero dado riserva] [+]o[-] '\n";
             }
             break;
 
             case 2: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 2";
+                this.parametersNeeded = "Pennello per Eglomise \nPer usare questa carta, digita :                                      ' usautensile 2 [coord X partenza carta schema] [coord Y partenza carta schema] [coord X dest carta schema] [coord Y dest carta schema] '\n ";
             }
             break;
 
             case 3: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 3";
+                this.parametersNeeded = "Alesatore per Lamina di Rame \nPer usare questa carta, digita :                                      ' usautensile 3 [coord X partenza carta schema] [coord Y partenza carta schema] [coord X dest carta schema] [coord Y dest carta schema] '\n ";
             }
             break;
 
             case 4: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 4";
+                this.parametersNeeded = "Lathekin \nPer usare questa carta, digita :                                      ' usautensile 4 [coord X 1 partenza carta schema] [coord Y 1 partenza carta schema] [coord X 1 dest carta schema] [coord Y 1 dest carta schema] [coord X 2 partenza carta schema] [coord Y 2 partenza carta schema] [coord X 2 dest carta schema] [coord Y 2 dest carta schema]'\n ";
             }
             break;
 
             case 5: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 5";
+                this.parametersNeeded = "Taglierina Circolare \nPer usare questa carta, digita :                                      ' usautensile 5 [numero dado riserva] [numero round] [numero dado nel round] '\n";
             }
             break;
 
             case 6: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 6";
+                this.parametersNeeded = "Pennello per Pasta Salda \nPer usare questa carta, digita :                                     ' usautensile 6 [numero dado riserva] '\n";
             }
             break;
 
             case 7: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 7";
+                this.parametersNeeded = "Martelletto\nPer usare questa carta, digita :                                      ' usautensile 7] '\n";
             }
             break;
 
             case 8: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 8";
+                this.parametersNeeded = "Tenaglia a Rotelle\nPer usare questa carta, digita :                                     ' usautensile 8 '\n";
             }
             break;
 
             case 9: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 9";
+                this.parametersNeeded = "Riga in sughero\nPer usare questa carta, digita :                                      ' usautensile 9 [numero dado riserva] [coord X dest carta schema] [coord Y dest carta schema] '\n";
             }
             break;
 
             case 10: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 10";
+                this.parametersNeeded = "Tampone Diamantato\nPer usare questa carta, digita :                                      ' usautensile 10 [numero dado riserva] '\n ";
             }
             break;
 
             case 11: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 11";
+                this.parametersNeeded = "Diluente per Pasta Salda\nPer usare questa carta, digita :                                      ' usautensile 11 [numero dado riserva] '\n ";
             }
             break;
 
             case 12: {
-                this.parametersNeeded = "Descrizione azione e parametri da passare 12";
+                this.parametersNeeded = "Taglierina Manuale\nPer usare questa carta, digita :                                     ' usautensile 12 [numero round] [numero dado round] [coord X 1 partenza carta schema] [coord Y 1 partenza carta schema] [coord X 1 dest carta schema] [coord Y 1 dest carta schema] [coord X 2 partenza carta schema] [coord Y 2 partenza carta schema] [coord X 2 dest carta schema] [coord Y 2 dest carta schema]'\n";
             }
             break;
 

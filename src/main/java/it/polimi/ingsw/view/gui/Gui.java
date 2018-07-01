@@ -128,6 +128,7 @@ public class Gui {
             String multi = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
             String single = "Round: " + round + "\tTurno: " + turn;
             if (gameBoardHandlerMulti != null) {
+                gameBoardHandlerMulti.setDiceChosenOutOfRange();
                 gameBoardHandlerMulti.resetToolValues();
                 gameBoardHandlerMulti.appendToTextArea(multi);
                 gameBoardHandlerMulti.initializeActions();
@@ -135,6 +136,7 @@ public class Gui {
                 chooseCardHandlerMultiplayer.appendToTextArea(multi);
                 chooseCardHandlerMultiplayer.setTurn(true);
             } else if (gameBoardHandlerSingle != null) {
+                gameBoardHandlerSingle.setDiceChosenOutOfRange();
                 gameBoardHandlerSingle.resetToolValues();
                 gameBoardHandlerSingle.appendToTextArea(single);
             }
@@ -147,7 +149,6 @@ public class Gui {
 
     public void onReserve(String string) {
         dicesList = new ArrayList<>();
-        System.out.println("On reserve");
         String dicesString = string.substring(1, string.length() - 1);
         List<String> temp = Pattern.compile(", ")
                 .splitAsStream(dicesString)
@@ -156,7 +157,6 @@ public class Gui {
             s = s.substring(1, s.length() - 1).toLowerCase().replaceAll(" ", "_");
             dicesList.add(s);
         }
-        for (String dice : dicesList) System.out.println(dice);
         if (single) {
             if (gameBoardHandlerSingle != null) {
                 gameBoardHandlerSingle.setReserve(dicesList);
@@ -274,7 +274,7 @@ public class Gui {
         if (schemeCardChosen) {
             mySchemeCard = schemeCard;
             String s = schemeCardName.toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
-            playerSchemeCardImageURL = "File:./src/main/resources/images/cards/window_pattern_cards/" + s + ".png";
+            playerSchemeCardImageURL = "/images/cards/window_pattern_cards/" + s + ".png";
         }
     }
 
@@ -370,7 +370,6 @@ public class Gui {
     }
 
     public void onPlayerExit(String name) {
-        System.out.println("On player exit");
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea("Il giocatore " + name + " è uscito dalla partita!");
         } else {

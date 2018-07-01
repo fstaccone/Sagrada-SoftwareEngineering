@@ -773,7 +773,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     private void reserveToBeUpdated(boolean reserveToBeUpdated) {
         if (reserveToBeUpdated) {
-            Response response = new UpdateReserveResponse(board.getReserve().getDices().toString());
+            Response response = new ReserveResponse(board.getReserve().getDices().toString());
             for (PlayerMultiplayer player : players) {
                 if (remoteObservers.get(player) != null) {
                     try {
