@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class FractalDrops extends WindowPatternCard {
 
     public FractalDrops() {
-        super("Fractal Drops",4,5);
+        super("Fractal Drops", 4, 5);
         this.setDifficulty(3);
         this.getWindow()[0][1].setValueConstraint(4);
         this.getWindow()[0][3].setColorConstraint(Colors.YELLOW);

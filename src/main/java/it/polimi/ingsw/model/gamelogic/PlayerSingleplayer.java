@@ -10,6 +10,7 @@ import java.util.List;
 public class PlayerSingleplayer extends Player {
 
     private List<PrivateObjectiveCard> privateObjectiveCards;
+
     /**
      * Creates a new Player for a single player match.
      *

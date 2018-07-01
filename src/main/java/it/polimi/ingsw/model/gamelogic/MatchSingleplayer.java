@@ -36,7 +36,7 @@ public class MatchSingleplayer extends Match implements Runnable {
         this.decksContainer = new DecksContainer(1, difficulty);
         this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
-        board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
+        board = new Board(decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
         System.out.println("New singleplayer matchId: " + this.matchId);
         observerSocket = socketOut;
         privateCardChosen = false;

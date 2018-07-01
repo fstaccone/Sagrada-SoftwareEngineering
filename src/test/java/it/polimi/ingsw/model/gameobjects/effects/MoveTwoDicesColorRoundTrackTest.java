@@ -48,7 +48,6 @@ public class MoveTwoDicesColorRoundTrackTest {
         singleplayer.setSchemeCard(schemeCard);
         toolCard = new ToolCard("Taglierina Manuale", "tool12");
         RoundTrack roundTrack = new RoundTrack();
-        roundTrack.showRoundTrack();
         List<Dice> list0 = new LinkedList<>();
         Dice d00 = new Dice(Colors.RED);
         d00.setValue(1);
@@ -62,7 +61,6 @@ public class MoveTwoDicesColorRoundTrackTest {
         list1.add(d11);
         roundTrack.putDices(list0, 0);
         roundTrack.putDices(list1, 1);
-        roundTrack.showRoundTrack();
         when(reserve.getDices()).thenReturn(dices);
         when(match.getBoard()).thenReturn(board);
         when(matchSingleplayer.getBoard()).thenReturn(board);

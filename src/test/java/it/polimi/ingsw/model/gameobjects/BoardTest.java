@@ -15,7 +15,6 @@ public class BoardTest {
 
     @Test
     public void Board(){
-        MatchMultiplayer match = mock(MatchMultiplayer.class);
         ToolCard toolCard1 = new ToolCard("Alesatore per Lamina di Rame", "tool3");
         ToolCard toolCard2 = new ToolCard("Lathekin", "tool4");
         ToolCard toolCard3 = new ToolCard("Taglierina Circolare", "tool5");
@@ -32,7 +31,7 @@ public class BoardTest {
         PublicObjectiveCard publicObjectiveCard1 = new PublicObjectiveCard("Sfumature chiare");
         List<PublicObjectiveCard> pickedPublicObjectiveCards = new ArrayList<>();
         pickedPublicObjectiveCards.add(publicObjectiveCard1);
-        Board board = new Board(match, pickedToolCards, pickedPublicObjectiveCards);
+        Board board = new Board(pickedToolCards, pickedPublicObjectiveCards);
         Assert.assertEquals(pickedToolCards, board.getPickedToolCards());
         Assert.assertEquals(pickedPublicObjectiveCards, board.getPickedPublicObjectiveCards());
         Assert.assertEquals(true, board.findAndUseToolCard(30, playerMultiplayer, m));

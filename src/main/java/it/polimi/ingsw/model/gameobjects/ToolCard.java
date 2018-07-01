@@ -87,7 +87,6 @@ public class ToolCard {
                 color = Colors.BLUE;
                 break;
             default:
-                System.out.println("Invalid card from ToolCard");
                 break;
         }
         this.toolID = toolID;

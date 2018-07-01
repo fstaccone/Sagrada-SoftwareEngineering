@@ -4,23 +4,20 @@ import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.Player;
 
 import java.util.List;
-import java.util.Map;
 
 public class Board {
     private List<PublicObjectiveCard> pickedPublicObjectiveCards;
-    //private int numOfPlayers // potrebbe essere utile per la GUI
     private Reserve reserve;
     private List<ToolCard> pickedToolCards;
     private RoundTrack roundTrack;
-    private Map<Player, WindowPatternCard> windowPatternCardsMap; // Viene creata una mappa che associa la carta al giocatore
 
     /**
      * Creates the board where the gameobjects will be placed
-     * @param match is the current match
-     * @param pickedToolCards are the toolcards for the current match
+     *
+     * @param pickedToolCards            are the toolcards for the current match
      * @param pickedPublicObjectiveCards are the public objective cards for the current match
      */
-    public Board(Match match, List<ToolCard> pickedToolCards, List<PublicObjectiveCard> pickedPublicObjectiveCards) {
+    public Board(List<ToolCard> pickedToolCards, List<PublicObjectiveCard> pickedPublicObjectiveCards) {
         // To be managed later, even in Match
         this.pickedToolCards = pickedToolCards;
         this.pickedPublicObjectiveCards = pickedPublicObjectiveCards;
@@ -31,9 +28,10 @@ public class Board {
 
     /**
      * allows a player to use a toolcard
-     * @param i is tool card number
+     *
+     * @param i      is tool card number
      * @param player is the player that wants to use the toolcard
-     * @param match is the current match
+     * @param match  is the current match
      * @return true is the toolcard is available and used by the player, false otherwise.
      */
     public boolean findAndUseToolCard(int i, Player player, Match match) {

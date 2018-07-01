@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class LuxAstram extends WindowPatternCard {
 
     public LuxAstram() {
-        super("Lux Astram",4,5);
+        super("Lux Astram", 4, 5);
         this.setDifficulty(5);
         this.getWindow()[0][1].setValueConstraint(1);
         this.getWindow()[0][2].setColorConstraint(Colors.GREEN);

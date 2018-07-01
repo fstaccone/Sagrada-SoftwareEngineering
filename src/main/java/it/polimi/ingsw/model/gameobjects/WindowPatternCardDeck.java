@@ -1,22 +1,25 @@
 package it.polimi.ingsw.model.gameobjects;
 
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.*;
-import java.util.*;
 
-public class WindowPatternCardDeck extends Deck<WindowPatternCard>{
+import java.util.Random;
+
+public class WindowPatternCardDeck extends Deck<WindowPatternCard> {
+
     /**
      * Initializes the deck with all the scheme cards and then chooses randomly 4 scheme cards to show to each player
+     *
      * @param numOfPlayers is the number of players
      */
     public WindowPatternCardDeck(int numOfPlayers) {
         super();
-        for(int i=1;i<25;i++) {
-            this.deck.add("window"+i);
+        for (int i = 1; i < 25; i++) {
+            this.deck.add("window" + i);
         }
 
         Random randomGenerator;
 
-        for(int j=0;j<4*numOfPlayers;j++) {
+        for (int j = 0; j < 4 * numOfPlayers; j++) {
             randomGenerator = new Random();
             int windowIndex = randomGenerator.nextInt(deck.size());
             String windowName = deck.get(windowIndex);
@@ -119,12 +122,9 @@ public class WindowPatternCardDeck extends Deck<WindowPatternCard>{
                     this.deck.remove("window24");
                     break;
 
-                default: windowName = "Invalid card";
+                default:
                     break;
             }
-
         }
-
     }
-
 }

@@ -14,7 +14,7 @@ public class RoundTrack {
      */
     public RoundTrack() {
         rounds = new LinkedList<>();
-        for (int i = 0; i < Match.getNumberOfRounds(); i++) {
+        for (int i = 0; i < Match.NUMBER_OF_ROUNDS; i++) {
             rounds.add(new ArrayList<>());
         }
     }
@@ -40,33 +40,22 @@ public class RoundTrack {
                 string.append("Round ");
                 string.append(i + 1);
                 string.append("\n");
-                rounds.get(i).forEach(e -> string.append(j.getAndIncrement() + ") " + e.toString() + "\t"));
+                rounds.get(i).forEach(e -> {
+                    string.append(j.getAndIncrement());
+                    string.append(") ");
+                    string.append(e.toString());
+                    string.append("\t");
+                });
                 string.append("\n");
             }
         }
         return string.toString();
     }
 
-    // todo: eliminare, anche gli utilizzi in testing
-    public void showRoundTrack() {
-        int j = 0;
-        for (List<Dice> list : rounds) {
-            System.out.println("List number: " + j);
-            int i = 0;
-            for (Dice d : list) {
-                System.out.println(d.toString() + "id=" + i);
-                i++;
-            }
-            j++;
-        }
-    }
-
     /**
-     * @return the dice from the round track chosen by the player
+     * @return a dice from the roundTrack, useful to test putDice
      */
-    // todo: va modificata?
     public Dice getDice() {
-        showRoundTrack();
         System.out.println("Choose the number of the list from which you want to get a dice");
         Scanner scan = new Scanner(System.in);
         int listNumber = scan.nextInt();

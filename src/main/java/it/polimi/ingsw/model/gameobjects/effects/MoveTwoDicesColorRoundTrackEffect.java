@@ -4,7 +4,9 @@ import it.polimi.ingsw.model.gamelogic.Match;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.*;
+import it.polimi.ingsw.model.gameobjects.Colors;
+import it.polimi.ingsw.model.gameobjects.Dice;
+import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.Response;
 import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 

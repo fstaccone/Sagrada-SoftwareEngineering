@@ -48,7 +48,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         socketObservers = new HashMap<>();
         turnManager = new TurnManagerMultiplayer(this, turnTime);
         decksContainer = new DecksContainer(clients.size(), -1);
-        board = new Board(this, decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
+        board = new Board(decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
 
         initializePlayers(clients, socketsOut);
 
@@ -175,18 +175,18 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         ranking.clear();
 
-       notifyWinner(winner, rankingNames, rankingValues);
+        notifyWinner(winner, rankingNames, rankingValues);
     }
 
     /**
      * notifies to all clients who is the winner and the list of all players with their points. The String in position x
      * inside ranckingNames is linked to the points contained in the position x of the list rankingvalues
      *
-     * @param winner is the player whit most points
-     * @param rankingNames is the list of players' names
+     * @param winner        is the player whit most points
+     * @param rankingNames  is the list of players' names
      * @param rankingValues is the list of values of points got by all players
      */
-    private void notifyWinner(PlayerMultiplayer winner, List<String> rankingNames, List<Integer> rankingValues){
+    private void notifyWinner(PlayerMultiplayer winner, List<String> rankingNames, List<Integer> rankingValues) {
         for (PlayerMultiplayer p : players) {
             if (remoteObservers.get(p) != null) {
                 try {
@@ -235,7 +235,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         int myTokens = p.getNumFavorTokens();
         String[][] schemeCard = null;
         String schemeCardName = null;
-        if(p.getSchemeCard()!=null) {
+        if (p.getSchemeCard() != null) {
             schemeCard = new String[4][5];
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 5; j++)
@@ -255,7 +255,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         for (PlayerMultiplayer player : players) {
             String[][] otherSchemeCard = new String[4][5];
             if (!player.getName().equals(name)) {
-                if(player.getSchemeCard()!=null) {
+                if (player.getSchemeCard() != null) {
                     for (int i = 0; i < 4; i++) {
                         for (int j = 0; j < 5; j++)
                             otherSchemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
@@ -885,7 +885,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public void deleteDisconnectedClients(){
+    public void deleteDisconnectedClients() {
         lobby.deleteDisconnectedClients(players.stream().map(Player::getName).collect(Collectors.toList()));
     }
 

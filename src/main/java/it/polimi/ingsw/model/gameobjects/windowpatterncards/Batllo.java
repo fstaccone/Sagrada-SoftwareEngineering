@@ -21,7 +21,5 @@ public class Batllo extends WindowPatternCard {
         this.getWindow()[3][2].setColorConstraint(Colors.RED);
         this.getWindow()[3][3].setValueConstraint(5);
         this.getWindow()[3][4].setValueConstraint(3);
-
-
     }
 }

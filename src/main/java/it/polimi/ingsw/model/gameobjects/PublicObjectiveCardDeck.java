@@ -1,20 +1,21 @@
 package it.polimi.ingsw.model.gameobjects;
 
-import java.util.*;
+import java.util.Random;
 
-public  class PublicObjectiveCardDeck extends Deck<PublicObjectiveCard>{
+public class PublicObjectiveCardDeck extends Deck<PublicObjectiveCard> {
 
     private Random randomGenerator;
 
     /**
      * Initializes the deck with all the public objective card id names and then it really creates 2 cards if it's a
      * single player match, 3 if it's a multiplayer match
-     * @param numOfPlayers
+     *
+     * @param numOfPlayers is the number of players playing the current match
      */
     public PublicObjectiveCardDeck(int numOfPlayers) {
         super();
-        for(int i=1; i<11; i++) {
-            this.deck.add("public"+i);
+        for (int i = 1; i < 11; i++) {
+            this.deck.add("public" + i);
         }
         randomGenerator = new Random();
         setReallyCreatedCards(numOfPlayers);
@@ -22,16 +23,16 @@ public  class PublicObjectiveCardDeck extends Deck<PublicObjectiveCard>{
 
     /**
      * Creates a number of cards based on the number of players of the match (2 for single player, 3 for multiplayer)
+     *
      * @param numOfPlayers is the number of players of the match
      */
-    public void setReallyCreatedCards(int numOfPlayers){
+    public void setReallyCreatedCards(int numOfPlayers) {
         int n;
-        if(numOfPlayers == 1)
-            n=2;
-        else n=3;
-        for(int j=0;j<n;j++) {
+        if (numOfPlayers == 1)
+            n = 2;
+        else n = 3;
+        for (int j = 0; j < n; j++) {
             int publicIndex = randomGenerator.nextInt(deck.size());
-            System.out.println("Numero: " + publicIndex);//CANCELLA
             String publicName = deck.get(publicIndex);
             switch (publicName) {
 

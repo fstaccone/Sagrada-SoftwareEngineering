@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.socket.responses.*;
+import it.polimi.ingsw.view.MatchObserver;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -26,7 +26,9 @@ public class TurnManagerMultiplayer implements Runnable {
         timerExpired = false;
     }
 
-    public boolean isTimerExpired() { return timerExpired; }
+    public boolean isTimerExpired() {
+        return timerExpired;
+    }
 
     /**
      * sets the boolean to true in order to avoid double canceling of the timer when the timer expires

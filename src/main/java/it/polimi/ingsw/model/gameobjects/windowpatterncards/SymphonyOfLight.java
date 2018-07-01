@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.gameobjects.windowpatterncards;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
-public class SymphonyOfLight extends WindowPatternCard{
+public class SymphonyOfLight extends WindowPatternCard {
     public SymphonyOfLight() {
         super("Symphony of Light", 4, 5);
         this.setDifficulty(6);

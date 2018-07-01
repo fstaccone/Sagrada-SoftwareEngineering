@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class SunSGlory extends WindowPatternCard {
 
     public SunSGlory() {
-        super("Sun's Glory",4,5);
+        super("Sun's Glory", 4, 5);
         this.setDifficulty(6);
         this.getWindow()[0][0].setValueConstraint(1);
         this.getWindow()[0][1].setColorConstraint(Colors.VIOLET);

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.gameobjects;
 
 import java.util.ArrayList;
-import java.util.*;
+import java.util.List;
 import java.util.Random;
 
 public class Bag {
@@ -10,11 +10,12 @@ public class Bag {
 
     /**
      * Initializes the bag with n = num dices of each color
+     *
      * @param num represents the number of dices in the bag for each color
      */
     public Bag(int num) {
         dices = new ArrayList<>();
-        for (int j = 0; j < Colors.values().length-1; j++) { //lenght-1 because of NONE color
+        for (int j = 0; j < Colors.values().length - 1; j++) { //lenght-1 because of NONE color
             for (int i = 0; i < num; i++) {
                 Dice dice = new Dice(Colors.values()[j]);
                 dices.add(dice);
@@ -23,15 +24,15 @@ public class Bag {
     }
 
     /**
-     *
      * @return the number of dices in the bag
      */
-    public int getSize(){
+    public int getSize() {
         return dices.size();
     }
 
     /**
      * Takes n = (num*2 + 1) random dices from the bag, adds them in a list and removes them from the bag
+     *
      * @param num is the number of players of the match
      * @return a list of n = (num*2 + 1) dices taken from the bag
      */
@@ -39,13 +40,12 @@ public class Bag {
         List<Dice> result = new ArrayList<>();
         int item;
         for (int i = 0; i < num; i++) {
-            if(dices.size()!=1) {
+            if (dices.size() != 1) {
                 item = new Random().nextInt(dices.size() - 1);
-            }
-            else item = 0;
-            for (int j=0; j<=item; j++) {
+            } else item = 0;
+            for (int j = 0; j <= item; j++) {
                 if (j == item) {
-                    result.add( dices.get(j));
+                    result.add(dices.get(j));
                     dices.remove(j);
                 }
             }
@@ -55,13 +55,14 @@ public class Bag {
 
     /**
      * Picks a single random dice from the bag
+     *
      * @return a dice or null if the bag is empty
      */
-    public Dice pickSingleDice(){
+    public Dice pickSingleDice() {
         int item;
-        if(dices.size() == 1)  item = 0;
-        else item = new Random().nextInt(dices.size()-1);
-        for (int j=0; j<=item; j++) {
+        if (dices.size() == 1) item = 0;
+        else item = new Random().nextInt(dices.size() - 1);
+        for (int j = 0; j <= item; j++) {
             if (j == item) {
                 Dice d = dices.get(j);
                 dices.remove(j);
@@ -73,9 +74,10 @@ public class Bag {
 
     /**
      * Puts a dice back in the bag
+     *
      * @param dice is the dice to put in the bag
      */
-    public void putDiceInBag(Dice dice){
+    public void putDiceInBag(Dice dice) {
         dices.add(dice);
     }
 }

@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.gameobjects.windowpatterncards;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 
-public class Firelight extends  WindowPatternCard{
+public class Firelight extends WindowPatternCard {
 
     public Firelight() {
         super("Firelight", 4, 5);

@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class Comitas extends WindowPatternCard {
 
     public Comitas() {
-        super("Comitas",4,5);
+        super("Comitas", 4, 5);
         this.setDifficulty(5);
         this.getWindow()[0][0].setColorConstraint(Colors.YELLOW);
         this.getWindow()[0][2].setValueConstraint(2);

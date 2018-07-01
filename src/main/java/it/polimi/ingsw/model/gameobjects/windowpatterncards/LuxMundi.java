@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class LuxMundi extends WindowPatternCard {
 
     public LuxMundi() {
-        super("Lux Mundi",4,5);
+        super("Lux Mundi", 4, 5);
         this.setDifficulty(6);
         this.getWindow()[0][2].setValueConstraint(1);
         this.getWindow()[1][0].setValueConstraint(1);

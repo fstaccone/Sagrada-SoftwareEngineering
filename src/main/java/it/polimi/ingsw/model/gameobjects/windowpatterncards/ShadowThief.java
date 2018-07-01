@@ -15,7 +15,8 @@ public class ShadowThief extends WindowPatternCard {
         this.getWindow()[2][0].setColorConstraint(Colors.RED);
         this.getWindow()[2][1].setValueConstraint(6);
         this.getWindow()[2][3].setColorConstraint(Colors.VIOLET);
-        this.getWindow()[3][0].setColorConstraint(Colors.YELLOW);        ;
+        this.getWindow()[3][0].setColorConstraint(Colors.YELLOW);
+        ;
         this.getWindow()[3][1].setColorConstraint(Colors.RED);
         this.getWindow()[3][2].setValueConstraint(5);
         this.getWindow()[3][3].setValueConstraint(4);

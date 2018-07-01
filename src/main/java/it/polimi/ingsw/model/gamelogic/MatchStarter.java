@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.TimerTask;
 
-public class MatchStarter extends TimerTask{
+public class MatchStarter extends TimerTask {
 
     Lobby lobby;
 
@@ -36,7 +36,7 @@ public class MatchStarter extends TimerTask{
             }
         }
 
-        if(lobby.getWaitingPlayers().size() >= 2) {
+        if (lobby.getWaitingPlayers().size() >= 2) {
             lobby.startMatch();
         }
     }

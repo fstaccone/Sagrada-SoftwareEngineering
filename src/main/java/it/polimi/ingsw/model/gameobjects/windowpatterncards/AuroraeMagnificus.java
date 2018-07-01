@@ -20,6 +20,5 @@ public class AuroraeMagnificus extends WindowPatternCard {
         this.getWindow()[3][0].setValueConstraint(1);
         this.getWindow()[3][3].setColorConstraint(Colors.GREEN);
         this.getWindow()[3][4].setValueConstraint(4);
-
     }
 }

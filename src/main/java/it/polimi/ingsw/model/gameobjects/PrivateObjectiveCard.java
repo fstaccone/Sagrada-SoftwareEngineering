@@ -8,10 +8,8 @@ import java.util.Arrays;
 public class PrivateObjectiveCard {
 
     private Colors color;
-    private String name;
 
     public PrivateObjectiveCard(Colors color) {
-        this.name = "PrivateObjectiveCard " + color.toString();
         this.color = color;
     }
 

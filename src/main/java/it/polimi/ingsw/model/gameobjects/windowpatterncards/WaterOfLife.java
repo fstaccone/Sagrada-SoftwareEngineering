@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class WaterOfLife extends WindowPatternCard {
 
     public WaterOfLife() {
-        super("Water of Life",4,5);
+        super("Water of Life", 4, 5);
         this.setDifficulty(6);
         this.getWindow()[0][0].setValueConstraint(6);
         this.getWindow()[0][1].setColorConstraint(Colors.BLUE);

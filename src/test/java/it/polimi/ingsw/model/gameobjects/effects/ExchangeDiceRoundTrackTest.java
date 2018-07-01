@@ -80,7 +80,6 @@ public class ExchangeDiceRoundTrackTest {
         list1.add(d11);
         roundTrack.putDices(list0, 0);
         roundTrack.putDices(list1, 1);
-        roundTrack.showRoundTrack();
         when(match.getBoard()).thenReturn(board);
         when(matchSingleplayer.getBoard()).thenReturn(board);
         when(match.getBoard().getReserve()).thenReturn(reserve);
@@ -96,7 +95,6 @@ public class ExchangeDiceRoundTrackTest {
     public void checkDice() {
         player.setNumFavorTokens(4);
         toolCard.useCard(player, match);
-        roundTrack.showRoundTrack();
         player.setPickedDice(reserve.getDices().get(player.getDice()));
         Assert.assertEquals(5, player.getPickedDice().getValue());
         Assert.assertEquals(Colors.YELLOW, player.getPickedDice().getColor());
@@ -105,7 +103,6 @@ public class ExchangeDiceRoundTrackTest {
     @Test
     public void checkDiceSingle(){
         toolCard.useCard(singleplayer, matchSingleplayer);
-        roundTrack.showRoundTrack();
         singleplayer.setPickedDice(reserve.getDices().get(singleplayer.getDice()));
         Assert.assertEquals(5, singleplayer.getPickedDice().getValue());
         Assert.assertEquals(Colors.YELLOW, singleplayer.getPickedDice().getColor());

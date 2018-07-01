@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class ChromaticSplendor extends WindowPatternCard {
 
     public ChromaticSplendor() {
-        super("Chromatic Splendor",4,5);
+        super("Chromatic Splendor", 4, 5);
         this.setDifficulty(4);
         this.getWindow()[0][2].setColorConstraint(Colors.GREEN);
         this.getWindow()[1][0].setValueConstraint(2);

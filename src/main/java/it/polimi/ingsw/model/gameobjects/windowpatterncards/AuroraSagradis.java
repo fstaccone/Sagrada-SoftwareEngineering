@@ -18,6 +18,5 @@ public class AuroraSagradis extends WindowPatternCard {
         this.getWindow()[2][1].setValueConstraint(1);
         this.getWindow()[2][3].setValueConstraint(5);
         this.getWindow()[3][2].setValueConstraint(6);
-
     }
 }

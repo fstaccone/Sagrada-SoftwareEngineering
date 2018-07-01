@@ -1087,9 +1087,10 @@ public class GameBoardHandler {
             });
         }
 
-        private void createContext9() {
-            setupSacrificeImageView();
-
+        /**
+         * initialize variables to use tool card 9
+         */
+        private void initializeContext9(){
             imageView1 = null;
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
@@ -1109,6 +1110,15 @@ public class GameBoardHandler {
             gameBoard.getChildren().add(finalX1);
             gameBoard.getChildren().add(finalY1);
             setupReserveTarget(imageView1);
+        }
+
+        /**
+         * create the context for using the tool card 9
+         */
+        private void createContext9() {
+            setupSacrificeImageView();
+
+            initializeContext9();
 
             useButton.setOnMouseClicked(event -> {
                 finalCoordinateX1 = tryParse(finalX1.getText());
@@ -1146,6 +1156,9 @@ public class GameBoardHandler {
             });
         }
 
+        /**
+         * create the context for using the tool card 10
+         */
         private void createContext10() {
             setupSacrificeImageView();
 
@@ -1195,6 +1208,9 @@ public class GameBoardHandler {
 
         }
 
+        /**
+         * create the first part of the context for using the tool card 11
+         */
         private void createContext11() {
             setupSacrificeImageView();
 
@@ -1254,9 +1270,10 @@ public class GameBoardHandler {
             });
         }
 
-        private void createContext12() {
-            setupSacrificeImageView();
-
+        /**
+         * initialize variables used by context 12 for using the tool card 12
+         */
+        private void initializeContext12(){
             imageView1 = null;
             imageView2 = null;
             imageView3 = null;
@@ -1299,7 +1316,15 @@ public class GameBoardHandler {
             setupRoundTrackTarget(imageView3);
             setupSchemeCardTarget1(imageView1);
             setupSchemeCardTarget2(imageView2);
+        }
 
+        /**
+         * create the context for using the tool card 12
+         */
+        private void createContext12() {
+            setupSacrificeImageView();
+
+            initializeContext12();
 
             useButton.setOnMouseClicked(event -> {
                 finalCoordinateX1 = tryParse(finalX1.getText());
@@ -1366,6 +1391,9 @@ public class GameBoardHandler {
             });
         }
 
+        /**
+         * create the second part of the context for using the tool card 11
+         */
         private void createContext11bis() {
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
@@ -1491,7 +1519,6 @@ public class GameBoardHandler {
         }
 
         private Integer tryParse(String text) {
-
             try {
                 return Integer.parseInt(text);
             } catch (NumberFormatException e) {

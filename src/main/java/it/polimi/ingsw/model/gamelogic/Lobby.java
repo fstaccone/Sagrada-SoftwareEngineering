@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.gamelogic;
 
+import it.polimi.ingsw.socket.responses.*;
 import it.polimi.ingsw.view.LobbyObserver;
 import it.polimi.ingsw.view.MatchObserver;
-import it.polimi.ingsw.socket.responses.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -448,9 +448,9 @@ public class Lobby {
         }
     }
 
-    public void deleteDisconnectedClients(List<String> players){
-        for(String player : players){
-            if(takenUsernames.get(player).equals(ConnectionStatus.DISCONNECTED)){
+    public void deleteDisconnectedClients(List<String> players) {
+        for (String player : players) {
+            if (takenUsernames.get(player).equals(ConnectionStatus.DISCONNECTED)) {
                 removeFromMatchMulti(player);
             }
         }

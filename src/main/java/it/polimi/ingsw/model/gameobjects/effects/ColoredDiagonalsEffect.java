@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.gameobjects.effects;
 
 import it.polimi.ingsw.model.gamelogic.Match;
-import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gamelogic.Player;
+import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class ColoredDiagonalsEffect implements Effect {

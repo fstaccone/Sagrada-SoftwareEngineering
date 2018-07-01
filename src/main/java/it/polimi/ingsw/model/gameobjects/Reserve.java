@@ -11,10 +11,13 @@ public class Reserve {
     /**
      * Creates a new reserve with no dices
      */
-    public Reserve() { dices = new ArrayList<>(); }
+    public Reserve() {
+        dices = new ArrayList<>();
+    }
 
     /**
      * Populates the reserve with the dices
+     *
      * @param init is the list of dices to put in the reserve, a random value between 1 and 6 is assigned to each dice
      */
     public void throwDices(List<Dice> init) {
@@ -27,10 +30,13 @@ public class Reserve {
         }
     }
 
-    public List<Dice> getDices() { return dices; }
+    public List<Dice> getDices() {
+        return dices;
+    }
 
     /**
      * Takes a dice from the reserve
+     *
      * @param index is the index of the dice the player wants to pick
      * @return returns the dice chosen by the player
      */
@@ -38,7 +44,7 @@ public class Reserve {
         if (!(dices.isEmpty())) {
             return dices.remove(index);
         } else {
-            System.out.println("The reserve is empty."); //andrebbe fatto lanciando ExceptionEmptyReserve
+            System.out.println("The reserve is empty.");
             return null;
         }
     }

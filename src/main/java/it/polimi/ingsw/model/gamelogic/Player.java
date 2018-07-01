@@ -18,7 +18,7 @@ public abstract class Player {
     private Dice diceFromBag;
     private int roundChosen;
     private int diceChosenFromRound;
-    private int diceToBeSacrificed=9;
+    private int diceToBeSacrificed = 9;
 
     public int getDiceToBeSacrificed() {
         return diceToBeSacrificed;

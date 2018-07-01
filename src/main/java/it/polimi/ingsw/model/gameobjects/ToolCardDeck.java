@@ -17,7 +17,6 @@ public class ToolCardDeck extends Deck<ToolCard> {
                 randomGenerator = new Random();
                 int toolIndex = randomGenerator.nextInt(deck.size());
                 String toolName = deck.get(toolIndex);
-                System.out.println(toolName);
                 switchOnToolName(toolName);
             }
         } else {
@@ -25,7 +24,6 @@ public class ToolCardDeck extends Deck<ToolCard> {
                 randomGenerator = new Random();
                 int toolIndex = randomGenerator.nextInt(deck.size());
                 String toolName = deck.get(toolIndex);
-                System.out.println(toolName);
                 switchOnToolName(toolName);
             }
         }
@@ -108,7 +106,6 @@ public class ToolCardDeck extends Deck<ToolCard> {
                 this.deck.remove("tool12");
                 break;
             default:
-                toolName = "Invalid card"; // todo: che senso ha?
                 break;
         }
 

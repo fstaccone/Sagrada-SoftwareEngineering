@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 public class FulgorDelCielo extends WindowPatternCard {
 
     public FulgorDelCielo() {
-        super("Fulgor del Cielo",4,5);
+        super("Fulgor del Cielo", 4, 5);
         this.setDifficulty(5);
         this.getWindow()[0][1].setColorConstraint(Colors.BLUE);
         this.getWindow()[0][2].setColorConstraint(Colors.RED);

@@ -15,7 +15,7 @@ public abstract class Match {
     protected DecksContainer decksContainer;
     private Bag bag;
     protected Board board;
-    private static final int numberOfRounds = 10;
+    public static final int NUMBER_OF_ROUNDS = 10;
     protected int roundCounter;
     protected Thread localThread;
     private boolean stillPlaying;
@@ -60,11 +60,9 @@ public abstract class Match {
         return board;
     }
 
-    public static int getNumberOfRounds() {
-        return numberOfRounds;
+    public boolean isStillPlaying() {
+        return stillPlaying;
     }
-
-    public boolean isStillPlaying() { return stillPlaying; }
 
     public List<WindowPatternCard> getWindowsProposed() {
         return windowsProposed;
@@ -112,7 +110,9 @@ public abstract class Match {
         this.roundCounter++;
     }
 
-    public void setStillPlaying(boolean stillPlaying) { this.stillPlaying = stillPlaying; }
+    public void setStillPlaying(boolean stillPlaying) {
+        this.stillPlaying = stillPlaying;
+    }
 
     /**
      * At the end of each round, all the dices left on the reserve are taken and placed on the round track
@@ -166,20 +166,20 @@ public abstract class Match {
 
     public abstract boolean useToolCard4(int diceToBeSacrificed, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name);
 
-    public abstract boolean useToolCard5(int diceToBeSacrificed,int diceChosen, int roundChosen, int diceChosenFromRound, String name);
+    public abstract boolean useToolCard5(int diceToBeSacrificed, int diceChosen, int roundChosen, int diceChosenFromRound, String name);
 
-    public abstract boolean useToolCard6(int diceToBeSacrificed,int diceChosen, String name);
+    public abstract boolean useToolCard6(int diceToBeSacrificed, int diceChosen, String name);
 
-    public abstract boolean useToolCard7(int diceToBeSacrificed,String name);
+    public abstract boolean useToolCard7(int diceToBeSacrificed, String name);
 
-    public abstract boolean useToolCard8(int diceToBeSacrificed,String name);
+    public abstract boolean useToolCard8(int diceToBeSacrificed, String name);
 
-    public abstract boolean useToolCard9(int diceToBeSacrificed,int diceChosen, int finalX1, int finalY1, String name);
+    public abstract boolean useToolCard9(int diceToBeSacrificed, int diceChosen, int finalX1, int finalY1, String name);
 
-    public abstract boolean useToolCard10(int diceToBeSacrificed,int diceChosen, String name);
+    public abstract boolean useToolCard10(int diceToBeSacrificed, int diceChosen, String name);
 
-    public abstract boolean useToolCard11(int diceToBeSacrificed,int diceChosen, String name);
+    public abstract boolean useToolCard11(int diceToBeSacrificed, int diceChosen, String name);
 
-    public abstract boolean useToolCard12(int diceToBeSacrificed,int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name);
+    public abstract boolean useToolCard12(int diceToBeSacrificed, int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name);
 }
 
