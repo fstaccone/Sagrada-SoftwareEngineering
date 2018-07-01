@@ -4,6 +4,7 @@ import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
 import it.polimi.ingsw.socket.requests.QuitGameRequest;
+import it.polimi.ingsw.socket.requests.RemoveFromWaitingPlayersRequest;
 import it.polimi.ingsw.socket.requests.TerminateMatchRequest;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -126,6 +127,10 @@ public class ChooseCardHandler {
             window.setTitle("Scelta della carta schema");
             window.setResizable(false);
             window.show();
+        });
+        windowFromGui.setOnCloseRequest(event -> {
+            event.consume();
+            onQuitClicked();
         });
     }
 

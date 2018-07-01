@@ -33,7 +33,7 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     @Override
     public void onLastPlayer(String name) {
-        log.setText(name + "è uscito dalla sala di attesa, sei l'unico rimasto. Il timer è stato cancellato!");
+        log.setText(name + " è uscito dalla sala di attesa, sei l'unico rimasto. Il timer è stato cancellato!");
     }
 
     @Override
