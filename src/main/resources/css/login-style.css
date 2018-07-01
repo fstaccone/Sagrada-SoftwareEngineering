@@ -31,7 +31,6 @@
 #waiting {
     -fx-background-image: url("/images/other/waiting.jpg");
     -fx-background-size: cover;
-    -fx-font-family: "Courier New";
 }
 
 
