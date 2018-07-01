@@ -196,7 +196,7 @@ public class LoginHandler implements Initializable {
         alert.setResizable(false);
         alert.setGraphic(null);
         alert.showAndWait();
-        if (alert.getResult() == ButtonType.YES) {
+        if (alert.getResult() == yes) {
             window.close();
             if (isRmi)
                 controllerRmi.removePlayer(this.username);
