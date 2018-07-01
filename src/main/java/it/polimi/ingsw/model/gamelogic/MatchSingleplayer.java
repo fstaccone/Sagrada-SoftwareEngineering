@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
 import it.polimi.ingsw.socket.responses.*;
+import it.polimi.ingsw.view.MatchObserver;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -22,13 +22,12 @@ public class MatchSingleplayer extends Match implements Runnable {
     private int turnTime;
 
     /**
-     *
-     * @param matchId id of the current match
-     * @param name name of the player in the match
+     * @param matchId    id of the current match
+     * @param name       name of the player in the match
      * @param difficulty difficulty chosen by the player
-     * @param turnTime duration of every turn in milliseconds
-     * @param lobby lobby that creates this match
-     * @param socketOut OutputObjectStream of the client (only if the connection is socket)
+     * @param turnTime   duration of every turn in milliseconds
+     * @param lobby      lobby that creates this match
+     * @param socketOut  OutputObjectStream of the client (only if the connection is socket)
      */
     public MatchSingleplayer(int matchId, String name, int difficulty, int turnTime, Lobby lobby, ObjectOutputStream socketOut) {
         super(lobby);
@@ -47,7 +46,6 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     /**
-     *
      * @return the rmi observer for the match
      */
     public MatchObserver getObserverRmi() {
@@ -55,7 +53,6 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     /**
-     *
      * @return the socket observer for the match
      */
     public ObjectOutputStream getObserverSocket() {
@@ -63,7 +60,6 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     /**
-     *
      * @return the match id
      */
     public int getMatchId() {
@@ -71,7 +67,6 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     /**
-     *
      * @return the match turn manager
      */
     public TurnManagerSingleplayer getTurnManager() {
@@ -79,7 +74,6 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     /**
-     *
      * @return the player of the match
      */
     public PlayerSingleplayer getPlayer() {
@@ -89,8 +83,9 @@ public class MatchSingleplayer extends Match implements Runnable {
     public boolean isPrivateCardChosen() {
         return privateCardChosen;
     }
+
     /**
-     *Assigns to the player two private objective cards randomly chosen from the corresponding deck
+     * Assigns to the player two private objective cards randomly chosen from the corresponding deck
      */
     @Override
     public void drawPrivateObjectiveCards() {
@@ -165,8 +160,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     /**
-     *
-     * @param name player's name
+     * @param name  player's name
      * @param index index of the window pattern card chosen among the four proposed
      */
     @Override
@@ -203,11 +197,12 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     /**
      * If result == true the player's scheme card has to be updated.
+     *
      * @param result boolean giving information about the scheme card status.
      */
     private void schemeCardToBeUpdated(boolean result) {
 
-        String [][] schemeCard= new String[4][5];
+        String[][] schemeCard = new String[4][5];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++)
                 schemeCard[i][j] = player.getSchemeCard().getWindow()[i][j].toString();
@@ -235,6 +230,7 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     /**
      * If reserveToBeUpdated == True, the reserve has to be updated.
+     *
      * @param reserveToBeUpdated boolean giving information about the reserve status.
      */
     private void reserveToBeUpdated(boolean reserveToBeUpdated) {
@@ -259,11 +255,10 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     /**
-     *
-     * @param name Player's name
+     * @param name  Player's name
      * @param index index of the dice in the reserve that the player wants to place
-     * @param x row index of the chosen dice new position in the player's scheme card
-     * @param y column index of the chosen dice new position in the player's scheme card
+     * @param x     row index of the chosen dice new position in the player's scheme card
+     * @param y     column index of the chosen dice new position in the player's scheme card
      * @return true if the player is allowed to place a dice (if isDiceAction()==true the player has already
      * placed a dice in this turn) and the dice is placed correctly.
      */
@@ -301,14 +296,15 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     /**
      * Places the dice taken from the bag after using tool card 11.
+     *
      * @param name Player's name
-     * @param x row index of the chosen dice new position in the player's scheme card
-     * @param y column index of the chosen dice new position in the player's scheme card
+     * @param x    row index of the chosen dice new position in the player's scheme card
+     * @param y    column index of the chosen dice new position in the player's scheme card
      * @return true if the player is allowed to place a dice (if isDiceAction()==true the player has already
      * placed a dice in this turn) and the dice is placed correctly.
      */
     @Override
-    public boolean placeDiceTool11(String name, int x, int y){
+    public boolean placeDiceTool11(String name, int x, int y) {
         if (!isDiceAction()) {
             boolean result;
             result = getPlayer().getSchemeCard().putDice(getPlayer().getDiceFromBag(), x, y);
@@ -335,10 +331,11 @@ public class MatchSingleplayer extends Match implements Runnable {
      * Method used to set the parameters needed by the effect of tool 1.
      * This tool card allows the player to increment or decrement by 1 the value of a chosen dice in the reserve.
      * The player can't increment the value of a dice with value 6 and can't decrement the value of a dice with value 1.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param diceChosen Dice from the reserve whose value is modified.
-     * @param incrOrDecr Choice made by the player.
-     * @param name Player's name.
+     * @param diceChosen         Dice from the reserve whose value is modified.
+     * @param incrOrDecr         Choice made by the player.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -364,13 +361,14 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * Method used to set the parameters needed by the effects of tool cards 2 and 3.
      * Both tool cards allow the player to move a dice in his scheme card.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param n index of the tool card selected (it can be 2 or 3).
-     * @param startX Row index of the chosen dice to move.
-     * @param startY Column index of the chosen dice to move.
-     * @param finalX Row index of the chosen dice new position.
-     * @param finalY Column index of the chosen dice new position.
-     * @param name Player's name.
+     * @param n                  index of the tool card selected (it can be 2 or 3).
+     * @param startX             Row index of the chosen dice to move.
+     * @param startY             Column index of the chosen dice to move.
+     * @param finalX             Row index of the chosen dice new position.
+     * @param finalY             Column index of the chosen dice new position.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -399,16 +397,17 @@ public class MatchSingleplayer extends Match implements Runnable {
      * Method used to set the parameters needed by the effect of tool card 4.
      * This tool card allows the player to move exactly 2 dices in his scheme card.
      * The player has to consider all placement rules.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param startX1 Row index of the first chosen dice to move.
-     * @param startY1 Column index of the first chosen dice to move.
-     * @param finalX1 Row index of the first chosen dice new position.
-     * @param finalY1 Column index of the first chosen dice new position.
-     * @param startX2 Row index of the second chosen dice to move.
-     * @param startY2 Column index of the second chosen dice to move.
-     * @param finalX2 Row index of the second chosen dice new position.
-     * @param finalY2 Column index of the second chosen dice new position.
-     * @param name Player's name.
+     * @param startX1            Row index of the first chosen dice to move.
+     * @param startY1            Column index of the first chosen dice to move.
+     * @param finalX1            Row index of the first chosen dice new position.
+     * @param finalY1            Column index of the first chosen dice new position.
+     * @param startX2            Row index of the second chosen dice to move.
+     * @param startY2            Column index of the second chosen dice to move.
+     * @param finalX2            Row index of the second chosen dice new position.
+     * @param finalY2            Column index of the second chosen dice new position.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -440,11 +439,12 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * Method used to set the parameters needed by the effect of tool card 5.
      * This tool card allows the player to switch a dice chosen from the reserve with a dice in the round track.
-     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param diceChosen Dice from the reserve to swap with the dice from the round track.
-     * @param roundChosen Round slot in the round track from which the player wants to take a dice.
+     *
+     * @param diceToBeSacrificed  Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param diceChosen          Dice from the reserve to swap with the dice from the round track.
+     * @param roundChosen         Round slot in the round track from which the player wants to take a dice.
      * @param diceChosenFromRound Position index of the chosen dice in the round slot.
-     * @param name Player's name.
+     * @param name                Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -485,9 +485,10 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * Method used to set the parameters needed by the effect of tool card 6.
      * This tool card allows the player to re roll a chosen dice in the reserve.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param diceChosen Dice from the reserve to re roll.
-     * @param name Player's name.
+     * @param diceChosen         Dice from the reserve to re roll.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -512,8 +513,9 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * Method used to set the parameters needed by the effect of tool card 7.
      * This tool card allows the player to re roll all the dices in the reserve.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param name Player's name.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -536,8 +538,9 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * Method used to set the parameters needed by the effect of tool card 8.
      * This tool card allows the player to choose and place a second dice in his first turn.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param name Player's name.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -562,11 +565,12 @@ public class MatchSingleplayer extends Match implements Runnable {
      * Method used to set the parameters needed by the effect of tool card 9.
      * This tool card allows the player to place one chosen dice from the reserve anywhere in his scheme card.
      * The new dice must not have any adjacent dice and the player has to consider all constraints.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param diceChosen Dice from the reserve to place in the player's scheme card.
-     * @param finalX1 Row index of the chosen dice new position.
-     * @param finalY1 Column index of the chosen dice new position.
-     * @param name Player's name.
+     * @param diceChosen         Dice from the reserve to place in the player's scheme card.
+     * @param finalX1            Row index of the chosen dice new position.
+     * @param finalY1            Column index of the chosen dice new position.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -595,9 +599,10 @@ public class MatchSingleplayer extends Match implements Runnable {
      * Method used to set the parameters needed by the effect of tool card 10.
      * This tool card allows the player to put a chosen dice from the reserve upside down.
      * It means that if the dice value is 6, after using the tool card it'll be 1, if it's 5, it'll be 2 and so on.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param diceChosen Dice from the reserve to put upside down.
-     * @param name Player's name.
+     * @param diceChosen         Dice from the reserve to put upside down.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -620,9 +625,10 @@ public class MatchSingleplayer extends Match implements Runnable {
      * Method used to set the parameters needed by the effect of tool card 11.
      * This tool card allows the player to put a dice of the reserve back in the dices bag, and get a new dice from the
      * bag.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param diceChosen Dice from the reserve to put back in the dices bag.
-     * @param name Player's name.
+     * @param diceChosen         Dice from the reserve to put back in the dices bag.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -643,18 +649,19 @@ public class MatchSingleplayer extends Match implements Runnable {
      * This tool card allows the player to move up to 2 dices in his scheme card. These dices must have the same color
      * of a dice in the round track.
      * The player has to consider all placement rules.
+     *
      * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
-     * @param roundFromTrack Round slot in round track from which the player wants to choose a dice.
-     * @param diceInRound Index of the chosen dice from the round slot.
-     * @param startX1 Row index of the first chosen dice to move.
-     * @param startY1 Column index of the first chosen dice to move.
-     * @param finalX1 Row index of the first chosen dice new position.
-     * @param finalY1 Column index of the first chosen dice new position.
-     * @param startX2 Row index of the second chosen dice to move.
-     * @param startY2 Column index of the second chosen dice to move.
-     * @param finalX2 Row index of the second chosen dice new position.
-     * @param finalY2 Column index of the second chosen dice new position.
-     * @param name Player's name.
+     * @param roundFromTrack     Round slot in round track from which the player wants to choose a dice.
+     * @param diceInRound        Index of the chosen dice from the round slot.
+     * @param startX1            Row index of the first chosen dice to move.
+     * @param startY1            Column index of the first chosen dice to move.
+     * @param finalX1            Row index of the first chosen dice new position.
+     * @param finalY1            Column index of the first chosen dice new position.
+     * @param startX2            Row index of the second chosen dice to move.
+     * @param startY2            Column index of the second chosen dice to move.
+     * @param finalX2            Row index of the second chosen dice new position.
+     * @param finalY2            Column index of the second chosen dice new position.
+     * @param name               Player's name.
      * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
      */
     @Override
@@ -686,6 +693,7 @@ public class MatchSingleplayer extends Match implements Runnable {
 
     /**
      * Sets the Rmi observer for the match.
+     *
      * @param observer Is the rmi observer.
      */
     public void observeMatchRemote(MatchObserver observer) {
@@ -701,7 +709,12 @@ public class MatchSingleplayer extends Match implements Runnable {
         localThread.start();
     }
 
-    public void setPrivateCardChosen(int position){
+    /**
+     * sets the private card chosen for the calculation of the score, to be used later on
+     *
+     * @param position is the index of the card chosen in the list containing two cards
+     */
+    public void setPrivateCardChosen(int position) {
         privateCardChosen = true;
         selectedPrivateCard = position;
         synchronized (getLock()) {

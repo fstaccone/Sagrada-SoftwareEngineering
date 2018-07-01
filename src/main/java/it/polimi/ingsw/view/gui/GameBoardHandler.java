@@ -615,6 +615,7 @@ public class GameBoardHandler {
         partialRoundForTools = OUT_OF_RANGE;
         targetRoundForTools = OUT_OF_RANGE;
         targetSacrificeDiceForTools = OUT_OF_RANGE;
+
         value11 = null;
         finalCoordinateX1 = null;
         finalCoordinateY1 = null;
