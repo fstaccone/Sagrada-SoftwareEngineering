@@ -29,12 +29,12 @@ public class GameBoardHandler {
     private GameBoardHandlerMulti gameBoardHandlerMulti;
     private GameBoardHandlerSingle gameBoardHandlerSingle;
 
+    static final String TOOLCARDS_PATH = "/images/cards/toolcards/";
+    static final String DICE_IMAGES_PATH = "/images/dices/";
+    static final String PUBLIC_CARDS_PATH = "/images/cards/public_objective_cards/";
+    static final String FAVOR_TOKEN_PATH = "/images/other/favour.png";
+    static final String WINDOW_PATTERN_CARDS_PATH = "/images/cards/window_pattern_cards/";
     private static final String PRIVATE_CARDS_PATH = "/images/cards/private_objective_cards/";
-    protected static final String TOOLCARDS_PATH = "/images/cards/toolcards/";
-    protected static final String DICE_IMAGES_PATH = "/images/dices/";
-    protected static final String PUBLIC_CARDS_PATH = "/images/cards/public_objective_cards/";
-    protected static final String FAVOR_TOKEN_PATH = "/images/other/favour.png";
-    protected static final String WINDOW_PATTERN_CARDS_PATH = "/images/cards/window_pattern_cards/";
     private static final String TRANSPARENT_IMAGE_URL = "/images/other/transparent.png";
     private static final int OUT_OF_RANGE = -1;
     private static final int COLUMNS = 5;
@@ -89,7 +89,7 @@ public class GameBoardHandler {
     private Label sacrificeLabel;
     private Button useButton;
 
-    public GameBoardHandler(boolean single, GameBoardHandlerMulti gameBoardHandlerMulti, GameBoardHandlerSingle gameBoardHandlerSingle, AnchorPane gameBoard, Pane toolPane, Label toolLabel, Button useButton, Label sacrificeLabel) {
+    GameBoardHandler(boolean single, GameBoardHandlerMulti gameBoardHandlerMulti, GameBoardHandlerSingle gameBoardHandlerSingle, AnchorPane gameBoard, Pane toolPane, Label toolLabel, Button useButton, Label sacrificeLabel) {
         this.gameBoardHandlerMulti = gameBoardHandlerMulti;
         this.gameBoardHandlerSingle = gameBoardHandlerSingle;
         this.single = single;
@@ -236,7 +236,7 @@ public class GameBoardHandler {
         });
     }
 
-    public void toolSelected(String source) {
+    void toolSelected(String source) {
         if (gui.isMyTurn()) {
             int tool = Integer.parseInt(source);
             String name = gui.getToolCardsList().get(tool);
@@ -247,7 +247,7 @@ public class GameBoardHandler {
         }
     }
 
-    public void terminateGame() {
+    void terminateGame() {
         if (rmiController != null) {
             try {
                 rmiController.removeMatch(username);
@@ -307,7 +307,7 @@ public class GameBoardHandler {
         }
     }
 
-    public void init(Scene scene, Gui gui) {
+    void init(Scene scene, Gui gui) {
         diceChosen = OUT_OF_RANGE;
         this.gui = gui;
         username = gui.getUsername();
@@ -339,7 +339,7 @@ public class GameBoardHandler {
         textField11 = new TextField();
     }
 
-    public void setWindowPatternCardImg(String imgURL) {
+    void setWindowPatternCardImg(String imgURL) {
         BackgroundImage myBI = new BackgroundImage(new Image(getClass().getResourceAsStream(imgURL), 340, 300, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
@@ -396,7 +396,7 @@ public class GameBoardHandler {
 
     private EventHandler<MouseEvent> windowPatternCardSlotSelected = event -> windowPatternCardSlotSelected((ImageView) event.getSource());
 
-    public void setSinglePrivateCard(Label privObjLabel, ImageView card, ImageView other, String privateCard) {
+    void setSinglePrivateCard(Label privObjLabel, ImageView card, ImageView other, String privateCard) {
         Image privateObjCardImg = new Image(getClass().getResourceAsStream(PRIVATE_CARDS_PATH + privateCard + ".png"));
         card.setImage(privateObjCardImg);
 
@@ -421,7 +421,7 @@ public class GameBoardHandler {
         });
     }
 
-    public void setReserve(List<String> dicesList, Pane reserve) {
+    void setReserve(List<String> dicesList, Pane reserve) {
 
         if (reserve.getChildren() != null) {
             Platform.runLater(() -> reserve.getChildren().remove(0, reserve.getChildren().size()));
@@ -481,12 +481,12 @@ public class GameBoardHandler {
                 source = gui.getDicesList().get(i);
                 diceChosen = i;
                 String[] parts = source.split("_");
-                appendToTextArea("Hai scelto il dado: " + parts[0] + " " + parts[1] +". Completa il piazzamento con un click su una casella della carta schema!");
+                appendToTextArea("Hai scelto il dado: " + parts[0] + " " + parts[1] + ". Completa il piazzamento con un click su una casella della carta schema!");
             }
         }
     };
 
-    public void appendToTextArea(String s) {
+    void appendToTextArea(String s) {
         TextArea textArea;
         if (single) {
             textArea = gameBoardHandlerSingle.getTextArea();
@@ -500,7 +500,7 @@ public class GameBoardHandler {
         });
     }
 
-    public void setMySchemeCard(Pane pane, String[][] window) {
+    void setMySchemeCard(Pane pane, String[][] window) {
         if (pane.getChildren() != null) {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
@@ -602,7 +602,7 @@ public class GameBoardHandler {
     }
 
 
-    public void resetToolValues() {
+    void resetToolValues() {
         partialReserveIndexForTools = OUT_OF_RANGE;
         targetReserveIndexForTools = OUT_OF_RANGE;
         partialDiceFromRoundForTools = OUT_OF_RANGE;
@@ -645,7 +645,7 @@ public class GameBoardHandler {
 
 
     private class ToolContext {
-        public ToolContext(int i) {
+        ToolContext(int i) {
             switch (i) {
                 case 1: {
                     createContext1();
@@ -700,20 +700,20 @@ public class GameBoardHandler {
 
         private void setImageView1(int y) {
             imageView1 = new ImageView();
-            imageView1.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "bianco.png")));
-            imageView1.setFitWidth(70);
-            imageView1.setFitHeight(70);
-            imageView1.setLayoutX(63);
-            imageView1.setLayoutY(y);
+            setLayoutImageView(imageView1, y);
         }
 
         private void setImageView2(int y) {
             imageView2 = new ImageView();
-            imageView2.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "bianco.png")));
-            imageView2.setFitWidth(70);
-            imageView2.setFitHeight(70);
-            imageView2.setLayoutX(63);
-            imageView2.setLayoutY(y);
+            setLayoutImageView(imageView2, y);
+        }
+
+        private void setLayoutImageView(ImageView img, int y){
+            img.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "bianco.png")));
+            img.setFitWidth(70);
+            img.setFitHeight(70);
+            img.setLayoutX(63);
+            img.setLayoutY(y);
         }
 
         private void createContext1() {
@@ -1090,7 +1090,7 @@ public class GameBoardHandler {
         /**
          * initialize variables to use tool card 9
          */
-        private void initializeContext9(){
+        private void initializeContext9() {
             imageView1 = null;
             toolLabel.setVisible(true);
             toolPane.setVisible(true);
@@ -1273,7 +1273,7 @@ public class GameBoardHandler {
         /**
          * initialize variables used by context 12 for using the tool card 12
          */
-        private void initializeContext12(){
+        private void initializeContext12() {
             imageView1 = null;
             imageView2 = null;
             imageView3 = null;
@@ -1422,6 +1422,7 @@ public class GameBoardHandler {
             imageView1.setFitHeight(70);
             imageView1.setLayoutX(63);
             imageView1.setLayoutY(250);
+            assert color != null;
             imageView1.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + color.getDescription().toLowerCase() + ".png")));
             concludeButton = new Button();
             concludeButton.setStyle("-fx-background-color: linear-gradient(lightgreen, lightseagreen)");
@@ -1562,7 +1563,7 @@ public class GameBoardHandler {
         }
     }
 
-    public void passButtonClicked() {
+    void passButtonClicked() {
         diceChosen = OUT_OF_RANGE;
         resetToolValues();
         if (gui.isMyTurn()) {
@@ -1582,7 +1583,7 @@ public class GameBoardHandler {
         }
     }
 
-    public void quitClicked() {
+    void quitClicked() {
         ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi davvero uscire?", yes, ButtonType.NO);
         alert.setTitle("Uscita");
@@ -1614,7 +1615,7 @@ public class GameBoardHandler {
         }
     }
 
-    public void setDiceChosenOutOfRange() {
+    void setDiceChosenOutOfRange() {
         diceChosen = OUT_OF_RANGE;
     }
 }

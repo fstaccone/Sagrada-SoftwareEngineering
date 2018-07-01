@@ -24,7 +24,6 @@ public class GameBoardHandlerSingle {
     private GameBoardHandler gameBoardHandler;
     private Map<Integer, Button> toolCardsMap = new HashMap<>();
 
-
     @FXML
     Label sacrificeLabel;
     @FXML
@@ -84,7 +83,7 @@ public class GameBoardHandlerSingle {
     @FXML
     Button rightCard;
 
-    public void init(Scene scene, Gui gui) {
+    void init(Scene scene, Gui gui) {
         this.gui = gui;
         gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this, gameBoard, toolPane, toolLabel, useButton, sacrificeLabel);
         gameBoardHandler.init(scene, gui);
@@ -113,7 +112,7 @@ public class GameBoardHandlerSingle {
         toolCardsMap.put(4, tool4);
     }
 
-    public void appendToTextArea(String s) {
+    void appendToTextArea(String s) {
         gameBoardHandler.appendToTextArea(s);
     }
 
@@ -125,15 +124,15 @@ public class GameBoardHandlerSingle {
         return textArea;
     }
 
-    public Pane getPlayerWindowPatternCard() {
+    Pane getPlayerWindowPatternCard() {
         return playerWindowPatternCard;
     }
 
-    public void setWindowPatternCardImg(String imgURL) {
+    void setWindowPatternCardImg(String imgURL) {
         gameBoardHandler.setWindowPatternCardImg(imgURL);
     }
 
-    public void showResultForSingle(int goal, int points) {
+    void showResultForSingle(int goal, int points) {
 
         StringBuilder s = new StringBuilder();
         s.append("Obiettivo da battere: \t");
@@ -169,7 +168,7 @@ public class GameBoardHandlerSingle {
         gameBoardHandler.setReserve(dicesList, reserve);
     }
 
-    public void setPrivateCards(String privateCard1, String privateCard2) {
+    void setPrivateCards(String privateCard1, String privateCard2) {
         gameBoardHandler.setSinglePrivateCard(privObjLabel, privObjCard0, privObjCard1, privateCard1);
         gameBoardHandler.setSinglePrivateCard(privObjLabel, privObjCard1, privObjCard0, privateCard2);
     }
@@ -202,7 +201,7 @@ public class GameBoardHandlerSingle {
         });
     }
 
-    public void setMyWindow(String[][] window) {
+    void setMyWindow(String[][] window) {
         gameBoardHandler.setMySchemeCard(playerWindowPatternCard, window);
     }
 
@@ -213,7 +212,7 @@ public class GameBoardHandlerSingle {
         }
     };
 
-    public void setToolCards(List<String> toolCardsList) {
+    void setToolCards(List<String> toolCardsList) {
         for (int i = 0; i < toolCardsList.size(); i++) {
             setSingleToolcard(toolCardsMap.get(i), toolCardsList.get(i));
         }
@@ -255,7 +254,7 @@ public class GameBoardHandlerSingle {
         });
     }
 
-    public void choosePrivateCard() {
+    void choosePrivateCard() {
         disableActionsOnGameBoard();
         gameBoardHandler.appendToTextArea("Sei giunto al termine della partita, nel riquadro a destra scegli" +
                 "quale carta obiettivo utilizzare per il calcolo del punteggio");
@@ -291,11 +290,11 @@ public class GameBoardHandlerSingle {
         gameBoardHandler.passButtonClicked();
     }
 
-    public void resetToolValues() {
+    void resetToolValues() {
         gameBoardHandler.resetToolValues();
     }
 
-    public void setDiceChosenOutOfRange(){
+    void setDiceChosenOutOfRange(){
         gameBoardHandler.setDiceChosenOutOfRange();
     }
 }

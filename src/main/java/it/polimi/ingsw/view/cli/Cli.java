@@ -1,8 +1,8 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.control.RemoteController;
-import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.control.SocketController;
+import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.socket.requests.*;
 
 import java.io.*;
@@ -207,7 +207,7 @@ public class Cli {
         if (names != null) {
             playersNames = names;
             printNames();
-            printer.println("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare! \n");
+            printer.println("Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare! \n");
             printer.flush();
         }
     }

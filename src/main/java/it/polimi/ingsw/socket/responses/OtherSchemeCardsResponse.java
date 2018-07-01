@@ -11,7 +11,7 @@ public class OtherSchemeCardsResponse implements Response {
     public OtherSchemeCardsResponse(String[][] scheme, String name, String cardName) {
         this.scheme = scheme;
         this.name = name;
-        this.cardName=cardName;
+        this.cardName = cardName;
     }
 
     public String[][] getScheme() {

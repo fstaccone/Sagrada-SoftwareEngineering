@@ -43,22 +43,18 @@ public class Gui {
     private List<String> players;
     private String[][] mySchemeCard;
     private int myTokens;
-    private boolean dicePlaced;
     private Map<String, Integer> toolcardsPrices;
-
-    private boolean windowChosen;
     private boolean single;
 
     private String playerSchemeCardImageURL;
     private AudioClip turnClip = Applet.newAudioClip(getClass().getResource("/sounds/turn.au"));
 
-    public Gui(Stage fromLogin, String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
+    Gui(Stage fromLogin, String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
         this.username = username;
         this.controllerRmi = controllerRmi;
         this.controllerSocket = controllerSocket;
         privateCards = new ArrayList<>();
         myTurn = false;
-        windowChosen = false;
         this.single = single;
         stillPlaying = true;
         windowStage = fromLogin;
@@ -76,32 +72,28 @@ public class Gui {
         return single;
     }
 
-    public List<String> getToolCardsList() {
+    List<String> getToolCardsList() {
         return toolCardsList;
     }
 
-    public RemoteController getControllerRmi() {
+    RemoteController getControllerRmi() {
         return controllerRmi;
     }
 
-    public SocketController getControllerSocket() {
+    SocketController getControllerSocket() {
         return controllerSocket;
     }
 
-    public Stage getWindowStage() {
+    Stage getWindowStage() {
         return windowStage;
     }
 
-    public Boolean isMyTurn() {
+    Boolean isMyTurn() {
         return myTurn;
     }
 
-    public List<String> getDicesList() {
+    List<String> getDicesList() {
         return dicesList;
-    }
-
-    public Map<String, String[][]> getOtherSchemeCardsMap() {
-        return otherSchemeCardsMap;
     }
 
     public List<String> getPlayers() {
@@ -111,19 +103,18 @@ public class Gui {
     public String getUsername() {
         return username;
     }
-
+/*
     // setters
-    public void setDicePlaced(boolean dicePlaced) {
-        this.dicePlaced = dicePlaced;
+    void setDicePlacedToFalse() {
+        this.dicePlaced = false;
     }
-
+*/
     public void onYourTurn(boolean isMyTurn, String string, int round, int turn) {
         if (string != null) {
             onReserve(string);
         }
         this.myTurn = isMyTurn;
         if (myTurn) {
-            //Solo per verifica
             turnClip.play();
             String multi = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
             String single = "Round: " + round + "\tTurno: " + turn;
@@ -131,7 +122,7 @@ public class Gui {
                 gameBoardHandlerMulti.setDiceChosenOutOfRange();
                 gameBoardHandlerMulti.resetToolValues();
                 gameBoardHandlerMulti.appendToTextArea(multi);
-                gameBoardHandlerMulti.initializeActions();
+                //gameBoardHandlerMulti.initializeActions();
             } else if (chooseCardHandlerMultiplayer != null) {
                 chooseCardHandlerMultiplayer.appendToTextArea(multi);
                 chooseCardHandlerMultiplayer.setTurn(true);
@@ -166,7 +157,6 @@ public class Gui {
                 gameBoardHandlerMulti.setReserve(dicesList);
             }
         }
-
     }
 
     public void onPlayerReconnection(String name) {
@@ -228,7 +218,7 @@ public class Gui {
         chooseCardHandlerMultiplayer.init(windowStage, scene, controllerRmi, controllerSocket, username);
         chooseCardHandlerMultiplayer.welcome(turnTime);
         chooseCardHandlerMultiplayer.showOpponents(players);
-        chooseCardHandlerMultiplayer.appendToTextArea("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare!");
+        chooseCardHandlerMultiplayer.appendToTextArea("Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare!");
     }
 
     public void onGameClosing() {
@@ -305,7 +295,7 @@ public class Gui {
     /* to update the owner's tokens*/
     public void onMyFavorTokens(int value) {
         if (gameBoardHandlerMulti != null) {
-            gameBoardHandlerMulti.setFavourTokens(value);
+            gameBoardHandlerMulti.setMyFavourTokens(value);
         }
     }
 
@@ -420,7 +410,7 @@ public class Gui {
         gameBoardHandlerMulti.setWindowPatternCardImg(playerSchemeCardImageURL);
         if (mySchemeCard != null) {
             gameBoardHandlerMulti.setMyWindow(mySchemeCard);
-            gameBoardHandlerMulti.setFavourTokens(myTokens);
+            gameBoardHandlerMulti.setMyFavourTokens(myTokens);
         }
 
         gameBoardHandlerMulti.setToolCards(toolCardsList);
@@ -440,7 +430,6 @@ public class Gui {
         gameBoardHandlerMulti.createOtherLabelsList();
         gameBoardHandlerMulti.initializeLabels(players);
 
-
         //FOR SOCKET CONNECTION
         if (controllerSocket != null) {
             try {
@@ -454,12 +443,11 @@ public class Gui {
         gameBoardHandlerMulti.initializeSchemeCards(otherSchemeCardsMap, otherSchemeCardNamesMap);
     }
 
-    private void notifyTimerMulti(int turnTime){
-        gameBoardHandlerMulti.appendToTextArea("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare!");
+    private void notifyTimerMulti(int turnTime) {
+        gameBoardHandlerMulti.appendToTextArea("Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare!");
     }
 
     public void onAfterWindowChoiceSingleplayer() {
-
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
@@ -488,9 +476,8 @@ public class Gui {
         gameBoardHandlerSingle.appendToTextArea("Fai la tua prima mossa!");
     }
 
-    private void notifyTimerSingle(int turnTime){
-        gameBoardHandlerSingle.appendToTextArea("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare!");
-
+    private void notifyTimerSingle(int turnTime) {
+        gameBoardHandlerSingle.appendToTextArea("Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare!");
     }
 
     public void onChoosePrivateCard() {

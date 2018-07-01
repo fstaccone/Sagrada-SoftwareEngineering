@@ -39,16 +39,13 @@ public class SocketHandler implements Runnable {
         } catch (Exception e) {
             System.out.println("Connection down");
         }
-
-        //close();
-
     }
 
     public void respond(Response response) {
         try {
             out.writeObject(response);
         } catch (IOException e) {
-            System.out.println("non scrive la risposta");
+            System.out.println("Cannot write the response");
         }
     }
 

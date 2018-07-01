@@ -22,7 +22,7 @@ public class AfterReconnectionResponse implements Response {
     private Map<String, Integer> toolcardsPrices;
     private Map<String, String> otherSchemeCardNamesMap;
 
-    public AfterReconnectionResponse(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens, String[][] schemeCard,String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards,Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+    public AfterReconnectionResponse(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens, String[][] schemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards, Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         this.toolcards = toolcards;
         this.publicCards = publicCards;
         this.privateCard = privateCard;
@@ -34,8 +34,8 @@ public class AfterReconnectionResponse implements Response {
         this.otherSchemeCards = otherSchemeCards;
         this.schemeCardChosen = schemeCardChosen;
         this.toolcardsPrices = toolcardsPrices;
-        this.schemeCardName=schemeCardName;
-        this.otherSchemeCardNamesMap=otherSchemeCardNamesMap;
+        this.schemeCardName = schemeCardName;
+        this.otherSchemeCardNamesMap = otherSchemeCardNamesMap;
     }
 
     public String getToolcards() {

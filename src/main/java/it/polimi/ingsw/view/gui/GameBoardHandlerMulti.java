@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -97,11 +98,11 @@ public class GameBoardHandlerMulti {
         return textArea;
     }
 
-    public Pane getPlayerWindowPatternCard() {
+    Pane getPlayerWindowPatternCard() {
         return playerWindowPatternCard;
     }
 
-    public void init(Scene scene, Gui gui) {
+    void init(Scene scene, Gui gui) {
         this.gui = gui;
         gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null, gameBoard, toolPane, toolLabel, useButton, null);
         gameBoardHandler.init(scene, gui);
@@ -132,20 +133,23 @@ public class GameBoardHandlerMulti {
 
     }
 
-    public void appendToTextArea(String s) {
+    void appendToTextArea(String s) {
         gameBoardHandler.appendToTextArea(s);
     }
 
+    /*
     /**
      * the boolean dicePlaced is used to control if a dice has been placed during a turn.
      * This method initialize dicePlaced to false. If the value is false, the player can place a dice
      */
+    /*
     public void initializeActions() {
-        gui.setDicePlaced(false);
+        gui.setDicePlacedToFalse();
         // todo: aggiungere altre azioni da compiere
     }
+    */
 
-    public void setWindowPatternCardImg(String imgURL) {
+    void setWindowPatternCardImg(String imgURL) {
         gameBoardHandler.setWindowPatternCardImg(imgURL);
     }
 
@@ -156,20 +160,20 @@ public class GameBoardHandlerMulti {
         }
     };
 
-    public void createOtherLabelsList() {
+    void createOtherLabelsList() {
         labelsList.add(label1);
         labelsList.add(label2);
         labelsList.add(label3);
     }
 
-    public void createLabelsMap() {
+    void createLabelsMap() {
         labels.put(0, label0);
         labels.put(1, label1);
         labels.put(2, label2);
         labels.put(3, label3);
     }
 
-    public void initializeSchemeCards(Map<String, String[][]> map, Map<String, String> namesMap) {
+    void initializeSchemeCards(Map<String, String[][]> map, Map<String, String> namesMap) {
         for (String name : map.keySet()) {
             for (Label label : labelsList) {
                 if (label.getText().equals(name)) {
@@ -244,7 +248,7 @@ public class GameBoardHandlerMulti {
         }
     }
 
-    public void onOtherSchemeCards(String[][] window, String name, String cardName) {
+    void onOtherSchemeCards(String[][] window, String name, String cardName) {
 
         for (Label label : labelsList) {
             if (label.getText().equals(name)) {
@@ -269,7 +273,7 @@ public class GameBoardHandlerMulti {
         gameBoardHandler.setReserve(dicesList, reserve);
     }
 
-    public void showRanking(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+    void showRanking(String winner, List<String> rankingNames, List<Integer> rankingValues) {
 
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < rankingNames.size(); i++) {
@@ -292,7 +296,7 @@ public class GameBoardHandlerMulti {
         disableActionsOnGameBoard();
     }
 
-    public void onGameClosing() {
+    void onGameClosing() {
         gameBoardHandler.appendToTextArea("Congratulazioni! Sei il vincitore. Sei rimasto da solo in gioco.\n\nClicca su ESCI per terminare");
         disableActionsOnGameBoard();
         exit = true;
@@ -319,7 +323,7 @@ public class GameBoardHandlerMulti {
      *
      * @param players is a list of Strings which are the names of the players invlolved in the match
      */
-    public void initializeLabels(List<String> players) {
+    void initializeLabels(List<String> players) {
 
         //FOR RMI CONNECTION
         if (gui.getControllerRmi() != null) {
@@ -351,25 +355,11 @@ public class GameBoardHandlerMulti {
         gameBoardHandler.setSinglePrivateCard(privObjLabel, privateObjCard, null, privateCard);
     }
 
-    public void setFavourTokens(int value) {
-        if (myFavourTokensContainer.getChildren() != null) {
-            Platform.runLater(() -> myFavourTokensContainer.getChildren().remove(0, myFavourTokensContainer.getChildren().size()));
-        }
-
-        GridPane myFavourTokens = new GridPane();
-        myFavourTokens.setPrefSize(40, 240);
-        Image img = new Image(getClass().getResourceAsStream(GameBoardHandler.FAVOR_TOKEN_PATH));
-        for (int i = 0; i < value; i++) {
-            ImageView imgView = new ImageView(img);
-            imgView.setFitWidth(40);
-            imgView.setFitHeight(40);
-            int finalI = i;
-            Platform.runLater(() -> myFavourTokens.add(imgView, 0, finalI));
-        }
-        Platform.runLater(() -> myFavourTokensContainer.getChildren().add(myFavourTokens));
+    void setMyFavourTokens(int value) {
+        setFavourTokens(myFavourTokensContainer, value);
     }
 
-    private void setOtherFavorTokens(Pane pane, int value) {
+    private void setFavourTokens(Pane pane, int value) {
         if (pane.getChildren() != null) {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
         }
@@ -386,7 +376,7 @@ public class GameBoardHandlerMulti {
         Platform.runLater(() -> pane.getChildren().add(myFavourTokens));
     }
 
-    public void initializeFavorTokens(Map<String, Integer> map) {
+    void initializeFavorTokens(Map<String, Integer> map) {
 
         for (String name : map.keySet()) {
             for (Label label : labelsList) {
@@ -394,13 +384,13 @@ public class GameBoardHandlerMulti {
                     int a = Integer.parseInt(label.getId().substring(5, 6));
                     switch (a) {
                         case 1:
-                            setOtherFavorTokens(favourTokensContainer1, map.get(name));
+                            setFavourTokens(favourTokensContainer1, map.get(name));
                             break;
                         case 2:
-                            setOtherFavorTokens(favourTokensContainer2, map.get(name));
+                            setFavourTokens(favourTokensContainer2, map.get(name));
                             break;
                         case 3:
-                            setOtherFavorTokens(favourTokensContainer3, map.get(name));
+                            setFavourTokens(favourTokensContainer3, map.get(name));
                             break;
                     }
                     break;
@@ -409,7 +399,7 @@ public class GameBoardHandlerMulti {
         }
     }
 
-    public void onOtherFavorTokens(Integer value, String name) {
+    void onOtherFavorTokens(Integer value, String name) {
 
         for (Label label : labelsList) {
             if (label.getText().equals(name)) {
@@ -417,13 +407,13 @@ public class GameBoardHandlerMulti {
 
                 switch (a) {
                     case 1:
-                        setOtherFavorTokens(favourTokensContainer1, value);
+                        setFavourTokens(favourTokensContainer1, value);
                         break;
                     case 2:
-                        setOtherFavorTokens(favourTokensContainer2, value);
+                        setFavourTokens(favourTokensContainer2, value);
                         break;
                     case 3:
-                        setOtherFavorTokens(favourTokensContainer3, value);
+                        setFavourTokens(favourTokensContainer3, value);
                         break;
                 }
                 break;
@@ -452,28 +442,20 @@ public class GameBoardHandlerMulti {
             other2.setVisible(false);
             label.setVisible(false);
         });
-        main.setOnMouseExited(event -> {
-            main.setTranslateX(0);
-            main.setTranslateY(0);
-            main.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
-            other1.setVisible(true);
-            other2.setVisible(true);
-            label.setVisible(true);
-        });
+        main.setOnMouseExited(event -> setTranslationCards(main, other1, other2, label));
     }
 
-    public void setMyWindow(String[][] window) {
+    void setMyWindow(String[][] window) {
         gameBoardHandler.setMySchemeCard(playerWindowPatternCard, window);
     }
 
-    public void setToolCards(List<String> toolCardsList) {
+    void setToolCards(List<String> toolCardsList) {
         setSingleToolcard(tool0, tool1, tool2, toolCardsList.get(0));
         setSingleToolcard(tool1, tool0, tool2, toolCardsList.get(1));
         setSingleToolcard(tool2, tool0, tool1, toolCardsList.get(2));
     }
 
     private void setSingleToolcard(Button main, Button other1, Button other2, String toolcard) {
-        ;
         Image cardImg = new Image(getClass().getResourceAsStream(GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png"));
 
         ImageView cardView = new ImageView(cardImg);
@@ -489,14 +471,16 @@ public class GameBoardHandlerMulti {
             other2.setVisible(false);
             toolCardsLabel.setVisible(false);
         });
-        main.setOnMouseExited(event -> {
-            main.setTranslateX(0);
-            main.setTranslateY(0);
-            main.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
-            other1.setVisible(true);
-            other2.setVisible(true);
-            toolCardsLabel.setVisible(true);
-        });
+        main.setOnMouseExited(event -> setTranslationCards(main, other1, other2, toolCardsLabel));
+    }
+
+    private void setTranslationCards(Node main, Node other1, Node other2, Label label) {
+        main.setTranslateX(0);
+        main.setTranslateY(0);
+        main.setStyle("-fx-scale-x: 1.0;-fx-scale-y: 1.0");
+        other1.setVisible(true);
+        other2.setVisible(true);
+        label.setVisible(true);
     }
 
     @FXML
@@ -504,11 +488,11 @@ public class GameBoardHandlerMulti {
         gameBoardHandler.passButtonClicked();
     }
 
-    public void resetToolValues() {
+    void resetToolValues() {
         gameBoardHandler.resetToolValues();
     }
 
-    public void setDiceChosenOutOfRange(){
+    void setDiceChosenOutOfRange() {
         gameBoardHandler.setDiceChosenOutOfRange();
     }
 }

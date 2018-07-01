@@ -270,7 +270,7 @@ public class Lobby {
                     match.getRemoteObservers().remove(player);
                 } else if ((match.getSocketObservers().get(player) != null)) {
                     match.getSocketObservers().get(player).writeObject(new ClosingGameResponse());
-                    //match.getSocketObservers().get(player).reset();
+                    match.getSocketObservers().get(player).reset();
                     match.getSocketObservers().remove(player);
                 }
             }

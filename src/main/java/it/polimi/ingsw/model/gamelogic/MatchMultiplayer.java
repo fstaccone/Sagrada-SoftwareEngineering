@@ -848,7 +848,6 @@ public class MatchMultiplayer extends Match implements Runnable {
             if (socketObservers.get(p) != null) {
                 try {
                     socketObservers.get(p).writeObject(new MyWindowResponse(schemeCard));
-                    socketObservers.get(p).reset();
                 } catch (IOException e) {
                     lobby.disconnect(p.getName());
                     System.out.println("Player " + p.getName() + " disconnected!");

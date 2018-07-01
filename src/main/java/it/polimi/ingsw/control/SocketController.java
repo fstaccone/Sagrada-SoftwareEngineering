@@ -1,12 +1,12 @@
 package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
-import it.polimi.ingsw.view.LoginHandler;
-import it.polimi.ingsw.view.cli.SocketCli;
-import it.polimi.ingsw.view.gui.SocketGui;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.socket.requests.Request;
 import it.polimi.ingsw.socket.responses.*;
+import it.polimi.ingsw.view.LoginHandler;
+import it.polimi.ingsw.view.cli.SocketCli;
+import it.polimi.ingsw.view.gui.SocketGui;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -117,7 +117,7 @@ public class SocketController implements ResponseHandler {
     }
 
 
-    @Override//DA RIVEDERE
+    @Override
     public void handle(MatchStartedResponse response) {
         loginHandler.onMatchStartedSocket();
     }
@@ -191,7 +191,6 @@ public class SocketController implements ResponseHandler {
             socketGui.getGui().onOtherTurn(response.getName());
         }
     }
-
 
 
     @Override
@@ -286,7 +285,7 @@ public class SocketController implements ResponseHandler {
     }
 
     @Override
-    public void handle(CheckConnectionResponse response) { //DA SISTEMARE ANCHE CON GUI
+    public void handle(CheckConnectionResponse response) {
         if (loginHandler.isCli())
             loginHandler.getWaitingRoomCli().onCheckConnection();
         else {

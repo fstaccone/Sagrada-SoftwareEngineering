@@ -5,17 +5,14 @@ import java.util.TimerTask;
 public class TurnTimer extends TimerTask {
 
     private MatchMultiplayer match;
-    private PlayerMultiplayer player;
 
     /**
      * Initializes the TurnTimer
      *
      * @param match  is the current match
-     * @param player is the current player
      */
-    public TurnTimer(MatchMultiplayer match, PlayerMultiplayer player) {
+    public TurnTimer(MatchMultiplayer match) {
         this.match = match;
-        this.player = player;
     }
 
     /**
@@ -23,9 +20,6 @@ public class TurnTimer extends TimerTask {
      */
     @Override
     public void run() {
-        // debug
-        System.out.println("Timer is expired during the turn of the player: " + player.getName());
-
         match.getTurnManagerMultiplayer().setTimerExpiredTrue();
         match.goThrough();
     }

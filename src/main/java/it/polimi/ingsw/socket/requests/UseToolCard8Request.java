@@ -12,7 +12,7 @@ public class UseToolCard8Request implements Request {
     public UseToolCard8Request(int diceToBeSacrificed, String name, boolean single) {
         this.name = name;
         this.single = single;
-        this.diceToBeSacrificed=diceToBeSacrificed;
+        this.diceToBeSacrificed = diceToBeSacrificed;
     }
 
     public String getName() {

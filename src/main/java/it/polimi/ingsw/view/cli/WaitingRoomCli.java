@@ -61,7 +61,7 @@ public class WaitingRoomCli extends UnicastRemoteObject implements LobbyObserver
     @Override
     public void onWaitingPlayers(List<String> waitingPlayers) {
         String wPlayers = waitingPlayers.toString().replaceAll("\\[", "");
-        wPlayers = wPlayers.replaceAll("\\]", "");
+        wPlayers = wPlayers.replaceAll("]", "");
         printer.println("Lista ordinata dei giocatori nella sala di attesa (tu incluso):\n" + wPlayers);
         printer.flush();
         Platform.runLater(() -> window.close());

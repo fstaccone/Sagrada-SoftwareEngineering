@@ -9,10 +9,10 @@ public class UseToolCard7Request implements Request {
     private boolean isSingle;
     private int diceToBeSacrificed;
 
-    public UseToolCard7Request(int diceToBeSacrificed,String username, boolean isSingle) {
+    public UseToolCard7Request(int diceToBeSacrificed, String username, boolean isSingle) {
         this.username = username;
         this.isSingle = isSingle;
-        this.diceToBeSacrificed=diceToBeSacrificed;
+        this.diceToBeSacrificed = diceToBeSacrificed;
     }
 
     public String getUsername() {

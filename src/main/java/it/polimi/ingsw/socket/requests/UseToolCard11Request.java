@@ -10,11 +10,11 @@ public class UseToolCard11Request implements Request {
     private boolean isSingle;
     private int diceToBeSacrificed;
 
-    public UseToolCard11Request(int diceToBeSacrificed,int diceChosen, String username, boolean isSingle) {
+    public UseToolCard11Request(int diceToBeSacrificed, int diceChosen, String username, boolean isSingle) {
         this.diceChosen = diceChosen;
         this.username = username;
         this.isSingle = isSingle;
-        this.diceToBeSacrificed=diceToBeSacrificed;
+        this.diceToBeSacrificed = diceToBeSacrificed;
     }
 
     public int getDiceChosen() {

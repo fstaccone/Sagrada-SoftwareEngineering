@@ -2,12 +2,12 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
 import it.polimi.ingsw.model.gamelogic.Lobby;
-import it.polimi.ingsw.view.LobbyObserver;
-import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.socket.SocketHandler;
 import it.polimi.ingsw.socket.requests.*;
 import it.polimi.ingsw.socket.responses.*;
+import it.polimi.ingsw.view.LobbyObserver;
+import it.polimi.ingsw.view.MatchObserver;
 
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;

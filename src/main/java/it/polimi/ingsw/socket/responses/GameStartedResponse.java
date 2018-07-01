@@ -24,7 +24,9 @@ public class GameStartedResponse implements Response {
         return names;
     }
 
-    public int getTurnTime() { return turnTime; }
+    public int getTurnTime() {
+        return turnTime;
+    }
 
     @Override
     public void handleResponse(ResponseHandler handler) {

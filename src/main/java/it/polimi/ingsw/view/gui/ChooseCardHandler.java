@@ -4,7 +4,6 @@ import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.socket.requests.ChooseWindowRequest;
 import it.polimi.ingsw.socket.requests.QuitGameRequest;
-import it.polimi.ingsw.socket.requests.RemoveFromWaitingPlayersRequest;
 import it.polimi.ingsw.socket.requests.TerminateMatchRequest;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -22,17 +21,17 @@ import java.util.List;
 
 public class ChooseCardHandler {
 
-    public ChooseCardHandler(boolean single, boolean myTurn) {
+    ChooseCardHandler(boolean single, boolean myTurn) {
         this.single = single;
         choice = ChooseCardHandler.OUT_OF_RANGE;
         this.myTurn = myTurn;
     }
 
-    protected static final String WINDOWS_URL = "/images/cards/window_pattern_cards/";
-    protected static final String PRIVATE_CARDS_URL = "/images/cards/private_objective_cards/";
-    protected static final int OUT_OF_RANGE = 5;
+    private static final String WINDOWS_URL = "/images/cards/window_pattern_cards/";
+    private static final int OUT_OF_RANGE = 5;
+    static final String PRIVATE_CARDS_URL = "/images/cards/private_objective_cards/";
 
-    protected int choice;
+    private int choice;
     private boolean myTurn;
     protected boolean single;
     private String url0;
@@ -48,14 +47,14 @@ public class ChooseCardHandler {
     protected String username;
     private String imgURL;
 
-    public void initialize(Button card0, Button card1, Button card2, Button card3) {
+    void initialize(Button card0, Button card1, Button card2, Button card3) {
         card0.setDisable(true);
         card1.setDisable(true);
         card2.setDisable(true);
         card3.setDisable(true);
     }
 
-    public void onQuitClicked() {
+    void onQuitClicked() {
         ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confermi di voler abbandonare la partita?", yes, ButtonType.NO);
         alert.setTitle("Abbandona");
@@ -77,7 +76,7 @@ public class ChooseCardHandler {
         }
     }
 
-    public void onPlayClicked(Button play, TextArea textArea) throws RemoteException {
+    void onPlayClicked(TextArea textArea) throws RemoteException {
         if (myTurn) {
             if (choice == OUT_OF_RANGE) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Devi scegliere una carta schema!", ButtonType.OK);
@@ -87,8 +86,6 @@ public class ChooseCardHandler {
                 alert.setGraphic(null);
                 alert.showAndWait();
             } else {
-                Stage window = (Stage) play.getScene().getWindow();
-
                 //Getting the image URL of the chosen window pattern card
                 switch (choice) {
                     case 0:
@@ -117,7 +114,7 @@ public class ChooseCardHandler {
     }
 
     //Initializing
-    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
+    void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
         this.controllerRmi = remoteController;
         this.controllerSocket = socketController;
         this.username = username;
@@ -135,7 +132,7 @@ public class ChooseCardHandler {
     }
 
     //The window now shows the 4 window pattern cards the player have to choose between
-    public void setWindows(List<String> windows, Button card0, Button card1, Button card2, Button card3) {
+    void setWindows(List<String> windows, Button card0, Button card1, Button card2, Button card3) {
         card0.setDisable(false);
         card1.setDisable(false);
         card2.setDisable(false);
@@ -184,11 +181,11 @@ public class ChooseCardHandler {
         Platform.runLater(() -> card3.setGraphic(cardView3));
     }
 
-    public String getImageUrl() {
+    String getImageUrl() {
         return imgURL;
     }
 
-    public void appendToTextArea(TextArea textArea, String s) {
+    void appendToTextArea(TextArea textArea, String s) {
         s = "\n" + s;
         textArea.appendText(s);
         textArea.setScrollTop(Double.MAX_VALUE);
@@ -198,16 +195,16 @@ public class ChooseCardHandler {
         this.myTurn = myTurn;
     }
 
-    public void setChoice(int choice) {
+    void setChoice(int choice) {
         this.choice = choice;
     }
 
-    public void welcome(TextArea textArea, int turnTime) {
+    void welcome(TextArea textArea, int turnTime) {
         appendToTextArea(textArea, "Benvenuto in questa nuova partita di Sagrada. Buon divertimento!");
-        appendToTextArea(textArea, "Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare!");
+        appendToTextArea(textArea, "Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare!");
     }
 
-    public void terminateGame() {
+    void terminateGame() {
         window.close();
         if (controllerRmi != null) {
             try {

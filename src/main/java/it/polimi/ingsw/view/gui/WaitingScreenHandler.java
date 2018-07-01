@@ -39,7 +39,7 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
     @Override
     public void onWaitingPlayers(List<String> waitingPlayers) {
         String wPlayers = waitingPlayers.toString().replaceAll("\\[", "");
-        wPlayers = wPlayers.replaceAll("\\]", "");
+        wPlayers = wPlayers.replaceAll("]", "");
         text.setText("Lista ordinata dei giocatori nella sala di attesa (tu incluso):\n" + wPlayers);
     }
 

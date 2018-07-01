@@ -26,14 +26,14 @@ public class TurnManagerMultiplayer implements Runnable {
         timerExpired = false;
     }
 
-    public boolean isTimerExpired() {
+    boolean isTimerExpired() {
         return timerExpired;
     }
 
     /**
      * sets the boolean to true in order to avoid double canceling of the timer when the timer expires
      */
-    public void setTimerExpiredTrue() {
+    void setTimerExpiredTrue() {
         this.timerExpired = true;
     }
 
@@ -124,14 +124,12 @@ public class TurnManagerMultiplayer implements Runnable {
 
     /**
      * sets the timer to force the passing of the turn for the player if timer expires
-     *
-     * @param player is the representation of the player in the model
      */
-    private void setTimer(PlayerMultiplayer player) {
+    private void setTimer() {
         TurnTimer task;
 
         turnTimer = new Timer();
-        task = new TurnTimer(match, player);
+        task = new TurnTimer(match);
         turnTimer.schedule(task, turnTime);
     }
 
@@ -243,7 +241,7 @@ public class TurnManagerMultiplayer implements Runnable {
      */
     private void playTurnCore(PlayerMultiplayer player) throws InterruptedException {
         notifyTurnBeginning(player);
-        setTimer(player);
+        setTimer();
         play(player);
         notifyTurnEnd(player);
         if (!timerExpired) {
@@ -308,10 +306,12 @@ public class TurnManagerMultiplayer implements Runnable {
      * @param player is the player who will receive the notification
      */
     private void getObserverSocket(PlayerMultiplayer player, Response response) {
-        try {
-            match.getSocketObservers().get(player).writeObject(response);
-        } catch (IOException e) {
-            match.getLobby().disconnect(player.getName());
+        if (match.getSocketObservers().get(player) != null) {
+            try {
+                match.getSocketObservers().get(player).writeObject(response);
+            } catch (IOException e) {
+                match.getLobby().disconnect(player.getName());
+            }
         }
     }
 

@@ -48,7 +48,7 @@ public class ChooseCardHandlerSingle implements Initializable {
 
     @FXML
     public void onPlayClicked() throws RemoteException {
-        parent.onPlayClicked(play, textArea);
+        parent.onPlayClicked(textArea);
     }
 
     public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
