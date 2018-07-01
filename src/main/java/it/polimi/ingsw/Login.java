@@ -1,6 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.view.LoginHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,8 +9,6 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
-import java.net.URL;
-
 
 public class Login extends Application {
     private Stage window;
@@ -20,7 +17,6 @@ public class Login extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         window = primaryStage;
-        LoginHandler loginHandler = new LoginHandler();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/login-sagrada.fxml"));
         Parent root = fxmlLoader.load();

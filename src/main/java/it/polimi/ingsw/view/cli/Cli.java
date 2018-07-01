@@ -207,7 +207,7 @@ public class Cli {
         if (names != null) {
             playersNames = names;
             printNames();
-            printer.println("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare! ");
+            printer.println("Hai a disposizione " + turnTime/1000 + " secondi ad ogni turno per giocare! \n");
             printer.flush();
         }
     }

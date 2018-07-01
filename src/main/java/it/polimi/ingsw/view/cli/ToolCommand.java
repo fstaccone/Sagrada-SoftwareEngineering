@@ -25,62 +25,62 @@ public class ToolCommand {
         this.single = isSingle;
         switch (i) {
             case 1: {
-                this.parametersNeeded = "Pinza Sgrossatrice: \nPer usare questa carta, digita :                                      ' usautensile 1 [numero dado riserva] [+]o[-] '\n";
+                this.parametersNeeded = "Pinza Sgrossatrice: \nPer usare questa carta, digita :                                      ' usautensile 1 [numero dado riserva] [+]o[-] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola. ";
             }
             break;
 
             case 2: {
-                this.parametersNeeded = "Pennello per Eglomise \nPer usare questa carta, digita :                                      ' usautensile 2 [coord X partenza carta schema] [coord Y partenza carta schema] [coord X dest carta schema] [coord Y dest carta schema] '\n ";
+                this.parametersNeeded = "Pennello per Eglomise \nPer usare questa carta, digita :                                      ' usautensile 2 [coord X partenza carta schema] [coord Y partenza carta schema] [coord X dest carta schema] [coord Y dest carta schema] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola ";
             }
             break;
 
             case 3: {
-                this.parametersNeeded = "Alesatore per Lamina di Rame \nPer usare questa carta, digita :                                      ' usautensile 3 [coord X partenza carta schema] [coord Y partenza carta schema] [coord X dest carta schema] [coord Y dest carta schema] '\n ";
+                this.parametersNeeded = "Alesatore per Lamina di Rame \nPer usare questa carta, digita :                                      ' usautensile 3 [coord X partenza carta schema] [coord Y partenza carta schema] [coord X dest carta schema] [coord Y dest carta schema] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola ";
             }
             break;
 
             case 4: {
-                this.parametersNeeded = "Lathekin \nPer usare questa carta, digita :                                      ' usautensile 4 [coord X 1 partenza carta schema] [coord Y 1 partenza carta schema] [coord X 1 dest carta schema] [coord Y 1 dest carta schema] [coord X 2 partenza carta schema] [coord Y 2 partenza carta schema] [coord X 2 dest carta schema] [coord Y 2 dest carta schema]'\n ";
+                this.parametersNeeded = "Lathekin \nPer usare questa carta, digita :                                      ' usautensile 4 [coord X 1 partenza carta schema] [coord Y 1 partenza carta schema] [coord X 1 dest carta schema] [coord Y 1 dest carta schema] [coord X 2 partenza carta schema] [coord Y 2 partenza carta schema] [coord X 2 dest carta schema] [coord Y 2 dest carta schema]'\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola ";
             }
             break;
 
             case 5: {
-                this.parametersNeeded = "Taglierina Circolare \nPer usare questa carta, digita :                                      ' usautensile 5 [numero dado riserva] [numero round] [numero dado nel round] '\n";
+                this.parametersNeeded = "Taglierina Circolare \nPer usare questa carta, digita :                                      ' usautensile 5 [numero dado riserva] [numero round] [numero dado nel round] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola";
             }
             break;
 
             case 6: {
-                this.parametersNeeded = "Pennello per Pasta Salda \nPer usare questa carta, digita :                                     ' usautensile 6 [numero dado riserva] '\n";
+                this.parametersNeeded = "Pennello per Pasta Salda \nPer usare questa carta, digita :                                     ' usautensile 6 [numero dado riserva] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola";
             }
             break;
 
             case 7: {
-                this.parametersNeeded = "Martelletto\nPer usare questa carta, digita :                                      ' usautensile 7] '\n";
+                this.parametersNeeded = "Martelletto\nPer usare questa carta, digita :                                      ' usautensile 7] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola";
             }
             break;
 
             case 8: {
-                this.parametersNeeded = "Tenaglia a Rotelle\nPer usare questa carta, digita :                                     ' usautensile 8 '\n";
+                this.parametersNeeded = "Tenaglia a Rotelle\nPer usare questa carta, digita :                                     ' usautensile 8 '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola";
             }
             break;
 
             case 9: {
-                this.parametersNeeded = "Riga in sughero\nPer usare questa carta, digita :                                      ' usautensile 9 [numero dado riserva] [coord X dest carta schema] [coord Y dest carta schema] '\n";
+                this.parametersNeeded = "Riga in sughero\nPer usare questa carta, digita :                                      ' usautensile 9 [numero dado riserva] [coord X dest carta schema] [coord Y dest carta schema] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola";
             }
             break;
 
             case 10: {
-                this.parametersNeeded = "Tampone Diamantato\nPer usare questa carta, digita :                                      ' usautensile 10 [numero dado riserva] '\n ";
+                this.parametersNeeded = "Tampone Diamantato\nPer usare questa carta, digita :                                      ' usautensile 10 [numero dado riserva] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola";
             }
             break;
 
             case 11: {
-                this.parametersNeeded = "Diluente per Pasta Salda\nPer usare questa carta, digita :                                      ' usautensile 11 [numero dado riserva] '\n ";
+                this.parametersNeeded = "Diluente per Pasta Salda\nPer usare questa carta, digita :                                      ' usautensile 11 [numero dado riserva] '\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola";
             }
             break;
 
             case 12: {
-                this.parametersNeeded = "Taglierina Manuale\nPer usare questa carta, digita :                                     ' usautensile 12 [numero round] [numero dado round] [coord X 1 partenza carta schema] [coord Y 1 partenza carta schema] [coord X 1 dest carta schema] [coord Y 1 dest carta schema] [coord X 2 partenza carta schema] [coord Y 2 partenza carta schema] [coord X 2 dest carta schema] [coord Y 2 dest carta schema]'\n";
+                this.parametersNeeded = "Taglierina Manuale\nPer usare questa carta, digita :                                     ' usautensile 12 [numero round] [numero dado round] [coord X 1 partenza carta schema] [coord Y 1 partenza carta schema] [coord X 1 dest carta schema] [coord Y 1 dest carta schema] [coord X 2 partenza carta schema] [coord Y 2 partenza carta schema] [coord X 2 dest carta schema] [coord Y 2 dest carta schema]'\nInserisci l' ulteriore parametro [dado sacrificale] tra il numero della carta utensile e il parametro successivo in caso di partita singola";
             }
             break;
 
