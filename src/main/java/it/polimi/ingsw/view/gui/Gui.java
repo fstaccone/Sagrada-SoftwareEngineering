@@ -50,7 +50,7 @@ public class Gui {
     private boolean single;
 
     private String playerSchemeCardImageURL;
-    private AudioClip turnClip = Applet.newAudioClip(getClass().getResource("/sounds/turn.mp3"));
+    private AudioClip turnClip = Applet.newAudioClip(getClass().getResource("/sounds/turn.au"));
 
     public Gui(Stage fromLogin, String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
         this.username = username;
@@ -379,7 +379,7 @@ public class Gui {
     }
 
     public void onWindowChoice(List<String> windows) {
-        AudioClip cardsClip = Applet.newAudioClip(getClass().getResource("/sounds/cards.mp3"));
+        AudioClip cardsClip = Applet.newAudioClip(getClass().getResource("/sounds/cards.au"));
         cardsClip.play();
 
         if (single) {
@@ -401,7 +401,7 @@ public class Gui {
 
     public void onAfterWindowChoiceMultiplayer() {
 
-        AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.mp3"));
+        AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
         fx.setLocation(getClass().getResource("/game-board-multi.fxml"));
@@ -461,7 +461,7 @@ public class Gui {
 
     public void onAfterWindowChoiceSingleplayer() {
 
-        AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.mp3"));
+        AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
         fx.setLocation(getClass().getResource("/game-board-single.fxml"));
