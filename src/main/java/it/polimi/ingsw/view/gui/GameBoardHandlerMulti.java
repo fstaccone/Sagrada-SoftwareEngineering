@@ -102,6 +102,11 @@ public class GameBoardHandlerMulti {
         return playerWindowPatternCard;
     }
 
+    /**
+     * Initializes the game board scene and shows it.
+     * @param scene is the scene to show.
+     * @param gui is the current gui.
+     */
     void init(Scene scene, Gui gui) {
         this.gui = gui;
         gameBoardHandler = new GameBoardHandler(gui.isSingle(), this, null, gameBoard, toolPane, toolLabel, useButton, null);
@@ -133,26 +138,26 @@ public class GameBoardHandlerMulti {
 
     }
 
+    /**
+     * Appends a new message to the game board text area.
+     * @param s is the message to append.
+     */
     void appendToTextArea(String s) {
         gameBoardHandler.appendToTextArea(s);
     }
 
-    /*
     /**
-     * the boolean dicePlaced is used to control if a dice has been placed during a turn.
-     * This method initialize dicePlaced to false. If the value is false, the player can place a dice
+     * Shows the player's window pattern card image as the background of a Pane.
+     * It then creates a grid pane where dices will be placed.
+     * @param imgURL is the window pattern card image url.
      */
-    /*
-    public void initializeActions() {
-        gui.setDicePlacedToFalse();
-        // todo: aggiungere altre azioni da compiere
-    }
-    */
-
     void setWindowPatternCardImg(String imgURL) {
         gameBoardHandler.setWindowPatternCardImg(imgURL);
     }
 
+    /**
+     * Creates the context for the chosen tool card after the player clicks on it.
+     */
     private EventHandler<ActionEvent> toolSelected = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
@@ -160,12 +165,18 @@ public class GameBoardHandlerMulti {
         }
     };
 
+    /**
+     * Creates a list of the 3 labels of the player's opponents in the match.
+     */
     void createOtherLabelsList() {
         labelsList.add(label1);
         labelsList.add(label2);
         labelsList.add(label3);
     }
 
+    /**
+     * Creates a map with 0,1,2,3 as keys and the labels as values.
+     */
     void createLabelsMap() {
         labels.put(0, label0);
         labels.put(1, label1);
@@ -173,6 +184,11 @@ public class GameBoardHandlerMulti {
         labels.put(3, label3);
     }
 
+    /**
+     * Initializes the window pattern cards of the player's opponents in the match.
+     * @param map is a map matching the opponent's name with his window pattern card.
+     * @param namesMap is a map matching the opponent's name with the name of his window pattern card.
+     */
     void initializeSchemeCards(Map<String, String[][]> map, Map<String, String> namesMap) {
         for (String name : map.keySet()) {
             for (Label label : labelsList) {
@@ -195,8 +211,15 @@ public class GameBoardHandlerMulti {
         }
     }
 
+    /**
+     * Sets the image of the player's opponent window pattern card as background of a Pane, then creates a GridPane where the images of the dices in the
+     * player's window pattern card are placed.
+     * @param pane is the Pane containing the player's window pattern card.
+     * @param window is a bi-dimensional array of string representing the player's window pattern card.
+     * @param cardName is the name of the player's window pattern card.
+     */
     private void setOtherSchemeCards(Pane pane, String[][] window, String cardName) {
-        if (window != null) {//DA CONTROLLARE
+        if (window != null) {
             String s = cardName.toLowerCase().replaceAll(" ", "_").replaceAll("'", "");
             BackgroundImage myBI = new BackgroundImage(new Image(getClass().getResourceAsStream(GameBoardHandler.WINDOW_PATTERN_CARDS_PATH + s + ".png"), 220, 192, false, true),
                     BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -248,6 +271,13 @@ public class GameBoardHandlerMulti {
         }
     }
 
+    /**
+     * When one of the player's opponent modifies his window pattern card, its representation in the player's game board
+     * scene, is modified consequently.
+     * @param window is the modified window pattern card.
+     * @param name is the name of the opponent who modified his window pattern card.
+     * @param cardName is the window pattern card name.
+     */
     void onOtherSchemeCards(String[][] window, String name, String cardName) {
 
         for (Label label : labelsList) {
@@ -269,10 +299,20 @@ public class GameBoardHandlerMulti {
         }
     }
 
+    /**
+     * Updates the reserve.
+     * @param dicesList is the list of dices in the reserve.
+     */
     public void setReserve(List<String> dicesList) {
         gameBoardHandler.setReserve(dicesList, reserve);
     }
 
+    /**
+     * Shows the ranking of the players by their scores.
+     * @param winner is the player with the highest score.
+     * @param rankingNames is the ordered list of players by their scores.
+     * @param rankingValues is the ordered list of the players'scores.
+     */
     void showRanking(String winner, List<String> rankingNames, List<Integer> rankingValues) {
 
         StringBuilder s = new StringBuilder();
@@ -296,13 +336,19 @@ public class GameBoardHandlerMulti {
         disableActionsOnGameBoard();
     }
 
+    /**
+     * Appends a message to the scene text area telling the player he's the winner because he's the only player left in the game.
+     * It then disables actions on board.
+     */
     void onGameClosing() {
         gameBoardHandler.appendToTextArea("Congratulazioni! Sei il vincitore. Sei rimasto da solo in gioco.\n\nClicca su ESCI per terminare");
         disableActionsOnGameBoard();
         exit = true;
     }
 
-
+    /**
+     * Disables all actions on board except clicking the QUIT button.
+     */
     private void disableActionsOnGameBoard() {
         tool0.setDisable(true);
         tool1.setDisable(true);
@@ -335,6 +381,11 @@ public class GameBoardHandlerMulti {
         }
     }
 
+    /**
+     * Assigns every name to the corresponding label.
+     * @param players is the list of players in the match.
+     * @param label0 is the label containing the name of the owner of this GUI.
+     */
     private void setLabels(List<String> players, Label label0) {
         AtomicInteger myPosition = new AtomicInteger();
         /* find the position of the owner of this GUI */
@@ -351,14 +402,28 @@ public class GameBoardHandlerMulti {
         }
     }
 
+    /**
+     * Sets the image of a private objective card and the visual effects to be applied when the mouse enters and exits
+     * the image.
+     * @param privateCard is the name of the private objective card.
+     */
     public void setPrivateCard(String privateCard) {
         gameBoardHandler.setSinglePrivateCard(privObjLabel, privateObjCard, null, privateCard);
     }
 
+    /**
+     * Updates the number of favor tokens of the player.
+     * @param value is the new number of favor tokens.
+     */
     void setMyFavourTokens(int value) {
         setFavourTokens(myFavourTokensContainer, value);
     }
 
+    /**
+     * Updates the number of favor tokens in the chosen Pane.
+     * @param pane is the pane containing the favor tokens.
+     * @param value is the new number of favor tokens.
+     */
     private void setFavourTokens(Pane pane, int value) {
         if (pane.getChildren() != null) {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
@@ -376,6 +441,10 @@ public class GameBoardHandlerMulti {
         Platform.runLater(() -> pane.getChildren().add(myFavourTokens));
     }
 
+    /**
+     * Initializes the favor tokens of all the player's opponents.
+     * @param map is a map with opponent's name as key and number of favor tokens as value.
+     */
     void initializeFavorTokens(Map<String, Integer> map) {
 
         for (String name : map.keySet()) {
@@ -399,6 +468,11 @@ public class GameBoardHandlerMulti {
         }
     }
 
+    /**
+     * Updates the favor tokens of a player's opponent.
+     * @param value is the new number of favor tokens.
+     * @param name is the opponent's name.
+     */
     void onOtherFavorTokens(Integer value, String name) {
 
         for (Label label : labelsList) {
@@ -421,16 +495,32 @@ public class GameBoardHandlerMulti {
         }
     }
 
+    /**
+     * Updates the round track.
+     * @param track is the string representing the round track.
+     */
     public void onRoundTrack(String track) {
         gameBoardHandler.onRoundTrack(track);
     }
 
+    /**
+     * Initializes the three public objective cards.
+     * @param publicCards is the list of the names of the three public objective cards.
+     */
     public void setPublicCards(List<String> publicCards) {
         setSinglePublicCard(pubObjLabel, pubObjCard1, pubObjCard2, pubObjCard3, publicCards.get(0));
         setSinglePublicCard(pubObjLabel, pubObjCard2, pubObjCard1, pubObjCard3, publicCards.get(1));
         setSinglePublicCard(pubObjLabel, pubObjCard3, pubObjCard1, pubObjCard2, publicCards.get(2));
     }
 
+    /**
+     * Sets the image of a public objective card and the effects to apply when the mouse enters and exits the image.
+     * @param label is the label pointing out where public objective cards are in the game board.
+     * @param main is the current public objective card.
+     * @param other1 is one of the remaining public objective cards.
+     * @param other2 is the other remaining public objective card.
+     * @param publicCard is the current public objective card name.
+     */
     private void setSinglePublicCard(Label label, ImageView main, ImageView other1, ImageView other2, String publicCard) {
         Image publicObjCardImg1 = new Image(getClass().getResourceAsStream(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png"));
         main.setImage(publicObjCardImg1);
@@ -445,16 +535,31 @@ public class GameBoardHandlerMulti {
         main.setOnMouseExited(event -> setTranslationCards(main, other1, other2, label));
     }
 
+    /**
+     * Updates the player's window pattern card.
+     * @param window is a bi-dimensional array of strings representing the player's window pattern card.
+     */
     void setMyWindow(String[][] window) {
         gameBoardHandler.setMySchemeCard(playerWindowPatternCard, window);
     }
 
+    /**
+     * Sets the three tool cards in the game board scene.
+     * @param toolCardsList is the list of the names of the three tool cards.
+     */
     void setToolCards(List<String> toolCardsList) {
         setSingleToolcard(tool0, tool1, tool2, toolCardsList.get(0));
         setSingleToolcard(tool1, tool0, tool2, toolCardsList.get(1));
         setSingleToolcard(tool2, tool0, tool1, toolCardsList.get(2));
     }
 
+    /**
+     * Sets the image of a tool card and the effects to apply when the mouse enters and exits the image.
+     * @param main is the current tool card.
+     * @param other1 is one of the remaining tool cards.
+     * @param other2 is the other remaining tool card.
+     * @param toolcard is the tool card name.
+     */
     private void setSingleToolcard(Button main, Button other1, Button other2, String toolcard) {
         Image cardImg = new Image(getClass().getResourceAsStream(GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png"));
 
@@ -474,6 +579,13 @@ public class GameBoardHandlerMulti {
         main.setOnMouseExited(event -> setTranslationCards(main, other1, other2, toolCardsLabel));
     }
 
+    /**
+     * Sets the effect to apply when the mouse enters in a tool card image.
+     * @param main is the current tool card.
+     * @param other1 is one of the remaining tool cards.
+     * @param other2 is the other remaining tool card.
+     * @param label is a label pointing out where tool cards are in the game board scene.
+     */
     private void setTranslationCards(Node main, Node other1, Node other2, Label label) {
         main.setTranslateX(0);
         main.setTranslateY(0);

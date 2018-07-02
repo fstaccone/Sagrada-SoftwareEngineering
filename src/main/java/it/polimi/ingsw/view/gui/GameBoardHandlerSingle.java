@@ -83,6 +83,11 @@ public class GameBoardHandlerSingle {
     @FXML
     Button rightCard;
 
+    /**
+     * Initializes the game board scene and shows it.
+     * @param scene is the scene to show.
+     * @param gui is the current gui.
+     */
     void init(Scene scene, Gui gui) {
         this.gui = gui;
         gameBoardHandler = new GameBoardHandler(gui.isSingle(), null, this, gameBoard, toolPane, toolLabel, useButton, sacrificeLabel);
@@ -104,6 +109,9 @@ public class GameBoardHandlerSingle {
         });
     }
 
+    /**
+     * Initializes toolCardsMap with 0,1,2,3,4 as keys and five buttons representing tool cards as values.
+     */
     private void initializeToolMap() {
         toolCardsMap.put(0, tool0);
         toolCardsMap.put(1, tool1);
@@ -112,6 +120,10 @@ public class GameBoardHandlerSingle {
         toolCardsMap.put(4, tool4);
     }
 
+    /**
+     * Appends a new message to the game board text area.
+     * @param s is the message to append.
+     */
     void appendToTextArea(String s) {
         gameBoardHandler.appendToTextArea(s);
     }
@@ -128,10 +140,20 @@ public class GameBoardHandlerSingle {
         return playerWindowPatternCard;
     }
 
+    /**
+     * Shows the player's window pattern card image as the background of a Pane.
+     * It then creates a grid pane where dices will be placed.
+     * @param imgURL is the window pattern card image url.
+     */
     void setWindowPatternCardImg(String imgURL) {
         gameBoardHandler.setWindowPatternCardImg(imgURL);
     }
 
+    /**
+     * Shows the player's score at the end of the game and the goal to beat, telling him if he won.
+     * @param goal is the score the player has to beat.
+     * @param points is the player's actual score.
+     */
     void showResultForSingle(int goal, int points) {
 
         StringBuilder s = new StringBuilder();
@@ -151,6 +173,9 @@ public class GameBoardHandlerSingle {
         privObjCard1.setDisable(true);
     }
 
+    /**
+     * Disables all actions on board except clicking the QUIT button.
+     */
     private void disableActionsOnGameBoard() {
         reserve.setDisable(true);
         playerWindowPatternCard.setDisable(true);
@@ -164,24 +189,49 @@ public class GameBoardHandlerSingle {
         pubObjCard1.setDisable(true);
     }
 
+    /**
+     * Updates the reserve.
+     * @param dicesList is the list of dices in the reserve.
+     */
     public void setReserve(List<String> dicesList) {
         gameBoardHandler.setReserve(dicesList, reserve);
     }
 
+    /**
+     * Sets the image of the two private objective cards and the visual effects to be applied when the mouse enters and exits
+     * the images.
+     * @param privateCard1 is the name of the first private objective card.
+     * @param privateCard2 is the name of the second private objective card.
+     */
     void setPrivateCards(String privateCard1, String privateCard2) {
         gameBoardHandler.setSinglePrivateCard(privObjLabel, privObjCard0, privObjCard1, privateCard1);
         gameBoardHandler.setSinglePrivateCard(privObjLabel, privObjCard1, privObjCard0, privateCard2);
     }
 
+    /**
+     * Updates the round track.
+     * @param track is the string representing the round track.
+     */
     public void onRoundTrack(String track) {
         gameBoardHandler.onRoundTrack(track);
     }
 
+    /**
+     * Initializes the two public objective cards.
+     * @param publicCards is the list of the names of the two public objective cards.
+     */
     public void setPublicCards(List<String> publicCards) {
         setSinglePublicCard(pubObjLabel, pubObjCard0, pubObjCard1, publicCards.get(0));
         setSinglePublicCard(pubObjLabel, pubObjCard1, pubObjCard0, publicCards.get(1));
     }
 
+    /**
+     * Sets the image of a public objective card and the effects to apply when the mouse enters and exits the image.
+     * @param label is the label pointing out where public objective cards are in the game board.
+     * @param main is the current public objective card.
+     * @param other1 is the other public objective card.
+     * @param publicCard is the current public objective card name.
+     */
     private void setSinglePublicCard(Label label, ImageView main, ImageView other1, String publicCard) {
         Image publicObjCardImg1 = new Image(getClass().getResourceAsStream(GameBoardHandler.PUBLIC_CARDS_PATH + publicCard + ".png"));
         main.setImage(publicObjCardImg1);
@@ -201,10 +251,17 @@ public class GameBoardHandlerSingle {
         });
     }
 
+    /**
+     * Updates the player's window pattern card.
+     * @param window is a bi-dimensional array of strings representing the player's window pattern card.
+     */
     void setMyWindow(String[][] window) {
         gameBoardHandler.setMySchemeCard(playerWindowPatternCard, window);
     }
 
+    /**
+     * Creates the context for the chosen tool card after the player clicks on it.
+     */
     private EventHandler<ActionEvent> toolSelected = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
@@ -212,6 +269,10 @@ public class GameBoardHandlerSingle {
         }
     };
 
+    /**
+     * Sets the tool cards in the game board scene.
+     * @param toolCardsList is the list of the names of the tool cards.
+     */
     void setToolCards(List<String> toolCardsList) {
         for (int i = 0; i < toolCardsList.size(); i++) {
             setSingleToolcard(toolCardsMap.get(i), toolCardsList.get(i));
@@ -221,6 +282,11 @@ public class GameBoardHandlerSingle {
         }
     }
 
+    /**
+     * Sets the image of a tool card and the effects to apply when the mouse enters and exits the image.
+     * @param main is the current tool card.
+     * @param toolcard is the tool card name.
+     */
     private void setSingleToolcard(Button main, String toolcard) {
         Image cardImg = new Image(getClass().getResourceAsStream(GameBoardHandler.TOOLCARDS_PATH + toolcard + ".png"));
 
@@ -254,6 +320,10 @@ public class GameBoardHandlerSingle {
         });
     }
 
+    /**
+     * Disables actions on board and asks the player which of the two private objective cards he wants to use to
+     * calculate his final score.
+     */
     void choosePrivateCard() {
         disableActionsOnGameBoard();
         gameBoardHandler.appendToTextArea("Sei giunto al termine della partita, nel riquadro a destra scegli" +

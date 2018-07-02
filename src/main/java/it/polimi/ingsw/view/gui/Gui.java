@@ -49,6 +49,14 @@ public class Gui {
     private String playerSchemeCardImageURL;
     private AudioClip turnClip = Applet.newAudioClip(getClass().getResource("/sounds/turn.au"));
 
+    /**
+     * GUI constructor.
+     * @param fromLogin is the Stage where the login scene was showed.
+     * @param username is the name of the GUI owner.
+     * @param controllerRmi is the controller in case of rmi connection.
+     * @param controllerSocket is the controller in case of socket connection.
+     * @param single is true if the GUI refers to a single player match, false otherwise.
+     */
     Gui(Stage fromLogin, String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
         this.username = username;
         this.controllerRmi = controllerRmi;
@@ -103,12 +111,14 @@ public class Gui {
     public String getUsername() {
         return username;
     }
-/*
-    // setters
-    void setDicePlacedToFalse() {
-        this.dicePlaced = false;
-    }
-*/
+
+    /**
+     * Called on the player's turn.
+     * @param isMyTurn true if it's the player's turn, false otherwise.
+     * @param string represents the reserve. If not null, the reserve is updated.
+     * @param round indicates the current round.
+     * @param turn indicates the current turn.
+     */
     public void onYourTurn(boolean isMyTurn, String string, int round, int turn) {
         if (string != null) {
             onReserve(string);
@@ -138,6 +148,10 @@ public class Gui {
         }
     }
 
+    /**
+     * Updates the reserve.
+     * @param string is the string representing the reserve.
+     */
     public void onReserve(String string) {
         dicesList = new ArrayList<>();
         String dicesString = string.substring(1, string.length() - 1);
@@ -159,6 +173,10 @@ public class Gui {
         }
     }
 
+    /**
+     * Shows a message in the texArea when a player is reconnected to the match.
+     * @param name is the name of the player reconnected to the match.
+     */
     public void onPlayerReconnection(String name) {
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea("Il giocatore " + name + " è entrato nella partita!");
@@ -167,6 +185,12 @@ public class Gui {
         }
     }
 
+    /**
+     * Called whenever the game starts.
+     * @param windowChosen true if the GUI owner has already chosen his window pattern card.
+     * @param names is the list of players in the match.
+     * @param turnTime is the time limit for each turn.
+     */
     public void onGameStarted(Boolean windowChosen, List<String> names, int turnTime) {
         players = names;
 
@@ -187,6 +211,10 @@ public class Gui {
         }
     }
 
+    /**
+     * The player in a single player match is redirected to the window pattern card choice scene.
+     * @param turnTime is the time limit for each turn.
+     */
     private void initializeChooseCardSingle(int turnTime) {
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = null;
@@ -203,6 +231,10 @@ public class Gui {
         chooseCardHandlerSingle.welcome(turnTime);
     }
 
+    /**
+     * The player in a multi player match is redirected to the window pattern card choice scene.
+     * @param turnTime is the time limit for each turn.
+     */
     private void initializeChooseCardMulti(int turnTime) {
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = null;
@@ -221,6 +253,9 @@ public class Gui {
         chooseCardHandlerMultiplayer.appendToTextArea("Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare!");
     }
 
+    /**
+     * Called when the game is being closed.
+     */
     public void onGameClosing() {
         if (stillPlaying) {
             if (gameBoardHandlerMulti != null) {
@@ -232,6 +267,12 @@ public class Gui {
         stillPlaying = false;
     }
 
+    /**
+     * Called when a multi player match ends.
+     * @param winner is the player with the highest score.
+     * @param rankingNames is the ordered list of players by their scores.
+     * @param rankingValues is the ordered list of the players'scores.
+     */
     public void onGameEndMulti(String winner, List<String> rankingNames, List<Integer> rankingValues) {
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.showRanking(winner, rankingNames, rankingValues);
@@ -239,6 +280,11 @@ public class Gui {
         stillPlaying = false;
     }
 
+    /**
+     * Shows the player's score at the end of the game and the goal to beat, telling him if he won.
+     * @param goal is the score the player has to beat.
+     * @param points is the player's actual score.
+     */
     public void onGameEndSingle(int goal, int points) {
         if (gameBoardHandlerSingle != null) {
             gameBoardHandlerSingle.showResultForSingle(goal, points);
@@ -246,6 +292,22 @@ public class Gui {
         stillPlaying = false;
     }
 
+    /**
+     * Called when a player is reconnected to a match. All his information about the game is updated.
+     * @param toolcards of the match.
+     * @param publicCards of the match.
+     * @param privateCards of the player.
+     * @param reserve of the match at the current state.
+     * @param roundTrack of the match at the current state.
+     * @param myTokens are the token of the player.
+     * @param schemeCard player's window pattern card.
+     * @param schemeCardName name of the player's window pattern card.
+     * @param otherTokens maps with opponents' names as key and their number of tokens as values.
+     * @param otherSchemeCards maps with opponents' names as key and theur window pattern cards as values.
+     * @param otherSchemeCardNamesMap maps with opponents' names as key and window pattern cards names as values.
+     * @param schemeCardChosen is true if the reconnected player has already chosen his window pattern card, false otherwise.
+     * @param toolcardsPrices map with tool card names as keys and their price as value.
+     */
     public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards, Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         reconnection = true;
         this.myTokens = myTokens;
@@ -268,6 +330,10 @@ public class Gui {
         }
     }
 
+    /**
+     * Updates the round track
+     * @param track is a string representing the round track.
+     */
     public void onRoundTrack(String track) {
         if (single) {
             if (gameBoardHandlerSingle != null) {
@@ -280,6 +346,10 @@ public class Gui {
         }
     }
 
+    /**
+     * Updates the GUI owner's window pattern card.
+     * @param window is a bi-dimensional array of strings representing the player's window pattern card.
+     */
     public void onMyWindow(String[][] window) {
         if (single) {
             if (gameBoardHandlerSingle != null) {
@@ -292,14 +362,21 @@ public class Gui {
         }
     }
 
-    /* to update the owner's tokens*/
+    /**
+     * Updates the number of favor tokens of the GUI owner.
+     * @param value is the new number of favor tokens.
+     */
     public void onMyFavorTokens(int value) {
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.setMyFavourTokens(value);
         }
     }
 
-    /* to update the others' tokens*/
+    /**
+     * Updates the favor tokens of a player's opponent.
+     * @param value is the new number of favor tokens.
+     * @param name is the opponent's name.
+     */
     public void onOtherFavorTokens(int value, String name) {
         otherFavorTokensMap.put(name, value);
         if (gameBoardHandlerMulti != null) {
@@ -307,12 +384,22 @@ public class Gui {
         }
     }
 
+    /**
+     * Called when one of the player's opponent modifies his window pattern card.
+     * @param window is the modified window pattern card.
+     * @param name is the name of the opponent who modified his window pattern card.
+     * @param cardName is the window pattern card name.
+     */
     public void onOtherSchemeCards(String[][] window, String name, String cardName) {
         otherSchemeCardNamesMap.put(name, cardName);
         otherSchemeCardsMap.put(name, window);
         if (gameBoardHandlerMulti != null) gameBoardHandlerMulti.onOtherSchemeCards(window, name, cardName);
     }
 
+    /**
+     * Shows a message in the textArea of the game telling that is another's player's turn.
+     * @param name is the name of the player who is now playing.
+     */
     public void onOtherTurn(String name) {
         String s = "Ora è il turno di " + name + "!";
         if (gameBoardHandlerMulti != null) {
@@ -322,6 +409,13 @@ public class Gui {
         }
     }
 
+    /**
+     * Initializes some game elements values.
+     * @param toolcards is a string representing the tool cards available for the match.
+     * @param publicCards is a string representing the public objective cards available for the match.
+     * @param privateCards is a list of the private objective cards available for the match.
+     * @param players is the list of players in te match.
+     */
     public void onInitialization(String toolcards, String publicCards, List<String> privateCards, List<String> players) {
         parseToolcards(toolcards);
 
@@ -336,6 +430,10 @@ public class Gui {
         this.players = players;
     }
 
+    /**
+     * Parses the string passed as a parameter to get a list of the tool cards available for the match.
+     * @param toolcards is a string representing the tool cards available for the match.
+     */
     private void parseToolcards(String toolcards) {
         String dicesString = toolcards.substring(1, toolcards.length() - 1);
         List<String> temp = Pattern.compile(", ")
@@ -347,6 +445,10 @@ public class Gui {
         }
     }
 
+    /**
+     * Parses the string passed as a parameter to get a list of the public objective cards available for the match.
+     * @param publicCards is a string representing the public objective cards available for the match.
+     */
     private void parsePublicCards(String publicCards) {
         publicCardsList = new ArrayList<>();
         String cards = publicCards.substring(1, publicCards.length() - 1);
@@ -359,6 +461,10 @@ public class Gui {
         }
     }
 
+    /**
+     * Shows a message in the game board text area informing of the exit of a player.
+     * @param name of the player who left the match.
+     */
     public void onPlayerExit(String name) {
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea("Il giocatore " + name + " è uscito dalla partita!");
@@ -367,6 +473,12 @@ public class Gui {
         }
     }
 
+    /**
+     * Called when a player has to choose his window pattern card.
+     * If it's a single player match, both private objective cards available are shown.
+     * If it's a multi player match, only the first private objective card available is shown.
+     * @param windows is a list of the proposed window pattern cards.
+     */
     public void onWindowChoice(List<String> windows) {
         AudioClip cardsClip = Applet.newAudioClip(getClass().getResource("/sounds/cards.au"));
         cardsClip.play();
@@ -381,6 +493,11 @@ public class Gui {
         }
     }
 
+    /**
+     * Shows a message in the game board text area to inform that an opponent has used a tool card for the first time.
+     * @param name of the opponent who used the tool card for the first time.
+     * @param toolNumber is the number of the used tool card.
+     */
     public void onToolCardUsedByOthers(String name, int toolNumber) {
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
@@ -388,6 +505,10 @@ public class Gui {
             chooseCardHandlerMultiplayer.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
     }
 
+    /**
+     * Called after the GUI owner has chosen his window pattern card in a multi player match.
+     * He is redirected to the game board scene and all the scene elements are initialized.
+     */
     public void onAfterWindowChoiceMultiplayer() {
 
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
@@ -443,10 +564,18 @@ public class Gui {
         gameBoardHandlerMulti.initializeSchemeCards(otherSchemeCardsMap, otherSchemeCardNamesMap);
     }
 
+    /**
+     * Shows a message in the text area of a multi player match game board, informing the player about the turn time.
+     * @param turnTime is the time limit for each turn.
+     */
     private void notifyTimerMulti(int turnTime) {
         gameBoardHandlerMulti.appendToTextArea("Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare!");
     }
 
+    /**
+     * Called after the GUI owner has chosen his window pattern card in a single player match.
+     * He is redirected to the game board scene and all the scene elements are initialized.
+     */
     public void onAfterWindowChoiceSingleplayer() {
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
@@ -476,10 +605,18 @@ public class Gui {
         gameBoardHandlerSingle.appendToTextArea("Fai la tua prima mossa!");
     }
 
+    /**
+     * Shows a message in the text area of a single player match game board, informing the player about the turn time.
+     * @param turnTime is the time limit for each turn.
+     */
     private void notifyTimerSingle(int turnTime) {
         gameBoardHandlerSingle.appendToTextArea("Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare!");
     }
 
+    /**
+     * Called at the end of a single player match, when the player has to choose which of the two private objective cards
+     * available he wants to use to calculate his final score.
+     */
     public void onChoosePrivateCard() {
         gameBoardHandlerSingle.choosePrivateCard();
     }

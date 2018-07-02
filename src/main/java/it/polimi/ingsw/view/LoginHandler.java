@@ -43,6 +43,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
+
 public class LoginHandler implements Initializable {
 
     private static final String GAME_NAME = "Lobby";
@@ -99,6 +100,9 @@ public class LoginHandler implements Initializable {
         return waitingRoomCli;
     }
 
+    /**
+     * When the login window is created, the default choice is rmi connection with cli.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rmiCheckmark.setSelected(true);
@@ -109,6 +113,9 @@ public class LoginHandler implements Initializable {
         singleplayer = false;
     }
 
+    /**
+     * Marks the single player checkBox when the player clicks on it.
+     */
     @FXML
     private void singleplayerMarked() {
         if(singlePlayerCheckmark.isSelected()){
@@ -118,30 +125,48 @@ public class LoginHandler implements Initializable {
         }
     }
 
+    /**
+     * Marks the rmi checkBox when the player clicks on it. It also deselects the socket checkBox.
+     */
     @FXML
     private void rmiMarked() {
         rmiCheckmark.setSelected(true);
         socketCheckmark.setSelected(false);
     }
 
+    /**
+     * Marks the socket checkBox when the player clicks on it. It also deselects the rmi checkBox.
+     */
     @FXML
     private void socketMarked() {
         socketCheckmark.setSelected(true);
         rmiCheckmark.setSelected(false);
     }
 
+    /**
+     * Marks the gui checkBox when the player clicks on it. It also deselects the cli checkBox.
+     */
     @FXML
     private void guiMarked() {
         guiCheckmark.setSelected(true);
         cliCheckmark.setSelected(false);
     }
 
+    /**
+     * Marks the cli checkBox when the player clicks on it. It also deselects the gui checkBox.
+     */
     @FXML
     private void cliMarked() {
         cliCheckmark.setSelected(true);
         guiCheckmark.setSelected(false);
     }
 
+    /**
+     * When the PLAY button is clicked, the handler checks if the player actually chose a name with at least one
+     * character. After that, it checks the choices made by the player (single/multi, cli/gui) and initializes the corresponding
+     * window.
+     * @throws Exception todo:
+     */
     @FXML
     private void playClicked() throws Exception {
 
@@ -187,7 +212,12 @@ public class LoginHandler implements Initializable {
         }
     }
 
-
+    /**
+     * It's called after the player clicked on the QUIT button or on the X in the top-right corner of the window.
+     * It shows an alert message and if the player clicks on YES it closes the login window and removes the player from
+     * the game.
+     * @throws RemoteException todo
+     */
     private void onClosing() throws RemoteException {
         ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Sei sicuro di voler uscire?", yes, ButtonType.NO);
@@ -217,7 +247,9 @@ public class LoginHandler implements Initializable {
         playButton.setEffect(new DropShadow(10, 0, 0, Color.VIOLET));
     }
 
-
+    /**
+     * Stores all the choices made by the player.
+     */
     private void readInput() {
         this.username = usernameInput.getText();
         this.isRmi = rmiCheckmark.isSelected();
@@ -240,6 +272,11 @@ public class LoginHandler implements Initializable {
         } else return null;
     }
 
+    /**
+     * Shows a custom alert window. Title and message are passed as parameters.
+     * @param title of the alert window.
+     * @param message of the alert window.
+     */
     private void showAlertWarning(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -249,6 +286,16 @@ public class LoginHandler implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Sets up the connection chosen by the player and checks the connection status for the chosen username.
+     * If the status is CONNECTED it means the username chosen is actually being used and player has to choose a different one.
+     * If the status is DISCONNECTED the player gets reconnected to the match in which he was previously playing.
+     * Otherwise, the player joins a new match.
+     * @param waiting is the new scene (waiting room), to show only if the player chose to play with gui in a
+     *                multi player match.
+     * @throws IOException todo
+     * @throws InterruptedException todo
+     */
     private void connectionSetup(Scene waiting) throws IOException, InterruptedException {
         ConnectionStatus status;
 
@@ -303,6 +350,9 @@ public class LoginHandler implements Initializable {
         }
     }
 
+    /**
+     * Loads and shows the window pattern card choice scene for single player.
+     */
     private void loadAndShowGuiSingle() {
         FXMLLoader fx = new FXMLLoader();
         fx.setLocation(getClass().getResource("/choose-card-single.fxml"));
@@ -319,7 +369,10 @@ public class LoginHandler implements Initializable {
         window.show();
     }
 
-    // the connection is established between client and lobby
+    /**
+     * The connection is established between client and lobby
+     * @throws RemoteException todo
+     */
     private void setupRmiConnection() throws RemoteException {
 
         //registry = LocateRegistry.getRegistry();
@@ -339,6 +392,10 @@ public class LoginHandler implements Initializable {
         }
     }
 
+    /**
+     * Sets up the socket connection
+     * @throws IOException todo
+     */
     private void setupSocketConnection() throws IOException {
         ObjectInputStream in;
         ObjectOutputStream out;
@@ -351,11 +408,13 @@ public class LoginHandler implements Initializable {
 
         } catch (SocketException e) {
             System.out.println("Unable to create socket connection");
-        } //finally { socket.close() INOLTRE VANNO CHIUSI GLI INPUT E OUTPUT STREAM}
+        }
     }
 
+    /**
+     * Creates the link between this Client and the Player in the model.
+     */
     private void createClientRmi() {
-        // to create the link between this Client and the Player in the model
         if (singleplayer) {
             try {
                 controllerRmi.createMatch(this.username, difficulty, null);
@@ -387,10 +446,11 @@ public class LoginHandler implements Initializable {
         }
     }
 
-
+    /**
+     * Creates the link between this Client and the Player in the model.
+     */
     private void createClientSocket() {
 
-        // to create the link between this Client and the Player in the model
         if (singleplayer) {
             try {
                 new Thread(new SocketListener(controllerSocket)).start();
@@ -417,6 +477,9 @@ public class LoginHandler implements Initializable {
         }
     }
 
+    /**
+     * Initializes gui or cli with rmi connection when the match starts.
+     */
     public void onMatchStartedRmi() {
         if (isCli) {
             try {
@@ -433,6 +496,9 @@ public class LoginHandler implements Initializable {
         }
     }
 
+    /**
+     * Initializes gui or cli with socket connection when the match starts.
+     */
     public void onMatchStartedSocket() {
         if (isCli) {
             new SocketCli(username, controllerSocket, singleplayer);

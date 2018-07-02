@@ -20,22 +20,39 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
     @FXML
     private TextArea log;
 
+    /**
+     * Constructor of WaitingScreenHandler, instantiates two text areas.
+     * @throws RemoteException todo
+     */
     public WaitingScreenHandler() throws RemoteException {
         super();
         log = new TextArea();
         text = new TextArea();
     }
 
+    /**
+     * Shows a message in the log textArea telling that a player's left the waiting room..
+     * @param name is the name of the player who has left the waiting room.
+     */
     @Override
     public void onPlayerExit(String name) {
         log.setText("Il giocatore " + name + " è uscito dalla sala di attesa prima dell'inizio della partita!");
     }
 
+    /**
+     * Shows a message in the log textArea telling that a player's left the waiting room and the current player is the
+     * only player left.
+     * @param name is the name of the player who has left the waiting room.
+     */
     @Override
     public void onLastPlayer(String name) {
         log.setText(name + " è uscito dalla sala di attesa, sei l'unico rimasto. Il timer è stato cancellato!");
     }
 
+    /**
+     * Shows a message with the updated list of players currently in the waiting room.
+     * @param waitingPlayers is the list of players currently in the waiting room.
+     */
     @Override
     public void onWaitingPlayers(List<String> waitingPlayers) {
         String wPlayers = waitingPlayers.toString().replaceAll("\\[", "");

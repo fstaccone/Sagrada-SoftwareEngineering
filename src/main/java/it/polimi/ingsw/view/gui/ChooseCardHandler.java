@@ -20,7 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseCardHandler {
-
+    /**
+     * Constructor for ChooseCardHandler. The window pattern card choice value is initialized to a default value.
+     * @param single is true is this is a single player match, false otherwise.
+     * @param myTurn is true if it's the player's turn, false otherwise.
+     */
     ChooseCardHandler(boolean single, boolean myTurn) {
         this.single = single;
         choice = ChooseCardHandler.OUT_OF_RANGE;
@@ -47,6 +51,13 @@ public class ChooseCardHandler {
     protected String username;
     private String imgURL;
 
+    /**
+     * Initializes the four card choices buttons by disabling them until it's the player's turn.
+     * @param card0 first option.
+     * @param card1 second option.
+     * @param card2 third option.
+     * @param card3 fourth option.
+     */
     void initialize(Button card0, Button card1, Button card2, Button card3) {
         card0.setDisable(true);
         card1.setDisable(true);
@@ -54,6 +65,10 @@ public class ChooseCardHandler {
         card3.setDisable(true);
     }
 
+    /**
+     * Shows an alert message when the player clicks on QUIT button or on the X in the top-right corner.
+     * If the player answers by clicking YES the handler closes the window and starts the quitting game process.
+     */
     void onQuitClicked() {
         ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confermi di voler abbandonare la partita?", yes, ButtonType.NO);
@@ -76,6 +91,14 @@ public class ChooseCardHandler {
         }
     }
 
+    /**
+     * When the player clicks on the PLAY button the handler checks if it's the player's turn.
+     * If it isn't, it shows a message in the text area. If it is, but the player did't choose any card, it shows
+     * an alert message. Once the card is chosen and the PLAY button clicked, the url of the chosen window pattern card
+     * and the player's choice are stored.
+     * @param textArea in the choose card scene where messages are shown
+     * @throws RemoteException todo
+     */
     void onPlayClicked(TextArea textArea) throws RemoteException {
         if (myTurn) {
             if (choice == OUT_OF_RANGE) {
@@ -113,7 +136,14 @@ public class ChooseCardHandler {
         }
     }
 
-    //Initializing
+    /**
+     * Initializes the choose card scene.
+     * @param windowFromGui is the Stage where the new scene has to be shown.
+     * @param sceneFromGui is the new choose card scene.
+     * @param remoteController is the rmi controller.
+     * @param socketController is the socket controller.
+     * @param username is the player's username.
+     */
     void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
         this.controllerRmi = remoteController;
         this.controllerSocket = socketController;
@@ -131,7 +161,14 @@ public class ChooseCardHandler {
         });
     }
 
-    //The window now shows the 4 window pattern cards the player have to choose between
+    /**
+     * The window now shows the four window pattern cards the player have to choose between.
+     * @param windows is a list of the names of the four window pattern cards proposed.
+     * @param card0 button corresponding to the first option.
+     * @param card1 button corresponding to the second option.
+     * @param card2 button corresponding to the third option.
+     * @param card3 button corresponding to the fourth option.
+     */
     void setWindows(List<String> windows, Button card0, Button card1, Button card2, Button card3) {
         card0.setDisable(false);
         card1.setDisable(false);
@@ -185,6 +222,11 @@ public class ChooseCardHandler {
         return imgURL;
     }
 
+    /**
+     * Appends a new message in the scene text area.
+     * @param textArea is the scene text area.
+     * @param s is the new message to append.
+     */
     void appendToTextArea(TextArea textArea, String s) {
         s = "\n" + s;
         textArea.appendText(s);
@@ -199,11 +241,19 @@ public class ChooseCardHandler {
         this.choice = choice;
     }
 
+    /**
+     * Appends a welcome message to the text area showing also the time limit for each turn.
+     * @param textArea is the scene text area.
+     * @param turnTime is the time limit for each turn.
+     */
     void welcome(TextArea textArea, int turnTime) {
         appendToTextArea(textArea, "Benvenuto in questa nuova partita di Sagrada. Buon divertimento!");
         appendToTextArea(textArea, "Hai a disposizione " + turnTime / 1000 + " secondi ad ogni turno per giocare!");
     }
 
+    /**
+     * Closes the window and removes the player from the match.
+     */
     void terminateGame() {
         window.close();
         if (controllerRmi != null) {

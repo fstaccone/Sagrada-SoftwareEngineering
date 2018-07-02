@@ -89,6 +89,17 @@ public class GameBoardHandler {
     private Label sacrificeLabel;
     private Button useButton;
 
+    /**
+     * Constructor for GameBoardHandler.
+     * @param single is true if this is a single player match, false otherwise.
+     * @param gameBoardHandlerMulti is the already existing GameBoardHandlerMulti if this is a multi player match.
+     * @param gameBoardHandlerSingle is the already existing GameBoardHandlerSingle if this is a single player match.
+     * @param gameBoard is the AnchorPane that contains all the other elements of the scene.
+     * @param toolPane is the Pane containing the context for tool card use.
+     * @param toolLabel is a label contained in the toolPane.
+     * @param useButton is the use button contained in the toolPane.
+     * @param sacrificeLabel is a label contained in the toolPane.
+     */
     GameBoardHandler(boolean single, GameBoardHandlerMulti gameBoardHandlerMulti, GameBoardHandlerSingle gameBoardHandlerSingle, AnchorPane gameBoard, Pane toolPane, Label toolLabel, Button useButton, Label sacrificeLabel) {
         this.gameBoardHandlerMulti = gameBoardHandlerMulti;
         this.gameBoardHandlerSingle = gameBoardHandlerSingle;
@@ -100,7 +111,10 @@ public class GameBoardHandler {
         this.sacrificeLabel = sacrificeLabel;
     }
 
-
+    /**
+     * Allows the player to drag a dice from the scheme card.
+     * @param source is the ImageView of the dice.
+     */
     private void setupSchemeCardSource(ImageView source) {
         source.setOnMouseEntered(event -> source.setCursor(Cursor.HAND));
         source.setOnDragDetected(event -> {
@@ -116,6 +130,10 @@ public class GameBoardHandler {
         });
     }
 
+    /**
+     * Allows the player to drag a dice from the reserve.
+     * @param source is the ImageView of the dice.
+     */
     private void setupReserveSource(ImageView source) {
         source.setOnMouseEntered(event -> source.setCursor(Cursor.HAND));
         source.setOnDragDetected(event -> {
@@ -130,6 +148,10 @@ public class GameBoardHandler {
         });
     }
 
+    /**
+     * Allows the player to drag a dice from the round track.
+     * @param source is the ImageView of the dice.
+     */
     private void setupRoundTrackSource(ImageView source) {
 
         source.setOnMouseEntered(event -> source.setCursor(Cursor.HAND));
@@ -145,6 +167,10 @@ public class GameBoardHandler {
         });
     }
 
+    /**
+     * Allows the player to drop a dice in the selected box in tool card context.
+     * @param target is the ImageView of the selected box.
+     */
     private void setupReserveTarget(ImageView target) {
         target.setOnDragOver(event -> {
             if (event.getDragboard().hasImage()) {
@@ -163,6 +189,10 @@ public class GameBoardHandler {
         });
     }
 
+    /**
+     * Allows the player to drag a dice over the sacrifice dice box or drop one on it.
+     * @param target is the ImageView of the sacrifice dice box.
+     */
     private void setupSacrificeTarget(ImageView target) {
 
         target.setOnDragOver(event -> {
@@ -236,6 +266,10 @@ public class GameBoardHandler {
         });
     }
 
+    /**
+     * Creates the context for the chosen tool card.
+     * @param source is the id of the chosen tool card.
+     */
     void toolSelected(String source) {
         if (gui.isMyTurn()) {
             int tool = Integer.parseInt(source);
@@ -247,6 +281,10 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * Removes the username key from the multi player matches map, removes the username from the taken usernames and
+     * closes the window.
+     */
     void terminateGame() {
         if (rmiController != null) {
             try {
@@ -263,6 +301,12 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * When the player clicks on a slot of his window pattern card during his turn, checks if he has chosen a dice from
+     * the reserve. If he did, the handler tries to place the dice in the selected slot.
+     * The handler then appends a message to the scene text area telling the player if the dice placement was successful.
+     * @param slot is the window pattern card slot clicked by the player.
+     */
     private void windowPatternCardSlotSelected(ImageView slot) {
         if (gui.isMyTurn()) {
             if (diceChosen != OUT_OF_RANGE) {
@@ -307,6 +351,11 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * Initializes the game board scene and shows it.
+     * @param scene is the scene to show.
+     * @param gui is the current gui.
+     */
     void init(Scene scene, Gui gui) {
         diceChosen = OUT_OF_RANGE;
         this.gui = gui;
@@ -339,6 +388,11 @@ public class GameBoardHandler {
         textField11 = new TextField();
     }
 
+    /**
+     * Shows the player's window pattern card image as the background of a Pane.
+     * It then creates a grid pane where dices will be placed.
+     * @param imgURL is the window pattern card image url.
+     */
     void setWindowPatternCardImg(String imgURL) {
         BackgroundImage myBI = new BackgroundImage(new Image(getClass().getResourceAsStream(imgURL), 340, 300, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -385,6 +439,11 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * Puts a transparent ImageView in the selected slot and sets the action to execute when it's clicked.
+     * @param row is the row index of the selected slot in the GridPane.
+     * @param col is the column index of the selected slot in the GridPane.
+     */
     private void setImageInSlot(int row, int col) {
         Image img = new Image(getClass().getResourceAsStream(TRANSPARENT_IMAGE_URL));
         ImageView imgView = new ImageView(img);
@@ -394,8 +453,19 @@ public class GameBoardHandler {
         Platform.runLater(() -> schemeCard.add(imgView, col, row));
     }
 
+    /**
+     * Effect applied when the player clicks on a window pattern card slot.
+     */
     private EventHandler<MouseEvent> windowPatternCardSlotSelected = event -> windowPatternCardSlotSelected((ImageView) event.getSource());
 
+    /**
+     * Sets the image of a private objective card and the visual effects to be applied when the mouse enters and exits
+     * the image.
+     * @param privObjLabel is the label in the game board pointing out where private objective cards are.
+     * @param card is the ImageView of the private objective card where the image is set.
+     * @param other is the ImageView of the closest private objective card to the one that is being set.
+     * @param privateCard is the name of the private objective card, used to derive the image url.
+     */
     void setSinglePrivateCard(Label privObjLabel, ImageView card, ImageView other, String privateCard) {
         Image privateObjCardImg = new Image(getClass().getResourceAsStream(PRIVATE_CARDS_PATH + privateCard + ".png"));
         card.setImage(privateObjCardImg);
@@ -421,6 +491,13 @@ public class GameBoardHandler {
         });
     }
 
+    /**
+     * Creates a GridPane inside the Pane passed as parameter.
+     * For all the dices in dicesList a corresponding dice ImageView is placed in the GridPane and the effect to apply
+     * when the ImageView is clicked is set.
+     * @param dicesList is the list of all the dices in the reserve.
+     * @param reserve is the Pane that contains the reserve.
+     */
     void setReserve(List<String> dicesList, Pane reserve) {
 
         if (reserve.getChildren() != null) {
@@ -472,6 +549,10 @@ public class GameBoardHandler {
 
     }
 
+    /**
+     * Effect applied when the player clicks on a dice in the reserve.
+     * If the player clicks during his turn, he is informed of his choice and the choice is stored.
+     */
     private EventHandler<MouseEvent> reserveDiceSelected = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
@@ -486,6 +567,10 @@ public class GameBoardHandler {
         }
     };
 
+    /**
+     * Appends a new message to the game board text area.
+     * @param s is the message to append.
+     */
     void appendToTextArea(String s) {
         TextArea textArea;
         if (single) {
@@ -500,6 +585,13 @@ public class GameBoardHandler {
         });
     }
 
+    /**
+     * Creates a new GridPane where ImageViews with images of the dices in the window pattern cards are placed in the
+     * corresponding slot.
+     * In the empty slots a transparent ImageView is placed. The effect to be applied when a slot is clicked is set.
+     * @param pane is the Pane containing the player's window pattern card.
+     * @param window is a bi-dimensional array of strings representing the window pattern card.
+     */
     void setMySchemeCard(Pane pane, String[][] window) {
         if (pane.getChildren() != null) {
             Platform.runLater(() -> pane.getChildren().remove(0, pane.getChildren().size()));
@@ -556,6 +648,11 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * A new GridPane containing all the round track dices is created.
+     * The string representing the track is parsed to obtain the dices positions and their corresponding images.
+     * @param track is a string representing the round track.
+     */
     public void onRoundTrack(String track) {
         Pane roundTrack;
         if (single) {
@@ -601,7 +698,9 @@ public class GameBoardHandler {
         }
     }
 
-
+    /**
+     * Restores all the attributes used in tool card context to their default values.
+     */
     void resetToolValues() {
         partialReserveIndexForTools = OUT_OF_RANGE;
         targetReserveIndexForTools = OUT_OF_RANGE;
@@ -643,7 +742,9 @@ public class GameBoardHandler {
         }
     }
 
-
+    /**
+     * Creates the context relative to the selected tool card.
+     */
     private class ToolContext {
         ToolContext(int i) {
             switch (i) {
@@ -698,16 +799,29 @@ public class GameBoardHandler {
             }
         }
 
+        /**
+         * Instantiates a new ImageView.
+         * @param y is the LayoutY value of the position of the new ImageView.
+         */
         private void setImageView1(int y) {
             imageView1 = new ImageView();
             setLayoutImageView(imageView1, y);
         }
 
+        /**
+         * Instantiates a new ImageView.
+         * @param y is the LayoutY value of the position of the new ImageView.
+         */
         private void setImageView2(int y) {
             imageView2 = new ImageView();
             setLayoutImageView(imageView2, y);
         }
 
+        /**
+         * Sets the ImageView image (a white box) and LayoutY value.
+         * @param img is the ImageView to modify.
+         * @param y is the LayoutY value.
+         */
         private void setLayoutImageView(ImageView img, int y){
             img.setImage(new Image(getClass().getResourceAsStream(DICE_IMAGES_PATH + "bianco.png")));
             img.setFitWidth(70);
@@ -716,6 +830,14 @@ public class GameBoardHandler {
             img.setLayoutY(y);
         }
 
+        /**
+         * Creates the context for using tool card 1.
+         * It shows the context pane with a box to place the dice chosen from the reserve,
+         * two buttons, plus and minus, that allow the player to choose if increasing or decreasing the dice value,
+         * and, if it's a single player match, also a box for the dice to sacrifice.
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
+         */
         private void createContext1() {
 
             setupSacrificeImageView();
@@ -781,6 +903,15 @@ public class GameBoardHandler {
             });
         }
 
+        /**
+         * Creates the context for using the tool card 2 or 3.
+         * It shows the context pane with a box for the dice the player wants to move,
+         * two text fields where the player puts the coordinates of the chosen dice new position, and, if it's a
+         * single player match, also a box for the dice to sacrifice
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
+         * @param n is the id of the tool card that is being used (2 or 3).
+         */
         private void createContext2or3(int n) {
             setupSacrificeImageView();
 
@@ -840,6 +971,14 @@ public class GameBoardHandler {
 
         }
 
+        /**
+         * Creates the context for using the tool card 4.
+         * It shows the context pane with two boxes for the dices the player wants to move,
+         * four text fields where the player puts the coordinates of the chosen dices new positions, and, if it's a
+         * single player match, also a box for the dice to sacrifice.
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
+         */
         private void createContext4() {
             setupSacrificeImageView();
 
@@ -915,6 +1054,14 @@ public class GameBoardHandler {
             });
         }
 
+        /**
+         * Creates the context for using the tool card 5.
+         * It shows the context pane with two boxes for the dices the player wants to switch, the upper one is for the
+         * dice from the reserve, the lower one is for the dice from the round track.
+         * If it's a single player match, it shows also a box for the dice to sacrifice.
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
+         */
         private void createContext5() {
             setupSacrificeImageView();
 
@@ -968,6 +1115,13 @@ public class GameBoardHandler {
 
         }
 
+        /**
+         * Creates the context for using the tool card 6.
+         * It shows the context pane with one box for the dice the player wants to re-roll.
+         * If it's a single player match, it also shows a box for the dice to sacrifice.
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
+         */
         private void createContext6() {
             setupSacrificeImageView();
 
@@ -1015,6 +1169,14 @@ public class GameBoardHandler {
             });
         }
 
+        /**
+         * Creates the context for using the tool cards 7 or 8.
+         * It shows the context pane with the USE button.
+         * If it's a single player match, it also shows a box for the dice to sacrifice.
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
+         * @param n is the id of the tool card (7 or 8).
+         */
         private void createContext7or8(int n) {
             setupSacrificeImageView();
 
@@ -1088,7 +1250,10 @@ public class GameBoardHandler {
         }
 
         /**
-         * initialize variables to use tool card 9
+         * Initializes the context for using the tool card 9.
+         * It shows the context pane with a box for the chosen dice from the reserve and two text fields where the player
+         * puts the coordinates of the dice new position.
+         * If it's a single player match, it also shows a box for the dice to sacrifice.
          */
         private void initializeContext9() {
             imageView1 = null;
@@ -1113,7 +1278,9 @@ public class GameBoardHandler {
         }
 
         /**
-         * create the context for using the tool card 9
+         * Create the context for using the tool card 9.
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
          */
         private void createContext9() {
             setupSacrificeImageView();
@@ -1157,7 +1324,11 @@ public class GameBoardHandler {
         }
 
         /**
-         * create the context for using the tool card 10
+         * Create the context for using the tool card 10.
+         * It shows the context pane with a box for the chosen dice to turn upside-down.
+         * If it's a single player match, it also shows a box for the dice to sacrifice.
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
          */
         private void createContext10() {
             setupSacrificeImageView();
@@ -1209,7 +1380,11 @@ public class GameBoardHandler {
         }
 
         /**
-         * create the first part of the context for using the tool card 11
+         * Create the first part of the context for using the tool card 11.
+         * It shows the context pane with a box for the dice to put in the bag.
+         * If it's a single player match, it also shows a box for the dice to sacrifice.
+         * When the USE button is clicked a message is shown in the scene text area
+         * informing the player about the possibility to use this tool card.
          */
         private void createContext11() {
             setupSacrificeImageView();
@@ -1271,7 +1446,10 @@ public class GameBoardHandler {
         }
 
         /**
-         * initialize variables used by context 12 for using the tool card 12
+         * Initializes variables used by context 12 for using the tool card 12.
+         * It shows the context pane with three boxes, one for the dice from the round track and two for the dices from
+         * the window pattern card, and four text fields for the coordinates of the two dices new positions.
+         * If it's a single player match, it also shows a box for the dice to sacrifice.
          */
         private void initializeContext12() {
             imageView1 = null;
@@ -1319,7 +1497,9 @@ public class GameBoardHandler {
         }
 
         /**
-         * create the context for using the tool card 12
+         * Creates the context for using the tool card 12.
+         * When the USE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
          */
         private void createContext12() {
             setupSacrificeImageView();
@@ -1392,7 +1572,12 @@ public class GameBoardHandler {
         }
 
         /**
-         * create the second part of the context for using the tool card 11
+         * Creates the second part of the context for using the tool card 11.
+         * It shows the context pane with the image of the new dice picked from the bag (the dice is without value),
+         * and three text fields, one to set the new value of the dice and the other two to set the coordinates of the
+         * dice new position.
+         * When the CONCLUDE button is clicked the effect of the tool card is applied, and a message is shown in the scene text area
+         * informing the player about the outcome of the application of the effect.
          */
         private void createContext11bis() {
             toolLabel.setVisible(true);
@@ -1529,6 +1714,11 @@ public class GameBoardHandler {
 
     }
 
+    /**
+     * A message is shown in the scene text area informing the player in a multi player match about the outcome of the application of the effect.
+     * @param done is true if the effect was applied successfully, false otherwise.
+     * @param i is the id of the tool card.
+     */
     private void checkBooleanMulti(boolean done, int i) {
         if (done) {
             appendToTextArea("Carta utensile " + i + " utilizzata correttamente!");
@@ -1538,6 +1728,11 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * A message is shown in the scene text area informing the player in a single player match about the outcome of the application of the effect.
+     * @param done is true if the effect was applied successfully, false otherwise.
+     * @param i is the id of the tool card.
+     */
     private void checkBooleanSingle(boolean done, int i) {
         if (done) {
             appendToTextArea("Carta utensile " + i + " utilizzata correttamente! Non potrai più utilizzarla per il resto della partita!");
@@ -1547,7 +1742,10 @@ public class GameBoardHandler {
         }
     }
 
-
+    /**
+     * In the tool card context Pane a white box is shown with a descriptive label.
+     * In this box the player has to drop a dice from the reserve.
+     */
     private void setupSacrificeImageView() {
         if (gameBoardHandlerSingle != null) {
             sacrificeLabel.setVisible(true);
@@ -1563,6 +1761,10 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * When the PASS button is clicked all variables used in tool card context are set to their default values.
+     * If the player clicks on the button during another player's turn, a message is appended in the scene text area.
+     */
     void passButtonClicked() {
         diceChosen = OUT_OF_RANGE;
         resetToolValues();
@@ -1583,6 +1785,10 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * When QUIT button is clicked an alert message is shown to the player.
+     * If the player answers YES the window is closed and the quitting game process starts.
+     */
     void quitClicked() {
         ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Vuoi davvero uscire?", yes, ButtonType.NO);
@@ -1606,6 +1812,10 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * Checks if the player dropped a dice in the sacrifice dice box in tool card context.
+     * @return true if a dice was placed correctly in the sacrifice box, false otherwise.
+     */
     private boolean sacrificeCheck() {
         if (targetSacrificeDiceForTools != GameBoardHandler.OUT_OF_RANGE) {
             return true;
@@ -1615,6 +1825,9 @@ public class GameBoardHandler {
         }
     }
 
+    /**
+     * Sets the player's choice to the default value.
+     */
     void setDiceChosenOutOfRange() {
         diceChosen = OUT_OF_RANGE;
     }
