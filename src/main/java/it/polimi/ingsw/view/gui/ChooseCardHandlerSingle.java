@@ -69,7 +69,7 @@ public class ChooseCardHandlerSingle implements Initializable {
      * @param socketController is the socket controller.
      * @param username is the player's username.
      */
-    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
+    void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
         parent.init(windowFromGui, sceneFromGui, remoteController, socketController, username);
         quit.setOnMouseClicked(event -> {
             event.consume();
@@ -117,7 +117,7 @@ public class ChooseCardHandlerSingle implements Initializable {
         parent.setWindows(windows, card0, card1, card2, card3);
     }
 
-    public String getImageUrl() {
+    String getImageUrl() {
         return parent.getImageUrl();
     }
 
@@ -125,7 +125,7 @@ public class ChooseCardHandlerSingle implements Initializable {
      * Appends a welcome message to the text area showing also the time limit for each turn.
      * @param turnTime is the time limit for each turn.
      */
-    public void welcome(int turnTime) {
+    void welcome(int turnTime) {
         parent.welcome(textArea, turnTime);
     }
 
@@ -134,11 +134,25 @@ public class ChooseCardHandlerSingle implements Initializable {
      * @param privateCard0 is the first private objective card name.
      * @param privateCard1 is the second private objective card name.
      */
-    public void setPrivateCard(String privateCard0, String privateCard1) {
+    void setPrivateCard(String privateCard0, String privateCard1) {
         Image image0 = new Image(getClass().getResourceAsStream(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard0 + ".png"));
         privateObjCard0.setImage(image0);
         Image image1 = new Image(getClass().getResourceAsStream(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard1 + ".png"));
         privateObjCard1.setImage(image1);
+    }
+
+    void afterDisconnection(){
+        parent.getWindow().setOnCloseRequest(e -> parent.appendToTextArea(textArea, "Aspetta la chiusura automatica"));
+        play.setDisable(true);
+        quit.setDisable(true);
+        parent.showErrorAlert("La tua connessione è caduta,  questa finestra sarà chiusa tra 10 secondi." +
+                "\nInizia una nuova partita eseguendo un nuovo login.");
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        parent.closeWindow();
     }
 
 }

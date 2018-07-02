@@ -607,4 +607,18 @@ public class GameBoardHandlerMulti {
     void setDiceChosenOutOfRange() {
         gameBoardHandler.setDiceChosenOutOfRange();
     }
+
+    void afterDisconnection(){
+        gameBoardHandler.getWindow().setOnCloseRequest(e -> gameBoardHandler.appendToTextArea("Attendi la chiusura automatica"));
+        disableActionsOnGameBoard();
+        quit.setDisable(true);
+        gameBoardHandler.showErrorAlert("La tua connessione è caduta, questa finestra sarà chiusa tra 10 secondi." +
+                "\nPer continuare la partita esegui nuovamente il login con lo stesso username.");
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        gameBoardHandler.closeWindow();
+    }
 }

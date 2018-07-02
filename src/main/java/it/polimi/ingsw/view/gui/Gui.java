@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.control.SocketController;
+import it.polimi.ingsw.socket.requests.PingRequest;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.stage.Stage;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,11 +53,12 @@ public class Gui {
 
     /**
      * GUI constructor.
-     * @param fromLogin is the Stage where the login scene was showed.
-     * @param username is the name of the GUI owner.
-     * @param controllerRmi is the controller in case of rmi connection.
+     *
+     * @param fromLogin        is the Stage where the login scene was showed.
+     * @param username         is the name of the GUI owner.
+     * @param controllerRmi    is the controller in case of rmi connection.
      * @param controllerSocket is the controller in case of socket connection.
-     * @param single is true if the GUI refers to a single player match, false otherwise.
+     * @param single           is true if the GUI refers to a single player match, false otherwise.
      */
     Gui(Stage fromLogin, String username, RemoteController controllerRmi, SocketController controllerSocket, boolean single) {
         this.username = username;
@@ -114,12 +117,16 @@ public class Gui {
 
     /**
      * Called on the player's turn.
+     *
      * @param isMyTurn true if it's the player's turn, false otherwise.
-     * @param string represents the reserve. If not null, the reserve is updated.
-     * @param round indicates the current round.
-     * @param turn indicates the current turn.
+     * @param string   represents the reserve. If not null, the reserve is updated.
+     * @param round    indicates the current round.
+     * @param turn     indicates the current turn.
      */
     public void onYourTurn(boolean isMyTurn, String string, int round, int turn) {
+        // ping response to be considered connected
+        respondToPing();
+
         if (string != null) {
             onReserve(string);
         }
@@ -149,7 +156,23 @@ public class Gui {
     }
 
     /**
+     * respond to ping in order to prove that connection is ok
+     */
+    private void respondToPing(){
+        if (controllerRmi != null) {
+            try {
+                controllerRmi.ping(username, single);
+            } catch (RemoteException e) {
+                closingForDisconnection();
+            }
+        } else if (controllerSocket != null) {
+            controllerSocket.request(new PingRequest(username, single));
+        }
+    }
+
+    /**
      * Updates the reserve.
+     *
      * @param string is the string representing the reserve.
      */
     public void onReserve(String string) {
@@ -175,6 +198,7 @@ public class Gui {
 
     /**
      * Shows a message in the texArea when a player is reconnected to the match.
+     *
      * @param name is the name of the player reconnected to the match.
      */
     public void onPlayerReconnection(String name) {
@@ -187,9 +211,10 @@ public class Gui {
 
     /**
      * Called whenever the game starts.
+     *
      * @param windowChosen true if the GUI owner has already chosen his window pattern card.
-     * @param names is the list of players in the match.
-     * @param turnTime is the time limit for each turn.
+     * @param names        is the list of players in the match.
+     * @param turnTime     is the time limit for each turn.
      */
     public void onGameStarted(Boolean windowChosen, List<String> names, int turnTime) {
         players = names;
@@ -213,6 +238,7 @@ public class Gui {
 
     /**
      * The player in a single player match is redirected to the window pattern card choice scene.
+     *
      * @param turnTime is the time limit for each turn.
      */
     private void initializeChooseCardSingle(int turnTime) {
@@ -233,6 +259,7 @@ public class Gui {
 
     /**
      * The player in a multi player match is redirected to the window pattern card choice scene.
+     *
      * @param turnTime is the time limit for each turn.
      */
     private void initializeChooseCardMulti(int turnTime) {
@@ -269,8 +296,9 @@ public class Gui {
 
     /**
      * Called when a multi player match ends.
-     * @param winner is the player with the highest score.
-     * @param rankingNames is the ordered list of players by their scores.
+     *
+     * @param winner        is the player with the highest score.
+     * @param rankingNames  is the ordered list of players by their scores.
      * @param rankingValues is the ordered list of the players'scores.
      */
     public void onGameEndMulti(String winner, List<String> rankingNames, List<Integer> rankingValues) {
@@ -282,7 +310,8 @@ public class Gui {
 
     /**
      * Shows the player's score at the end of the game and the goal to beat, telling him if he won.
-     * @param goal is the score the player has to beat.
+     *
+     * @param goal   is the score the player has to beat.
      * @param points is the player's actual score.
      */
     public void onGameEndSingle(int goal, int points) {
@@ -294,19 +323,20 @@ public class Gui {
 
     /**
      * Called when a player is reconnected to a match. All his information about the game is updated.
-     * @param toolcards of the match.
-     * @param publicCards of the match.
-     * @param privateCards of the player.
-     * @param reserve of the match at the current state.
-     * @param roundTrack of the match at the current state.
-     * @param myTokens are the token of the player.
-     * @param schemeCard player's window pattern card.
-     * @param schemeCardName name of the player's window pattern card.
-     * @param otherTokens maps with opponents' names as key and their number of tokens as values.
-     * @param otherSchemeCards maps with opponents' names as key and theur window pattern cards as values.
+     *
+     * @param toolcards               of the match.
+     * @param publicCards             of the match.
+     * @param privateCards            of the player.
+     * @param reserve                 of the match at the current state.
+     * @param roundTrack              of the match at the current state.
+     * @param myTokens                are the token of the player.
+     * @param schemeCard              player's window pattern card.
+     * @param schemeCardName          name of the player's window pattern card.
+     * @param otherTokens             maps with opponents' names as key and their number of tokens as values.
+     * @param otherSchemeCards        maps with opponents' names as key and theur window pattern cards as values.
      * @param otherSchemeCardNamesMap maps with opponents' names as key and window pattern cards names as values.
-     * @param schemeCardChosen is true if the reconnected player has already chosen his window pattern card, false otherwise.
-     * @param toolcardsPrices map with tool card names as keys and their price as value.
+     * @param schemeCardChosen        is true if the reconnected player has already chosen his window pattern card, false otherwise.
+     * @param toolcardsPrices         map with tool card names as keys and their price as value.
      */
     public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards, Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
         reconnection = true;
@@ -332,6 +362,7 @@ public class Gui {
 
     /**
      * Updates the round track
+     *
      * @param track is a string representing the round track.
      */
     public void onRoundTrack(String track) {
@@ -348,6 +379,7 @@ public class Gui {
 
     /**
      * Updates the GUI owner's window pattern card.
+     *
      * @param window is a bi-dimensional array of strings representing the player's window pattern card.
      */
     public void onMyWindow(String[][] window) {
@@ -364,6 +396,7 @@ public class Gui {
 
     /**
      * Updates the number of favor tokens of the GUI owner.
+     *
      * @param value is the new number of favor tokens.
      */
     public void onMyFavorTokens(int value) {
@@ -374,8 +407,9 @@ public class Gui {
 
     /**
      * Updates the favor tokens of a player's opponent.
+     *
      * @param value is the new number of favor tokens.
-     * @param name is the opponent's name.
+     * @param name  is the opponent's name.
      */
     public void onOtherFavorTokens(int value, String name) {
         otherFavorTokensMap.put(name, value);
@@ -386,8 +420,9 @@ public class Gui {
 
     /**
      * Called when one of the player's opponent modifies his window pattern card.
-     * @param window is the modified window pattern card.
-     * @param name is the name of the opponent who modified his window pattern card.
+     *
+     * @param window   is the modified window pattern card.
+     * @param name     is the name of the opponent who modified his window pattern card.
      * @param cardName is the window pattern card name.
      */
     public void onOtherSchemeCards(String[][] window, String name, String cardName) {
@@ -398,6 +433,7 @@ public class Gui {
 
     /**
      * Shows a message in the textArea of the game telling that is another's player's turn.
+     *
      * @param name is the name of the player who is now playing.
      */
     public void onOtherTurn(String name) {
@@ -411,10 +447,11 @@ public class Gui {
 
     /**
      * Initializes some game elements values.
-     * @param toolcards is a string representing the tool cards available for the match.
-     * @param publicCards is a string representing the public objective cards available for the match.
+     *
+     * @param toolcards    is a string representing the tool cards available for the match.
+     * @param publicCards  is a string representing the public objective cards available for the match.
      * @param privateCards is a list of the private objective cards available for the match.
-     * @param players is the list of players in te match.
+     * @param players      is the list of players in te match.
      */
     public void onInitialization(String toolcards, String publicCards, List<String> privateCards, List<String> players) {
         parseToolcards(toolcards);
@@ -432,6 +469,7 @@ public class Gui {
 
     /**
      * Parses the string passed as a parameter to get a list of the tool cards available for the match.
+     *
      * @param toolcards is a string representing the tool cards available for the match.
      */
     private void parseToolcards(String toolcards) {
@@ -447,6 +485,7 @@ public class Gui {
 
     /**
      * Parses the string passed as a parameter to get a list of the public objective cards available for the match.
+     *
      * @param publicCards is a string representing the public objective cards available for the match.
      */
     private void parsePublicCards(String publicCards) {
@@ -463,6 +502,7 @@ public class Gui {
 
     /**
      * Shows a message in the game board text area informing of the exit of a player.
+     *
      * @param name of the player who left the match.
      */
     public void onPlayerExit(String name) {
@@ -477,6 +517,7 @@ public class Gui {
      * Called when a player has to choose his window pattern card.
      * If it's a single player match, both private objective cards available are shown.
      * If it's a multi player match, only the first private objective card available is shown.
+     *
      * @param windows is a list of the proposed window pattern cards.
      */
     public void onWindowChoice(List<String> windows) {
@@ -495,7 +536,8 @@ public class Gui {
 
     /**
      * Shows a message in the game board text area to inform that an opponent has used a tool card for the first time.
-     * @param name of the opponent who used the tool card for the first time.
+     *
+     * @param name       of the opponent who used the tool card for the first time.
      * @param toolNumber is the number of the used tool card.
      */
     public void onToolCardUsedByOthers(String name, int toolNumber) {
@@ -566,6 +608,7 @@ public class Gui {
 
     /**
      * Shows a message in the text area of a multi player match game board, informing the player about the turn time.
+     *
      * @param turnTime is the time limit for each turn.
      */
     private void notifyTimerMulti(int turnTime) {
@@ -607,6 +650,7 @@ public class Gui {
 
     /**
      * Shows a message in the text area of a single player match game board, informing the player about the turn time.
+     *
      * @param turnTime is the time limit for each turn.
      */
     private void notifyTimerSingle(int turnTime) {
@@ -619,5 +663,24 @@ public class Gui {
      */
     public void onChoosePrivateCard() {
         gameBoardHandlerSingle.choosePrivateCard();
+    }
+
+    /**
+     * close the client if a in connection with server occurs
+     */
+    void closingForDisconnection() {
+        if (single) {
+            if (chooseCardHandlerSingle != null) {
+                chooseCardHandlerSingle.afterDisconnection();
+            } else if (gameBoardHandlerSingle != null) {
+                gameBoardHandlerSingle.afterDisconnection();
+            }
+        } else {
+            if (chooseCardHandlerMultiplayer != null) {
+                chooseCardHandlerMultiplayer.afterDisconnection();
+            } else if (gameBoardHandlerMulti != null) {
+                gameBoardHandlerMulti.afterDisconnection();
+            }
+        }
     }
 }

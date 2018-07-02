@@ -200,6 +200,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
         if (rmiObserver != null) {
             try {
+                match.initializePingTimer(player.getName());
                 rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
@@ -207,7 +208,7 @@ public class TurnManagerMultiplayer implements Runnable {
         }
 
         if (match.getSocketObservers().get(player) != null) {
-
+            match.initializePingTimer(player.getName());
             getObserverSocket(player, new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn));
         }
         notifyOthers(player);
@@ -365,7 +366,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
         if (match.getCurrentRound() >= NUM_ROUNDS) {
             match.calculateFinalScore();
-            match.setStillPlaying(false);
+            match.setStillPlayingToFalse();
             match.deleteDisconnectedClients();
         } else {
             this.turnManager();

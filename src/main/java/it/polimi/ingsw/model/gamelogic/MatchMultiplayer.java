@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.gamelogic;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
+import it.polimi.ingsw.socket.requests.PingRequest;
 import it.polimi.ingsw.socket.responses.*;
 import it.polimi.ingsw.view.MatchObserver;
 
@@ -25,6 +26,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     private TurnManagerMultiplayer turnManager;
     private List<PlayerMultiplayer> players;
     private Map<String, Integer> toolCardsPrices;
+    private Map<String, Timer> pingTimers;
 
 
     /**
@@ -49,6 +51,8 @@ public class MatchMultiplayer extends Match implements Runnable {
         turnManager = new TurnManagerMultiplayer(this, turnTime);
         decksContainer = new DecksContainer(clients.size(), -1);
         board = new Board(decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
+        pingTimers = new HashMap<>();
+
 
         initializePlayers(clients, socketsOut);
 
@@ -63,7 +67,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     }
 
     // getters
-    public TurnManagerMultiplayer getTurnManagerMultiplayer() {
+    TurnManagerMultiplayer getTurnManagerMultiplayer() {
         return turnManager;
     }
 
@@ -71,7 +75,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         return remoteObservers;
     }
 
-    public Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers() {
+    Map<PlayerMultiplayer, ObjectOutputStream> getSocketObservers() {
         return socketObservers;
     }
 
@@ -108,7 +112,7 @@ public class MatchMultiplayer extends Match implements Runnable {
      *
      * @return the number of CONNECTED players
      */
-    public int checkConnection() {
+    int checkConnection() {
         return (int) players.stream().filter(p -> p.getStatus().equals(ConnectionStatus.CONNECTED)).count();
     }
 
@@ -223,7 +227,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public void afterReconnection(String name) {
+    void afterReconnection(String name) {
         PlayerMultiplayer p = getPlayer(name);
         List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
         String toolCards = decksContainer.getToolCardDeck().getPickedCards().toString();
@@ -771,6 +775,17 @@ public class MatchMultiplayer extends Match implements Runnable {
         } else return false;
     }
 
+    /**
+     * Cancel timer if the client linked to this match is connected. The client calls this method after receiving a notify
+     *
+     * @param username is the name of the player
+     */
+    @Override
+    public void ping(String username) {
+        System.out.println("Timer cancellato, giocatore " + username);
+        pingTimers.get(username).cancel();
+    }
+
     private void reserveToBeUpdated(boolean reserveToBeUpdated) {
         if (reserveToBeUpdated) {
             Response response = new ReserveResponse(board.getReserve().getDices().toString());
@@ -884,7 +899,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
-    public void deleteDisconnectedClients() {
+    void deleteDisconnectedClients() {
         lobby.deleteDisconnectedClients(players.stream().map(Player::getName).collect(Collectors.toList()));
     }
 
@@ -892,5 +907,16 @@ public class MatchMultiplayer extends Match implements Runnable {
     public void terminateMatch() {
         lobby.removeFromMatchMulti(players.get(0).getName());
         localThread.interrupt();
+    }
+
+    /**
+     * initializes the timer for the ping response of player whose name is equal to the parameter name
+     * @param name is the name of the player
+     */
+    void initializePingTimer(String name){
+        System.out.println("Timer inizializzato, giocatore " + name);
+        PingTimer task = new PingTimer(name, lobby);
+        pingTimers.put(name, new Timer());
+        pingTimers.get(name).schedule(task, Match.PING_TIME);
     }
 }

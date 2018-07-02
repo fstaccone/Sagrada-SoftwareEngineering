@@ -58,7 +58,6 @@ public class Server {
                 System.out.println("New socket connection: " + Socket.getRemoteSocketAddress());
                 threadPool.submit(new SocketHandler(Socket, controller));
             }
-            serverSocket.close();
         }
         threadPool.shutdown();
     }

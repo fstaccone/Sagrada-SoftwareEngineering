@@ -111,6 +111,10 @@ public class GameBoardHandler {
         this.sacrificeLabel = sacrificeLabel;
     }
 
+    public Stage getWindow() {
+        return window;
+    }
+
     /**
      * Allows the player to drag a dice from the scheme card.
      * @param source is the ImageView of the dice.
@@ -1830,5 +1834,26 @@ public class GameBoardHandler {
      */
     void setDiceChosenOutOfRange() {
         diceChosen = OUT_OF_RANGE;
+    }
+
+    /**
+     * Shows an error alert window. Title and message are passed as parameters.
+     * @param message of the alert window.
+     */
+    void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Caduta di connessione");
+        alert.setHeaderText(null);
+        alert.setResizable(false);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * close the window and terminate the process
+     */
+    void closeWindow() {
+        window.close();
+        System.exit(0);
     }
 }

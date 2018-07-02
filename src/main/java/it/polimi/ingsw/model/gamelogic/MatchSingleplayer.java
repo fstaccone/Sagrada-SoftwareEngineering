@@ -8,6 +8,7 @@ import it.polimi.ingsw.view.MatchObserver;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
+import java.util.Timer;
 
 public class MatchSingleplayer extends Match implements Runnable {
 
@@ -20,6 +21,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     private static final int MULTIPLIER_FOR_SINGLE = 3;
     private boolean privateCardChosen;
     private int turnTime;
+    private Timer pingTimer;
 
     /**
      * @param matchId    id of the current match
@@ -689,6 +691,16 @@ public class MatchSingleplayer extends Match implements Runnable {
 
             return result;
         } else return false;
+    }
+
+    /**
+     * Cancel timer if the client linked to this match is connected. The client, after receiving a notify calls this method
+     *
+     * @param username is not useful in this method, but this is an abstract method of the superclass Match
+     */
+    @Override
+    public void ping(String username) {
+        pingTimer.cancel();
     }
 
     /**

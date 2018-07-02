@@ -260,7 +260,7 @@ public class Lobby {
         match = multiplayerMatches.get(name);
         for (PlayerMultiplayer player : match.getPlayers()) {
             if (!player.getName().equals(name) && player.getStatus().equals(ConnectionStatus.CONNECTED)) {
-                match.setStillPlaying(false);
+                match.setStillPlayingToFalse();
                 if (!match.getTurnManagerMultiplayer().isTimerExpired()) {
                     match.getTurnManagerMultiplayer().setTimerExpiredTrue();
                 }

@@ -37,6 +37,7 @@ public class Cli {
     private boolean tool11DiceToBePlaced;
     private List<String> playersNames;
     private boolean windowChosen;
+
     private boolean single;
     private boolean enablePrivateCardChoice;
 
@@ -158,6 +159,10 @@ public class Cli {
         enablePrivateCardChoice = false;
     }
 
+    public boolean isSingle() {
+        return single;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -231,6 +236,9 @@ public class Cli {
      * @param turn     is the current number of turn
      */
     public void onYourTurn(boolean yourTurn, String reserve, int round, int turn) {
+        // ping response to prove that connection is on
+        respondToPing();
+
         if (reserve != null)
             onReserve(reserve);
         this.myTurn = yourTurn;
@@ -245,6 +253,21 @@ public class Cli {
         } else
             printer.println("\nNon è più il tuo turno! (h for help)");
         printer.flush();
+    }
+
+    /**
+     * respond to ping in order to prove that connection is ok
+     */
+    private void respondToPing() {
+        if (controllerRmi != null) {
+            try {
+                controllerRmi.ping(username, single);
+            } catch (RemoteException e) {
+                closingForDisconnection();
+            }
+        } else if (controllerSocket != null) {
+            controllerSocket.request(new PingRequest(username, single));
+        }
     }
 
     /**
@@ -1783,5 +1806,18 @@ public class Cli {
             printer.println(GAME_ERROR);
             printer.flush();
         }
+    }
+
+    /**
+     * close the client if a in connection with server occurs
+     */
+    private void closingForDisconnection() {
+        if (single) {
+            printer.println("La tua connessione è caduta. Se vuoi continuare a giocare inizia una nuova partita.");
+        } else {
+            printer.println("La tua connessione è caduta, esegui nuovamente il login con lo stesso username per rientrare in partita.");
+        }
+        printer.flush();
+        System.exit(0);
     }
 }

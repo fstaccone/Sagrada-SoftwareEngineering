@@ -54,4 +54,5 @@ public interface RequestHandler {
 
     Response handle(TerminateMatchRequest request);
 
+    Response handle(PingRequest request);
 }

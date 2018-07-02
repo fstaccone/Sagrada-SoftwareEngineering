@@ -69,7 +69,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
      * @param socketController is the socket controller.
      * @param username is the player's username.
      */
-    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
+    void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
         parent.init(windowFromGui, sceneFromGui, remoteController, socketController, username);
         quit.setOnMouseClicked(event -> {
             event.consume();
@@ -121,7 +121,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
         parent.setWindows(windows, card0, card1, card2, card3);
     }
 
-    public String getImageUrl() {
+    String getImageUrl() {
         return parent.getImageUrl();
     }
 
@@ -129,7 +129,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
      * Appends a new message in the scene text area.
      * @param s is the new message to append.
      */
-    public void appendToTextArea(String s) {
+    void appendToTextArea(String s) {
         parent.appendToTextArea(textArea, s);
     }
 
@@ -141,7 +141,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
      * Appends a welcome message to the text area showing also the time limit for each turn.
      * @param turnTime is the time limit for each turn.
      */
-    public void welcome(int turnTime) {
+    void welcome(int turnTime) {
         parent.welcome(textArea, turnTime);
     }
 
@@ -149,7 +149,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
      * The scene text area shows a message displaying all the player's opponents in the current match.
      * @param players is the list of the names of all players in the match.
      */
-    public void showOpponents(List<String> players) {
+    void showOpponents(List<String> players) {
         StringBuilder otherPlayers = new StringBuilder();
         for (String s : players) {
             if (!s.equals(parent.username)) {
@@ -174,7 +174,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
      * The text area shows a message telling the player he is the winner because he's the only player left in the game.
      * Actions on board are disabled.
      */
-    public void onGameClosing() {
+    void onGameClosing() {
         parent.appendToTextArea(textArea, "Congratulazioni! Sei il vincitore. Sei rimasto da solo in gioco.\n\nClicca su ESCI per terminare");
         disableActionsOnBoard();
         exit = true;
@@ -192,4 +192,17 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
         privateObjCard.setDisable(true);
     }
 
+    void afterDisconnection(){
+        parent.getWindow().setOnCloseRequest(e -> parent.appendToTextArea(textArea, "Aspetta la chiusura automatica"));
+        play.setDisable(true);
+        quit.setDisable(true);
+        parent.showErrorAlert("La tua connessione è caduta, questa finestra sarà chiusa tra 10 secondi." +
+                "\nPer continuare la partita esegui nuovamente il login con lo stesso username.");
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        parent.closeWindow();
+    }
 }

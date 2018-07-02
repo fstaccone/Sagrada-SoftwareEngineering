@@ -20,16 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseCardHandler {
-    /**
-     * Constructor for ChooseCardHandler. The window pattern card choice value is initialized to a default value.
-     * @param single is true is this is a single player match, false otherwise.
-     * @param myTurn is true if it's the player's turn, false otherwise.
-     */
-    ChooseCardHandler(boolean single, boolean myTurn) {
-        this.single = single;
-        choice = ChooseCardHandler.OUT_OF_RANGE;
-        this.myTurn = myTurn;
-    }
 
     private static final String WINDOWS_URL = "/images/cards/window_pattern_cards/";
     private static final int OUT_OF_RANGE = 5;
@@ -52,6 +42,17 @@ public class ChooseCardHandler {
     private String imgURL;
 
     /**
+     * Constructor for ChooseCardHandler. The window pattern card choice value is initialized to a default value.
+     * @param single is true is this is a single player match, false otherwise.
+     * @param myTurn is true if it's the player's turn, false otherwise.
+     */
+    ChooseCardHandler(boolean single, boolean myTurn) {
+        this.single = single;
+        choice = ChooseCardHandler.OUT_OF_RANGE;
+        this.myTurn = myTurn;
+    }
+
+    /**
      * Initializes the four card choices buttons by disabling them until it's the player's turn.
      * @param card0 first option.
      * @param card1 second option.
@@ -63,6 +64,10 @@ public class ChooseCardHandler {
         card1.setDisable(true);
         card2.setDisable(true);
         card3.setDisable(true);
+    }
+
+    public Stage getWindow() {
+        return window;
     }
 
     /**
@@ -265,6 +270,27 @@ public class ChooseCardHandler {
         } else if (controllerSocket != null) {
             controllerSocket.request(new TerminateMatchRequest(username));
         }
+        System.exit(0);
+    }
+
+    /**
+     * Shows an error alert window. Title and message are passed as parameters.
+     * @param message of the alert window.
+     */
+    void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Caduta di connessione");
+        alert.setHeaderText(null);
+        alert.setResizable(false);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * close the window and terminate the process
+     */
+    void closeWindow() {
+        window.close();
         System.exit(0);
     }
 }
