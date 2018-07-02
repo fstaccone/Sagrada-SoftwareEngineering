@@ -13,12 +13,11 @@ public class SocketListener implements Runnable {
     @Override
     public void run() {
         while (clientController != null) {
-            //try {
+            try {
                 clientController.nextResponse().handleResponse(clientController);
-            /*} catch (NullPointerException e) {
-                System.out.println("Problem in connection with server");
-                System.exit(0);
-            }*/
+            } catch (Exception e) {
+                // todo: disconnettere il giocatore in caso di eccezione
+            }
         }
     }
 }

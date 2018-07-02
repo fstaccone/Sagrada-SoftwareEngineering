@@ -64,8 +64,6 @@ public class Server {
 
 
     private static void readServerConfig(String serverConfig) {
-
-        FileReader fileReader = null;
         Scanner scanner = null;
         Scanner lineParser = null;
         String line;

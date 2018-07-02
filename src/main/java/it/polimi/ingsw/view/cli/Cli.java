@@ -266,7 +266,11 @@ public class Cli {
                 closingForDisconnection();
             }
         } else if (controllerSocket != null) {
-            controllerSocket.request(new PingRequest(username, single));
+            try {
+                controllerSocket.request(new PingRequest(username, single));
+            } catch (Exception e) {
+                closingForDisconnection();
+            }
         }
     }
 
