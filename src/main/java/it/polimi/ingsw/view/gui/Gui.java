@@ -180,6 +180,9 @@ public class Gui {
      * @param string is the string representing the reserve.
      */
     public void onReserve(String string) {
+        // ping response to be considered connected
+        respondToPing();
+
         dicesList = new ArrayList<>();
         String dicesString = string.substring(1, string.length() - 1);
         List<String> temp = Pattern.compile(", ")
@@ -221,6 +224,9 @@ public class Gui {
      * @param turnTime     is the time limit for each turn.
      */
     public void onGameStarted(Boolean windowChosen, List<String> names, int turnTime) {
+        // ping response to be considered connected
+        respondToPing();
+
         players = names;
 
         if (windowChosen) {
@@ -288,6 +294,9 @@ public class Gui {
      * Called when the game is being closed.
      */
     public void onGameClosing() {
+        // ping response to be considered connected
+        respondToPing();
+
         if (stillPlaying) {
             if (gameBoardHandlerMulti != null) {
                 gameBoardHandlerMulti.onGameClosing();
@@ -306,6 +315,9 @@ public class Gui {
      * @param rankingValues is the ordered list of the players'scores.
      */
     public void onGameEndMulti(String winner, List<String> rankingNames, List<Integer> rankingValues) {
+        // ping response to be considered connected
+        respondToPing();
+
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.showRanking(winner, rankingNames, rankingValues);
         }
@@ -319,6 +331,9 @@ public class Gui {
      * @param points is the player's actual score.
      */
     public void onGameEndSingle(int goal, int points) {
+        // ping response to be considered connected
+        respondToPing();
+
         if (gameBoardHandlerSingle != null) {
             gameBoardHandlerSingle.showResultForSingle(goal, points);
         }
@@ -370,6 +385,9 @@ public class Gui {
      * @param track is a string representing the round track.
      */
     public void onRoundTrack(String track) {
+        // ping response to prove that connection is on
+        respondToPing();
+
         if (single) {
             if (gameBoardHandlerSingle != null) {
                 gameBoardHandlerSingle.onRoundTrack(track);
@@ -387,6 +405,9 @@ public class Gui {
      * @param window is a bi-dimensional array of strings representing the player's window pattern card.
      */
     public void onMyWindow(String[][] window) {
+        // ping response to prove that connection is on
+        respondToPing();
+
         if (single) {
             if (gameBoardHandlerSingle != null) {
                 gameBoardHandlerSingle.setMyWindow(window);
@@ -404,6 +425,9 @@ public class Gui {
      * @param value is the new number of favor tokens.
      */
     public void onMyFavorTokens(int value) {
+        // ping response to prove that connection is on
+        respondToPing();
+
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.setMyFavourTokens(value);
         }
@@ -416,6 +440,9 @@ public class Gui {
      * @param name  is the opponent's name.
      */
     public void onOtherFavorTokens(int value, String name) {
+        // ping response to prove that connection is on
+        respondToPing();
+
         otherFavorTokensMap.put(name, value);
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.onOtherFavorTokens(value, name);
@@ -430,6 +457,9 @@ public class Gui {
      * @param cardName is the window pattern card name.
      */
     public void onOtherSchemeCards(String[][] window, String name, String cardName) {
+        // ping response to prove that connection is on
+        respondToPing();
+
         otherSchemeCardNamesMap.put(name, cardName);
         otherSchemeCardsMap.put(name, window);
         if (gameBoardHandlerMulti != null) gameBoardHandlerMulti.onOtherSchemeCards(window, name, cardName);
@@ -441,6 +471,9 @@ public class Gui {
      * @param name is the name of the player who is now playing.
      */
     public void onOtherTurn(String name) {
+        // ping response to prove that connection is on
+        respondToPing();
+
         String s = "Ora è il turno di " + name + "!";
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea(s);
@@ -458,6 +491,9 @@ public class Gui {
      * @param players      is the list of players in te match.
      */
     public void onInitialization(String toolcards, String publicCards, List<String> privateCards, List<String> players) {
+        // ping response to prove that connection is on
+        respondToPing();
+
         parseToolcards(toolcards);
 
         for (String c : privateCards) {
@@ -525,6 +561,9 @@ public class Gui {
      * @param windows is a list of the proposed window pattern cards.
      */
     public void onWindowChoice(List<String> windows) {
+        // ping response to be considered connected
+        respondToPing();
+
         AudioClip cardsClip = Applet.newAudioClip(getClass().getResource("/sounds/cards.au"));
         cardsClip.play();
 
@@ -556,6 +595,8 @@ public class Gui {
      * He is redirected to the game board scene and all the scene elements are initialized.
      */
     public void onAfterWindowChoiceMultiplayer() {
+        // ping response to be considered connected
+        respondToPing();
 
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
@@ -624,6 +665,9 @@ public class Gui {
      * He is redirected to the game board scene and all the scene elements are initialized.
      */
     public void onAfterWindowChoiceSingleplayer() {
+        // ping response to be considered connected
+        respondToPing();
+
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
@@ -666,13 +710,16 @@ public class Gui {
      * available he wants to use to calculate his final score.
      */
     public void onChoosePrivateCard() {
+        // ping response to be considered connected
+        respondToPing();
+
         gameBoardHandlerSingle.choosePrivateCard();
     }
 
     /**
      * close the client if a in connection with server occurs
      */
-    void closingForDisconnection() {
+    private void closingForDisconnection() {
         if (single) {
             if (chooseCardHandlerSingle != null) {
                 chooseCardHandlerSingle.afterDisconnection();

@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class Match {
 
-    public static final int PING_TIME = 5000; // max lasting of the waiting for the ping response
+    public static final int PING_TIME = 1000; // max lasting of the waiting for the ping response
     public static final int NUMBER_OF_ROUNDS = 10;
 
     DecksContainer decksContainer;

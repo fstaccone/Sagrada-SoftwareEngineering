@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.gamelogic;
 import it.polimi.ingsw.model.gameobjects.Board;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.DecksContainer;
-import it.polimi.ingsw.socket.requests.PingRequest;
 import it.polimi.ingsw.socket.responses.*;
 import it.polimi.ingsw.view.MatchObserver;
 
@@ -194,6 +193,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         for (PlayerMultiplayer p : players) {
             if (remoteObservers.get(p) != null) {
                 try {
+                    initializePingTimer(p.getName());
                     remoteObservers.get(p).onGameEnd(winner.getName(), rankingNames, rankingValues);
                 } catch (RemoteException e) {
                     lobby.disconnect(p.getName());
@@ -201,6 +201,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                 }
             } else if (socketObservers.get(p) != null) {
                 try {
+                    initializePingTimer(p.getName());
                     socketObservers.get(p).writeObject(new GameEndResponse(winner.getName(), rankingNames, rankingValues));
                     socketObservers.get(p).reset();
                 } catch (IOException e) {
@@ -273,6 +274,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         if (remoteObservers.get(p) != null) {
             try {
+                initializePingTimer(p.getName());
                 remoteObservers.get(p).onAfterReconnection(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, schemeCardName, otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices);
                 remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), names, turnTime);
             } catch (RemoteException e) {
@@ -281,6 +283,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             }
         } else if (socketObservers.get(p) != null) {
             try {
+                initializePingTimer(p.getName());
                 socketObservers.get(p).writeObject(new AfterReconnectionResponse(toolCards, publicCards, privateCard, reserve, roundTrack, myTokens, schemeCard, schemeCardName, otherTokens, otherSchemeCards, otherSchemeCardNamesMap, schemeCardChosen, toolCardsPrices));
                 socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), names, turnTime));
                 socketObservers.get(p).reset();
@@ -404,6 +407,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         for (PlayerMultiplayer p : remoteObservers.keySet()) {
             if (remoteObservers.get(p) != null) {
                 try {
+                    initializePingTimer(p.getName());
                     remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames, turnTime);
                 } catch (RemoteException e) {
                     lobby.disconnect(p.getName());
@@ -416,6 +420,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         for (PlayerMultiplayer p : socketObservers.keySet()) {
             if (socketObservers.get(p) != null) {
                 try {
+                    initializePingTimer(p.getName());
                     socketObservers.get(p).writeObject(new GameStartedResponse(p.isSchemeCardSet(), playersNames, turnTime));
                     socketObservers.get(p).reset();
                 } catch (IOException e) {
@@ -474,6 +479,7 @@ public class MatchMultiplayer extends Match implements Runnable {
 
         if (remoteObservers.get(p) != null) {
             try {
+                initializePingTimer(p.getName());
                 remoteObservers.get(p).onAfterWindowChoice();
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
@@ -482,6 +488,7 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
         if (socketObservers.get(p) != null) {
             try {
+                initializePingTimer(p.getName());
                 socketObservers.get(p).writeObject(new AfterWindowChoiceResponse());
                 socketObservers.get(p).reset();
             } catch (IOException e) {
@@ -625,13 +632,16 @@ public class MatchMultiplayer extends Match implements Runnable {
             for (PlayerMultiplayer player : players) {
                 if (remoteObservers.get(player) != null) {
                     try {
+                        initializePingTimer(player.getName());
                         remoteObservers.get(player).onRoundTrack(board.getRoundTrack().toString());
                     } catch (RemoteException e) {
                         lobby.disconnect(player.getName());
                         System.out.println("Player " + player.getName() + " disconnected!");
                     }
+                } else {
+                    initializePingTimer(player.getName());
+                    notifyToSocketClient(player, response);
                 }
-                notifyToSocketClient(player, response);
             }
 
             synchronized (getLock()) {
@@ -792,13 +802,16 @@ public class MatchMultiplayer extends Match implements Runnable {
             for (PlayerMultiplayer player : players) {
                 if (remoteObservers.get(player) != null) {
                     try {
+                        initializePingTimer(player.getName());
                         remoteObservers.get(player).onReserve(board.getReserve().getDices().toString());
                     } catch (RemoteException e) {
                         lobby.disconnect(player.getName());
                         System.out.println("Player " + player.getName() + " disconnected!");
                     }
+                } else {
+                    initializePingTimer(player.getName());
+                    notifyToSocketClient(player, response);
                 }
-                notifyToSocketClient(player, response);
             }
         }
     }
@@ -808,14 +821,15 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (result) {
             if (remoteObservers.get(p) != null) {
                 try {
+                    initializePingTimer(p.getName());
                     remoteObservers.get(p).onMyFavorTokens(p.getNumFavorTokens());
                 } catch (RemoteException e) {
                     lobby.disconnect(p.getName());
                     System.out.println("Player " + p.getName() + " disconnected!");
                 }
-            }
-            if (socketObservers.get(p) != null) {
+            } else if (socketObservers.get(p) != null) {
                 try {
+                    initializePingTimer(p.getName());
                     socketObservers.get(p).writeObject(new MyFavorTokensResponse(p.getNumFavorTokens()));
                     socketObservers.get(p).reset();
                 } catch (IOException e) {
@@ -828,13 +842,16 @@ public class MatchMultiplayer extends Match implements Runnable {
                 if (!otherPlayer.getName().equals(name)) {
                     if (remoteObservers.get(otherPlayer) != null) {
                         try {
+                            initializePingTimer(p.getName());
                             remoteObservers.get(otherPlayer).onOtherFavorTokens(p.getNumFavorTokens(), name);
                         } catch (RemoteException e) {
                             lobby.disconnect(otherPlayer.getName());
                             System.out.println("Player " + p.getName() + " disconnected!");
                         }
+                    } else {
+                        initializePingTimer(p.getName());
+                        notifyToSocketClient(otherPlayer, response);
                     }
-                    notifyToSocketClient(otherPlayer, response);
                 }
             }
         }
@@ -854,14 +871,15 @@ public class MatchMultiplayer extends Match implements Runnable {
         if (result) {
             if (remoteObservers.get(p) != null) {
                 try {
+                    initializePingTimer(p.getName());
                     remoteObservers.get(p).onMyWindow(schemeCard);
                 } catch (RemoteException e) {
                     lobby.disconnect(p.getName());
                     System.out.println("Player " + p.getName() + " disconnected!");
                 }
-            }
-            if (socketObservers.get(p) != null) {
+            } else if (socketObservers.get(p) != null) {
                 try {
+                    initializePingTimer(p.getName());
                     socketObservers.get(p).writeObject(new MyWindowResponse(schemeCard));
                 } catch (IOException e) {
                     lobby.disconnect(p.getName());
@@ -874,12 +892,14 @@ public class MatchMultiplayer extends Match implements Runnable {
                 if (!otherPlayer.getName().equals(name)) {
                     if (remoteObservers.get(otherPlayer) != null) {
                         try {
+                            initializePingTimer(p.getName());
                             remoteObservers.get(otherPlayer).onOtherSchemeCards(schemeCard, name, p.getSchemeCard().getName());
                         } catch (RemoteException e) {
                             lobby.disconnect(otherPlayer.getName());
                             System.out.println("Player " + p.getName() + " disconnected!");
                         }
                     } else {
+                        initializePingTimer(p.getName());
                         notifyToSocketClient(otherPlayer, response);
                     }
                 }
@@ -911,9 +931,10 @@ public class MatchMultiplayer extends Match implements Runnable {
 
     /**
      * initializes the timer for the ping response of player whose name is equal to the parameter name
+     *
      * @param name is the name of the player
      */
-    void initializePingTimer(String name){
+    void initializePingTimer(String name) {
         System.out.println("Timer inizializzato, giocatore " + name);
         PingTimer task = new PingTimer(name, lobby);
         pingTimers.put(name, new Timer());

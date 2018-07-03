@@ -266,9 +266,11 @@ public class Lobby {
                 }
                 // notifies to the player he is the only still in game
                 if (match.getRemoteObservers().get(player) != null) {
+                    match.initializePingTimer(player.getName());
                     match.getRemoteObservers().get(player).onGameClosing();
                     match.getRemoteObservers().remove(player);
                 } else if ((match.getSocketObservers().get(player) != null)) {
+                    match.initializePingTimer(player.getName());
                     match.getSocketObservers().get(player).writeObject(new ClosingGameResponse());
                     match.getSocketObservers().get(player).reset();
                     match.getSocketObservers().remove(player);

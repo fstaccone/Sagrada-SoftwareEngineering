@@ -12,15 +12,15 @@ import java.util.Timer;
 
 public class MatchSingleplayer extends Match implements Runnable {
 
-    private int matchId;
-    private PlayerSingleplayer player;
-    private TurnManagerSingleplayer turnManager;
+    private final int matchId;
+    private final PlayerSingleplayer player;
+    private final TurnManagerSingleplayer turnManager;
     private MatchObserver observerRmi;
-    private ObjectOutputStream observerSocket;
+    private final ObjectOutputStream observerSocket;
     private int selectedPrivateCard;
     private static final int MULTIPLIER_FOR_SINGLE = 3;
     private boolean privateCardChosen;
-    private int turnTime;
+    private final int turnTime;
     private Timer pingTimer;
 
     /**
@@ -57,7 +57,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * @return the socket observer for the match
      */
-    public ObjectOutputStream getObserverSocket() {
+    ObjectOutputStream getObserverSocket() {
         return observerSocket;
     }
 
@@ -71,7 +71,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * @return the match turn manager
      */
-    public TurnManagerSingleplayer getTurnManager() {
+    TurnManagerSingleplayer getTurnManager() {
         return turnManager;
     }
 
@@ -117,6 +117,7 @@ public class MatchSingleplayer extends Match implements Runnable {
 
         if (observerRmi != null) {
             try {
+                initializePingTimer(player.getName());
                 observerRmi.onGameEndSingle(targetPoints, player.getPoints());
             } catch (RemoteException e) {
                 terminateMatch();
@@ -124,6 +125,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             }
         } else if (observerSocket != null) {
             try {
+                initializePingTimer(player.getName());
                 observerSocket.writeObject(new GameEndSingleResponse(targetPoints, player.getPoints()));
             } catch (IOException e) {
                 terminateMatch();
@@ -143,6 +145,7 @@ public class MatchSingleplayer extends Match implements Runnable {
 
         if (observerRmi != null) {
             try {
+                initializePingTimer(player.getName());
                 observerRmi.onGameStarted(player.isSchemeCardSet(), null, turnTime);
             } catch (RemoteException e) {
                 terminateMatch();
@@ -150,6 +153,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             }
         } else if (observerSocket != null) {
             try {
+                initializePingTimer(player.getName());
                 observerSocket.writeObject(new GameStartedResponse(player.isSchemeCardSet(), null, turnTime));
                 observerSocket.reset();
             } catch (IOException e) {
@@ -177,6 +181,7 @@ public class MatchSingleplayer extends Match implements Runnable {
 
         if (observerRmi != null) {
             try {
+                initializePingTimer(player.getName());
                 observerRmi.onAfterWindowChoice();
             } catch (RemoteException e) {
                 terminateMatch();
@@ -184,6 +189,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             }
         } else if (observerSocket != null) {
             try {
+                initializePingTimer(player.getName());
                 observerSocket.writeObject(new AfterWindowChoiceResponse());
                 observerSocket.reset();
             } catch (IOException e) {
@@ -213,6 +219,7 @@ public class MatchSingleplayer extends Match implements Runnable {
         if (result) {
             if (observerRmi != null) {
                 try {
+                    initializePingTimer(player.getName());
                     observerRmi.onMyWindow(schemeCard);
                 } catch (RemoteException e) {
                     terminateMatch();
@@ -220,6 +227,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                 }
             } else if (observerSocket != null) {
                 try {
+                    initializePingTimer(player.getName());
                     observerSocket.writeObject(new MyWindowResponse(schemeCard));
                     observerSocket.reset();
                 } catch (IOException e) {
@@ -239,6 +247,7 @@ public class MatchSingleplayer extends Match implements Runnable {
         if (reserveToBeUpdated) {
             if (observerRmi != null) {
                 try {
+                    initializePingTimer(player.getName());
                     observerRmi.onReserve(board.getReserve().getDices().toString());
                 } catch (RemoteException e) {
                     terminateMatch();
@@ -246,6 +255,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                 }
             } else if (observerSocket != null) {
                 try {
+                    initializePingTimer(player.getName());
                     observerSocket.writeObject(new ReserveResponse(board.getReserve().getDices().toString()));
                     observerSocket.reset();
                 } catch (IOException e) {
@@ -462,13 +472,15 @@ public class MatchSingleplayer extends Match implements Runnable {
             setToolAction(result);
             if (observerRmi != null) {
                 try {
+                    initializePingTimer(player.getName());
                     observerRmi.onRoundTrack(board.getRoundTrack().toString());
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-            } else {
+            } else if(observerSocket != null){
                 Response response = new RoundTrackResponse(board.getRoundTrack().toString());
                 try {
+                    initializePingTimer(player.getName());
                     observerSocket.writeObject(response);
                     observerSocket.reset();
                 } catch (IOException e) {
@@ -732,5 +744,16 @@ public class MatchSingleplayer extends Match implements Runnable {
         synchronized (getLock()) {
             getLock().notifyAll();
         }
+    }
+
+    /**
+     * initializes the timer for the ping response of player whose name is equal to the parameter name
+     *
+     * @param name is the name of the player
+     */
+    void initializePingTimer(String name) {
+        System.out.println("Timer inizializzato, giocatore " + name);
+        PingTimer task = new PingTimer(name, lobby);
+        pingTimer.schedule(task, Match.PING_TIME);
     }
 }

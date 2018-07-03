@@ -64,11 +64,13 @@ public class TurnManagerMultiplayer implements Runnable {
         MatchObserver rmiObserver = getObserverRmi(player);
         if (rmiObserver != null) {
             try {
+                match.initializePingTimer(player.getName());
                 rmiObserver.onWindowChoice(windows);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
             }
         } else if (match.getSocketObservers().get(player) != null) {
+            match.initializePingTimer(player.getName());
             getObserverSocket(player, new ProposeWindowResponse(windows));
         }
 
@@ -92,11 +94,13 @@ public class TurnManagerMultiplayer implements Runnable {
             privateCard.add(p.getPrivateObjectiveCard().toString());
             if (getObserverRmi(p) != null) {
                 try {
+                    match.initializePingTimer(p.getName());
                     getObserverRmi(p).onInitialization(toolCards, publicCards, privateCard, names);
                 } catch (RemoteException e) {
                     match.getLobby().disconnect(p.getName());
                 }
             } else if (match.getSocketObservers().get(p) != null) {
+                match.initializePingTimer(p.getName());
                 getObserverSocket(p, new InitializationResponse(toolCards, publicCards, privateCard, names));
             }
         }
@@ -155,7 +159,7 @@ public class TurnManagerMultiplayer implements Runnable {
     }
 
     /**
-     * Rearrange match.getPlayers() to keep the right order in next round
+     * Rearrange players in MatchMultiplayer to keep the right order in next round
      * following the idea that the first player in this round will be the last in the next round
      *
      * @throws RemoteException
@@ -223,12 +227,14 @@ public class TurnManagerMultiplayer implements Runnable {
         MatchObserver rmiObserver = getObserverRmi(player);
         if (rmiObserver != null) {
             try {
+                match.initializePingTimer(player.getName());
                 rmiObserver.onYourTurn(false, null, match.getCurrentRound() + 1, currentTurn);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
             }
         }
         if (match.getSocketObservers().get(player) != null) {
+            match.initializePingTimer(player.getName());
             getObserverSocket(player, new YourTurnResponse(false, null, match.getCurrentRound() + 1, currentTurn));
         }
 
@@ -322,11 +328,13 @@ public class TurnManagerMultiplayer implements Runnable {
             if (playerNotInTurn != player) {
                 if (getObserverRmi(playerNotInTurn) != null)
                     try {
+                        match.initializePingTimer(player.getName());
                         getObserverRmi(playerNotInTurn).onOtherTurn(player.getName());
                     } catch (RemoteException e) {
                         match.getLobby().disconnect(playerNotInTurn.getName());
                     }
-                if (match.getSocketObservers().get(playerNotInTurn) != null) {
+                else if (match.getSocketObservers().get(playerNotInTurn) != null) {
+                    match.initializePingTimer(player.getName());
                     getObserverSocket(playerNotInTurn, response);
                 }
             }
@@ -341,11 +349,13 @@ public class TurnManagerMultiplayer implements Runnable {
         for (PlayerMultiplayer player : match.getPlayers()) {
             if (getObserverRmi(player) != null)
                 try {
+                    match.initializePingTimer(player.getName());
                     getObserverRmi(player).onRoundTrack(match.getBoard().getRoundTrack().toString());
                 } catch (RemoteException e) {
                     match.getLobby().disconnect(player.getName());
                 }
-            if (match.getSocketObservers().get(player) != null) {
+            else if (match.getSocketObservers().get(player) != null) {
+                match.initializePingTimer(player.getName());
                 getObserverSocket(player, roundTrackResponse);
             }
         }
