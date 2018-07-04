@@ -64,13 +64,13 @@ public class TurnManagerMultiplayer implements Runnable {
         MatchObserver rmiObserver = getObserverRmi(player);
         if (rmiObserver != null) {
             try {
-                match.initializePingTimer(player.getName());
+                //match.initializePingTimer(player.getName());
                 rmiObserver.onWindowChoice(windows);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());
             }
         } else if (match.getSocketObservers().get(player) != null) {
-            match.initializePingTimer(player.getName());
+            //match.initializePingTimer(player.getName());
             getObserverSocket(player, new ProposeWindowResponse(windows));
         }
 
@@ -94,13 +94,13 @@ public class TurnManagerMultiplayer implements Runnable {
             privateCard.add(p.getPrivateObjectiveCard().toString());
             if (getObserverRmi(p) != null) {
                 try {
-                    match.initializePingTimer(p.getName());
+                    //match.initializePingTimer(p.getName());
                     getObserverRmi(p).onInitialization(toolCards, publicCards, privateCard, names);
                 } catch (RemoteException e) {
                     match.getLobby().disconnect(p.getName());
                 }
             } else if (match.getSocketObservers().get(p) != null) {
-                match.initializePingTimer(p.getName());
+                //match.initializePingTimer(p.getName());
                 getObserverSocket(p, new InitializationResponse(toolCards, publicCards, privateCard, names));
             }
         }
@@ -349,13 +349,13 @@ public class TurnManagerMultiplayer implements Runnable {
         for (PlayerMultiplayer player : match.getPlayers()) {
             if (getObserverRmi(player) != null)
                 try {
-                    match.initializePingTimer(player.getName());
+                    //match.initializePingTimer(player.getName());
                     getObserverRmi(player).onRoundTrack(match.getBoard().getRoundTrack().toString());
                 } catch (RemoteException e) {
                     match.getLobby().disconnect(player.getName());
                 }
             else if (match.getSocketObservers().get(player) != null) {
-                match.initializePingTimer(player.getName());
+                //match.initializePingTimer(player.getName());
                 getObserverSocket(player, roundTrackResponse);
             }
         }

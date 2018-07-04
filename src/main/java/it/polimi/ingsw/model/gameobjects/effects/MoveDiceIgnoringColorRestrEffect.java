@@ -75,14 +75,14 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                                 if (!otherPlayer.getName().equals(p.getName())) {
                                     if (m.getRemoteObservers().get(otherPlayer) != null) {
                                         try {
-                                            m.initializePingTimer(otherPlayer.getName());
+                                            //m.initializePingTimer(otherPlayer.getName());
                                             m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 2);
                                         } catch (RemoteException e) {
                                             m.getLobby().disconnect(otherPlayer.getName());
                                             System.out.println("Player " + p.getName() + " disconnected!");
                                         }
                                     } else {
-                                        m.initializePingTimer(otherPlayer.getName());
+                                        //m.initializePingTimer(otherPlayer.getName());
                                         m.notifyToSocketClient(otherPlayer, response);
                                     }
                                 }
