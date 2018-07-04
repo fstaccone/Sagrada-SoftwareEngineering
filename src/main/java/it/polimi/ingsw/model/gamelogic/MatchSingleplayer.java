@@ -715,6 +715,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      */
     @Override
     public void ping(String username) {
+        LOGGER.log(Level.INFO, "Timer inizializzato, giocatore " + username);
         pingTimer.cancel();
     }
 
@@ -756,7 +757,7 @@ public class MatchSingleplayer extends Match implements Runnable {
      */
     void initializePingTimer(String name) {
         LOGGER.log(Level.INFO, "Timer inizializzato, giocatore " + name); // todo: si può cancellare
-        PingTimer task = new PingTimer(name, lobby);
+        PingTimerSingle task = new PingTimerSingle(name, lobby);
         pingTimer = new Timer();
         pingTimer.schedule(task, Match.PING_TIME);
     }
