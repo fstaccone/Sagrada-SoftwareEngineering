@@ -18,7 +18,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-
     private static final String SERVER_CONFIG = "/server.config";
     private static int socketPort;
     private static String lobbyName;

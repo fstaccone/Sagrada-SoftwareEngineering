@@ -1806,6 +1806,7 @@ public class GameBoardHandler {
                     rmiController.goThrough(username, single);
                 } catch (RemoteException e) {
                     LOGGER.log(Level.SEVERE, "exception in passing turn", e);
+                    System.exit(0);
                 }
             } else {
                 socketController.request(new GoThroughRequest(username, single));
@@ -1836,6 +1837,7 @@ public class GameBoardHandler {
                     rmiController.quitGame(username, single);
                 } catch (RemoteException e) {
                     LOGGER.log(Level.SEVERE, "exception in quitting game", e);
+                    System.exit(0);
                 }
             } else {
                 socketController.request(new QuitGameRequest(username, single));

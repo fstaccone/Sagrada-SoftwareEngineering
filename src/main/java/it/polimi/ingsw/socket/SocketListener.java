@@ -20,7 +20,7 @@ public class SocketListener implements Runnable {
             try {
                 clientController.nextResponse().handleResponse(clientController);
             } catch (Exception e) {
-                // todo: disabilitare il client se si disconnette, i metodi per farlo sono già definiti per GUI
+                System.exit(0);
             }
         }
     }
