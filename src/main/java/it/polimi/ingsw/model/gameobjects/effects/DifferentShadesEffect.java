@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class DifferentShadesEffect implements Effect {
-    private final int pointsToBeAssigned = 5;
 
     public DifferentShadesEffect() {
     }
@@ -15,7 +14,7 @@ public class DifferentShadesEffect implements Effect {
      *
      * @param caller is the player that uses this public objective card
      * @param match  is the player's current match
-     * @return
+     * @return false
      */
     @Override
     public boolean applyEffect(Player caller, Match match) {
@@ -62,6 +61,7 @@ public class DifferentShadesEffect implements Effect {
             if (counter <= min)
                 min = counter;
         }
+        int pointsToBeAssigned = 5;
         temp = temp + min * pointsToBeAssigned;
         caller.setPoints(temp);
         return false;

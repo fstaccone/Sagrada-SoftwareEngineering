@@ -794,6 +794,7 @@ public class MatchMultiplayer extends Match implements Runnable {
     public void ping(String username) {
         System.out.println("Timer cancellato, giocatore " + username);
         pingTimers.get(username).cancel();
+        pingTimers.remove(username);
     }
 
     private void reserveToBeUpdated(boolean reserveToBeUpdated) {
@@ -934,7 +935,7 @@ public class MatchMultiplayer extends Match implements Runnable {
      *
      * @param name is the name of the player
      */
-    void initializePingTimer(String name) {
+    public void initializePingTimer(String name) {
         System.out.println("Timer inizializzato, giocatore " + name);
         PingTimer task = new PingTimer(name, lobby);
         pingTimers.put(name, new Timer());

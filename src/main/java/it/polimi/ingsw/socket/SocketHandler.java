@@ -24,7 +24,6 @@ public class SocketHandler implements Runnable {
 
         this.controller = controller;
         controller.addSocketHandler(this);
-
     }
 
     @Override
@@ -41,7 +40,7 @@ public class SocketHandler implements Runnable {
         }
     }
 
-    public void respond(Response response) {
+    private void respond(Response response) {
         try {
             out.writeObject(response);
         } catch (IOException e) {

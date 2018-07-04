@@ -328,10 +328,11 @@ public class LoginHandler implements Initializable {
                     new RmiGui(window, username, controllerRmi, singleplayer).reconnect();
                 }
             } else {
-                new Thread(new SocketListener(controllerSocket)).start();
+                new Thread(new SocketListener(controllerSocket, username, singleplayer)).start();
                 if (isCli) {
                     window.close();
                     new SocketCli(username, controllerSocket, singleplayer).reconnect();
+
                 } else {
                     new SocketGui(window, username, controllerSocket, singleplayer).reconnect();
                 }
@@ -345,8 +346,11 @@ public class LoginHandler implements Initializable {
                 window.show();
             }
 
-            if (isRmi) createClientRmi();
-            else createClientSocket();
+            if (isRmi) {
+                createClientRmi();
+            } else {
+                createClientSocket();
+            }
         }
     }
 
@@ -385,8 +389,6 @@ public class LoginHandler implements Initializable {
         } catch (NotBoundException e) {
             System.out.println("A client can't get the controller Rmi's reference");
             e.printStackTrace();
-            //} catch (MalformedURLException e) {
-            //    e.printStackTrace();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -394,7 +396,7 @@ public class LoginHandler implements Initializable {
 
     /**
      * Sets up the socket connection
-     * @throws IOException todo
+     * @throws IOException
      */
     private void setupSocketConnection() throws IOException {
         ObjectInputStream in;
@@ -453,7 +455,7 @@ public class LoginHandler implements Initializable {
 
         if (singleplayer) {
             try {
-                new Thread(new SocketListener(controllerSocket)).start();
+                new Thread(new SocketListener(controllerSocket, username, true)).start();
                 controllerSocket.request(new CreateMatchRequest(this.username, difficulty));
                 if (isCli) {
                     window.close();
@@ -467,7 +469,7 @@ public class LoginHandler implements Initializable {
             }
         } else {
             try {
-                new Thread(new SocketListener(controllerSocket)).start();
+                new Thread(new SocketListener(controllerSocket, username, false)).start();
                 controllerSocket.request(new AddPlayerRequest(this.username));
             } catch (Exception e) {
                 e.printStackTrace();

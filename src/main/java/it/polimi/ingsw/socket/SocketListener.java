@@ -5,9 +5,13 @@ import it.polimi.ingsw.control.SocketController;
 public class SocketListener implements Runnable {
 
     private SocketController clientController;
+    private final String username;
+    private final boolean single;
 
-    public SocketListener(SocketController socketController) {
+    public SocketListener(SocketController socketController, String username, boolean single) {
         this.clientController = socketController;
+        this.username = username;
+        this.single = single;
     }
 
     @Override
@@ -16,7 +20,7 @@ public class SocketListener implements Runnable {
             try {
                 clientController.nextResponse().handleResponse(clientController);
             } catch (Exception e) {
-                // todo: disconnettere il giocatore in caso di eccezione
+                // todo: disabilitare il client se si disconnette, i metodi per farlo sono già definiti per GUI
             }
         }
     }

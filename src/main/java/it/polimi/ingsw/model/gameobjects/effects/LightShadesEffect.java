@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class LightShadesEffect implements Effect {
-    private final int pointsToBeAssigned = 2;
 
     public LightShadesEffect() {
     }
@@ -15,7 +14,7 @@ public class LightShadesEffect implements Effect {
      *
      * @param player is the player that uses this public objective card
      * @param match  is the player's current match
-     * @return
+     * @return false
      */
     @Override
     public boolean applyEffect(Player player, Match match) {
@@ -37,6 +36,7 @@ public class LightShadesEffect implements Effect {
 
             }
         }
+        int pointsToBeAssigned = 2;
         if (onesCounter <= twosCounter)
             temp = temp + onesCounter * pointsToBeAssigned;
         else temp = temp + twosCounter * pointsToBeAssigned;

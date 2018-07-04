@@ -484,6 +484,9 @@ public class Cli {
      * @param toolCardNumber is the number of the tool card used
      */
     public void onToolCardUsedByOthers(String name, int toolCardNumber) {
+        // ping response to be considered connected
+        respondToPing();
+
         printer.println("\nIl giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolCardNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         printer.flush();
     }

@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class ColoredDiagonalsEffect implements Effect {
-    private final int pointsToBeAssigned = 1;//ASTERISCO
 
     public ColoredDiagonalsEffect() {
     }
@@ -16,7 +15,7 @@ public class ColoredDiagonalsEffect implements Effect {
      *
      * @param player is the player using the private objective card
      * @param match  is the player's current match
-     * @return
+     * @return false
      */
     @Override
     public boolean applyEffect(Player player, Match match) {
@@ -40,7 +39,6 @@ public class ColoredDiagonalsEffect implements Effect {
                         score = score + temp;
                     }
                 }
-
             }
         }
         player.setPoints(score);
@@ -57,7 +55,7 @@ public class ColoredDiagonalsEffect implements Effect {
      * @param score  is the player's current score
      * @return the updated score
      */
-    public int lookForColor(Square[][] schema, Colors color, int row, int column, int score) {
+    private int lookForColor(Square[][] schema, Colors color, int row, int column, int score) {
         Square upLeft = null;
         Square upRight = null;
         Square bottomLeft = null;

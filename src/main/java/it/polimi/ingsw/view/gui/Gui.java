@@ -584,6 +584,9 @@ public class Gui {
      * @param toolNumber is the number of the used tool card.
      */
     public void onToolCardUsedByOthers(String name, int toolNumber) {
+        // ping response to be considered connected
+        respondToPing();
+
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         } else
