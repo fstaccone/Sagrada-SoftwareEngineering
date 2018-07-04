@@ -181,7 +181,7 @@ public class Gui {
      */
     public void onReserve(String string) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         dicesList = new ArrayList<>();
         String dicesString = string.substring(1, string.length() - 1);
@@ -225,7 +225,7 @@ public class Gui {
      */
     public void onGameStarted(Boolean windowChosen, List<String> names, int turnTime) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         players = names;
 
@@ -295,7 +295,7 @@ public class Gui {
      */
     public void onGameClosing() {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         if (stillPlaying) {
             if (gameBoardHandlerMulti != null) {
@@ -316,7 +316,7 @@ public class Gui {
      */
     public void onGameEndMulti(String winner, List<String> rankingNames, List<Integer> rankingValues) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.showRanking(winner, rankingNames, rankingValues);
@@ -332,7 +332,7 @@ public class Gui {
      */
     public void onGameEndSingle(int goal, int points) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         if (gameBoardHandlerSingle != null) {
             gameBoardHandlerSingle.showResultForSingle(goal, points);
@@ -386,7 +386,7 @@ public class Gui {
      */
     public void onRoundTrack(String track) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         if (single) {
             if (gameBoardHandlerSingle != null) {
@@ -406,7 +406,7 @@ public class Gui {
      */
     public void onMyWindow(String[][] window) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         if (single) {
             if (gameBoardHandlerSingle != null) {
@@ -426,7 +426,7 @@ public class Gui {
      */
     public void onMyFavorTokens(int value) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.setMyFavourTokens(value);
@@ -441,7 +441,7 @@ public class Gui {
      */
     public void onOtherFavorTokens(int value, String name) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         otherFavorTokensMap.put(name, value);
         if (gameBoardHandlerMulti != null) {
@@ -458,7 +458,7 @@ public class Gui {
      */
     public void onOtherSchemeCards(String[][] window, String name, String cardName) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         otherSchemeCardNamesMap.put(name, cardName);
         otherSchemeCardsMap.put(name, window);
@@ -472,7 +472,7 @@ public class Gui {
      */
     public void onOtherTurn(String name) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         String s = "Ora è il turno di " + name + "!";
         if (gameBoardHandlerMulti != null) {
@@ -492,7 +492,7 @@ public class Gui {
      */
     public void onInitialization(String toolcards, String publicCards, List<String> privateCards, List<String> players) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         parseToolcards(toolcards);
 
@@ -562,7 +562,7 @@ public class Gui {
      */
     public void onWindowChoice(List<String> windows) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         AudioClip cardsClip = Applet.newAudioClip(getClass().getResource("/sounds/cards.au"));
         cardsClip.play();
@@ -585,7 +585,7 @@ public class Gui {
      */
     public void onToolCardUsedByOthers(String name, int toolNumber) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
@@ -599,7 +599,7 @@ public class Gui {
      */
     public void onAfterWindowChoiceMultiplayer() {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
@@ -669,7 +669,7 @@ public class Gui {
      */
     public void onAfterWindowChoiceSingleplayer() {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
@@ -714,7 +714,7 @@ public class Gui {
      */
     public void onChoosePrivateCard() {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         gameBoardHandlerSingle.choosePrivateCard();
     }
