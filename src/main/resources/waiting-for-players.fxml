@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane id="waiting" prefHeight="350.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.WaitingScreenHandler">
-   <stylesheets>
-      <URL value="@css/login-style.css" />
-   </stylesheets>
-   <children>
-      <Label layoutX="116.0" layoutY="66.0" prefHeight="45.0" prefWidth="468.0" text="Benvenuto nella sala d'attesa di Sagrada!">
-         <font>
-            <Font name="Courier New Bold" size="15.0" />
-         </font></Label>
-      <TextArea id="text" fx:id="text" editable="false" layoutX="91.0" layoutY="141.0" prefHeight="69.0" prefWidth="516.0" wrapText="true" />
-      <TextArea id="log" fx:id="log" editable="false" layoutX="83.0" layoutY="248.0" prefHeight="45.0" prefWidth="534.0" text="In caso di uscita di un giocatore, riceverai una notifica qui: ..." wrapText="true" />
-   </children>
+<?import java.net.URL?>
+<AnchorPane id="waiting" prefHeight="350.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.121"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.WaitingScreenHandler">
+    <stylesheets>
+        <URL value="@css/login-style.css"/>
+    </stylesheets>
+    <Label layoutX="116.0" layoutY="66.0" prefHeight="45.0" prefWidth="468.0"
+           text="Benvenuto nella sala d'attesa di Sagrada!">
+        <font>
+            <Font name="Courier New Bold" size="15.0"/>
+        </font>
+    </Label>
+    <TextArea id="text" fx:id="text" editable="false" layoutX="91.0" layoutY="141.0" prefHeight="69.0"
+              prefWidth="516.0" wrapText="true"/>
+    <TextArea id="log" fx:id="log" editable="false" layoutX="83.0" layoutY="248.0" prefHeight="45.0"
+              prefWidth="534.0" text="In caso di uscita di un giocatore, riceverai una notifica qui: ..."
+              wrapText="true"/>
 </AnchorPane>

@@ -54,6 +54,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
      * If it isn't, it shows a message in the text area. If it is, but the player did't choose any card, it shows
      * an alert message. Once the card is chosen and the PLAY button clicked, the url of the chosen window pattern card
      * and the player's choice are stored.
+     *
      * @throws RemoteException todo
      */
     @FXML
@@ -63,11 +64,12 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * Initializes the choose card scene.
-     * @param windowFromGui is the Stage where the new scene has to be shown.
-     * @param sceneFromGui is the new choose card scene.
+     *
+     * @param windowFromGui    is the Stage where the new scene has to be shown.
+     * @param sceneFromGui     is the new choose card scene.
      * @param remoteController is the rmi controller.
      * @param socketController is the socket controller.
-     * @param username is the player's username.
+     * @param username         is the player's username.
      */
     void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
         parent.init(windowFromGui, sceneFromGui, remoteController, socketController, username);
@@ -83,6 +85,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * When the player clicks on the first card option, it is set as the player's choice.
+     *
      * @param mouseEvent is the click on the card.
      */
     public void chosen0(MouseEvent mouseEvent) {
@@ -91,6 +94,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * When the player clicks on the second card option, it is set as the player's choice.
+     *
      * @param mouseEvent is the click on the card.
      */
     public void chosen1(MouseEvent mouseEvent) {
@@ -99,6 +103,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * When the player clicks on the third card option, it is set as the player's choice.
+     *
      * @param mouseEvent is the click on the card.
      */
     public void chosen2(MouseEvent mouseEvent) {
@@ -107,6 +112,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * When the player clicks on the fourth card option, it is set as the player's choice.
+     *
      * @param mouseEvent is the click on the card.
      */
     public void chosen3(MouseEvent mouseEvent) {
@@ -115,6 +121,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * The window now shows the four window pattern cards the player have to choose between.
+     *
      * @param windows is a list of the names of the four window pattern cards proposed.
      */
     public void setWindows(List<String> windows) {
@@ -127,6 +134,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * Appends a new message in the scene text area.
+     *
      * @param s is the new message to append.
      */
     void appendToTextArea(String s) {
@@ -139,6 +147,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * Appends a welcome message to the text area showing also the time limit for each turn.
+     *
      * @param turnTime is the time limit for each turn.
      */
     void welcome(int turnTime) {
@@ -147,6 +156,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * The scene text area shows a message displaying all the player's opponents in the current match.
+     *
      * @param players is the list of the names of all players in the match.
      */
     void showOpponents(List<String> players) {
@@ -162,6 +172,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
 
     /**
      * Derives the private objective card image url from its name and then shows the image.
+     *
      * @param privateCard is the private objective card name.
      */
     public void setPrivateCard(String privateCard) {
@@ -192,7 +203,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
         privateObjCard.setDisable(true);
     }
 
-    void afterDisconnection(){
+    void afterDisconnection() {
         parent.getWindow().setOnCloseRequest(e -> parent.appendToTextArea(textArea, "Aspetta la chiusura automatica"));
         play.setDisable(true);
         quit.setDisable(true);
@@ -202,6 +213,7 @@ public class ChooseCardHandlerMultiplayer implements Initializable {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         parent.closeWindow();
     }

@@ -158,7 +158,7 @@ public class Gui {
     /**
      * respond to ping in order to prove that connection is ok
      */
-    private void respondToPing(){
+    private void respondToPing() {
         if (controllerRmi != null) {
             try {
                 controllerRmi.ping(username, single);

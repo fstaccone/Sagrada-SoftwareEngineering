@@ -5,15 +5,12 @@ import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.socket.SocketHandler;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -38,7 +35,7 @@ public class Server {
 
         //start RMI registry
         try {
-           // Registry registry = LocateRegistry.createRegistry(1099);
+            // Registry registry = LocateRegistry.createRegistry(1099);
             //registry.rebind(lobbyName, controller);
             Naming.rebind("//localhost/" + lobbyName, controller);
 

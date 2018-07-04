@@ -10,18 +10,21 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class MatchMultiplayer extends Match implements Runnable {
+
+    private static final Logger LOGGER = Logger.getLogger(MatchMultiplayer.class.getName());
 
     private Map<PlayerMultiplayer, MatchObserver> remoteObservers;
     private Map<PlayerMultiplayer, ObjectOutputStream> socketObservers;
 
     private List<PlayerMultiplayer> ranking;
-
     private boolean started;
     private int turnTime;
-    private int matchId; // not really necessary, but it's useful to debug
+    private int matchId;
     private TurnManagerMultiplayer turnManager;
     private List<PlayerMultiplayer> players;
     private Map<String, Integer> toolCardsPrices;
@@ -61,8 +64,7 @@ public class MatchMultiplayer extends Match implements Runnable {
             started = true;
         }
 
-        // debug
-        System.out.println("New multiplayer matchId: " + matchId);
+        LOGGER.log(Level.INFO, "New multiplayer matchId: " + this.matchId);
     }
 
     // getters
@@ -197,7 +199,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     remoteObservers.get(p).onGameEnd(winner.getName(), rankingNames, rankingValues);
                 } catch (RemoteException e) {
                     lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
+                    LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                 }
             } else if (socketObservers.get(p) != null) {
                 try {
@@ -206,7 +208,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     socketObservers.get(p).reset();
                 } catch (IOException e) {
                     lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
+                    LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                 }
             }
         }
@@ -279,7 +281,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                 remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), names, turnTime);
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
-                System.out.println("Player " + p.getName() + " disconnected!");
+                LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
             }
         } else if (socketObservers.get(p) != null) {
             try {
@@ -289,7 +291,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                 socketObservers.get(p).reset();
             } catch (IOException e) {
                 lobby.disconnect(p.getName());
-                System.out.println("Player " + p.getName() + " disconnected!");
+                LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
             }
         }
     }
@@ -411,7 +413,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     remoteObservers.get(p).onGameStarted(p.isSchemeCardSet(), playersNames, turnTime);
                 } catch (RemoteException e) {
                     lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
+                    LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                 }
             }
         }
@@ -425,7 +427,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     socketObservers.get(p).reset();
                 } catch (IOException e) {
                     lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
+                    LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                 }
             }
         }
@@ -483,7 +485,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                 remoteObservers.get(p).onAfterWindowChoice();
             } catch (RemoteException e) {
                 lobby.disconnect(p.getName());
-                System.out.println("Player " + p.getName() + " disconnected!");
+                LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
             }
         }
         if (socketObservers.get(p) != null) {
@@ -493,7 +495,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                 socketObservers.get(p).reset();
             } catch (IOException e) {
                 lobby.disconnect(p.getName());
-                System.out.println("Player " + p.getName() + " disconnected!");
+                LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
             }
         }
 
@@ -516,7 +518,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                 try {
                     socketObservers.get(getPlayer(name)).writeObject(new DicePlacedResponse(result));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "problem in placing dice with a socket connection", e);
                 }
             }
 
@@ -636,7 +638,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                         remoteObservers.get(player).onRoundTrack(board.getRoundTrack().toString());
                     } catch (RemoteException e) {
                         lobby.disconnect(player.getName());
-                        System.out.println("Player " + player.getName() + " disconnected!");
+                        LOGGER.log(Level.FINE, "Player " + player.getName() + " disconnected!", e);
                     }
                 } else {
                     initializePingTimer(player.getName());
@@ -792,9 +794,11 @@ public class MatchMultiplayer extends Match implements Runnable {
      */
     @Override
     public void ping(String username) {
-        System.out.println("Timer cancellato, giocatore " + username);
-        pingTimers.get(username).cancel();
-        pingTimers.remove(username);
+        LOGGER.log(Level.INFO, "Timer cancellato, giocatore " + username); // todo: si può cancellare
+        if (pingTimers.get(username) != null) {
+            pingTimers.get(username).cancel();
+            pingTimers.remove(username);
+        }
     }
 
     private void reserveToBeUpdated(boolean reserveToBeUpdated) {
@@ -807,7 +811,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                         remoteObservers.get(player).onReserve(board.getReserve().getDices().toString());
                     } catch (RemoteException e) {
                         lobby.disconnect(player.getName());
-                        System.out.println("Player " + player.getName() + " disconnected!");
+                        LOGGER.log(Level.FINE, "Player " + player.getName() + " disconnected!", e);
                     }
                 } else {
                     initializePingTimer(player.getName());
@@ -826,7 +830,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     remoteObservers.get(p).onMyFavorTokens(p.getNumFavorTokens());
                 } catch (RemoteException e) {
                     lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
+                    LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                 }
             } else if (socketObservers.get(p) != null) {
                 try {
@@ -835,7 +839,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     socketObservers.get(p).reset();
                 } catch (IOException e) {
                     lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
+                    LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                 }
             }
             Response response = new OtherFavorTokensResponse(p.getNumFavorTokens(), name);
@@ -847,7 +851,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                             remoteObservers.get(otherPlayer).onOtherFavorTokens(p.getNumFavorTokens(), name);
                         } catch (RemoteException e) {
                             lobby.disconnect(otherPlayer.getName());
-                            System.out.println("Player " + p.getName() + " disconnected!");
+                            LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                         }
                     } else {
                         initializePingTimer(p.getName());
@@ -876,7 +880,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     remoteObservers.get(p).onMyWindow(schemeCard);
                 } catch (RemoteException e) {
                     lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
+                    LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                 }
             } else if (socketObservers.get(p) != null) {
                 try {
@@ -884,7 +888,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                     socketObservers.get(p).writeObject(new MyWindowResponse(schemeCard));
                 } catch (IOException e) {
                     lobby.disconnect(p.getName());
-                    System.out.println("Player " + p.getName() + " disconnected!");
+                    LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                 }
             }
 
@@ -897,7 +901,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                             remoteObservers.get(otherPlayer).onOtherSchemeCards(schemeCard, name, p.getSchemeCard().getName());
                         } catch (RemoteException e) {
                             lobby.disconnect(otherPlayer.getName());
-                            System.out.println("Player " + p.getName() + " disconnected!");
+                            LOGGER.log(Level.FINE, "Player " + p.getName() + " disconnected!", e);
                         }
                     } else {
                         initializePingTimer(p.getName());
@@ -915,7 +919,7 @@ public class MatchMultiplayer extends Match implements Runnable {
                 socketObservers.get(player).reset();
             } catch (IOException e) {
                 lobby.disconnect(player.getName());
-                System.out.println("Player " + player.getName() + " disconnected!");
+                LOGGER.log(Level.FINE, "Player " + player.getName() + " disconnected!", e);
             }
         }
     }
@@ -936,7 +940,7 @@ public class MatchMultiplayer extends Match implements Runnable {
      * @param name is the name of the player
      */
     public void initializePingTimer(String name) {
-        System.out.println("Timer inizializzato, giocatore " + name);
+        LOGGER.log(Level.INFO, "Timer inizializzato, giocatore " + name); // todo: si può cancellare
         PingTimer task = new PingTimer(name, lobby);
         pingTimers.put(name, new Timer());
         pingTimers.get(name).schedule(task, Match.PING_TIME);

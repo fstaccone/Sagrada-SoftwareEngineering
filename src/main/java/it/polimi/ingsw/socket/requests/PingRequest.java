@@ -3,7 +3,7 @@ package it.polimi.ingsw.socket.requests;
 import it.polimi.ingsw.control.RequestHandler;
 import it.polimi.ingsw.socket.responses.Response;
 
-public class PingRequest implements Request{
+public class PingRequest implements Request {
 
     private String username;
     private boolean single;

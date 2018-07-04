@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.view.MatchObserver;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;

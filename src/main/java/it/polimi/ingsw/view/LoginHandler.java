@@ -22,11 +22,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
-
-import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 
 import java.applet.Applet;
 import java.applet.AudioClip;
@@ -118,7 +115,7 @@ public class LoginHandler implements Initializable {
      */
     @FXML
     private void singleplayerMarked() {
-        if(singlePlayerCheckmark.isSelected()){
+        if (singlePlayerCheckmark.isSelected()) {
             singlePlayerCheckmark.setSelected(true);
         } else {
             singlePlayerCheckmark.setSelected(false);
@@ -165,6 +162,7 @@ public class LoginHandler implements Initializable {
      * When the PLAY button is clicked, the handler checks if the player actually chose a name with at least one
      * character. After that, it checks the choices made by the player (single/multi, cli/gui) and initializes the corresponding
      * window.
+     *
      * @throws Exception todo:
      */
     @FXML
@@ -216,6 +214,7 @@ public class LoginHandler implements Initializable {
      * It's called after the player clicked on the QUIT button or on the X in the top-right corner of the window.
      * It shows an alert message and if the player clicks on YES it closes the login window and removes the player from
      * the game.
+     *
      * @throws RemoteException todo
      */
     private void onClosing() throws RemoteException {
@@ -274,7 +273,8 @@ public class LoginHandler implements Initializable {
 
     /**
      * Shows a custom alert window. Title and message are passed as parameters.
-     * @param title of the alert window.
+     *
+     * @param title   of the alert window.
      * @param message of the alert window.
      */
     private void showAlertWarning(String title, String message) {
@@ -291,9 +291,10 @@ public class LoginHandler implements Initializable {
      * If the status is CONNECTED it means the username chosen is actually being used and player has to choose a different one.
      * If the status is DISCONNECTED the player gets reconnected to the match in which he was previously playing.
      * Otherwise, the player joins a new match.
+     *
      * @param waiting is the new scene (waiting room), to show only if the player chose to play with gui in a
      *                multi player match.
-     * @throws IOException todo
+     * @throws IOException          todo
      * @throws InterruptedException todo
      */
     private void connectionSetup(Scene waiting) throws IOException, InterruptedException {
@@ -375,6 +376,7 @@ public class LoginHandler implements Initializable {
 
     /**
      * The connection is established between client and lobby
+     *
      * @throws RemoteException todo
      */
     private void setupRmiConnection() throws RemoteException {
@@ -396,6 +398,7 @@ public class LoginHandler implements Initializable {
 
     /**
      * Sets up the socket connection
+     *
      * @throws IOException
      */
     private void setupSocketConnection() throws IOException {

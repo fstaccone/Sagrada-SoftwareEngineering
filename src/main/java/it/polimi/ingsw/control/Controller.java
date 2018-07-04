@@ -226,7 +226,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
 
     @Override
     public void ping(String username, boolean single) {
-        if(single){
+        if (single) {
             lobby.getSingleplayerMatches().get(username).ping(username);
         } else {
             lobby.getMultiplayerMatches().get(username).ping(username);
