@@ -7,17 +7,17 @@ import java.util.List;
 
 public class BagTest {
     @Test
-    public void Bag(){
+    public void Bag() {
         Bag bag = new Bag(2);
-        Assert.assertEquals(10 , bag.getSize() );
+        Assert.assertEquals(10, bag.getSize());
         int red = 0;
         int yellow = 0;
         int greeen = 0;
         int violet = 0;
         int blue = 0;
         List<Dice> allDices = bag.pickDices(10);
-        for(Dice d : allDices){
-            switch (d.getColor()){
+        for (Dice d : allDices) {
+            switch (d.getColor()) {
                 case YELLOW:
                     yellow++;
                     break;
@@ -43,7 +43,7 @@ public class BagTest {
     }
 
     @Test
-    public void putDiceInBag(){
+    public void putDiceInBag() {
         Bag bag = new Bag(3);
         Dice d = new Dice(Colors.YELLOW);
         bag.putDiceInBag(d);
@@ -51,14 +51,14 @@ public class BagTest {
     }
 
     @Test
-    public void pickSingleDice(){
+    public void pickSingleDice() {
         Bag bag = new Bag(1);
         Dice d = bag.pickSingleDice();
         Assert.assertEquals(4, bag.getSize());
     }
 
     @Test
-    public void pickDices(){
+    public void pickDices() {
         Bag bag = new Bag(5);
         Assert.assertEquals(25, bag.getSize());
         List<Dice> dices = bag.pickDices(5);

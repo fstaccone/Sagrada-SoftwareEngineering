@@ -17,8 +17,8 @@ public class PlayerMultiplayerTest {
         PlayerMultiplayer playerMultiplayer = new PlayerMultiplayer("CowboyBebop");
         Assert.assertEquals("CowboyBebop", playerMultiplayer.getName());
         Assert.assertEquals(ConnectionStatus.CONNECTED, playerMultiplayer.getStatus());
-        Assert.assertEquals(false, playerMultiplayer.isMyTurn());
-        Assert.assertEquals(false, playerMultiplayer.isSchemeCardSet());
+        Assert.assertFalse(playerMultiplayer.isMyTurn());
+        Assert.assertFalse(playerMultiplayer.isSchemeCardSet());
     }
 
     @Test

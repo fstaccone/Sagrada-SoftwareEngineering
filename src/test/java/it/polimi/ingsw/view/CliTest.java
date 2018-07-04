@@ -1,11 +1,11 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.model.gameobjects.WindowPatternCard;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.AuroraSagradis;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.Industria;
-import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.view.cli.Cli;
 import org.junit.Assert;
 import org.junit.Test;
