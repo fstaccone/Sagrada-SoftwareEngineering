@@ -204,7 +204,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
         if (rmiObserver != null) {
             try {
-                match.initializePingTimer(player.getName());
+                //match.initializePingTimer(player.getName());
                 rmiObserver.onYourTurn(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn);
             } catch (RemoteException e) {
                 match.getLobby().disconnect(player.getName());

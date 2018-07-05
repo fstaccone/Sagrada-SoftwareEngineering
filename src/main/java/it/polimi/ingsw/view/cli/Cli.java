@@ -181,7 +181,7 @@ public class Cli {
      */
     public void onMyFavorTokens(int value) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         myFavorTokens = value;
     }
@@ -194,7 +194,7 @@ public class Cli {
      */
     public void onOtherFavorTokens(int value, String name) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         otherFavorTokensMap.put(name, value);
     }
@@ -207,7 +207,7 @@ public class Cli {
      */
     public void onOtherSchemeCards(String[][] scheme, String name) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         otherSchemeCardsMap.put(name, scheme);
     }
@@ -219,7 +219,7 @@ public class Cli {
      */
     public void onGameStarted(List<String> names, int turnTime) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         if (names != null) {
             playersNames = names;
@@ -236,7 +236,7 @@ public class Cli {
      */
     public void onRoundTrack(String roundTrack) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         this.roundTrack = roundTrack;
     }
@@ -296,7 +296,7 @@ public class Cli {
      */
     public void onReserve(String reserve) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         String dicesString = reserve.substring(1, reserve.length() - 1);
         dicesList = Pattern.compile(", ")
@@ -311,7 +311,7 @@ public class Cli {
      */
     public void onWindowChoice(List<String> schemeCards) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         int i = 0;
         printer.println("\nScegli la tua carta tra le disponibili:                                        ~ [scs] + [numero]\n");
@@ -327,7 +327,7 @@ public class Cli {
      */
     public void onAfterWindowChoice() {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         printer.println("\nAdesso puoi utilizzare la tua carta schema                              ~ [riserva] per vedere i dadi disponibili\n");
         printer.flush();
@@ -340,7 +340,7 @@ public class Cli {
      */
     public void onMyWindow(String[][] schemeCard) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         this.mySchemeCard = schemeCard;
     }
@@ -352,7 +352,7 @@ public class Cli {
      */
     public void onOtherTurn(String name) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         printer.println("\nOra è il turno di " + name + "!");
         printer.flush();
@@ -368,7 +368,7 @@ public class Cli {
      */
     public void onInitialization(String toolcards, String publicCards, List<String> privateCard, List<String> players) {
         // ping response to prove that connection is on
-        respondToPing();
+        //respondToPing();
 
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
@@ -402,7 +402,7 @@ public class Cli {
      */
     public void onGameClosing() {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         if (stillPlaying) {
             printer.println("\nCongratulazioni! Sei il vincitore. Sei rimasto da solo.\n");
@@ -459,7 +459,7 @@ public class Cli {
      */
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         printer.println("\nPunteggio finale:");
         for (int i = 0; i < rankingNames.size(); i++) {
@@ -485,7 +485,7 @@ public class Cli {
      */
     public void onToolCardUsedByOthers(String name, int toolCardNumber) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         printer.println("\nIl giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolCardNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         printer.flush();
@@ -499,7 +499,7 @@ public class Cli {
      */
     public void onGameEndSingle(int goal, int points) {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         printer.println("\nObiettivo da battere: \t" + goal);
         printer.println("Punteggio ottenuto: \t" + points);
@@ -520,7 +520,7 @@ public class Cli {
      */
     public void onChoosePrivateCard() {
         // ping response to be considered connected
-        respondToPing();
+        //respondToPing();
 
         enablePrivateCardChoice = true;
         printer.println("\nScegli la carta obiettivo privato da utilizzare per il calcolo del punteggio: digita il comando 'scp' seguito da 'sinistra' o 'destra' per scegliere la carta corrispondente");
