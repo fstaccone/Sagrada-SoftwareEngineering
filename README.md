@@ -27,7 +27,8 @@
 We have adopted the *MVC* pattern to develop the whole software structure.
 In particular, we have implemented two different solutions for RMI and Socket. In the first case the controller is placed server side, while in the second case it is logically divided between server and client. This choice is mainly due to the *visitor pattern* used to parse the socket requests and responses, that allows us an easy serialization management through the network.
 Moreover, as a consequence of the *MVC*, we have used the *observer pattern* for the sending of notifies from server to client. About design patterns, we have also decided to create the toolcards's effects adopting an hybrid solution between a factory and a *strategy pattern*. (Note about cards: we create only the actual cards randomically drawn to preserve memory)
-We have just differed from regular *MVC* for some requests' syntax checks in view side, to lighten the server load.   
+We have just differed from regular *MVC* for some requests' syntax checks in view side, to lighten the server load.
+
 ### Network management and choices
 In multiplayer match, a client can be logically disconnected from the server in three different ways.
 The first one is the click made by the client on the *EXIT* button or on the *X* of the window; the second one is the closure of the process from IntelliJ through the red button; the third is the physical network disconnection due to cables disconnection or network crash.
@@ -42,6 +43,8 @@ Since we have tested the whole software using three different operating systems 
 Then we report the problem met during the JAR execution in the Linux laptop regarding the JavaFX window cutting.
 Finally, we have not managed correctly an exception thrown in case of voluntary closure in Match Singleplayer, but the server state seems to be preserved.
 
+### Final tip:
+We have decided to use Drag&Drop to use toolcards, while we used click-click to place a dice normally in GUI implementation.
 
 #### Minor note by Francesco Staccone:
 Please note that from 6th may I have changed my local Git username, due to some problems I had with the synchronization of local username and GitHub username. To be more clear, I had to change that because I was committing as "francescostaccone" while my GitHub username was actually "fstaccone", so that I was present neither as a contributor in the folder nor in the statistics made by GitHub. Currently I am present both in the contributors and in the statistics, but my preovious 63 commits (made with "francescostaccone") are not visible there. If you want to check them, they are located in the global list of commits. 
