@@ -42,6 +42,7 @@ There is a minor bug concerning the names management and the reconnection: we ha
 Since we have tested the whole software using three different operating systems (Windows 10, Ubuntu Linux, MacOS X) and three different screen sizes and resolutions, we have been oblidged to find a compromise. This is represented by the current size of the GameBoard, but in MacBook Pro 13" we need to scale the screen size to obtain the wanted result.
 Then we report the problem met during the JAR execution in the Linux laptop regarding the JavaFX window cutting.
 Finally, we have not managed correctly an exception thrown in case of voluntary closure in Match Singleplayer, but the server state seems to be preserved.
+Please note that our working configuration does not allow to use Rmi with Linux.
 
 ### Final tip:
 We have decided to use Drag&Drop to use toolcards, while we used click-click to place a dice normally in GUI implementation.
