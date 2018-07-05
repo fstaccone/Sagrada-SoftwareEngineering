@@ -3,9 +3,7 @@ package it.polimi.ingsw.model.gameobjects.effects;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.PublicObjectiveCard;
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.KaleidoscopicDream;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,6 +12,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 
 public class DifferentShadesInAColumnTest {
+    private KaleidoscopicDream schemeCard;
     private PublicObjectiveCard publicCard;
     private Player player;
     private MatchMultiplayer match;
@@ -21,8 +20,9 @@ public class DifferentShadesInAColumnTest {
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
+        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
-        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
+        schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
 
         Dice dy = new Dice(Colors.YELLOW);

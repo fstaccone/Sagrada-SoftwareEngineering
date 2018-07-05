@@ -18,18 +18,21 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MoveTwoDicesColorRoundTrackTest {
+    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
+    private RoundTrack roundTrack;
+    private Reserve reserve;
 
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
         matchSingleplayer = mock(MatchSingleplayer.class);
         Board board = mock(Board.class);
-        Reserve reserve = mock(Reserve.class);
+        reserve = mock(Reserve.class);
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
         d.setValue(3);
@@ -37,9 +40,10 @@ public class MoveTwoDicesColorRoundTrackTest {
         dices.add(d);
         dices.add(d);
         dices.add(d);
+        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
         singleplayer = new PlayerSingleplayer("Archi");
-        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
+        schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         singleplayer.setSchemeCard(schemeCard);
         toolCard = new ToolCard("Taglierina Manuale", "tool12");
@@ -121,7 +125,7 @@ public class MoveTwoDicesColorRoundTrackTest {
     }
 
     @Test
-    public void correctActionSingle() {
+    public void correctActionSingle(){
         singleplayer.setStartX1(2);
         singleplayer.setStartY1(0);
         singleplayer.setStartX2(3);
@@ -140,7 +144,7 @@ public class MoveTwoDicesColorRoundTrackTest {
     }
 
     @Test
-    public void wrongMoves() {
+    public void wrongMoves(){
         player.setStartX1(2);
         player.setStartY1(0);
         player.setStartX2(3);
@@ -171,7 +175,7 @@ public class MoveTwoDicesColorRoundTrackTest {
     }
 
     @Test
-    public void wrongMovesSingle() {
+    public void wrongMovesSingle(){
         singleplayer.setStartX1(2);
         singleplayer.setStartY1(0);
         singleplayer.setStartX2(3);
@@ -201,7 +205,7 @@ public class MoveTwoDicesColorRoundTrackTest {
     }
 
     @Test
-    public void movingOneDiceOnly() {
+    public void movingOneDiceOnly(){
         player.setStartX1(2);
         player.setStartY1(0);
         player.setStartX2(-1);
@@ -217,7 +221,7 @@ public class MoveTwoDicesColorRoundTrackTest {
     }
 
     @Test
-    public void movingOneDiceOnlySingle() {
+    public void movingOneDiceOnlySingle(){
         singleplayer.setStartX1(2);
         singleplayer.setStartY1(0);
         singleplayer.setStartX2(-1);

@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class MediumShadesEffect implements Effect {
+    private final int pointsToBeAssigned = 2;
 
     public MediumShadesEffect() {
     }
@@ -14,7 +15,7 @@ public class MediumShadesEffect implements Effect {
      *
      * @param player is the player that uses this public objective card
      * @param match  is the player's current match
-     * @return false
+     * @return
      */
     @Override
     public boolean applyEffect(Player player, Match match) {
@@ -33,7 +34,6 @@ public class MediumShadesEffect implements Effect {
                     foursCounter++;
             }
         }
-        int pointsToBeAssigned = 2;
         if (threesCounter <= foursCounter)
             temp = temp + threesCounter * pointsToBeAssigned;
         else temp = temp + foursCounter * pointsToBeAssigned;

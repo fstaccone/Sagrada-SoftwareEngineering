@@ -6,7 +6,7 @@ import org.junit.Test;
 public class WindowPatternCardDeckTest {
 
     @Test
-    public void WindowPatternCardDeck() {
+    public void WindowPatternCardDeck(){
         WindowPatternCardDeck windowPatternCardDeck = new WindowPatternCardDeck(4);
         Assert.assertEquals(16, windowPatternCardDeck.getPickedCards().size());
     }

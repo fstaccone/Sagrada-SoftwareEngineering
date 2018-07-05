@@ -37,7 +37,6 @@ public class Cli {
     private boolean tool11DiceToBePlaced;
     private List<String> playersNames;
     private boolean windowChosen;
-
     private boolean single;
     private boolean enablePrivateCardChoice;
 
@@ -118,7 +117,7 @@ public class Cli {
                     "\n 'tracciato'                                 per mostrare lo stato attuale del tracciato dei round" +
                     "\n 'usautensile' + 'number'                    per usare l'effetto della carta utensile [numero]" +
                     "\n 'utensile' + 'number'                       per mostrare la descrizione d'uso della carta utensile [numero] [numero] " +
-                    "\n 'utensili'                                  per mostrare tutte le carte utensili disponibili  \n" +
+                    "\n 'utensili'                                  per mostrare tutte le carte utensili disponibili " +
                     "\n 'valore' + 'numero'                         per assegnare al dado proposto dalla carta utensile 11 il valore [numero] ");
 
 
@@ -159,10 +158,6 @@ public class Cli {
         enablePrivateCardChoice = false;
     }
 
-    public boolean isSingle() {
-        return single;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -180,10 +175,7 @@ public class Cli {
      * @param value is the current number of favor tokens
      */
     public void onMyFavorTokens(int value) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
-        myFavorTokens = value;
+        this.myFavorTokens = value;
     }
 
     /**
@@ -193,10 +185,7 @@ public class Cli {
      * @param name  is the name of that player
      */
     public void onOtherFavorTokens(int value, String name) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
-        otherFavorTokensMap.put(name, value);
+        this.otherFavorTokensMap.put(name, value);
     }
 
     /**
@@ -206,10 +195,7 @@ public class Cli {
      * @param name   is the name of that player
      */
     public void onOtherSchemeCards(String[][] scheme, String name) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
-        otherSchemeCardsMap.put(name, scheme);
+        this.otherSchemeCardsMap.put(name, scheme);
     }
 
     /**
@@ -218,9 +204,6 @@ public class Cli {
      * @param names is the names of the opponents
      */
     public void onGameStarted(List<String> names, int turnTime) {
-        // ping response to be considered connected
-        //respondToPing();
-
         if (names != null) {
             playersNames = names;
             printNames();
@@ -235,9 +218,6 @@ public class Cli {
      * @param roundTrack is the string representing the current round track
      */
     public void onRoundTrack(String roundTrack) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         this.roundTrack = roundTrack;
     }
 
@@ -251,13 +231,11 @@ public class Cli {
      * @param turn     is the current number of turn
      */
     public void onYourTurn(boolean yourTurn, String reserve, int round, int turn) {
-        // ping response to prove that connection is on
-        respondToPing();
-
         if (reserve != null)
             onReserve(reserve);
         this.myTurn = yourTurn;
         if (myTurn) {
+            respondToPing();
             if (single) {
                 printer.println("\nRound: " + round + "\tTurno: " + turn + "\tInserisci un comando:     ~ ['a' per ricevere Aiuto]\n");
             } else {
@@ -274,18 +252,8 @@ public class Cli {
      * respond to ping in order to prove that connection is ok
      */
     private void respondToPing() {
-        if (controllerRmi != null) {
-            try {
-                controllerRmi.ping(username, single);
-            } catch (RemoteException e) {
-                closingForDisconnection();
-            }
-        } else if (controllerSocket != null) {
-            try {
-                controllerSocket.request(new PingRequest(username, single));
-            } catch (Exception e) {
-                closingForDisconnection();
-            }
+         if (controllerSocket != null) {
+            controllerSocket.request(new PingRequest(username, single));
         }
     }
 
@@ -295,9 +263,6 @@ public class Cli {
      * @param reserve is the string representing the current reserve state
      */
     public void onReserve(String reserve) {
-        // ping response to be considered connected
-        //respondToPing();
-
         String dicesString = reserve.substring(1, reserve.length() - 1);
         dicesList = Pattern.compile(", ")
                 .splitAsStream(dicesString)
@@ -310,9 +275,6 @@ public class Cli {
      * @param schemeCards is the list of strings representing the proposed scheme cards
      */
     public void onWindowChoice(List<String> schemeCards) {
-        // ping response to be considered connected
-        //respondToPing();
-
         int i = 0;
         printer.println("\nScegli la tua carta tra le disponibili:                                        ~ [scs] + [numero]\n");
         printer.flush();
@@ -326,9 +288,6 @@ public class Cli {
      * Notify used to update this Cli's owner about the scheme card choice; it is propagated from RmiCli and SocketController
      */
     public void onAfterWindowChoice() {
-        // ping response to be considered connected
-        //respondToPing();
-
         printer.println("\nAdesso puoi utilizzare la tua carta schema                              ~ [riserva] per vedere i dadi disponibili\n");
         printer.flush();
     }
@@ -339,9 +298,6 @@ public class Cli {
      * @param schemeCard is the string representing this Cli's owner scheme card
      */
     public void onMyWindow(String[][] schemeCard) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         this.mySchemeCard = schemeCard;
     }
 
@@ -351,9 +307,6 @@ public class Cli {
      * @param name is the name of the current owner of the turn
      */
     public void onOtherTurn(String name) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         printer.println("\nOra è il turno di " + name + "!");
         printer.flush();
     }
@@ -367,9 +320,6 @@ public class Cli {
      * @param players     is the list of strings each one representing one opponent
      */
     public void onInitialization(String toolcards, String publicCards, List<String> privateCard, List<String> players) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         parseToolcards(toolcards);
         parsePublicCards(publicCards);
         this.privateCard = privateCard;
@@ -401,9 +351,6 @@ public class Cli {
      * Notify used to tell this Cli's owner if he becomes the only player in game due to disconnection of other players, in this case he is the winner
      */
     public void onGameClosing() {
-        // ping response to be considered connected
-        //respondToPing();
-
         if (stillPlaying) {
             printer.println("\nCongratulazioni! Sei il vincitore. Sei rimasto da solo.\n");
             printer.flush();
@@ -458,9 +405,6 @@ public class Cli {
      * @param rankingValues is the list of integers representing the rankings of the opponents
      */
     public void onGameEnd(String winner, List<String> rankingNames, List<Integer> rankingValues) {
-        // ping response to be considered connected
-        //respondToPing();
-
         printer.println("\nPunteggio finale:");
         for (int i = 0; i < rankingNames.size(); i++) {
             printer.println("- " + rankingNames.get(i) + "\t" + rankingValues.get(i));
@@ -484,9 +428,6 @@ public class Cli {
      * @param toolCardNumber is the number of the tool card used
      */
     public void onToolCardUsedByOthers(String name, int toolCardNumber) {
-        // ping response to be considered connected
-        //respondToPing();
-
         printer.println("\nIl giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolCardNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         printer.flush();
     }
@@ -498,9 +439,6 @@ public class Cli {
      * @param points is the actual ranking of this Cli's owner
      */
     public void onGameEndSingle(int goal, int points) {
-        // ping response to be considered connected
-        //respondToPing();
-
         printer.println("\nObiettivo da battere: \t" + goal);
         printer.println("Punteggio ottenuto: \t" + points);
 
@@ -519,9 +457,6 @@ public class Cli {
      * Notify used to tell this Cli's owner that he has to choose a private card in case of singleplayer match; it is propagated from RmiCli and SocketController
      */
     public void onChoosePrivateCard() {
-        // ping response to be considered connected
-        //respondToPing();
-
         enablePrivateCardChoice = true;
         printer.println("\nScegli la carta obiettivo privato da utilizzare per il calcolo del punteggio: digita il comando 'scp' seguito da 'sinistra' o 'destra' per scegliere la carta corrispondente");
         printer.flush();
@@ -1858,18 +1793,5 @@ public class Cli {
             printer.println(GAME_ERROR);
             printer.flush();
         }
-    }
-
-    /**
-     * close the client if a in connection with server occurs
-     */
-    private void closingForDisconnection() {
-        if (single) {
-            printer.println("La tua connessione è caduta. Se vuoi continuare a giocare inizia una nuova partita.");
-        } else {
-            printer.println("La tua connessione è caduta, esegui nuovamente il login con lo stesso username per rientrare in partita.");
-        }
-        printer.flush();
-        System.exit(0);
     }
 }

@@ -17,23 +17,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MoveDiceIgnoringColorRestrTest {
+    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
+    private Board board;
+    private Reserve reserve;
 
     @Before
     public void before() {
-        Board board = mock(Board.class);
+        board = mock(Board.class);
         match = mock(MatchMultiplayer.class);
         matchSingleplayer = mock(MatchSingleplayer.class);
         player = new PlayerMultiplayer("player");
         singleplayer = new PlayerSingleplayer("Archi");
-        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
+        schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         singleplayer.setSchemeCard(schemeCard);
-        Reserve reserve = mock(Reserve.class);
+        reserve = mock(Reserve.class);
 
         List<Dice> list = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
@@ -96,7 +99,7 @@ public class MoveDiceIgnoringColorRestrTest {
     }
 
     @Test
-    public void singleplayer() {
+    public void singleplayer(){
         toolCard.useCard(singleplayer, matchSingleplayer);
         System.out.println(singleplayer.getSchemeCard().toString());
         Assert.assertEquals(Colors.GREEN, singleplayer.getSchemeCard().getWindow()[0][1].getDice().getColor());

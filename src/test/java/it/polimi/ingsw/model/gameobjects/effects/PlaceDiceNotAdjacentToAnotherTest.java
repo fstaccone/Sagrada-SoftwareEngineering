@@ -17,21 +17,25 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PlaceDiceNotAdjacentToAnotherTest {
+    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
+    private Board board;
+    private Reserve reserve;
 
     @Before
     public void before() {
-        Board board = mock(Board.class);
+        board = mock(Board.class);
         match = mock(MatchMultiplayer.class);
         matchSingleplayer = mock(MatchSingleplayer.class);
-        Reserve reserve = mock(Reserve.class);
+        reserve = mock(Reserve.class);
+        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
         singleplayer = new PlayerSingleplayer("Archi");
-        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
+        schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         singleplayer.setSchemeCard(schemeCard);
 
@@ -94,7 +98,7 @@ public class PlaceDiceNotAdjacentToAnotherTest {
     }
 
     @Test
-    public void singleplayer() {
+    public void singleplayer(){
         toolCard.useCard(singleplayer, matchSingleplayer);
         System.out.println(singleplayer.getSchemeCard().toString());
         Assert.assertEquals(Colors.GREEN, singleplayer.getSchemeCard().getWindow()[2][4].getDice().getColor());

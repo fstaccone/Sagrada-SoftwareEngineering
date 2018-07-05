@@ -18,18 +18,21 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ExchangeDiceRoundTrackTest {
+    private WindowPatternCard schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
+    private RoundTrack roundTrack;
+    private Board board;
     private Reserve reserve;
 
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
         matchSingleplayer = mock(MatchSingleplayer.class);
-        Board board = mock(Board.class);
+        board = mock(Board.class);
         reserve = mock(Reserve.class);
         Dice dice = new Dice(Colors.BLUE);
         dice.setValue(4);
@@ -48,9 +51,10 @@ public class ExchangeDiceRoundTrackTest {
         list.add(d1);
         list.add(d1);
         list.add(d1);
+        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
         singleplayer = new PlayerSingleplayer("Archi");
-        WindowPatternCard schemeCard = new AuroraSagradis();
+        schemeCard = new AuroraSagradis();
         player.setSchemeCard(schemeCard);
         singleplayer.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
@@ -62,7 +66,7 @@ public class ExchangeDiceRoundTrackTest {
         singleplayer.setDiceChosenFromRound(0);
         singleplayer.setDiceToBeSacrificed(2);
         toolCard = new ToolCard("Taglierina Circolare", "tool5");
-        RoundTrack roundTrack = new RoundTrack();
+        roundTrack = new RoundTrack();
         List<Dice> list0 = new LinkedList<>();
         Dice d00 = new Dice(Colors.RED);
         d00.setValue(1);
@@ -97,7 +101,7 @@ public class ExchangeDiceRoundTrackTest {
     }
 
     @Test
-    public void checkDiceSingle() {
+    public void checkDiceSingle(){
         toolCard.useCard(singleplayer, matchSingleplayer);
         singleplayer.setPickedDice(reserve.getDices().get(singleplayer.getDice()));
         Assert.assertEquals(5, singleplayer.getPickedDice().getValue());

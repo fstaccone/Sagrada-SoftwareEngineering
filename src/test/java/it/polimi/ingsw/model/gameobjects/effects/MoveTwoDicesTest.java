@@ -17,6 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MoveTwoDicesTest {
+    private SymphonyOfLight schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
@@ -37,7 +38,7 @@ public class MoveTwoDicesTest {
         list.add(d);
         player = new PlayerMultiplayer("player");
         singleplayer = new PlayerSingleplayer("Archi");
-        SymphonyOfLight schemeCard = new SymphonyOfLight();
+        schemeCard = new SymphonyOfLight();
         player.setSchemeCard(schemeCard);
         singleplayer.setSchemeCard(schemeCard);
         singleplayer.setDiceToBeSacrificed(0);
@@ -103,7 +104,7 @@ public class MoveTwoDicesTest {
     }
 
     @Test
-    public void correctMovesSingle() {
+    public void correctMovesSingle(){
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(Colors.GREEN, singleplayer.getSchemeCard().getWindow()[3][1].getDice().getColor());
         Assert.assertEquals(3, singleplayer.getSchemeCard().getWindow()[3][1].getDice().getValue());
@@ -112,7 +113,7 @@ public class MoveTwoDicesTest {
     }
 
     @Test
-    public void wrongMoves() {
+    public void wrongMoves(){
         player.setNumFavorTokens(8);
         player.setStartX1(0);
         player.setStartY1(1);
@@ -145,7 +146,7 @@ public class MoveTwoDicesTest {
     }
 
     @Test
-    public void wrongMovesSingle() {
+    public void wrongMovesSingle(){
         singleplayer.setStartX1(0);
         singleplayer.setStartY1(1);
         singleplayer.setStartX2(1);

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
-import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.view.MatchObserver;
+import it.polimi.ingsw.control.RemoteController;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -18,10 +18,9 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
     /**
      * Initializes the RmiCli
-     *
-     * @param username      is the name of the player who is the owner of this view
+     * @param username         is the name of the player who is the owner of this view
      * @param controllerRmi is the client side controller used by this view (if it uses Socket connection) to contact the model
-     * @param singleplayer  is a boolean used to let Cli understand if it is singleplayer or not
+     * @param singleplayer           is a boolean used to let Cli understand if it is singleplayer or not
      */
     public RmiCli(String username, RemoteController controllerRmi, boolean singleplayer) throws RemoteException {
         super();
@@ -184,7 +183,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
      * Notify propagated to Cli: there is explained the use of parameters
      */
     @Override
-    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens, String[][] mySchemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards, Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolCardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCard, String reserve, String roundTrack, int myTokens, String[][] mySchemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards,Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolCardsPrices) {
         cli.onAfterReconnection(toolcards, publicCards, privateCard, reserve, roundTrack, myTokens, mySchemeCard, otherTokens, otherSchemeCards, schemeCardChosen, toolCardsPrices);
     }
 
@@ -208,8 +207,6 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
      * Notify propagated to Cli: there is explained the use of parameters
      */
     @Override
-    public void onChoosePrivateCard() {
-        cli.onChoosePrivateCard();
-    }
+    public void onChoosePrivateCard() { cli.onChoosePrivateCard(); }
 
 }

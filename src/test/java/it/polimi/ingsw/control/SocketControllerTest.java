@@ -20,7 +20,7 @@ import static org.mockito.Mockito.mock;
 public class SocketControllerTest {
 
     @Test
-    public void SocketController() {
+    public void SocketController(){
         ObjectInputStream objectInputStream = mock(ObjectInputStream.class);
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         LoginHandler loginHandler = mock(LoginHandler.class);
@@ -29,34 +29,36 @@ public class SocketControllerTest {
     }
 
     @Test
-    public void isNameAlreadyTaken() {
+    public void isNameAlreadyTaken(){
         ObjectInputStream objectInputStream = mock(ObjectInputStream.class);
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         LoginHandler loginHandler = mock(LoginHandler.class);
         SocketController socketController = new SocketController(objectInputStream, objectOutputStream, loginHandler, true);
+        ObjectInputStream objectInputStream1 = socketController.getIn();
+        ObjectOutputStream objectOutputStream1 = socketController.getOut();
         Assert.assertEquals(ConnectionStatus.ABSENT, socketController.isNameAlreadyTaken());
     }
 
     @Test
-    public void isDicePlaced() {
+    public void isDicePlaced(){
         ObjectInputStream objectInputStream = mock(ObjectInputStream.class);
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         LoginHandler loginHandler = mock(LoginHandler.class);
         SocketController socketController = new SocketController(objectInputStream, objectOutputStream, loginHandler, true);
-        Assert.assertFalse(socketController.isDicePlaced());
+        Assert.assertEquals(false, socketController.isDicePlaced());
     }
 
     @Test
-    public void isEffectApplied() {
+    public void isEffectApplied(){
         ObjectInputStream objectInputStream = mock(ObjectInputStream.class);
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         LoginHandler loginHandler = mock(LoginHandler.class);
         SocketController socketController = new SocketController(objectInputStream, objectOutputStream, loginHandler, true);
-        Assert.assertFalse(socketController.isEffectApplied());
+        Assert.assertEquals(false, socketController.isEffectApplied());
     }
 
     @Test
-    public void handleNameAlreadyTakenResponse() {
+    public void handleNameAlreadyTakenResponse(){
         ObjectInputStream objectInputStream = mock(ObjectInputStream.class);
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         LoginHandler loginHandler = mock(LoginHandler.class);
@@ -73,29 +75,29 @@ public class SocketControllerTest {
     }
 
     @Test
-    public void handleDicePlacedResponse() {
+    public void handleDicePlacedResponse(){
         ObjectInputStream objectInputStream = mock(ObjectInputStream.class);
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         LoginHandler loginHandler = mock(LoginHandler.class);
         SocketController socketController = new SocketController(objectInputStream, objectOutputStream, loginHandler, true);
         DicePlacedResponse dicePlacedResponse = new DicePlacedResponse(true);
         socketController.handle(dicePlacedResponse);
-        Assert.assertTrue(socketController.isDicePlaced());
+        Assert.assertEquals(true, socketController.isDicePlaced());
     }
 
     @Test
-    public void toolCardEffectAppliedResponse() {
+    public void toolCardEffectAppliedResponse(){
         ObjectInputStream objectInputStream = mock(ObjectInputStream.class);
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         LoginHandler loginHandler = mock(LoginHandler.class);
         SocketController socketController = new SocketController(objectInputStream, objectOutputStream, loginHandler, true);
         ToolCardEffectAppliedResponse toolCardEffectAppliedResponse = new ToolCardEffectAppliedResponse(true);
         socketController.handle(toolCardEffectAppliedResponse);
-        Assert.assertTrue(socketController.isEffectApplied());
+        Assert.assertEquals(true, socketController.isEffectApplied());
     }
 
     @Test
-    public void handleDiceColorResponse() {
+    public void handleDiceColorResponse(){
         ObjectInputStream objectInputStream = mock(ObjectInputStream.class);
         ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
         LoginHandler loginHandler = mock(LoginHandler.class);
@@ -104,6 +106,7 @@ public class SocketControllerTest {
         socketController.handle(diceColorResponse);
         Assert.assertEquals(Colors.BLUE, socketController.getDiceColor());
     }
+
 
 
 }

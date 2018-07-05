@@ -14,18 +14,22 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class SubstituteDiceFromBagTest {
+    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private Player player;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingle;
+    private Reserve reserve;
+    private Board board;
 
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
         matchSingle = mock(MatchSingleplayer.class);
-        Board board = mock(Board.class);
+        board = mock(Board.class);
+        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
-        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
+        schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         Bag bag = new Bag(18);
         when(match.getBag()).thenReturn(bag);
@@ -44,7 +48,7 @@ public class SubstituteDiceFromBagTest {
 
         Dice dv = new Dice(Colors.VIOLET);
 
-        Reserve reserve = new Reserve();
+        reserve = new Reserve();
         List<Dice> list = new ArrayList<>();
         list.add(dv);
         list.add(db);
@@ -74,7 +78,7 @@ public class SubstituteDiceFromBagTest {
     }
 
     @Test
-    public void singlePlayer() {
+    public void singlePlayer(){
         PlayerSingleplayer singleplayer = new PlayerSingleplayer("Archi");
         singleplayer.setDiceToBeSacrificed(0);
         singleplayer.setDice(1);

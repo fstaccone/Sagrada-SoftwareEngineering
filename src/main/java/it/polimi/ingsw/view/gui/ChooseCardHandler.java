@@ -20,7 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseCardHandler {
+    /**
+     * Constructor for ChooseCardHandler. The window pattern card choice value is initialized to a default value.
+     * @param single is true is this is a single player match, false otherwise.
+     * @param myTurn is true if it's the player's turn, false otherwise.
+     */
 
+
+    ChooseCardHandler(boolean single, boolean myTurn) {
+        this.single = single;
+        choice = ChooseCardHandler.OUT_OF_RANGE;
+        this.myTurn = myTurn;
+    }
+    static final String CONNECTION_ERROR="Problema di connessione con il server, rieffettua il login per giocare!";
     private static final String WINDOWS_URL = "/images/cards/window_pattern_cards/";
     private static final int OUT_OF_RANGE = 5;
     static final String PRIVATE_CARDS_URL = "/images/cards/private_objective_cards/";
@@ -42,20 +54,7 @@ public class ChooseCardHandler {
     private String imgURL;
 
     /**
-     * Constructor for ChooseCardHandler. The window pattern card choice value is initialized to a default value.
-     *
-     * @param single is true is this is a single player match, false otherwise.
-     * @param myTurn is true if it's the player's turn, false otherwise.
-     */
-    ChooseCardHandler(boolean single, boolean myTurn) {
-        this.single = single;
-        choice = ChooseCardHandler.OUT_OF_RANGE;
-        this.myTurn = myTurn;
-    }
-
-    /**
      * Initializes the four card choices buttons by disabling them until it's the player's turn.
-     *
      * @param card0 first option.
      * @param card1 second option.
      * @param card2 third option.
@@ -66,10 +65,6 @@ public class ChooseCardHandler {
         card1.setDisable(true);
         card2.setDisable(true);
         card3.setDisable(true);
-    }
-
-    public Stage getWindow() {
-        return window;
     }
 
     /**
@@ -90,7 +85,8 @@ public class ChooseCardHandler {
                 try {
                     controllerRmi.quitGame(username, single);
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    System.out.println(CONNECTION_ERROR);
+                    System.exit(0);
                 }
             } else
                 controllerSocket.request(new QuitGameRequest(username, single));
@@ -103,11 +99,10 @@ public class ChooseCardHandler {
      * If it isn't, it shows a message in the text area. If it is, but the player did't choose any card, it shows
      * an alert message. Once the card is chosen and the PLAY button clicked, the url of the chosen window pattern card
      * and the player's choice are stored.
-     *
      * @param textArea in the choose card scene where messages are shown
      * @throws RemoteException todo
      */
-    void onPlayClicked(TextArea textArea) throws RemoteException {
+    void onPlayClicked(TextArea textArea)  {
         if (myTurn) {
             if (choice == OUT_OF_RANGE) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Devi scegliere una carta schema!", ButtonType.OK);
@@ -134,8 +129,14 @@ public class ChooseCardHandler {
                     default:
                         imgURL = null;
                 }
-                if (controllerRmi != null)
-                    controllerRmi.chooseWindow(username, choice, single);
+                if (controllerRmi != null) {
+                    try {
+                        controllerRmi.chooseWindow(username, choice, single);
+                    }catch(RemoteException e){
+                        System.out.println(CONNECTION_ERROR);
+                        System.exit(0);
+                    }
+                }
                 else
                     controllerSocket.request(new ChooseWindowRequest(username, choice, single));
             }
@@ -146,12 +147,11 @@ public class ChooseCardHandler {
 
     /**
      * Initializes the choose card scene.
-     *
-     * @param windowFromGui    is the Stage where the new scene has to be shown.
-     * @param sceneFromGui     is the new choose card scene.
+     * @param windowFromGui is the Stage where the new scene has to be shown.
+     * @param sceneFromGui is the new choose card scene.
      * @param remoteController is the rmi controller.
      * @param socketController is the socket controller.
-     * @param username         is the player's username.
+     * @param username is the player's username.
      */
     void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
         this.controllerRmi = remoteController;
@@ -172,12 +172,11 @@ public class ChooseCardHandler {
 
     /**
      * The window now shows the four window pattern cards the player have to choose between.
-     *
      * @param windows is a list of the names of the four window pattern cards proposed.
-     * @param card0   button corresponding to the first option.
-     * @param card1   button corresponding to the second option.
-     * @param card2   button corresponding to the third option.
-     * @param card3   button corresponding to the fourth option.
+     * @param card0 button corresponding to the first option.
+     * @param card1 button corresponding to the second option.
+     * @param card2 button corresponding to the third option.
+     * @param card3 button corresponding to the fourth option.
      */
     void setWindows(List<String> windows, Button card0, Button card1, Button card2, Button card3) {
         card0.setDisable(false);
@@ -234,9 +233,8 @@ public class ChooseCardHandler {
 
     /**
      * Appends a new message in the scene text area.
-     *
      * @param textArea is the scene text area.
-     * @param s        is the new message to append.
+     * @param s is the new message to append.
      */
     void appendToTextArea(TextArea textArea, String s) {
         s = "\n" + s;
@@ -254,7 +252,6 @@ public class ChooseCardHandler {
 
     /**
      * Appends a welcome message to the text area showing also the time limit for each turn.
-     *
      * @param textArea is the scene text area.
      * @param turnTime is the time limit for each turn.
      */
@@ -277,28 +274,6 @@ public class ChooseCardHandler {
         } else if (controllerSocket != null) {
             controllerSocket.request(new TerminateMatchRequest(username));
         }
-        System.exit(0);
-    }
-
-    /**
-     * Shows an error alert window. Title and message are passed as parameters.
-     *
-     * @param message of the alert window.
-     */
-    void showErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Caduta di connessione");
-        alert.setHeaderText(null);
-        alert.setResizable(false);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    /**
-     * close the window and terminate the process
-     */
-    void closeWindow() {
-        window.close();
         System.exit(0);
     }
 }

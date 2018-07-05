@@ -8,10 +8,12 @@ public class WaitingPlayersResponse implements Response {
 
     private List<String> waitingPlayers;
     private String name;
+    private boolean unique;
 
-    public WaitingPlayersResponse(List<String> waitingPlayers, String name) {
+    public WaitingPlayersResponse(List<String> waitingPlayers, String name, Boolean unique) {
         this.waitingPlayers = waitingPlayers;
         this.name = name;
+        this.unique = unique;
     }
 
     public List<String> getWaitingPlayers() {
@@ -20,6 +22,10 @@ public class WaitingPlayersResponse implements Response {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isUnique() {
+        return unique;
     }
 
     @Override

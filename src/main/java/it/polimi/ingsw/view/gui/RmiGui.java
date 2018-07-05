@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.view.MatchObserver;
+import it.polimi.ingsw.control.RemoteController;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
@@ -60,11 +60,10 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
 
     @Override
     public void onAfterWindowChoice() {
-        if (single) {
+        if (single)
             gui.onAfterWindowChoiceSingleplayer();
-        } else {
+        else
             gui.onAfterWindowChoiceMultiplayer();
-        }
     }
 
     @Override

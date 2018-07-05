@@ -9,12 +9,9 @@ import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Lobby {
 
-    private static final Logger LOGGER = Logger.getLogger(Lobby.class.getName());
     private int matchCounter;
     private int waitingTime;
     private int turnTime;
@@ -110,22 +107,23 @@ public class Lobby {
             } catch (RemoteException e) {
                 remoteObservers.remove(observerName);
                 removeFromWaitingPlayers(observerName);
-                LOGGER.log(Level.FINE, "player " + observerName + " removed from wainting players", e);
             }
         }
     }
 
     public void removeFromWaitingPlayers(String name) {
+        boolean unique = false;
         synchronized (waitingPlayers) {
             try {
                 if (waitingPlayers.size() == 2) {
                     timer.cancel();
                     waitingPlayers.remove(name);
                     removeUsername(name);
+                    unique = true;
 
                     // to update waiting players on the exiting players
                     notifyToAllRmiWaiting();
-                    WaitingPlayersResponse response1 = new WaitingPlayersResponse(waitingPlayers, name);
+                    WaitingPlayersResponse response1 = new WaitingPlayersResponse(waitingPlayers, name, unique);
                     notifyToAllSocket(response1);
 
                     // to keep all players updated on the player's exit
@@ -135,7 +133,6 @@ public class Lobby {
                         } catch (RemoteException e) {
                             remoteObservers.remove(observerName);
                             removeFromWaitingPlayers(observerName);
-                            LOGGER.log(Level.FINE, "player " + observerName + " removed from wainting players", e);
                         }
                     }
 
@@ -150,7 +147,7 @@ public class Lobby {
                     // to update waiting players on the exiting players
                     notifyToAllRmiWaiting();
 
-                    WaitingPlayersResponse response3 = new WaitingPlayersResponse(waitingPlayers, name);
+                    WaitingPlayersResponse response3 = new WaitingPlayersResponse(waitingPlayers, name, unique);
                     notifyToAllSocket(response3);
 
 
@@ -161,7 +158,6 @@ public class Lobby {
                         } catch (RemoteException e) {
                             remoteObservers.remove(observerName);
                             removeFromWaitingPlayers(observerName);
-                            LOGGER.log(Level.FINE, "player " + observerName + " removed from wainting players", e);
                         }
                     }
 
@@ -171,8 +167,11 @@ public class Lobby {
 
                 }
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "something wants to delete a name that doesn't exist!", e);
+                e.printStackTrace();
+                System.out.println("From lobby: Something wants to delete a name that doesn't exist!");
             }
+
+
         }
     }
 
@@ -214,7 +213,7 @@ public class Lobby {
                             match.getSocketObservers().get(player).reset();
                         }
                     } catch (IOException e) {
-                        LOGGER.log(Level.SEVERE, "problem in writing a socket response", e);
+                        e.printStackTrace();
                     }
                 }
             }
@@ -227,12 +226,14 @@ public class Lobby {
 
             // check if the game must be closed
             if (match.checkConnection() < 2) {
+                System.out.println("229 Lobby");
                 notifyAndRemoveObservers(name);
                 removeDisconnectedPlayers(name);
             }
 
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "problem in disconnecting player " + name, e);
+            e.printStackTrace();
+            System.out.println("From Lobby: problem in disconnecting player " + name + "!");
         }
     }
 
@@ -260,19 +261,17 @@ public class Lobby {
         match = multiplayerMatches.get(name);
         for (PlayerMultiplayer player : match.getPlayers()) {
             if (!player.getName().equals(name) && player.getStatus().equals(ConnectionStatus.CONNECTED)) {
-                match.setStillPlayingToFalse();
+                match.setStillPlaying(false);
                 if (!match.getTurnManagerMultiplayer().isTimerExpired()) {
                     match.getTurnManagerMultiplayer().setTimerExpiredTrue();
                 }
                 // notifies to the player he is the only still in game
                 if (match.getRemoteObservers().get(player) != null) {
-                    //match.initializePingTimer(player.getName());
                     match.getRemoteObservers().get(player).onGameClosing();
                     match.getRemoteObservers().remove(player);
                 } else if ((match.getSocketObservers().get(player) != null)) {
-                    //match.initializePingTimer(player.getName());
                     match.getSocketObservers().get(player).writeObject(new ClosingGameResponse());
-                    match.getSocketObservers().get(player).reset();
+                    //match.getSocketObservers().get(player).reset();
                     match.getSocketObservers().remove(player);
                 }
             }
@@ -299,7 +298,7 @@ public class Lobby {
                 match.getRemoteObservers().get(p).onPlayerReconnection(name);
             } catch (RemoteException e) {
                 disconnect(p.getName());
-                LOGGER.log(Level.FINE, "player " + p.getName() + " disconnected", e);
+                System.out.println("Player " + p.getName() + " disconnected!");
             }
         }
 
@@ -313,18 +312,20 @@ public class Lobby {
                     }
                 } catch (IOException e) {
                     disconnect(p.getName());
-                    LOGGER.log(Level.FINE, "player " + p.getName() + " disconnected", e);
+                    System.out.println("Player " + p.getName() + " disconnected!");
                 }
             }
         }
     }
 
-    void removeMatchSingleplayer(String name) {
+    public void removeMatchSingleplayer(String name) {
         try {
             singleplayerMatches.remove(name);
             removeUsername(name);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "This singleplayer Match doesn't exist", e);
+            e.printStackTrace();
+            // debug
+            System.out.println("From lobby: this SinglePlayer Match doesn't exist.");
         }
     }
 
@@ -345,7 +346,7 @@ public class Lobby {
             notifyToAllRmiWaiting();
 
             //SOCKET
-            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers, null);
+            WaitingPlayersResponse response = new WaitingPlayersResponse(waitingPlayers, null, false);
 
             notifyToAllSocket(response);
 
@@ -382,7 +383,6 @@ public class Lobby {
                 } catch (IOException e) {
                     socketObservers.remove(name);
                     removeFromWaitingPlayers(name);
-                    LOGGER.log(Level.FINE, "Player " + name + " removed from waiting players", e);
                 }
             }
         }
@@ -407,7 +407,6 @@ public class Lobby {
                 } catch (RemoteException e) {
                     remoteObservers.remove(name);
                     removeFromWaitingPlayers(name);
-                    LOGGER.log(Level.FINE, "Player " + name + " removed from waiting players", e);
                 }
             }
 
@@ -450,7 +449,7 @@ public class Lobby {
         }
     }
 
-    void deleteDisconnectedClients(List<String> players) {
+    public void deleteDisconnectedClients(List<String> players) {
         for (String player : players) {
             if (takenUsernames.get(player).equals(ConnectionStatus.DISCONNECTED)) {
                 removeFromMatchMulti(player);

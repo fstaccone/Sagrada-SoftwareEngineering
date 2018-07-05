@@ -68,16 +68,13 @@ public class ReRollDiceEffect implements Effect {
                             if (!otherPlayer.getName().equals(p.getName())) {
                                 if (m.getRemoteObservers().get(otherPlayer) != null) {
                                     try {
-                                        //m.initializePingTimer(otherPlayer.getName());
                                         m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 6);
                                     } catch (RemoteException e) {
                                         m.getLobby().disconnect(otherPlayer.getName());
                                         System.out.println("Player " + p.getName() + " disconnected!");
                                     }
-                                } else {
-                                    //m.initializePingTimer(otherPlayer.getName());
-                                    m.notifyToSocketClient(otherPlayer, response);
                                 }
+                                m.notifyToSocketClient(otherPlayer, response);
                             }
                         }
                         price = 2;

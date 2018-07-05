@@ -3,9 +3,7 @@ package it.polimi.ingsw.model.gameobjects.effects;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.PublicObjectiveCard;
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.ViaLux;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,6 +13,7 @@ import static org.mockito.Mockito.mock;
 
 public class LightShadesTest {
 
+    private ViaLux schemeCard;
     private PublicObjectiveCard publicCard;
     private Player player;
     private MatchMultiplayer match;
@@ -22,8 +21,9 @@ public class LightShadesTest {
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
+        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
-        ViaLux schemeCard = new ViaLux();
+        schemeCard = new ViaLux();
         player.setSchemeCard(schemeCard);
 
         Dice dy = new Dice(Colors.YELLOW);

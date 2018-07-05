@@ -5,13 +5,9 @@ import it.polimi.ingsw.control.SocketController;
 public class SocketListener implements Runnable {
 
     private SocketController clientController;
-    private final String username;
-    private final boolean single;
 
-    public SocketListener(SocketController socketController, String username, boolean single) {
+    public SocketListener(SocketController socketController) {
         this.clientController = socketController;
-        this.username = username;
-        this.single = single;
     }
 
     @Override
@@ -19,7 +15,8 @@ public class SocketListener implements Runnable {
         while (clientController != null) {
             try {
                 clientController.nextResponse().handleResponse(clientController);
-            } catch (Exception e) {
+            } catch (NullPointerException e) {
+                System.out.println("Problema di connessione con il server, rieffettua il login per giocare!");
                 System.exit(0);
             }
         }

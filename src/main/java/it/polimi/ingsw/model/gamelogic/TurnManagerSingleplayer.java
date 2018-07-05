@@ -53,7 +53,6 @@ public class TurnManagerSingleplayer implements Runnable {
 
         if (match.getObserverRmi() != null) {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverRmi().onInitialization(toolCards, publicCards, privateCards, null);
             } catch (RemoteException e) {
                 match.terminateMatch();
@@ -61,7 +60,6 @@ public class TurnManagerSingleplayer implements Runnable {
             }
         } else if (match.getObserverSocket() != null) {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverSocket().writeObject(new InitializationResponse(toolCards, publicCards, privateCards, null));
                 match.getObserverSocket().reset();
             } catch (IOException e) {
@@ -120,7 +118,6 @@ public class TurnManagerSingleplayer implements Runnable {
     private void notifyTurnBeginning() {
         if (match.getObserverRmi() != null) {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverRmi().onYourTurn(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn);
             } catch (RemoteException e) {
                 match.terminateMatch();
@@ -132,6 +129,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverSocket().writeObject(new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn));
                 //match.getObserverSocket().reset();
             } catch (IOException e) {
+                //CHIUSURA TIMER?
                 match.terminateMatch();
                 System.out.println("Match singleplayer interrupted");
             }
@@ -149,7 +147,6 @@ public class TurnManagerSingleplayer implements Runnable {
         //starting notification
         if (match.getObserverRmi() != null) {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverRmi().onWindowChoice(windows);
             } catch (RemoteException e) {
                 match.terminateMatch();
@@ -157,7 +154,6 @@ public class TurnManagerSingleplayer implements Runnable {
             }
         } else if (match.getObserverSocket() != null) {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverSocket().writeObject(new ProposeWindowResponse(windows));
                 match.getObserverSocket().reset();
             } catch (IOException e) {
@@ -214,7 +210,6 @@ public class TurnManagerSingleplayer implements Runnable {
 
         if (match.getObserverRmi() != null) {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverRmi().onRoundTrack(match.getBoard().getRoundTrack().toString());
                 match.getObserverRmi().onReserve(match.getBoard().getReserve().getDices().toString());
             } catch (RemoteException e) {
@@ -223,9 +218,7 @@ public class TurnManagerSingleplayer implements Runnable {
             }
         } else if (match.getObserverSocket() != null) {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverSocket().writeObject(new RoundTrackResponse(match.getBoard().getRoundTrack().toString()));
-                match.getObserverSocket().reset();
                 match.getObserverSocket().writeObject(new ReserveResponse(match.getBoard().getReserve().getDices().toString()));
                 match.getObserverSocket().reset();
             } catch (IOException e) {
@@ -244,7 +237,6 @@ public class TurnManagerSingleplayer implements Runnable {
     private void calculateScore() {
         if (match.getObserverRmi() != null) {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverRmi().onChoosePrivateCard();
             } catch (RemoteException e) {
                 match.terminateMatch();
@@ -252,7 +244,6 @@ public class TurnManagerSingleplayer implements Runnable {
             }
         } else {
             try {
-                //match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverSocket().writeObject(new ChoosePrivateCardResponse());
             } catch (IOException e) {
                 match.terminateMatch();

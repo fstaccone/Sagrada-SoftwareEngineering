@@ -224,14 +224,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.removeFromMatchMulti(name);
     }
 
-    @Override
-    public void ping(String username, boolean single) {
-        if (single) {
-            lobby.getSingleplayerMatches().get(username).ping(username);
-        } else {
-            lobby.getMultiplayerMatches().get(username).ping(username);
-        }
-    }
 
     @Override
     public Response handle(CheckUsernameRequest request) {
@@ -254,6 +246,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController,
         lobby.getSocketObservers().put(request.getUsername(), socketHandlers.remove(0).getOut());
         addPlayer(request.getUsername());
         return null;
+    }
+
+    @Override
+    public void ping(String username, boolean single) {
+        if (single) {
+            lobby.getSingleplayerMatches().get(username).ping(username);
+        } else {
+            lobby.getMultiplayerMatches().get(username).ping(username);
+        }
     }
 
     @Override

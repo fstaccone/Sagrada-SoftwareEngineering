@@ -51,8 +51,7 @@
             <Font name="Courier New Bold" size="18.0"/>
         </font>
     </Label>
-    <Button id="quit" fx:id="quit" layoutX="733.0" layoutY="547.0" mnemonicParsing="false" prefHeight="37.0"
-            prefWidth="108.0" text="ESCI" textFill="WHITE">
+    <Button id="quit" fx:id="quit" layoutX="733.0" layoutY="547.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="108.0" text="ESCI" textFill="WHITE">
         <font>
             <Font name="Courier New Bold" size="18.0"/>
         </font>

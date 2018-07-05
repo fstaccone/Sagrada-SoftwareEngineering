@@ -5,12 +5,15 @@ import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.socket.SocketHandler;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -18,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
+
     private static final String SERVER_CONFIG = "/server.config";
     private static int socketPort;
     private static String lobbyName;
@@ -34,8 +38,7 @@ public class Server {
 
         //start RMI registry
         try {
-            // Registry registry = LocateRegistry.createRegistry(1099);
-            //registry.rebind(lobbyName, controller);
+            LocateRegistry.createRegistry(1099);
             Naming.rebind("//localhost/" + lobbyName, controller);
 
             System.out.println("RMI server online on port 1099");
@@ -54,12 +57,14 @@ public class Server {
                 System.out.println("New socket connection: " + Socket.getRemoteSocketAddress());
                 threadPool.submit(new SocketHandler(Socket, controller));
             }
+            serverSocket.close();
         }
         threadPool.shutdown();
     }
 
 
     private static void readServerConfig(String serverConfig) {
+
         Scanner scanner = null;
         Scanner lineParser = null;
         String line;

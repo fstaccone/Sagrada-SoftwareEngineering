@@ -18,11 +18,8 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class GameBoardHandlerSingle {
-    private static final Logger LOGGER = Logger.getLogger(GameBoardHandlerSingle.class.getName());
     private Gui gui;
     private GameBoardHandler gameBoardHandler;
     private Map<Integer, Button> toolCardsMap = new HashMap<>();
@@ -88,9 +85,8 @@ public class GameBoardHandlerSingle {
 
     /**
      * Initializes the game board scene and shows it.
-     *
      * @param scene is the scene to show.
-     * @param gui   is the current gui.
+     * @param gui is the current gui.
      */
     void init(Scene scene, Gui gui) {
         this.gui = gui;
@@ -126,7 +122,6 @@ public class GameBoardHandlerSingle {
 
     /**
      * Appends a new message to the game board text area.
-     *
      * @param s is the message to append.
      */
     void appendToTextArea(String s) {
@@ -148,7 +143,6 @@ public class GameBoardHandlerSingle {
     /**
      * Shows the player's window pattern card image as the background of a Pane.
      * It then creates a grid pane where dices will be placed.
-     *
      * @param imgURL is the window pattern card image url.
      */
     void setWindowPatternCardImg(String imgURL) {
@@ -157,8 +151,7 @@ public class GameBoardHandlerSingle {
 
     /**
      * Shows the player's score at the end of the game and the goal to beat, telling him if he won.
-     *
-     * @param goal   is the score the player has to beat.
+     * @param goal is the score the player has to beat.
      * @param points is the player's actual score.
      */
     void showResultForSingle(int goal, int points) {
@@ -183,7 +176,7 @@ public class GameBoardHandlerSingle {
     /**
      * Disables all actions on board except clicking the QUIT button.
      */
-    public void disableActionsOnGameBoard() {
+    private void disableActionsOnGameBoard() {
         reserve.setDisable(true);
         playerWindowPatternCard.setDisable(true);
         tool0.setDisable(true);
@@ -198,7 +191,6 @@ public class GameBoardHandlerSingle {
 
     /**
      * Updates the reserve.
-     *
      * @param dicesList is the list of dices in the reserve.
      */
     public void setReserve(List<String> dicesList) {
@@ -208,7 +200,6 @@ public class GameBoardHandlerSingle {
     /**
      * Sets the image of the two private objective cards and the visual effects to be applied when the mouse enters and exits
      * the images.
-     *
      * @param privateCard1 is the name of the first private objective card.
      * @param privateCard2 is the name of the second private objective card.
      */
@@ -219,7 +210,6 @@ public class GameBoardHandlerSingle {
 
     /**
      * Updates the round track.
-     *
      * @param track is the string representing the round track.
      */
     public void onRoundTrack(String track) {
@@ -228,7 +218,6 @@ public class GameBoardHandlerSingle {
 
     /**
      * Initializes the two public objective cards.
-     *
      * @param publicCards is the list of the names of the two public objective cards.
      */
     public void setPublicCards(List<String> publicCards) {
@@ -238,10 +227,9 @@ public class GameBoardHandlerSingle {
 
     /**
      * Sets the image of a public objective card and the effects to apply when the mouse enters and exits the image.
-     *
-     * @param label      is the label pointing out where public objective cards are in the game board.
-     * @param main       is the current public objective card.
-     * @param other1     is the other public objective card.
+     * @param label is the label pointing out where public objective cards are in the game board.
+     * @param main is the current public objective card.
+     * @param other1 is the other public objective card.
      * @param publicCard is the current public objective card name.
      */
     private void setSinglePublicCard(Label label, ImageView main, ImageView other1, String publicCard) {
@@ -265,7 +253,6 @@ public class GameBoardHandlerSingle {
 
     /**
      * Updates the player's window pattern card.
-     *
      * @param window is a bi-dimensional array of strings representing the player's window pattern card.
      */
     void setMyWindow(String[][] window) {
@@ -284,7 +271,6 @@ public class GameBoardHandlerSingle {
 
     /**
      * Sets the tool cards in the game board scene.
-     *
      * @param toolCardsList is the list of the names of the tool cards.
      */
     void setToolCards(List<String> toolCardsList) {
@@ -298,8 +284,7 @@ public class GameBoardHandlerSingle {
 
     /**
      * Sets the image of a tool card and the effects to apply when the mouse enters and exits the image.
-     *
-     * @param main     is the current tool card.
+     * @param main is the current tool card.
      * @param toolcard is the tool card name.
      */
     private void setSingleToolcard(Button main, String toolcard) {
@@ -350,7 +335,7 @@ public class GameBoardHandlerSingle {
                 try {
                     gui.getControllerRmi().choosePrivateCard(gui.getUsername(), 0);
                 } catch (RemoteException e) {
-                    LOGGER.log(Level.SEVERE, "exception in choosing private card", e);
+                    e.printStackTrace();
                 }
             } else if (gui.getControllerSocket() != null) {
                 gui.getControllerSocket().request(new PrivateCardChosenRequest(gui.getUsername(), 0));
@@ -362,7 +347,7 @@ public class GameBoardHandlerSingle {
                 try {
                     gui.getControllerRmi().choosePrivateCard(gui.getUsername(), 1);
                 } catch (RemoteException e) {
-                    LOGGER.log(Level.SEVERE, "exception in choosing private card", e);
+                    e.printStackTrace();
                 }
             } else if (gui.getControllerSocket() != null) {
                 gui.getControllerSocket().request(new PrivateCardChosenRequest(gui.getUsername(), 1));
@@ -379,22 +364,7 @@ public class GameBoardHandlerSingle {
         gameBoardHandler.resetToolValues();
     }
 
-    void setDiceChosenOutOfRange() {
+    void setDiceChosenOutOfRange(){
         gameBoardHandler.setDiceChosenOutOfRange();
-    }
-
-    void afterDisconnection() {
-        gameBoardHandler.getWindow().setOnCloseRequest(e -> gameBoardHandler.appendToTextArea("Attendi la chiusura automatica"));
-        disableActionsOnGameBoard();
-        quit.setDisable(true);
-        gameBoardHandler.showErrorAlert("La tua connessione è caduta,  questa finestra sarà chiusa tra 10 secondi." +
-                "\nInizia una nuova partita eseguendo un nuovo login.");
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            LOGGER.log(Level.SEVERE, "exception in a disconnected client", e);
-            Thread.currentThread().interrupt();
-        }
-        gameBoardHandler.closeWindow();
     }
 }

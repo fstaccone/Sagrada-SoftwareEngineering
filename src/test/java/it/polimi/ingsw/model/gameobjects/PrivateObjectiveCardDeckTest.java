@@ -5,7 +5,7 @@ import org.junit.Test;
 public class PrivateObjectiveCardDeckTest {
 
     @Test
-    public void PrivateObjectiveCard() {
+    public void PrivateObjectiveCard(){
 
     }
 }

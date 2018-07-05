@@ -21,6 +21,7 @@ public class PingTimerSingle extends TimerTask {
      */
     @Override
     public void run() {
+        System.out.println("rimozione giocatore " +username);
         lobby.removeMatchSingleplayer(username);
     }
 }

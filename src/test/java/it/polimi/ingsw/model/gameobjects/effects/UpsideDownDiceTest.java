@@ -17,18 +17,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UpsideDownDiceTest {
+    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
     private Reserve reserve;
+    private Board board;
 
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
         matchSingleplayer = mock(MatchSingleplayer.class);
-        Board board = mock(Board.class);
+        board = mock(Board.class);
         reserve = mock(Reserve.class);
         Dice d1 = new Dice(Colors.BLUE);
         d1.setValue(1);
@@ -63,9 +65,10 @@ public class UpsideDownDiceTest {
         dices.add(dice);
         dices.add(dice);
 
+        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
         singleplayer = new PlayerSingleplayer("Archi");
-        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
+        schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         toolCard = new ToolCard("Tampone Diamantato", "tool10");
         player.setNumFavorTokens(14);
@@ -104,12 +107,12 @@ public class UpsideDownDiceTest {
         Assert.assertEquals(1, reserve.getDices().get(player.getDice()).getValue());
         Assert.assertEquals(Colors.BLUE, reserve.getDices().get(player.getDice()).getColor());
         player.setDice(6);
-        Assert.assertFalse(toolCard.useCard(player, match));
+        Assert.assertEquals(false, toolCard.useCard(player, match));
         player.setDice(4);
         toolCard.useCard(player, match);
         Assert.assertEquals(5, reserve.getDices().get(player.getDice()).getValue());
         Assert.assertEquals(Colors.GREEN, reserve.getDices().get(player.getDice()).getColor());
-        Assert.assertFalse(toolCard.useCard(player, match));
+        Assert.assertEquals(false, toolCard.useCard(player, match));
     }
 
     @Test
@@ -129,7 +132,6 @@ public class UpsideDownDiceTest {
         Assert.assertEquals(5, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.YELLOW, reserve.getDices().get(singleplayer.getDice()).getColor());
     }
-
     @Test
     public void dice3() {
         singleplayer.setDice(2);
@@ -138,7 +140,6 @@ public class UpsideDownDiceTest {
         Assert.assertEquals(4, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.VIOLET, reserve.getDices().get(singleplayer.getDice()).getColor());
     }
-
     @Test
     public void dice4() {
         singleplayer.setDice(3);
@@ -147,7 +148,6 @@ public class UpsideDownDiceTest {
         Assert.assertEquals(3, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.RED, reserve.getDices().get(singleplayer.getDice()).getColor());
     }
-
     @Test
     public void dice5() {
         singleplayer.setDice(4);
@@ -156,7 +156,6 @@ public class UpsideDownDiceTest {
         Assert.assertEquals(2, reserve.getDices().get(singleplayer.getDice()).getValue());
         Assert.assertEquals(Colors.GREEN, reserve.getDices().get(singleplayer.getDice()).getColor());
     }
-
     @Test
     public void dice6() {
         singleplayer.setDice(5);
@@ -166,7 +165,7 @@ public class UpsideDownDiceTest {
         Assert.assertEquals(Colors.BLUE, reserve.getDices().get(singleplayer.getDice()).getColor());
         singleplayer.setDice(6);
         singleplayer.setDiceToBeSacrificed(7);
-        Assert.assertFalse(toolCard.useCard(singleplayer, matchSingleplayer));
+        Assert.assertEquals(false, toolCard.useCard(singleplayer, matchSingleplayer));
     }
 
 }

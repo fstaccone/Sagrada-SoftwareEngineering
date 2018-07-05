@@ -17,21 +17,24 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MoveDiceIgnoringValueRestrTest {
+    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
+    private Board board;
+    private Reserve reserve;
 
     @Before
     public void before() {
-        Board board = mock(Board.class);
+        board = mock(Board.class);
         match = mock(MatchMultiplayer.class);
         matchSingleplayer = mock(MatchSingleplayer.class);
-        Reserve reserve = mock(Reserve.class);
+        reserve = mock(Reserve.class);
         player = new PlayerMultiplayer("player");
         singleplayer = new PlayerSingleplayer("Archi");
-        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
+        schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         singleplayer.setSchemeCard(schemeCard);
 
@@ -103,7 +106,7 @@ public class MoveDiceIgnoringValueRestrTest {
     }
 
     @Test
-    public void singleplayerPutDiceInNewPosition() {
+    public void singleplayerPutDiceInNewPosition(){
         toolCard.useCard(singleplayer, matchSingleplayer);
         System.out.println(singleplayer.getSchemeCard().toString());
         Assert.assertEquals(2, singleplayer.getSchemeCard().getWindow()[1][2].getDice().getValue());

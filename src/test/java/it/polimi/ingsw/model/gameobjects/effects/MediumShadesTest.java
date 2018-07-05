@@ -3,9 +3,7 @@ package it.polimi.ingsw.model.gameobjects.effects;
 import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gamelogic.PlayerMultiplayer;
-import it.polimi.ingsw.model.gameobjects.Colors;
-import it.polimi.ingsw.model.gameobjects.Dice;
-import it.polimi.ingsw.model.gameobjects.PublicObjectiveCard;
+import it.polimi.ingsw.model.gameobjects.*;
 import it.polimi.ingsw.model.gameobjects.windowpatterncards.LuzCelestial;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,6 +12,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 
 public class MediumShadesTest {
+    private LuzCelestial schemeCard;
     private PublicObjectiveCard publicCard;
     private Player player;
     private MatchMultiplayer match;
@@ -21,8 +20,9 @@ public class MediumShadesTest {
     @Before
     public void Before() {
         match = mock(MatchMultiplayer.class);
+        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
-        LuzCelestial schemeCard = new LuzCelestial();
+        schemeCard = new LuzCelestial();
         player.setSchemeCard(schemeCard);
 
         Dice dg = new Dice(Colors.GREEN);

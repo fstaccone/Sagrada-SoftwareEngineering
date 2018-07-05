@@ -50,7 +50,7 @@ public class IncrDecrDiceValueEffect implements Effect {
                         case "+":
                             if (value != 6) {
                                 value = value + 1;
-                                match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() is the index
+                                match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
                                 match.getBoard().getReserve().getDices().remove(sacrificeDice);
                                 player.setDice(9);
                                 player.setChoice(null);
@@ -81,7 +81,7 @@ public class IncrDecrDiceValueEffect implements Effect {
                         case "+":
                             if (value != 6) {
                                 value = value + 1;
-                                match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() is the index
+                                match.getBoard().getReserve().getDices().get(player.getDice()).setValue(value); //player.getDice() è l'indice
                                 p.setNumFavorTokens(p.getNumFavorTokens() - price);
                                 if (price.equals(1)) {
                                     notifyToOthers();
@@ -121,16 +121,13 @@ public class IncrDecrDiceValueEffect implements Effect {
             if (!otherPlayer.getName().equals(p.getName())) {
                 if (m.getRemoteObservers().get(otherPlayer) != null) {
                     try {
-                        //m.initializePingTimer(otherPlayer.getName());
                         m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 1);
                     } catch (RemoteException e) {
                         m.getLobby().disconnect(otherPlayer.getName());
                         System.out.println("Player " + p.getName() + " disconnected!");
                     }
-                } else {
-                    //m.initializePingTimer(otherPlayer.getName());
-                    m.notifyToSocketClient(otherPlayer, response);
                 }
+                m.notifyToSocketClient(otherPlayer, response);
             }
         }
     }

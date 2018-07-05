@@ -1,53 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import java.net.URL?>
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.LoginHandler">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-    <Label layoutX="238.0" layoutY="270.0" text="NOME UTENTE"/>
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.LoginHandler">
 
-    <TextField fx:id="usernameInput" alignment="CENTER" layoutX="175.0" layoutY="304.0" prefHeight="23.0"
-               prefWidth="250.0" promptText="Digita qui il tuo nome"/>
-    <Separator layoutX="-331.0" layoutY="448.0" prefHeight="2.0" prefWidth="250.0"/>
+    <Label layoutX="238.0" layoutY="270.0" text="NOME UTENTE" />
 
-    <TextField fx:id="serverAddressInput" alignment="CENTER" layoutX="336.0" layoutY="437.0" prefHeight="23.0"
-               prefWidth="250.0" promptText="Digita qui l'IP del server"/>
-    <Separator layoutX="175.0" layoutY="303.0" prefHeight="2.0" prefWidth="250.0"/>
+    <TextField fx:id="usernameInput" alignment="CENTER" layoutX="175.0" layoutY="304.0" prefHeight="23.0" prefWidth="250.0" promptText="Digita qui il tuo nome" />
+    <Separator layoutX="36.0" layoutY="519.0" prefHeight="3.0" prefWidth="170.0" />
 
-    <Label layoutX="236.0" layoutY="344.0" text="IMPOSTAZIONI"/>
+    <TextField fx:id="serverAddressInput" alignment="CENTER" layoutX="336.0" layoutY="437.0" prefHeight="23.0" prefWidth="250.0" promptText="Digita qui l'IP del server" />
+    <Separator layoutX="175.0" layoutY="303.0" prefHeight="2.0" prefWidth="250.0" />
 
-    <Label id="choose" layoutX="36.0" layoutY="389.0" text="Scegli tra:"/>
-    <CheckBox fx:id="rmiCheckmark" layoutX="37.0" layoutY="421.0" onMouseClicked="#rmiMarked" text="RMI"
-              textFill="WHITE"/>
-    <Label id="choose" layoutX="114.0" layoutY="485.0" text="o"/>
-    <CheckBox fx:id="socketCheckmark" layoutX="152.0" layoutY="421.0" onMouseClicked="#socketMarked" text="SOCKET"
-              textFill="WHITE"/>
+    <Label layoutX="236.0" layoutY="344.0" text="IMPOSTAZIONI" />
+
+    <Label id="choose" layoutX="36.0" layoutY="389.0" text="Scegli tra:" />
+    <CheckBox fx:id="rmiCheckmark" layoutX="37.0" layoutY="421.0" onMouseClicked="#rmiMarked" text="RMI" textFill="WHITE" />
+    <Label id="choose" layoutX="114.0" layoutY="485.0" text="o" />
+    <CheckBox fx:id="socketCheckmark" layoutX="152.0" layoutY="421.0" onMouseClicked="#socketMarked" text="SOCKET" textFill="WHITE" />
 
 
-    <Label id="choose" layoutX="37.0" layoutY="528.0" text="Giocatore singolo:"/>
-    <CheckBox fx:id="singlePlayerCheckmark" layoutX="180.0" layoutY="527.0" onMouseClicked="#singleplayerMarked"
-              textFill="WHITE"/>
+    <Label id="choose" layoutX="36.0" layoutY="537.0" text="Giocatore singolo:" />
+    <CheckBox fx:id="singlePlayerCheckmark" layoutX="180.0" layoutY="536.0" onMouseClicked="#singleplayerMarked" textFill="WHITE" />
 
-    <Label id="choose" layoutX="36.0" layoutY="458.0" text="e tra:"/>
-    <CheckBox fx:id="guiCheckmark" layoutX="37.0" layoutY="486.0" onMouseClicked="#guiMarked" text="GUI"
-              textFill="WHITE"/>
-    <Label id="choose" layoutX="114.0" layoutY="422.0" text="o"/>
-    <CheckBox fx:id="cliCheckmark" layoutX="151.0" layoutY="486.0" onMouseClicked="#cliMarked" text="CLI"
-              textFill="WHITE"/>
+    <Label id="choose" layoutX="36.0" layoutY="458.0" text="e tra:" />
+    <CheckBox fx:id="guiCheckmark" layoutX="37.0" layoutY="486.0" onMouseClicked="#guiMarked" text="GUI" textFill="WHITE" />
+    <Label id="choose" layoutX="114.0" layoutY="422.0" text="o" />
+    <CheckBox fx:id="cliCheckmark" layoutX="151.0" layoutY="486.0" onMouseClicked="#cliMarked" text="CLI" textFill="WHITE" />
 
-    <Button fx:id="playButton" layoutX="432.0" layoutY="511.0" onMouseClicked="#playClicked"
-            onMouseEntered="#glowButton" onMouseExited="#unGlowButton" prefHeight="50.0" prefWidth="130.0"
-            style="-fx-border-color: #000000; -fx-background-color: #990099;" text="GIOCA &gt;" textFill="WHITE"/>
-    <Separator layoutX="36.0" layoutY="373.0" prefHeight="3.0" prefWidth="520.0"/>
-    <Label id="choose" layoutX="400.0" layoutY="413.0" text="Indirizzo Server:"/>
-    <Label id="choose" layoutX="37.0" layoutY="563.0" prefHeight="23.0" prefWidth="90.0" text="Difficoltà:"/>
-    <TextField fx:id="difficultyInput" id="serverAddressInput" layoutX="127.0" layoutY="561.0" prefHeight="26.0"
-               prefWidth="221.0" promptText="Digita un valore tra 1 e 5"/>
+    <Button fx:id="playButton" layoutX="432.0" layoutY="511.0" onMouseClicked="#playClicked" onMouseEntered="#glowButton" onMouseExited="#unGlowButton" prefHeight="50.0" prefWidth="130.0" style="-fx-border-color: #000000; -fx-background-color: #990099;" text="GIOCA &gt;" textFill="WHITE" />
+   <Separator layoutX="36.0" layoutY="373.0" prefHeight="3.0" prefWidth="520.0" />
+   <Label id="choose" layoutX="400.0" layoutY="413.0" text="Indirizzo Server:" />
+   <Label id="choose" layoutX="37.0" layoutY="563.0" prefHeight="23.0" prefWidth="155.0" text="N.ro carte utensile:" />
+   <TextField id="serverAddressInput" fx:id="difficultyInput" layoutX="192.0" layoutY="561.0" prefHeight="27.0" prefWidth="228.0" promptText="Digita un valore tra 1 e 5" />
 
     <stylesheets>
-        <URL value="@css/login-style.css"/>
+        <URL value="@css/login-style.css" />
     </stylesheets>
 
 </AnchorPane>

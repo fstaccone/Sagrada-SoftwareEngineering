@@ -21,6 +21,7 @@ public class PingTimer extends TimerTask {
      */
     @Override
     public void run() {
+        System.out.println("disconnessione giocatore " +username);
         lobby.disconnect(username);
     }
 }

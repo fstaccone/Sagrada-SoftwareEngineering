@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.gameobjects.Square;
 import java.util.ArrayList;
 
 public class DifferentShadesInAColumnEffect implements Effect {
+    private final int pointsToBeAssigned = 4;
 
     public DifferentShadesInAColumnEffect() {
     }
@@ -17,7 +18,7 @@ public class DifferentShadesInAColumnEffect implements Effect {
      *
      * @param player is the player that uses this public objective card
      * @param match  is the player's current match
-     * @return false
+     * @return
      */
     @Override
     public boolean applyEffect(Player player, Match match) {
@@ -39,7 +40,6 @@ public class DifferentShadesInAColumnEffect implements Effect {
                     valuesPerColumn.add(value);
                 }
             }
-            int pointsToBeAssigned = 4;
             if (count == schema.length)
                 temp = temp + pointsToBeAssigned;
         }

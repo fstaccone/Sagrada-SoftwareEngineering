@@ -12,7 +12,7 @@ import it.polimi.ingsw.socket.responses.ToolCardUsedByOthersResponse;
 
 import java.rmi.RemoteException;
 
-public class MoveTwoDicesColorRoundTrackEffect implements Effect {
+public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
 
     private Integer price;
     private boolean used;
@@ -110,7 +110,19 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
                         //NOTIFY TO OTHERS
                         if (price.equals(1)) {
                             Response response = new ToolCardUsedByOthersResponse(p.getName(), 12);
-                            notifyToolcardUse(m, p, response);
+                            for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                                if (!otherPlayer.getName().equals(p.getName())) {
+                                    if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                        try {
+                                            m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 12);
+                                        } catch (RemoteException e) {
+                                            m.getLobby().disconnect(otherPlayer.getName());
+                                            System.out.println("Player " + p.getName() + " disconnected!");
+                                        }
+                                    }
+                                    m.notifyToSocketClient(otherPlayer, response);
+                                }
+                            }
                             price = 2;
                             m.getToolCardsPrices().put("Carta utensile 12: ", price);
                         }
@@ -136,7 +148,19 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
                         if (price == 1) {
                             //NOTIFY TO OTHERS
                             Response response = new ToolCardUsedByOthersResponse(p.getName(), 12);
-                            notifyToolcardUse(m, p, response);
+                            for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+                                if (!otherPlayer.getName().equals(p.getName())) {
+                                    if (m.getRemoteObservers().get(otherPlayer) != null) {
+                                        try {
+                                            m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 12);
+                                        } catch (RemoteException e) {
+                                            m.getLobby().disconnect(otherPlayer.getName());
+                                            System.out.println("Player " + p.getName() + " disconnected!");
+                                        }
+                                    }
+                                    m.notifyToSocketClient(otherPlayer, response);
+                                }
+                            }
                             price = 2;
                         }
                         return true;
@@ -148,25 +172,6 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect {
                     return false;
             } else
                 return false;
-        }
-    }
-
-    private void notifyToolcardUse(MatchMultiplayer m, PlayerMultiplayer p, Response response) {
-        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-            if (!otherPlayer.getName().equals(p.getName())) {
-                if (m.getRemoteObservers().get(otherPlayer) != null) {
-                    try {
-                        //m.initializePingTimer(otherPlayer.getName());
-                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 12);
-                    } catch (RemoteException e) {
-                        m.getLobby().disconnect(otherPlayer.getName());
-                        System.out.println("Player " + p.getName() + " disconnected!");
-                    }
-                } else {
-                    //m.initializePingTimer(otherPlayer.getName());
-                    m.notifyToSocketClient(otherPlayer, response);
-                }
-            }
         }
     }
 }

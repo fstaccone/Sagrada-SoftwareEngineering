@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,13 +123,11 @@ public class Gui {
      * @param turn     indicates the current turn.
      */
     public void onYourTurn(boolean isMyTurn, String string, int round, int turn) {
-
         if (string != null) {
             onReserve(string);
         }
         this.myTurn = isMyTurn;
         if (myTurn) {
-            // ping response to be considered connected
             respondToPing();
             turnClip.play();
             String multi = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
@@ -155,24 +152,12 @@ public class Gui {
         }
     }
 
-    /**
-     * respond to ping in order to prove that connection is ok
-     */
     private void respondToPing() {
-        /*if (controllerRmi != null) {
-            try {
-                controllerRmi.ping(username, single);
-            } catch (RemoteException e) {
-                closingForDisconnection();
-            }
-        } else */
-            if (controllerSocket != null) {
-            try {
-                controllerSocket.request(new PingRequest(username, single));
-            } catch (Exception e) {
-                closingForDisconnection();
-            }
+
+        if (controllerSocket != null) {
+            controllerSocket.request(new PingRequest(username, single));
         }
+
     }
 
     /**
@@ -181,9 +166,6 @@ public class Gui {
      * @param string is the string representing the reserve.
      */
     public void onReserve(String string) {
-        // ping response to be considered connected
-        //respondToPing();
-
         dicesList = new ArrayList<>();
         String dicesString = string.substring(1, string.length() - 1);
         List<String> temp = Pattern.compile(", ")
@@ -225,9 +207,6 @@ public class Gui {
      * @param turnTime     is the time limit for each turn.
      */
     public void onGameStarted(Boolean windowChosen, List<String> names, int turnTime) {
-        // ping response to be considered connected
-        //respondToPing();
-
         players = names;
 
         if (windowChosen) {
@@ -295,9 +274,6 @@ public class Gui {
      * Called when the game is being closed.
      */
     public void onGameClosing() {
-        // ping response to be considered connected
-        //respondToPing();
-
         if (stillPlaying) {
             if (gameBoardHandlerMulti != null) {
                 gameBoardHandlerMulti.onGameClosing();
@@ -316,9 +292,6 @@ public class Gui {
      * @param rankingValues is the ordered list of the players'scores.
      */
     public void onGameEndMulti(String winner, List<String> rankingNames, List<Integer> rankingValues) {
-        // ping response to be considered connected
-        //respondToPing();
-
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.showRanking(winner, rankingNames, rankingValues);
         }
@@ -332,9 +305,6 @@ public class Gui {
      * @param points is the player's actual score.
      */
     public void onGameEndSingle(int goal, int points) {
-        // ping response to be considered connected
-        //respondToPing();
-
         if (gameBoardHandlerSingle != null) {
             gameBoardHandlerSingle.showResultForSingle(goal, points);
         }
@@ -358,7 +328,11 @@ public class Gui {
      * @param schemeCardChosen        is true if the reconnected player has already chosen his window pattern card, false otherwise.
      * @param toolcardsPrices         map with tool card names as keys and their price as value.
      */
-    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String reserve, String roundTrack, int myTokens, String[][] schemeCard, String schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]> otherSchemeCards, Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<String, Integer> toolcardsPrices) {
+    public void onAfterReconnection(String toolcards, String publicCards, List<String> privateCards, String
+            reserve, String roundTrack, int myTokens, String[][] schemeCard, String
+                                            schemeCardName, Map<String, Integer> otherTokens, Map<String, String[][]>
+                                            otherSchemeCards, Map<String, String> otherSchemeCardNamesMap, boolean schemeCardChosen, Map<
+            String, Integer> toolcardsPrices) {
         reconnection = true;
         this.myTokens = myTokens;
         parseToolcards(toolcards);
@@ -386,9 +360,6 @@ public class Gui {
      * @param track is a string representing the round track.
      */
     public void onRoundTrack(String track) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         if (single) {
             if (gameBoardHandlerSingle != null) {
                 gameBoardHandlerSingle.onRoundTrack(track);
@@ -406,9 +377,6 @@ public class Gui {
      * @param window is a bi-dimensional array of strings representing the player's window pattern card.
      */
     public void onMyWindow(String[][] window) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         if (single) {
             if (gameBoardHandlerSingle != null) {
                 gameBoardHandlerSingle.setMyWindow(window);
@@ -426,9 +394,6 @@ public class Gui {
      * @param value is the new number of favor tokens.
      */
     public void onMyFavorTokens(int value) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.setMyFavourTokens(value);
         }
@@ -441,9 +406,6 @@ public class Gui {
      * @param name  is the opponent's name.
      */
     public void onOtherFavorTokens(int value, String name) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         otherFavorTokensMap.put(name, value);
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.onOtherFavorTokens(value, name);
@@ -458,9 +420,6 @@ public class Gui {
      * @param cardName is the window pattern card name.
      */
     public void onOtherSchemeCards(String[][] window, String name, String cardName) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         otherSchemeCardNamesMap.put(name, cardName);
         otherSchemeCardsMap.put(name, window);
         if (gameBoardHandlerMulti != null) gameBoardHandlerMulti.onOtherSchemeCards(window, name, cardName);
@@ -472,9 +431,6 @@ public class Gui {
      * @param name is the name of the player who is now playing.
      */
     public void onOtherTurn(String name) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
         String s = "Ora è il turno di " + name + "!";
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea(s);
@@ -491,10 +447,8 @@ public class Gui {
      * @param privateCards is a list of the private objective cards available for the match.
      * @param players      is the list of players in te match.
      */
-    public void onInitialization(String toolcards, String publicCards, List<String> privateCards, List<String> players) {
-        // ping response to prove that connection is on
-        //respondToPing();
-
+    public void onInitialization(String toolcards, String
+            publicCards, List<String> privateCards, List<String> players) {
         parseToolcards(toolcards);
 
         for (String c : privateCards) {
@@ -562,9 +516,6 @@ public class Gui {
      * @param windows is a list of the proposed window pattern cards.
      */
     public void onWindowChoice(List<String> windows) {
-        // ping response to be considered connected
-        //respondToPing();
-
         AudioClip cardsClip = Applet.newAudioClip(getClass().getResource("/sounds/cards.au"));
         cardsClip.play();
 
@@ -585,9 +536,6 @@ public class Gui {
      * @param toolNumber is the number of the used tool card.
      */
     public void onToolCardUsedByOthers(String name, int toolNumber) {
-        // ping response to be considered connected
-        //respondToPing();
-
         if (gameBoardHandlerMulti != null) {
             gameBoardHandlerMulti.appendToTextArea("Il giocatore '" + name + "' è stato il primo ad utilizzare la carta utensile " + toolNumber + ", pertanto il suo prezzo di utilizzo diventa di 2 segnalini.");
         } else
@@ -599,8 +547,6 @@ public class Gui {
      * He is redirected to the game board scene and all the scene elements are initialized.
      */
     public void onAfterWindowChoiceMultiplayer() {
-        // ping response to be considered connected
-        //respondToPing();
 
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
@@ -669,9 +615,6 @@ public class Gui {
      * He is redirected to the game board scene and all the scene elements are initialized.
      */
     public void onAfterWindowChoiceSingleplayer() {
-        // ping response to be considered connected
-        //respondToPing();
-
         AudioClip dicesClip = Applet.newAudioClip(getClass().getResource("/sounds/dices.au"));
         dicesClip.play();
         FXMLLoader fx = new FXMLLoader();
@@ -714,28 +657,6 @@ public class Gui {
      * available he wants to use to calculate his final score.
      */
     public void onChoosePrivateCard() {
-        // ping response to be considered connected
-        //respondToPing();
-
         gameBoardHandlerSingle.choosePrivateCard();
-    }
-
-    /**
-     * close the client if a in connection with server occurs
-     */
-    private void closingForDisconnection() {
-        if (single) {
-            if (chooseCardHandlerSingle != null) {
-                chooseCardHandlerSingle.afterDisconnection();
-            } else if (gameBoardHandlerSingle != null) {
-                gameBoardHandlerSingle.afterDisconnection();
-            }
-        } else {
-            if (chooseCardHandlerMultiplayer != null) {
-                chooseCardHandlerMultiplayer.afterDisconnection();
-            } else if (gameBoardHandlerMulti != null) {
-                gameBoardHandlerMulti.afterDisconnection();
-            }
-        }
     }
 }

@@ -6,7 +6,7 @@ import org.junit.Test;
 public class DiceTest {
 
     @Test
-    public void Dice() {
+    public void Dice(){
         Dice d1 = new Dice(Colors.RED);
         Dice d2 = new Dice(Colors.YELLOW);
         Dice d3 = new Dice(Colors.VIOLET);
