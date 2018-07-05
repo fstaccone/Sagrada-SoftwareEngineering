@@ -814,7 +814,7 @@ public class Cli {
                         else {
                             controllerSocket.request(new PlaceDiceRequest(diceChosen, coordinateX, coordinateY, username, single));
                             try {
-                                Thread.sleep(500);
+                                Thread.sleep(300);
                             } catch (InterruptedException e) {
                                 LOGGER.log(Level.SEVERE, "exception while placing dice with a socket connected client", e);
                                 Thread.currentThread().interrupt();
@@ -862,7 +862,7 @@ public class Cli {
                     else {
                         controllerSocket.request(new PlaceDiceTool11Request(coordinateX, coordinateY, username, single));
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(300);
                         } catch (InterruptedException e) {
                             LOGGER.log(Level.SEVERE, "exception while placing dice in using of toolcard11 with socket", e);
                             Thread.currentThread().interrupt();

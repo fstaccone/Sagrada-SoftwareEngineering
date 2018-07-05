@@ -156,11 +156,7 @@ public class MatchSingleplayer extends Match implements Runnable {
             }
         } else if (observerSocket != null) {
             try {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                sleep();
                 observerSocket.writeObject(new GameStartedResponse(player.isSchemeCardSet(), null, turnTime));
                 observerSocket.reset();
             } catch (IOException e) {
@@ -170,6 +166,15 @@ public class MatchSingleplayer extends Match implements Runnable {
         }
 
         turnManager.run();
+    }
+
+    private void sleep(){
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            LOGGER.log(Level.SEVERE, "exception in sleep", e);
+            Thread.currentThread().interrupt();
+        }
     }
 
     /**
@@ -475,7 +480,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                 try {
                     observerRmi.onRoundTrack(board.getRoundTrack().toString());
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "exception in notification of roundtrack with rmi", e);
                 }
             } else {
                 Response response = new RoundTrackResponse(board.getRoundTrack().toString());
@@ -483,7 +488,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                     observerSocket.writeObject(response);
                     observerSocket.reset();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "exception in notification of roundtrack with socket", e);
                 }
             }
             synchronized (getLock()) {
