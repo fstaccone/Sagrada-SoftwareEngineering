@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.gamelogic.Player;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class DifferentShadesEffect implements Effect {
-    private final int pointsToBeAssigned = 5;
 
     public DifferentShadesEffect() {
     }
@@ -19,6 +18,7 @@ public class DifferentShadesEffect implements Effect {
      */
     @Override
     public boolean applyEffect(Player caller, Match match) {
+        int pointsToBeAssigned = 5;
         Square[][] schema = caller.getSchemeCard().getWindow();
         int temp = caller.getPoints();
         int onesCounter = 0;

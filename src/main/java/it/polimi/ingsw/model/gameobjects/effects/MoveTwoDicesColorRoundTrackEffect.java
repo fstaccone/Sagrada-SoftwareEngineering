@@ -110,19 +110,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                         //NOTIFY TO OTHERS
                         if (price.equals(1)) {
                             Response response = new ToolCardUsedByOthersResponse(p.getName(), 12);
-                            for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                                if (!otherPlayer.getName().equals(p.getName())) {
-                                    if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                        try {
-                                            m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 12);
-                                        } catch (RemoteException e) {
-                                            m.getLobby().disconnect(otherPlayer.getName());
-                                            System.out.println("Player " + p.getName() + " disconnected!");
-                                        }
-                                    }
-                                    m.notifyToSocketClient(otherPlayer, response);
-                                }
-                            }
+                            notifyToolCardUse(m,p,response);
                             price = 2;
                             m.getToolCardsPrices().put("Carta utensile 12: ", price);
                         }
@@ -148,19 +136,7 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                         if (price == 1) {
                             //NOTIFY TO OTHERS
                             Response response = new ToolCardUsedByOthersResponse(p.getName(), 12);
-                            for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
-                                if (!otherPlayer.getName().equals(p.getName())) {
-                                    if (m.getRemoteObservers().get(otherPlayer) != null) {
-                                        try {
-                                            m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 12);
-                                        } catch (RemoteException e) {
-                                            m.getLobby().disconnect(otherPlayer.getName());
-                                            System.out.println("Player " + p.getName() + " disconnected!");
-                                        }
-                                    }
-                                    m.notifyToSocketClient(otherPlayer, response);
-                                }
-                            }
+                            notifyToolCardUse(m,p,response);
                             price = 2;
                         }
                         return true;
@@ -172,6 +148,22 @@ public class MoveTwoDicesColorRoundTrackEffect implements Effect { //todo
                     return false;
             } else
                 return false;
+        }
+    }
+
+    private void notifyToolCardUse(MatchMultiplayer m, PlayerMultiplayer p, Response response){
+        for (PlayerMultiplayer otherPlayer : (m.getPlayers())) {
+            if (!otherPlayer.getName().equals(p.getName())) {
+                if (m.getRemoteObservers().get(otherPlayer) != null) {
+                    try {
+                        m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 12);
+                    } catch (RemoteException e) {
+                        m.getLobby().disconnect(otherPlayer.getName());
+                    }
+                }else {
+                    m.notifyToSocketClient(otherPlayer, response);
+                }
+            }
         }
     }
 }

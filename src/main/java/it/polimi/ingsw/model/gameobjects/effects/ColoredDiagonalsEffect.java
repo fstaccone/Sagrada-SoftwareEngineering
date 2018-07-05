@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class ColoredDiagonalsEffect implements Effect {
-    private final int pointsToBeAssigned = 1;//ASTERISCO
 
     public ColoredDiagonalsEffect() {
     }
@@ -40,7 +39,6 @@ public class ColoredDiagonalsEffect implements Effect {
                         score = score + temp;
                     }
                 }
-
             }
         }
         player.setPoints(score);

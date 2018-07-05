@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Square;
 
 public class ColorsVarietyEffect implements Effect {
-    private final int pointsToBeAssigned = 4;
 
     public ColorsVarietyEffect() {
 
@@ -21,6 +20,7 @@ public class ColorsVarietyEffect implements Effect {
      */
     @Override
     public boolean applyEffect(Player caller, Match match) {
+        int pointsToBeAssigned = 4;
         Square[][] schema = caller.getSchemeCard().getWindow();
         int temp = caller.getPoints();
         int yellowCounter = 0;

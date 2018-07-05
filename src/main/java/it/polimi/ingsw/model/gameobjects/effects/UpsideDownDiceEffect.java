@@ -147,15 +147,14 @@ public class UpsideDownDiceEffect implements Effect {
                             m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 10);
                         } catch (RemoteException e) {
                             m.getLobby().disconnect(otherPlayer.getName());
-                            System.out.println("Player " + p.getName() + " disconnected!");
                         }
+                    }else {
+                        m.notifyToSocketClient(otherPlayer, response);
                     }
-                    m.notifyToSocketClient(otherPlayer, response);
                 }
             }
             price = 2;
             m.getToolCardsPrices().put("Carta utensile 10: ", price);
         }
     }
-
 }

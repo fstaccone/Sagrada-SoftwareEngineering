@@ -71,10 +71,10 @@ public class ReRollDiceEffect implements Effect {
                                         m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 6);
                                     } catch (RemoteException e) {
                                         m.getLobby().disconnect(otherPlayer.getName());
-                                        System.out.println("Player " + p.getName() + " disconnected!");
                                     }
+                                }else {
+                                    m.notifyToSocketClient(otherPlayer, response);
                                 }
-                                m.notifyToSocketClient(otherPlayer, response);
                             }
                         }
                         price = 2;

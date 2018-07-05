@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.gameobjects.Square;
 import java.util.ArrayList;
 
 public class DifferentShadesInAColumnEffect implements Effect {
-    private final int pointsToBeAssigned = 4;
 
     public DifferentShadesInAColumnEffect() {
     }
@@ -22,6 +21,7 @@ public class DifferentShadesInAColumnEffect implements Effect {
      */
     @Override
     public boolean applyEffect(Player player, Match match) {
+        int pointsToBeAssigned = 4;
         int temp = player.getPoints();
         ArrayList<Integer> valuesPerColumn = new ArrayList<>();
         Square[][] schema = player.getSchemeCard().getWindow();

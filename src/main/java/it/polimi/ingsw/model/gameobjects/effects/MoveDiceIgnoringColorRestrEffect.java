@@ -52,7 +52,6 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                         return true;
                     } else {
                         schema.putDiceBack(dice, row, column);
-
                         return false;
                     }
                 } else {
@@ -79,10 +78,10 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
                                             m.getRemoteObservers().get(otherPlayer).onToolCardUsedByOthers(p.getName(), 2);
                                         } catch (RemoteException e) {
                                             m.getLobby().disconnect(otherPlayer.getName());
-                                            System.out.println("Player " + p.getName() + " disconnected!");
                                         }
+                                    }else {
+                                        m.notifyToSocketClient(otherPlayer, response);
                                     }
-                                    m.notifyToSocketClient(otherPlayer, response);
                                 }
                             }
                             price = 2;
@@ -117,5 +116,4 @@ public class MoveDiceIgnoringColorRestrEffect implements Effect {
         schema.removeDice(row, column);
         schema.putDiceIgnoringColorConstraint(dice, newRow, newColumn);
     }
-
 }
