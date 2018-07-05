@@ -13,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -54,22 +53,22 @@ public class ChooseCardHandlerSingle implements Initializable {
      * If the player did't choose any card, it shows an alert message.
      * Once the card is chosen and the PLAY button clicked, the url of the chosen window pattern card
      * and the player's choice are stored.
-     * @throws RemoteException todo
      */
     @FXML
-    public void onPlayClicked() throws RemoteException {
+    public void onPlayClicked() {
         parent.onPlayClicked(textArea);
     }
 
     /**
      * Initializes the choose card scene.
-     * @param windowFromGui is the Stage where the new scene has to be shown.
-     * @param sceneFromGui is the new choose card scene.
+     *
+     * @param windowFromGui    is the Stage where the new scene has to be shown.
+     * @param sceneFromGui     is the new choose card scene.
      * @param remoteController is the rmi controller.
      * @param socketController is the socket controller.
-     * @param username is the player's username.
+     * @param username         is the player's username.
      */
-    public void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
+    void init(Stage windowFromGui, Scene sceneFromGui, RemoteController remoteController, SocketController socketController, String username) {
         parent.init(windowFromGui, sceneFromGui, remoteController, socketController, username);
         quit.setOnMouseClicked(event -> {
             event.consume();
@@ -79,6 +78,7 @@ public class ChooseCardHandlerSingle implements Initializable {
 
     /**
      * When the player clicks on the first card option, it is set as the player's choice.
+     *
      * @param mouseEvent is the click on the card.
      */
     public void chosen0(MouseEvent mouseEvent) {
@@ -87,6 +87,7 @@ public class ChooseCardHandlerSingle implements Initializable {
 
     /**
      * When the player clicks on the second card option, it is set as the player's choice.
+     *
      * @param mouseEvent is the click on the card.
      */
     public void chosen1(MouseEvent mouseEvent) {
@@ -95,6 +96,7 @@ public class ChooseCardHandlerSingle implements Initializable {
 
     /**
      * When the player clicks on the third card option, it is set as the player's choice.
+     *
      * @param mouseEvent is the click on the card.
      */
     public void chosen2(MouseEvent mouseEvent) {
@@ -103,6 +105,7 @@ public class ChooseCardHandlerSingle implements Initializable {
 
     /**
      * When the player clicks on the fourth card option, it is set as the player's choice.
+     *
      * @param mouseEvent is the click on the card.
      */
     public void chosen3(MouseEvent mouseEvent) {
@@ -111,30 +114,33 @@ public class ChooseCardHandlerSingle implements Initializable {
 
     /**
      * The window now shows the four window pattern cards the player have to choose between.
+     *
      * @param windows is a list of the names of the four window pattern cards proposed.
      */
     public void setWindows(List<String> windows) {
         parent.setWindows(windows, card0, card1, card2, card3);
     }
 
-    public String getImageUrl() {
+    String getImageUrl() {
         return parent.getImageUrl();
     }
 
     /**
      * Appends a welcome message to the text area showing also the time limit for each turn.
+     *
      * @param turnTime is the time limit for each turn.
      */
-    public void welcome(int turnTime) {
+    void welcome(int turnTime) {
         parent.welcome(textArea, turnTime);
     }
 
     /**
      * Derives the two private objective cards image urls from their names and then shows the images.
+     *
      * @param privateCard0 is the first private objective card name.
      * @param privateCard1 is the second private objective card name.
      */
-    public void setPrivateCard(String privateCard0, String privateCard1) {
+    void setPrivateCard(String privateCard0, String privateCard1) {
         Image image0 = new Image(getClass().getResourceAsStream(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard0 + ".png"));
         privateObjCard0.setImage(image0);
         Image image1 = new Image(getClass().getResourceAsStream(ChooseCardHandler.PRIVATE_CARDS_URL + privateCard1 + ".png"));

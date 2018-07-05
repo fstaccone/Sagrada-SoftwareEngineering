@@ -13,6 +13,7 @@ public class SocketCli implements Serializable {
 
     /**
      * Initializes the SocketCli
+     *
      * @param username         is the name of the player who is the owner of this view
      * @param controllerSocket is the client side controller used by this view (if it uses Socket connection) to contact the model
      * @param single           is a boolean used to let Cli understand if it is singleplayer or not

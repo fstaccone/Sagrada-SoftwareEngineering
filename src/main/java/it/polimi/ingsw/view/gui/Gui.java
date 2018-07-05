@@ -15,10 +15,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Gui {
+
+    private static final Logger LOGGER = Logger.getLogger(Gui.class.getName());
 
     private String username;
     private RemoteController controllerRmi;
@@ -238,7 +242,7 @@ public class Gui {
         try {
             root = fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "exception in initializing chooseCardHandler singleplayer", e);
         }
         chooseCardHandlerSingle = fxmlLoader.getController();
         assert root != null;
@@ -259,7 +263,7 @@ public class Gui {
         try {
             root = fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "exception in initializing chooseCardHandler multiplayer", e);
         }
         chooseCardHandlerMultiplayer = fxmlLoader.getController();
         assert root != null;
@@ -556,7 +560,7 @@ public class Gui {
         try {
             root = fx.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "exception in initializing gameboardHandler multiplayer", e);
         }
         if (chooseCardHandlerMultiplayer != null) {
             playerSchemeCardImageURL = chooseCardHandlerMultiplayer.getImageUrl();
@@ -593,7 +597,7 @@ public class Gui {
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "exception in sleep", e);
                 Thread.currentThread().interrupt();
             }
         }
@@ -623,7 +627,7 @@ public class Gui {
         try {
             root = fx.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "exception in initializing gameboardHandler singleplayer", e);
         }
         if (chooseCardHandlerSingle != null) {
             playerSchemeCardImageURL = chooseCardHandlerSingle.getImageUrl();
