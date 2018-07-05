@@ -1,25 +1,25 @@
-#ing-sw-2018-Romeo-Sergi-Staccone
+# ing-sw-2018-Romeo-Sergi-Staccone
 
-1.#Matricole e codici persona degli studenti:
- 	*Romeo Paolo: 		846080 - 10542300
- 	*Sergi Guido: 		844175 - 10494956
- 	*Staccone Francesco: 	847605 - 10504541
+1. # Matricole e codici persona degli studenti:
+ 	* Romeo Paolo: 		846080 - 10542300
+ 	* Sergi Guido: 		844175 - 10494956
+ 	* Staccone Francesco: 	847605 - 10504541
 
-2.#Coverage dei test:
-	*complessiva:
-	*relativa al modello:
+2. # Coverage dei test:
+	* complessiva:
+	* relativa al modello:
 
-3.#Link al diagramma **UML**:
-	*http://google.com
-4.#Funzionalità implentate:
-	*Regole complete
-	*RMI
-	*Socket
-	*GUI
-	*CLI
-	*Multi-partite
-	*Partita singolo giocatore
-5.#Scelte progettuali e limitazioni implementative:
+3. # Link al diagramma **UML**:
+	* http://google.com
+4. # Funzionalità implentate:
+	* Regole complete
+	* RMI
+	* Socket
+	* GUI
+	* CLI
+	* Multi-partite
+	* Partita singolo giocatore
+5. # Scelte progettuali e limitazioni implementative:
 
 
 
