@@ -360,7 +360,7 @@ public class GameBoardHandlerMulti {
     /**
      * Disables all actions on board except clicking the QUIT button.
      */
-    private void disableActionsOnGameBoard() {
+    public void disableActionsOnGameBoard() {
         tool0.setDisable(true);
         tool1.setDisable(true);
         tool2.setDisable(true);

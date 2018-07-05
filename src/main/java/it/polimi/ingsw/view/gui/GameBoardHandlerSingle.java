@@ -183,7 +183,7 @@ public class GameBoardHandlerSingle {
     /**
      * Disables all actions on board except clicking the QUIT button.
      */
-    private void disableActionsOnGameBoard() {
+    public void disableActionsOnGameBoard() {
         reserve.setDisable(true);
         playerWindowPatternCard.setDisable(true);
         tool0.setDisable(true);

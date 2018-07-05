@@ -124,14 +124,14 @@ public class Gui {
      * @param turn     indicates the current turn.
      */
     public void onYourTurn(boolean isMyTurn, String string, int round, int turn) {
-        // ping response to be considered connected
-        respondToPing();
 
         if (string != null) {
             onReserve(string);
         }
         this.myTurn = isMyTurn;
         if (myTurn) {
+            // ping response to be considered connected
+            respondToPing();
             turnClip.play();
             String multi = "Ora è il tuo turno!\nRound: " + round + "\tTurno: " + turn;
             String single = "Round: " + round + "\tTurno: " + turn;
@@ -159,13 +159,14 @@ public class Gui {
      * respond to ping in order to prove that connection is ok
      */
     private void respondToPing() {
-        if (controllerRmi != null) {
+        /*if (controllerRmi != null) {
             try {
                 controllerRmi.ping(username, single);
             } catch (RemoteException e) {
                 closingForDisconnection();
             }
-        } else if (controllerSocket != null) {
+        } else */
+            if (controllerSocket != null) {
             try {
                 controllerSocket.request(new PingRequest(username, single));
             } catch (Exception e) {

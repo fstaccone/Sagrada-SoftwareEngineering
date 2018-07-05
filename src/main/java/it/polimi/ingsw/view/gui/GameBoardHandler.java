@@ -19,6 +19,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.logging.Level;
@@ -1805,8 +1806,10 @@ public class GameBoardHandler {
                 try {
                     rmiController.goThrough(username, single);
                 } catch (RemoteException e) {
-                    LOGGER.log(Level.SEVERE, "exception in passing turn", e);
+                    LOGGER.log(Level.SEVERE, "Remote exception in passing turn", e);
                     System.exit(0);
+                    //if(gameBoardHandlerMulti!=null) gameBoardHandlerMulti.disableActionsOnGameBoard();
+                    //else gameBoardHandlerSingle.disableActionsOnGameBoard();
                 }
             } else {
                 socketController.request(new GoThroughRequest(username, single));
