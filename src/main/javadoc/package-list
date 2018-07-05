@@ -1,0 +1,12 @@
+it.polimi.ingsw
+it.polimi.ingsw.control
+it.polimi.ingsw.model.gamelogic
+it.polimi.ingsw.model.gameobjects
+it.polimi.ingsw.model.gameobjects.effects
+it.polimi.ingsw.model.gameobjects.windowpatterncards
+it.polimi.ingsw.socket
+it.polimi.ingsw.socket.requests
+it.polimi.ingsw.socket.responses
+it.polimi.ingsw.view
+it.polimi.ingsw.view.cli
+it.polimi.ingsw.view.gui
