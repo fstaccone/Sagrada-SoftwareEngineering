@@ -1,14 +1,16 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.model.gameobjects.*;
-import it.polimi.ingsw.model.gameobjects.windowpatterncards.*;
+import it.polimi.ingsw.model.gameobjects.windowpatterncards.ChromaticSplendor;
+import it.polimi.ingsw.model.gameobjects.windowpatterncards.Firelight;
+import it.polimi.ingsw.model.gameobjects.windowpatterncards.RipplesOfLight;
+import it.polimi.ingsw.model.gameobjects.windowpatterncards.SymphonyOfLight;
+import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.view.gui.RmiGui;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ObjectOutputStream;
-import java.rmi.RemoteException;
 import java.util.*;
 
 import static org.mockito.Mockito.mock;
@@ -31,7 +33,7 @@ public class MatchMultiplayerTest {
     }
 
     @Test
-    public void windowsToBeProposed(){
+    public void windowsToBeProposed() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -43,7 +45,7 @@ public class MatchMultiplayerTest {
     }
 
     @Test
-    public void placeDice(){
+    public void placeDice() {
         Board board = mock(Board.class);
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
@@ -63,12 +65,12 @@ public class MatchMultiplayerTest {
         when(board.getReserve().getDices()).thenReturn(dices);
         matchMultiplayer.board = board;
         matchMultiplayer.placeDice("Archi", 0, 0, 0);
-        Assert.assertEquals(d, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(0,0));
+        Assert.assertEquals(d, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(0, 0));
         Assert.assertFalse(matchMultiplayer.placeDice("Archi", 0, 0, 0));
     }
 
     @Test
-    public void placeDiceTool11(){
+    public void placeDiceTool11() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -80,13 +82,13 @@ public class MatchMultiplayerTest {
         d.setValue(3);
         matchMultiplayer.getPlayer("Archi").setDiceFromBag(d);
         matchMultiplayer.placeDiceTool11("Archi", 0, 0);
-        Assert.assertEquals(d, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(0,0));
+        Assert.assertEquals(d, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(0, 0));
         matchMultiplayer.setDiceAction(true);
-        Assert.assertEquals(false, matchMultiplayer.placeDiceTool11("Archi", 0, 0));
+        Assert.assertFalse(matchMultiplayer.placeDiceTool11("Archi", 0, 0));
     }
 
     @Test
-    public void useToolCard1(){
+    public void useToolCard1() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -107,11 +109,11 @@ public class MatchMultiplayerTest {
         matchMultiplayer.useToolCard1(1, 0, "+", "Archi");
         Assert.assertEquals(5, matchMultiplayer.getBoard().getReserve().getDices().get(0).getValue());
         matchMultiplayer.setToolAction(true);
-        Assert.assertEquals(false, matchMultiplayer.useToolCard1(1,0,"+","Archi"));
+        Assert.assertFalse(matchMultiplayer.useToolCard1(1, 0, "+", "Archi"));
     }
 
     @Test
-    public void useToolCard2or3(){
+    public void useToolCard2or3() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -136,12 +138,12 @@ public class MatchMultiplayerTest {
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Pennello per Eglomise", "tool2"));
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Alesatore per Lamina di Rame", "tool3"));
         matchMultiplayer.useToolCard2or3(0, 2, 0, 0, 2, 0, "Archi");
-        Assert.assertEquals(3, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(2,0).getValue());
+        Assert.assertEquals(3, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(2, 0).getValue());
         Assert.assertFalse(matchMultiplayer.useToolCard2or3(0, 2, 0, 0, 2, 0, "Archi"));
     }
 
     @Test
-    public void useToolCard4(){
+    public void useToolCard4() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -167,16 +169,16 @@ public class MatchMultiplayerTest {
         matchMultiplayer.getBoard().getReserve().getDices().get(0).setValue(6);
         matchMultiplayer.placeDice("Archi", 0, 2, 0);
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Lathekin", "tool4"));
-        matchMultiplayer.useToolCard4(0,0,0,2,0,2,0,1,1, "Archi");
-        Assert.assertEquals(3, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(2,0).getValue());
-        Assert.assertEquals(Colors.YELLOW, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(2,0).getColor());
-        Assert.assertEquals(6, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(1,1).getValue());
-        Assert.assertEquals(Colors.BLUE, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(1,1).getColor());
-        Assert.assertFalse(matchMultiplayer.useToolCard4(0,0,0,2,0,2,0,1,1, "Archi"));
+        matchMultiplayer.useToolCard4(0, 0, 0, 2, 0, 2, 0, 1, 1, "Archi");
+        Assert.assertEquals(3, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(2, 0).getValue());
+        Assert.assertEquals(Colors.YELLOW, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(2, 0).getColor());
+        Assert.assertEquals(6, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(1, 1).getValue());
+        Assert.assertEquals(Colors.BLUE, matchMultiplayer.getPlayer("Archi").getSchemeCard().getDice(1, 1).getColor());
+        Assert.assertFalse(matchMultiplayer.useToolCard4(0, 0, 0, 2, 0, 2, 0, 1, 1, "Archi"));
     }
 
     @Test
-    public void useToolCard5(){
+    public void useToolCard5() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -206,9 +208,7 @@ public class MatchMultiplayerTest {
         matchMultiplayer.getBoard().getRoundTrack().putDices(list1, 1);
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Taglierina Circolare", "tool5"));
         MatchObserver matchObserver = mock(MatchObserver.class);
-        //MatchObserver matchObserver2 = mock(MatchObserver.class);
         matchMultiplayer.observeMatchRemote(matchObserver, "Archi");
-        //matchMultiplayer.observeMatchRemote(matchObserver2, "Archi2");
         matchMultiplayer.setToolAction(false);
         matchMultiplayer.useToolCard5(0, 1, 2, 0, "Archi");
         Assert.assertEquals(5, matchMultiplayer.getBoard().getReserve().getDices().get(1).getValue());
@@ -217,7 +217,7 @@ public class MatchMultiplayerTest {
     }
 
     @Test
-    public void useToolCard6(){
+    public void useToolCard6() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -233,14 +233,14 @@ public class MatchMultiplayerTest {
         matchMultiplayer.getBoard().getReserve().throwDices(dices);
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Pennello per Pasta Salda", "tool6"));
         matchMultiplayer.setToolAction(false);
-        Assert.assertTrue(matchMultiplayer.useToolCard6(0,1,"Archi"));
+        Assert.assertTrue(matchMultiplayer.useToolCard6(0, 1, "Archi"));
         Assert.assertEquals(2, matchMultiplayer.getBoard().getReserve().getDices().size());
         Assert.assertEquals(Colors.BLUE, matchMultiplayer.getBoard().getReserve().getDices().get(1).getColor());
-        Assert.assertFalse(matchMultiplayer.useToolCard6(0,1,"Archi"));
+        Assert.assertFalse(matchMultiplayer.useToolCard6(0, 1, "Archi"));
     }
 
     @Test
-    public void useToolCard7(){
+    public void useToolCard7() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -259,13 +259,13 @@ public class MatchMultiplayerTest {
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Martelletto", "tool7"));
         matchMultiplayer.setToolAction(false);
         matchMultiplayer.getPlayer("Archi").setTurnsLeft(1);
-        Assert.assertTrue(matchMultiplayer.useToolCard7(0,"Archi"));
+        Assert.assertTrue(matchMultiplayer.useToolCard7(0, "Archi"));
         Assert.assertEquals(3, matchMultiplayer.getBoard().getReserve().getDices().size());
-        Assert.assertFalse(matchMultiplayer.useToolCard7(0,"Archi"));
+        Assert.assertFalse(matchMultiplayer.useToolCard7(0, "Archi"));
     }
 
     @Test
-    public void useToolCard8(){
+    public void useToolCard8() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -289,7 +289,7 @@ public class MatchMultiplayerTest {
     }
 
     @Test
-    public void useToolCard9(){
+    public void useToolCard9() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -308,12 +308,12 @@ public class MatchMultiplayerTest {
         matchMultiplayer.placeDice("Archi", 1, 1, 0);
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Riga in Sughero", "tool9"));
         matchMultiplayer.setDiceAction(false);
-        Assert.assertTrue(matchMultiplayer.useToolCard9(0,1,2,2, "Archi"));
-        Assert.assertFalse(matchMultiplayer.useToolCard9(0,1,2,2, "Archi"));
+        Assert.assertTrue(matchMultiplayer.useToolCard9(0, 1, 2, 2, "Archi"));
+        Assert.assertFalse(matchMultiplayer.useToolCard9(0, 1, 2, 2, "Archi"));
     }
 
     @Test
-    public void useToolCard10(){
+    public void useToolCard10() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -328,12 +328,12 @@ public class MatchMultiplayerTest {
         dices.add(d1);
         matchMultiplayer.getBoard().getReserve().throwDices(dices);
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Tampone Diamantato", "tool10"));
-        Assert.assertTrue(matchMultiplayer.useToolCard10(0,1, "Archi"));
-        Assert.assertFalse(matchMultiplayer.useToolCard10(0,1, "Archi"));
+        Assert.assertTrue(matchMultiplayer.useToolCard10(0, 1, "Archi"));
+        Assert.assertFalse(matchMultiplayer.useToolCard10(0, 1, "Archi"));
     }
 
     @Test
-    public void useToolCard11(){
+    public void useToolCard11() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -348,12 +348,12 @@ public class MatchMultiplayerTest {
         dices.add(d1);
         matchMultiplayer.getBoard().getReserve().throwDices(dices);
         matchMultiplayer.getBoard().getPickedToolCards().add(new ToolCard("Diluente per Pasta Salda", "tool11"));
-        Assert.assertTrue(matchMultiplayer.useToolCard11(0,1, "Archi"));
-        Assert.assertFalse(matchMultiplayer.useToolCard11(0,1, "Archi"));
+        Assert.assertTrue(matchMultiplayer.useToolCard11(0, 1, "Archi"));
+        Assert.assertFalse(matchMultiplayer.useToolCard11(0, 1, "Archi"));
     }
 
     @Test
-    public void useToolCard12(){
+    public void useToolCard12() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -386,21 +386,21 @@ public class MatchMultiplayerTest {
         matchMultiplayer.getBoard().getRoundTrack().putDices(list0, 0);
         matchMultiplayer.getBoard().getRoundTrack().putDices(list1, 1);
         matchMultiplayer.getBoard().getReserve().getDices().get(1).setValue(3);
-        matchMultiplayer.placeDice("Archi",1,0,0);
+        matchMultiplayer.placeDice("Archi", 1, 0, 0);
         matchMultiplayer.setDiceAction(false);
         matchMultiplayer.getBoard().getReserve().getDices().get(1).setValue(5);
-        matchMultiplayer.placeDice("Archi",1,1,0);
+        matchMultiplayer.placeDice("Archi", 1, 1, 0);
         matchMultiplayer.setDiceAction(false);
         matchMultiplayer.getBoard().getReserve().getDices().get(1).setValue(4);
-        matchMultiplayer.placeDice("Archi",1,2,0);
+        matchMultiplayer.placeDice("Archi", 1, 2, 0);
         System.out.println(matchMultiplayer.getPlayer("Archi").getSchemeCard().toString());
-        Assert.assertTrue(matchMultiplayer.useToolCard12(0,1,0,0,0,2,1,2,0,0,1,"Archi"));
+        Assert.assertTrue(matchMultiplayer.useToolCard12(0, 1, 0, 0, 0, 2, 1, 2, 0, 0, 1, "Archi"));
         System.out.println(matchMultiplayer.getPlayer("Archi").getSchemeCard().toString());
-        Assert.assertFalse(matchMultiplayer.useToolCard12(0,1,0,0,0,2,1,2,0,0,1,"Archi"));
+        Assert.assertFalse(matchMultiplayer.useToolCard12(0, 1, 0, 0, 0, 2, 1, 2, 0, 0, 1, "Archi"));
     }
 
     @Test
-    public void setWindowPatternCard(){
+    public void setWindowPatternCard() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -414,7 +414,7 @@ public class MatchMultiplayerTest {
     }
 
     @Test
-    public void calculateFinalScore(){
+    public void calculateFinalScore() {
         List<String> clients = new ArrayList<>();
         clients.add("Archi");
         clients.add("Archi2");
@@ -439,9 +439,9 @@ public class MatchMultiplayerTest {
         matchMultiplayer.getBoard().getReserve().throwDices(dices);
         matchMultiplayer.getBoard().getReserve().getDices().get(0).setValue(4);
         matchMultiplayer.getBoard().getReserve().getDices().get(1).setValue(4);
-        matchMultiplayer.placeDice("Archi",1,1,0);
+        matchMultiplayer.placeDice("Archi", 1, 1, 0);
         matchMultiplayer.setDiceAction(false);
-        matchMultiplayer.placeDice("Archi2",0,0,1);
+        matchMultiplayer.placeDice("Archi2", 0, 0, 1);
         System.out.println(matchMultiplayer.getPlayer("Archi").getSchemeCard().toString());
         System.out.println(matchMultiplayer.getPlayer("Archi2").getSchemeCard().toString());
         matchMultiplayer.calculateFinalScore();
@@ -450,7 +450,7 @@ public class MatchMultiplayerTest {
     }
 
     @Test
-    public void afterReconnection(){
+    public void afterReconnection() {
         Lobby lobby = new Lobby(100000, 100000);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -495,13 +495,13 @@ public class MatchMultiplayerTest {
         lobby.getMultiplayerMatches().get("Archi").placeDice("Archi3", 0, 0, 0);
         lobby.getMultiplayerMatches().get("Archi").setDiceAction(false);
         lobby.disconnect("Archi3");
-        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 0, 1, 0 );
-        lobby.getMultiplayerMatches().get("Archi2").placeDice("Archi2", 0, 0, 1 );
+        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 0, 1, 0);
+        lobby.getMultiplayerMatches().get("Archi2").placeDice("Archi2", 0, 0, 1);
         lobby.getMultiplayerMatches().get("Archi").afterReconnection("Archi3");
     }
 
     @Test
-    public void deleteDisconnectedClients(){
+    public void deleteDisconnectedClients() {
         Lobby lobby = new Lobby(10000000, 1000000);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -516,7 +516,7 @@ public class MatchMultiplayerTest {
     }
 
     @Test
-    public void terminateMatch() throws RemoteException {
+    public void terminateMatch() {
         Lobby lobby = new Lobby(1000, 10000);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");

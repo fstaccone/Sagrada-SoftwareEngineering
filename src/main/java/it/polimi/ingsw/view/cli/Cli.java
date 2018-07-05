@@ -2,16 +2,21 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.control.SocketController;
+import it.polimi.ingsw.model.gamelogic.MatchMultiplayer;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.socket.requests.*;
 
 import java.io.*;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Cli {
+
+    private static final Logger LOGGER = Logger.getLogger(MatchMultiplayer.class.getName());
 
     private String username;
     private SocketController controllerSocket;
@@ -252,7 +257,7 @@ public class Cli {
      * respond to ping in order to prove that connection is ok
      */
     private void respondToPing() {
-         if (controllerSocket != null) {
+        if (controllerSocket != null) {
             controllerSocket.request(new PingRequest(username, single));
         }
     }
@@ -487,7 +492,7 @@ public class Cli {
         for (String card : toolCardsList) {
             String[] strings = card.split(":");
             int i = Integer.parseInt(strings[0].replaceAll("tool", ""));
-            this.toolCommands.add(new ToolCommand(i, this.printer, this.controllerRmi, this.controllerSocket, this.username, this.single));
+            this.toolCommands.add(new ToolCommand(i, this.controllerRmi, this.controllerSocket, this.username, this.single));
         }
     }
 
@@ -695,7 +700,7 @@ public class Cli {
                     }
                 } catch (
                         IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "IOException in run() of KeyboardHandler during game", e);
                 }
             }
 
@@ -704,7 +709,7 @@ public class Cli {
                 try {
                     s = keyboard.readLine();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "IOException in run() of KeyboardHandler after game end", e);
                 }
                 printer.println("\nLa partita è terminata, scrivi 'esci' per uscire");
                 printer.flush();
@@ -775,7 +780,7 @@ public class Cli {
                     try {
                         controllerRmi.goThrough(username, single);
                     } catch (RemoteException e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "exception while passing turn", e);
                     }
                 }
                 //SOCKET
@@ -801,7 +806,7 @@ public class Cli {
 
                                 }
                             } catch (RemoteException e) {
-                                e.printStackTrace();
+                                LOGGER.log(Level.SEVERE, "exception while placing dice with rmi", e);
                             }
                         }
 
@@ -811,7 +816,7 @@ public class Cli {
                             try {
                                 Thread.sleep(500);
                             } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                LOGGER.log(Level.SEVERE, "exception while placing dice with a socket connected client", e);
                                 Thread.currentThread().interrupt();
                             }
                             if (controllerSocket.isDicePlaced()) {
@@ -848,8 +853,8 @@ public class Cli {
                                 printer.println("\nATTENZIONE! Hai provato a piazzare un dado dove non puoi!, o stai provando mettere un secondo dado nel turno!");
                                 printer.flush();
                             }
-                        } catch (RemoteException e1) {
-                            e1.printStackTrace();
+                        } catch (RemoteException e) {
+                            LOGGER.log(Level.SEVERE, "exception while placing dice in using of toolcard11 with rmi", e);
                         }
                     }
 
@@ -859,7 +864,7 @@ public class Cli {
                         try {
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            LOGGER.log(Level.SEVERE, "exception while placing dice in using of toolcard11 with socket", e);
                             Thread.currentThread().interrupt();
                         }
                         if (controllerSocket.isDicePlaced()) {
@@ -943,7 +948,7 @@ public class Cli {
                                 try {
                                     controllerRmi.chooseWindow(username, toolNumber1, single);
                                 } catch (RemoteException e) {
-                                    e.printStackTrace();
+                                    LOGGER.log(Level.SEVERE, "exception while choosing schemecard with rmi", e);
                                 }
                             }
                             //SOCKET
@@ -995,7 +1000,7 @@ public class Cli {
                             try {
                                 controllerRmi.setDiceValue(toolNumber1, username, single);
                             } catch (RemoteException e) {
-                                e.printStackTrace();
+                                LOGGER.log(Level.SEVERE, "exception while setting dice valur after using toolcard11 with rmi", e);
                             }
                         }
                         //SOCKET
@@ -1040,7 +1045,7 @@ public class Cli {
                                 try {
                                     controllerRmi.choosePrivateCard(username, 0); // left position is equal to 0 inside the arrayList that contains private cards
                                 } catch (RemoteException e) {
-                                    e.printStackTrace();
+                                    LOGGER.log(Level.SEVERE, "exception while choosing private card with rmi", e);
                                 }
                             } else {
                                 controllerSocket.request(new PrivateCardChosenRequest(username, 0));
@@ -1051,7 +1056,7 @@ public class Cli {
                                 try {
                                     controllerRmi.choosePrivateCard(username, 1); // right position is equal to 1 inside the arrayList that contains private cards
                                 } catch (RemoteException e) {
-                                    e.printStackTrace();
+                                    LOGGER.log(Level.SEVERE, "exception while choosing private card with rmi", e);
                                 }
                             } else {
                                 controllerSocket.request(new PrivateCardChosenRequest(username, 1));
@@ -1162,7 +1167,7 @@ public class Cli {
                         controllerRmi.quitGame(username, single);
                     }
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "exception while quitting game", e);
                 }
                 System.exit(0);
             }
@@ -1567,7 +1572,7 @@ public class Cli {
                                     try {
                                         color = controllerRmi.askForDiceColor(username, single);
                                     } catch (RemoteException e) {
-                                        e.printStackTrace();
+                                        LOGGER.log(Level.SEVERE, "exception while using toolcard 11 with rmi in singleplayer", e);
                                     }
                                 }
                                 //SOCKET
@@ -1588,7 +1593,7 @@ public class Cli {
                                 try {
                                     color = controllerRmi.askForDiceColor(username, single);
                                 } catch (RemoteException e) {
-                                    e.printStackTrace();
+                                    LOGGER.log(Level.SEVERE, "exception while using toolcard 11 with rmi in multiplayer", e);
                                 }
                             }
                             //SOCKET

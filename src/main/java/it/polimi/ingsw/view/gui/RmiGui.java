@@ -1,15 +1,19 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.view.MatchObserver;
 import it.polimi.ingsw.control.RemoteController;
+import it.polimi.ingsw.view.MatchObserver;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RmiGui extends UnicastRemoteObject implements MatchObserver {
+
+    private static final Logger LOGGER = Logger.getLogger(Gui.class.getName());
 
     private Gui gui;
     private RemoteController controller;
@@ -33,7 +37,7 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
         try {
             controller.observeMatch(gui.getUsername(), this, single, reconnection);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "exception in observing match", e);
         }
     }
 

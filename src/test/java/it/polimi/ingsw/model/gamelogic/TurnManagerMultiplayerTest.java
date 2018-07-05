@@ -12,7 +12,7 @@ import java.util.Map;
 public class TurnManagerMultiplayerTest {
 
     @Test
-    public void TurnManager(){
+    public void TurnManager() {
         int matchId = 0;
         List<String> clients = new ArrayList<>();
         clients.add("client1");

@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 public class BoardTest {
 
     @Test
-    public void Board(){
+    public void Board() {
         ToolCard toolCard1 = new ToolCard("Alesatore per Lamina di Rame", "tool3");
         ToolCard toolCard2 = new ToolCard("Lathekin", "tool4");
         ToolCard toolCard3 = new ToolCard("Taglierina Circolare", "tool5");
@@ -34,8 +34,8 @@ public class BoardTest {
         Board board = new Board(pickedToolCards, pickedPublicObjectiveCards);
         Assert.assertEquals(pickedToolCards, board.getPickedToolCards());
         Assert.assertEquals(pickedPublicObjectiveCards, board.getPickedPublicObjectiveCards());
-        Assert.assertEquals(true, board.findAndUseToolCard(30, playerMultiplayer, m));
-        Assert.assertEquals(false, board.findAndUseToolCard(31, playerMultiplayer, m));
+        Assert.assertTrue(board.findAndUseToolCard(30, playerMultiplayer, m));
+        Assert.assertFalse(board.findAndUseToolCard(31, playerMultiplayer, m));
     }
 
 }

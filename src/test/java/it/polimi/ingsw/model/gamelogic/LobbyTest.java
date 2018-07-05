@@ -1,26 +1,21 @@
 package it.polimi.ingsw.model.gamelogic;
 
-import it.polimi.ingsw.control.Controller;
-import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
-import it.polimi.ingsw.model.gamelogic.Lobby;
 import it.polimi.ingsw.view.LobbyObserver;
 import it.polimi.ingsw.view.MatchObserver;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.mock;
 
 public class LobbyTest {
 
     @Test
-    public void Lobby(){
+    public void Lobby() {
         Lobby lobby = new Lobby(10, 10);
         Assert.assertNotNull(lobby);
         Assert.assertEquals(new HashMap<>(), lobby.getMultiplayerMatches());
@@ -31,7 +26,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void AddUsernameandCheckName(){
+    public void AddUsernameandCheckName() {
         Lobby lobby = new Lobby(10, 10);
         lobby.addUsername("CowboyBebop");
         Assert.assertEquals(ConnectionStatus.CONNECTED, lobby.checkName("CowboyBebop"));
@@ -39,7 +34,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void addToWaitingPlayers(){
+    public void addToWaitingPlayers() {
         Lobby lobby = new Lobby(10, 10);
         lobby.addToWaitingPlayers("CowboyBebop");
         lobby.addToWaitingPlayers("CowboyBebop1");
@@ -50,7 +45,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void removeFromWaitingPlayers(){
+    public void removeFromWaitingPlayers() {
         Lobby lobby = new Lobby(10, 10);
         lobby.addToWaitingPlayers("CowboyBebop");
         lobby.addToWaitingPlayers("CowboyBebop1");
@@ -62,25 +57,25 @@ public class LobbyTest {
         Assert.assertEquals("CowboyBebop2", lobby.getWaitingPlayers().get(1));
         lobby.removeFromWaitingPlayers("CowboyBebop");
         Assert.assertEquals("CowboyBebop2", lobby.getWaitingPlayers().get(0));
-    };
+    }
 
     @Test
-    public void createSingleplayerMatch(){
+    public void createSingleplayerMatch() {
         Lobby lobby = new Lobby(10, 10);
-        lobby.createSingleplayerMatch("Ancona",1,null);
+        lobby.createSingleplayerMatch("Ancona", 1, null);
         Assert.assertEquals(0, lobby.getSingleplayerMatches().get("Ancona").getMatchId());
         Assert.assertEquals("Ancona", lobby.getSingleplayerMatches().get("Ancona").getPlayer().getName());
     }
 
     @Test
-    public void addPlayer(){
+    public void addPlayer() {
         Lobby lobby = new Lobby(10, 10);
         lobby.addToWaitingPlayers("CowboyBebop");
         Assert.assertEquals("CowboyBebop", lobby.getWaitingPlayers().get(0));
     }
 
     @Test
-    public void startMatch(){
+    public void startMatch() {
         Lobby lobby = new Lobby(1000000, 10);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Bovalino");
@@ -93,7 +88,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void disconnect(){
+    public void disconnect() {
         Lobby lobby = new Lobby(10000000, 10);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Bovalino");
@@ -104,7 +99,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void reconnect(){
+    public void reconnect() {
         Lobby lobby = new Lobby(1000000000, 10);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Bovalino");
@@ -120,10 +115,10 @@ public class LobbyTest {
     }
 
     @Test
-    public void removeMatchSingleplayer(){
+    public void removeMatchSingleplayer() {
         Lobby lobby = new Lobby(10, 10);
-        lobby.createSingleplayerMatch("Archi",1,null);
-        lobby.createSingleplayerMatch("Bovalino",1,null);
+        lobby.createSingleplayerMatch("Archi", 1, null);
+        lobby.createSingleplayerMatch("Bovalino", 1, null);
         Assert.assertEquals(0, lobby.getSingleplayerMatches().get("Archi").getMatchId());
         Assert.assertEquals(1, lobby.getSingleplayerMatches().get("Bovalino").getMatchId());
         lobby.removeMatchSingleplayer("Archi");
@@ -131,10 +126,9 @@ public class LobbyTest {
     }
 
     @Test
-    public void observeMatchRemote() throws RemoteException {
+    public void observeMatchRemote() {
         Lobby lobby = new Lobby(10, 10);
-        lobby.createSingleplayerMatch("Archi",1,null);
-        Controller controller = new Controller(lobby);
+        lobby.createSingleplayerMatch("Archi", 1, null);
         MatchObserver m = mock(MatchObserver.class);
         lobby.observeMatchRemote("Archi", m, true);
         lobby.addToWaitingPlayers("Bagaladi");
@@ -145,7 +139,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void observeLobbyRemote(){
+    public void observeLobbyRemote() {
         Lobby lobby = new Lobby(10, 10);
         LobbyObserver observer = mock(LobbyObserver.class);
         lobby.observeLobbyRemote("Archi", observer);
@@ -153,7 +147,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void removeFromMatchMulti(){
+    public void removeFromMatchMulti() {
         Lobby lobby = new Lobby(1000000, 10);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Bovalino");
@@ -164,7 +158,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void removeDisconnectedPlayers(){
+    public void removeDisconnectedPlayers() {
         Lobby lobby = new Lobby(1000000, 10);
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Bovalino");
@@ -177,7 +171,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void deleteDisconnectedClients(){
+    public void deleteDisconnectedClients() {
         Lobby lobby = new Lobby(1000000, 10);
         lobby.addToWaitingPlayers("Archi");
         lobby.addUsername("Archi");

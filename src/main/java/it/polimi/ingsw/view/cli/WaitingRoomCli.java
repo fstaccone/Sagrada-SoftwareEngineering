@@ -20,8 +20,9 @@ public class WaitingRoomCli extends UnicastRemoteObject implements LobbyObserver
 
     /**
      * Initializes the Cli waiting room
-     * @param loginHandler     is the controller of the previous stage
-     * @param window          is the stage representing the previous step
+     *
+     * @param loginHandler is the controller of the previous stage
+     * @param window       is the stage representing the previous step
      */
     public WaitingRoomCli(LoginHandler loginHandler, Stage window) throws RemoteException {
         super();

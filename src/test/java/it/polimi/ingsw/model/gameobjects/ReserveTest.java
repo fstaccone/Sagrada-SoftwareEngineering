@@ -9,13 +9,13 @@ import java.util.List;
 
 public class ReserveTest {
     @Test
-    public void Reserve(){
+    public void Reserve() {
         Reserve reserve = new Reserve();
-        Assert.assertEquals(Collections.emptyList() ,reserve.getDices());
+        Assert.assertEquals(Collections.emptyList(), reserve.getDices());
     }
 
     @Test
-    public void throwDices(){
+    public void throwDices() {
         Reserve reserve = new Reserve();
         List<Dice> dicesToThrow = new ArrayList<>();
         dicesToThrow.add(new Dice(Colors.YELLOW));
@@ -25,13 +25,13 @@ public class ReserveTest {
         Dice d1 = reserve.chooseDice(0);
         Dice d2 = reserve.chooseDice(0);
         Dice d3 = reserve.chooseDice(0);
-        Assert.assertTrue(d1.getValue()>0 && d1.getValue()<7);
-        Assert.assertTrue(d2.getValue()>0 && d1.getValue()<7);
-        Assert.assertTrue(d3.getValue()>0 && d1.getValue()<7);
+        Assert.assertTrue(d1.getValue() > 0 && d1.getValue() < 7);
+        Assert.assertTrue(d2.getValue() > 0 && d1.getValue() < 7);
+        Assert.assertTrue(d3.getValue() > 0 && d1.getValue() < 7);
     }
 
     @Test
-    public void chooseDice(){
+    public void chooseDice() {
         Reserve reserve = new Reserve();
         List<Dice> dicesToThrow = new ArrayList<>();
         dicesToThrow.add(new Dice(Colors.YELLOW));
@@ -41,14 +41,14 @@ public class ReserveTest {
         Dice d1 = reserve.chooseDice(2);
         Dice d2 = reserve.chooseDice(0);
         Dice d3 = reserve.chooseDice(0);
-        Assert.assertTrue(d1.getColor().equals(Colors.BLUE));
-        Assert.assertTrue(d2.getColor().equals(Colors.YELLOW));
-        Assert.assertTrue(d3.getColor().equals(Colors.RED));
-        Assert.assertEquals(null, reserve.chooseDice(0));
+        Assert.assertEquals(d1.getColor(), Colors.BLUE);
+        Assert.assertEquals(d2.getColor(), Colors.YELLOW);
+        Assert.assertEquals(d3.getColor(), Colors.RED);
+        Assert.assertNull(reserve.chooseDice(0));
     }
 
     @Test
-    public void removeAllDices(){
+    public void removeAllDices() {
         Reserve reserve = new Reserve();
         List<Dice> dicesToThrow = new ArrayList<>();
         dicesToThrow.add(new Dice(Colors.YELLOW));
@@ -57,8 +57,8 @@ public class ReserveTest {
         reserve.throwDices(dicesToThrow);
         Dice d1 = reserve.chooseDice(1);
         List<Dice> dicesLeft = reserve.removeAllDices();
-        Assert.assertEquals(Collections.emptyList() ,reserve.getDices());
-        Assert.assertTrue(dicesLeft.get(0).getColor().equals(Colors.YELLOW));
-        Assert.assertTrue(dicesLeft.get(1).getColor().equals(Colors.BLUE));
+        Assert.assertEquals(Collections.emptyList(), reserve.getDices());
+        Assert.assertEquals(dicesLeft.get(0).getColor(), Colors.YELLOW);
+        Assert.assertEquals(dicesLeft.get(1).getColor(), Colors.BLUE);
     }
 }

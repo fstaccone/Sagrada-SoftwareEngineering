@@ -17,23 +17,21 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class IncrDecrDiceValueTest {
-    private WindowPatternCard schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
-    private Board board;
     private Reserve reserve;
 
     @Before
     public void before() {
-        board = mock(Board.class);
+        Board board = mock(Board.class);
         match = mock(MatchMultiplayer.class);
         matchSingleplayer = mock(MatchSingleplayer.class);
         player = new PlayerMultiplayer("player");
         singleplayer = new PlayerSingleplayer("Archi");
-        schemeCard = new Firmitas();
+        WindowPatternCard schemeCard = new Firmitas();
         player.setSchemeCard(schemeCard);
         singleplayer.setSchemeCard(schemeCard);
         Dice dice = new Dice(Colors.BLUE);
@@ -75,7 +73,7 @@ public class IncrDecrDiceValueTest {
     public void checkDice() {
         player.setChoice("+");
         toolCard.useCard(player, match);
-        Assert.assertEquals(false, toolCard.useCard(player, match));
+        Assert.assertFalse(toolCard.useCard(player, match));
         player.setChoice("-");
         toolCard.useCard(player, match);
         Assert.assertEquals(5, reserve.getDices().get(0).getValue());
@@ -83,30 +81,31 @@ public class IncrDecrDiceValueTest {
         toolCard.useCard(player, match);
         Assert.assertEquals(6, reserve.getDices().get(0).getValue());
         player.setChoice("a");
-        Assert.assertEquals(false, toolCard.useCard(player, match));
+        Assert.assertFalse(toolCard.useCard(player, match));
         player.setChoice("-");
         toolCard.useCard(player, match);
         Assert.assertEquals(6, reserve.getDices().get(0).getValue());
         player.setChoice("+");
-        Assert.assertEquals(false, toolCard.useCard(player, match));
+        Assert.assertFalse(toolCard.useCard(player, match));
     }
 
     @Test
     public void incrDecrDiceValue6() {
         singleplayer.setChoice("+");
         toolCard.useCard(singleplayer, matchSingleplayer);
-        Assert.assertEquals(false, toolCard.useCard(singleplayer, matchSingleplayer));
+        Assert.assertFalse(toolCard.useCard(singleplayer, matchSingleplayer));
         singleplayer.setChoice("-");
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(5, reserve.getDices().get(0).getValue());
     }
+
     @Test
     public void incrDiceValue5() {
         singleplayer.setChoice("+");
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(6, reserve.getDices().get(0).getValue());
         singleplayer.setChoice("a");
-        Assert.assertEquals(false, toolCard.useCard(singleplayer, matchSingleplayer));
+        Assert.assertFalse(toolCard.useCard(singleplayer, matchSingleplayer));
         player.setChoice("-");
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(6, reserve.getDices().get(0).getValue());
