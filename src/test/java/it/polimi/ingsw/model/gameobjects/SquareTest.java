@@ -6,86 +6,86 @@ import org.junit.Test;
 public class SquareTest {
 
     @Test
-    public void Square(){
+    public void Square() {
         Square square = new Square();
-        Assert.assertEquals(null, square.getColorConstraint());
+        Assert.assertNull(square.getColorConstraint());
         Assert.assertEquals(0, square.getValueConstraint());
     }
 
     @Test
-    public void occupiedSquare(){
+    public void occupiedSquare() {
         Square square = new Square();
-        Assert.assertEquals(false, square.occupiedSquare());
+        Assert.assertFalse(square.occupiedSquare());
         Dice d = new Dice(Colors.YELLOW);
         square.putDice(d);
-        Assert.assertEquals(true, square.occupiedSquare());
+        Assert.assertTrue(square.occupiedSquare());
     }
 
     @Test
-    public void satisfiedConstraints(){
+    public void satisfiedConstraints() {
         Square square = new Square();
         Dice d = new Dice(Colors.RED);
-        Assert.assertEquals(true, square.satisfiedConstraints(d));
+        Assert.assertTrue(square.satisfiedConstraints(d));
         square.setColorConstraint(Colors.BLUE);
-        Assert.assertEquals(false, square.satisfiedConstraints(d));
+        Assert.assertFalse(square.satisfiedConstraints(d));
         square.setColorConstraint(Colors.RED);
-        Assert.assertEquals(true, square.satisfiedConstraints(d));
+        Assert.assertTrue(square.satisfiedConstraints(d));
         d.setValue(4);
-        Assert.assertEquals(true, square.satisfiedConstraints(d));
+        Assert.assertTrue(square.satisfiedConstraints(d));
         square.setColorConstraint(null);
         square.setValueConstraint(3);
-        Assert.assertEquals(false, square.satisfiedConstraints(d));
+        Assert.assertFalse(square.satisfiedConstraints(d));
         square.setValueConstraint(4);
-        Assert.assertEquals(true, square.satisfiedConstraints(d));
+        Assert.assertTrue(square.satisfiedConstraints(d));
     }
 
     @Test
-    public void satisfiedColorConstraints(){
+    public void satisfiedColorConstraints() {
         Square square = new Square();
         square.setValueConstraint(3);
         Dice d = new Dice(Colors.VIOLET);
-        Assert.assertEquals(true, square.satisfiedColorConstraint(d));
+        Assert.assertTrue(square.satisfiedColorConstraint(d));
         square.setColorConstraint(Colors.RED);
-        Assert.assertEquals(false, square.satisfiedColorConstraint(d));
+        Assert.assertFalse(square.satisfiedColorConstraint(d));
         square.setColorConstraint(Colors.VIOLET);
-        Assert.assertEquals(true, square.satisfiedColorConstraint(d));
+        Assert.assertTrue(square.satisfiedColorConstraint(d));
     }
 
     @Test
-    public void satisfiedValueConstraint(){
+    public void satisfiedValueConstraint() {
         Square square = new Square();
         square.setColorConstraint(Colors.RED);
         Dice d = new Dice(Colors.BLUE);
         d.setValue(4);
-        Assert.assertEquals(true, square.satisfiedValueConstraint(d));
+        Assert.assertTrue(square.satisfiedValueConstraint(d));
         square.setValueConstraint(3);
-        Assert.assertEquals(false, square.satisfiedValueConstraint(d));
+        Assert.assertFalse(square.satisfiedValueConstraint(d));
         square.setValueConstraint(4);
-        Assert.assertEquals(true, square.satisfiedValueConstraint(d));
+        Assert.assertTrue(square.satisfiedValueConstraint(d));
     }
 
     @Test
-    public void putDice(){
+    public void putDice() {
         Square square = new Square();
         Dice d = new Dice(Colors.GREEN);
         d.setValue(4);
-        Assert.assertEquals(true, square.putDice(d));
-        Assert.assertEquals(false, square.putDice(d));
+        Assert.assertTrue(square.putDice(d));
+        Assert.assertFalse(square.putDice(d));
         square.removeDice();
         square.setColorConstraint(Colors.YELLOW);
-        Assert.assertEquals(false, square.putDice(d));
+        Assert.assertFalse(square.putDice(d));
         square.setColorConstraint(Colors.GREEN);
-        Assert.assertEquals(true, square.putDice(d));
+        Assert.assertTrue(square.putDice(d));
         square.removeDice();
         square.setColorConstraint(null);
         square.setValueConstraint(3);
-        Assert.assertEquals(false, square.putDice(d));
+        Assert.assertFalse(square.putDice(d));
         square.setValueConstraint(4);
-        Assert.assertEquals(true, square.putDice(d));
+        Assert.assertTrue(square.putDice(d));
     }
 
     @Test
-    public void putDiceIgnoringColorConstraint(){
+    public void putDiceIgnoringColorConstraint() {
         Square square = new Square();
         Dice d = new Dice(Colors.GREEN);
         d.setValue(4);
@@ -98,7 +98,7 @@ public class SquareTest {
         square.removeDice();
         square.setValueConstraint(3);
         square.putDiceIgnoringColorConstraint(d);
-        Assert.assertEquals(null, square.getDice());
+        Assert.assertNull(square.getDice());
         square.setValueConstraint(4);
         square.putDiceIgnoringColorConstraint(d);
         Assert.assertEquals(d, square.getDice());
@@ -108,11 +108,11 @@ public class SquareTest {
         Assert.assertEquals(d, square.getDice());
         square.removeDice();
         square.putDiceIgnoringColorConstraint(d2);
-        Assert.assertEquals(null, square.getDice());
+        Assert.assertNull(square.getDice());
     }
 
     @Test
-    public void putDiceIgnoringValueConstraint(){
+    public void putDiceIgnoringValueConstraint() {
         Square square = new Square();
         square.setValueConstraint(2);
         Dice d = new Dice(Colors.BLUE);
@@ -128,7 +128,7 @@ public class SquareTest {
         square.removeDice();
         square.setColorConstraint(Colors.BLUE);
         square.putDiceIgnoringValueConstraint(d2);
-        Assert.assertEquals(null, square.getDice());
+        Assert.assertNull(square.getDice());
         square.putDiceIgnoringValueConstraint(d);
         Assert.assertEquals(d, square.getDice());
         square.putDiceIgnoringValueConstraint(d3);
@@ -136,7 +136,7 @@ public class SquareTest {
     }
 
     @Test
-    public void putDiceIgnoringAllConstraints(){
+    public void putDiceIgnoringAllConstraints() {
         Square square = new Square();
         square.setValueConstraint(2);
         square.setColorConstraint(Colors.YELLOW);
@@ -151,12 +151,12 @@ public class SquareTest {
     }
 
     @Test
-    public void removeDice(){
+    public void removeDice() {
         Square square = new Square();
         Dice d = new Dice(Colors.YELLOW);
         square.putDice(d);
         Assert.assertEquals(d, square.removeDice());
-        Assert.assertEquals(null, square.removeDice());
+        Assert.assertNull(square.removeDice());
     }
 
 

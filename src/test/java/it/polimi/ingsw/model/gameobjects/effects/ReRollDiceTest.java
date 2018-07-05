@@ -17,20 +17,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ReRollDiceTest {
-    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
     private Reserve reserve;
-    private Board board;
 
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
         matchSingleplayer = mock(MatchSingleplayer.class);
-        board = mock(Board.class);
+        Board board = mock(Board.class);
         Dice dice = new Dice(Colors.BLUE);
         Dice d1 = new Dice(Colors.YELLOW);
         Dice d2 = new Dice(Colors.VIOLET);
@@ -40,9 +38,8 @@ public class ReRollDiceTest {
         list.add(dice);
         list.add(d2);
         reserve.throwDices(list);
-        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
-        schemeCard = new KaleidoscopicDream();
+        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setPickedDice(dice);
         player.setDice(1);
@@ -65,7 +62,7 @@ public class ReRollDiceTest {
     }
 
     @Test
-    public void singlePlayer(){
+    public void singlePlayer() {
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertEquals(Colors.BLUE, reserve.chooseDice(singleplayer.getDice()).getColor());
     }

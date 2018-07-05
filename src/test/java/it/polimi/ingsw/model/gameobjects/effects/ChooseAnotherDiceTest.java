@@ -16,17 +16,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ChooseAnotherDiceTest {
-    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerMultiplayer player2;
     private MatchMultiplayer match;
-    private Board board;
 
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
-        board = mock(Board.class);
+        Board board = mock(Board.class);
 
         Reserve reserve = new Reserve();
         List<Dice> dices = new ArrayList<>();
@@ -44,10 +42,9 @@ public class ChooseAnotherDiceTest {
         when(match.getBoard()).thenReturn(board);
         when(board.getReserve()).thenReturn(reserve);
         when(match.getBoard().getReserve()).thenReturn(reserve);
-        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
         player2 = new PlayerMultiplayer("player2");
-        schemeCard = new KaleidoscopicDream();
+        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setNumFavorTokens(4);
         player2.setNumFavorTokens(0);
@@ -58,17 +55,16 @@ public class ChooseAnotherDiceTest {
     public void checkReserve() {
         Assert.assertEquals("Tenaglia a Rotelle", toolCard.getName());
         Assert.assertEquals("tool8", toolCard.getToolID());
-        Assert.assertEquals(null, player.getPickedDice());
+        Assert.assertNull(player.getPickedDice());
         toolCard.useCard(player, match);
         toolCard.useCard(player2, match);
-        //match.getBoard().getReserve().showReserve();
         Assert.assertNotNull(match.getBoard().getReserve());
         player.setPickedDice(new Dice(Colors.YELLOW));
         Assert.assertEquals(Colors.YELLOW, player.getPickedDice().getColor());
     }
 
     @Test
-    public void applyEffect(){
+    public void applyEffect() {
         PlayerSingleplayer singleplayer = new PlayerSingleplayer("Archi");
         singleplayer.setDiceToBeSacrificed(0);
         toolCard.useCard(singleplayer, match);

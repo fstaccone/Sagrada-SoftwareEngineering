@@ -10,7 +10,7 @@ import java.util.List;
 public class RoundTrackTest {
 
     @Test
-    public void putDices(){
+    public void putDices() {
         RoundTrack roundTrack = new RoundTrack();
         List<Dice> dicesToPut = new ArrayList<>();
         Dice blueDice = new Dice(Colors.BLUE);
@@ -28,7 +28,7 @@ public class RoundTrackTest {
     }
 
     @Test
-    public void switchDices(){
+    public void switchDices() {
         RoundTrack roundTrack = new RoundTrack();
         List<Dice> dicesToPut = new ArrayList<>();
         Dice blueDice = new Dice(Colors.BLUE);
@@ -48,7 +48,7 @@ public class RoundTrackTest {
     }
 
     @Test
-    public void sumForSingleplayer (){
+    public void sumForSingleplayer() {
         RoundTrack roundTrack = new RoundTrack();
         List<Dice> dicesToPut = new ArrayList<>();
         Dice blueDice = new Dice(Colors.BLUE);

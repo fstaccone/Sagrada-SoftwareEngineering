@@ -17,18 +17,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ReRollAllReserveDicesTest {
-    private KaleidoscopicDream schemeCard;
     private ToolCard toolCard;
     private PlayerMultiplayer player;
     private PlayerSingleplayer singleplayer;
     private MatchMultiplayer match;
     private MatchSingleplayer matchSingleplayer;
-    private Board board;
 
     @Before
     public void before() {
         match = mock(MatchMultiplayer.class);
-        board = mock(Board.class);
+        Board board = mock(Board.class);
 
         Reserve reserve = new Reserve();
         List<Dice> dices = new ArrayList<>();
@@ -46,9 +44,8 @@ public class ReRollAllReserveDicesTest {
         when(match.getBoard()).thenReturn(board);
         when(board.getReserve()).thenReturn(reserve);
         when(match.getBoard().getReserve()).thenReturn(reserve);
-        // modificato in seguito all'introduzione di Lobby
         player = new PlayerMultiplayer("player");
-        schemeCard = new KaleidoscopicDream();
+        KaleidoscopicDream schemeCard = new KaleidoscopicDream();
         player.setSchemeCard(schemeCard);
         player.setNumFavorTokens(4);
         player.setTurnsLeft(1);
@@ -74,7 +71,7 @@ public class ReRollAllReserveDicesTest {
     }
 
     @Test
-    public void singlePlayer(){
+    public void singlePlayer() {
         toolCard.useCard(singleplayer, matchSingleplayer);
         Assert.assertNotNull(matchSingleplayer.getBoard().getReserve());
         Assert.assertEquals(Colors.RED, matchSingleplayer.getBoard().getReserve().chooseDice(0).getColor());

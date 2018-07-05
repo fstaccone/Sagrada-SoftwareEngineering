@@ -2,7 +2,6 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.model.gamelogic.ConnectionStatus;
 import it.polimi.ingsw.model.gamelogic.Lobby;
-import it.polimi.ingsw.control.Controller;
 import it.polimi.ingsw.model.gameobjects.Colors;
 import it.polimi.ingsw.model.gameobjects.Dice;
 import it.polimi.ingsw.model.gameobjects.PrivateObjectiveCard;
@@ -18,15 +17,13 @@ import it.polimi.ingsw.view.gui.WaitingScreenHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
-import java.net.Socket;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ControllerTest {
 
@@ -61,7 +58,7 @@ public class ControllerTest {
     public void createMatch() throws RemoteException {
         Lobby lobby = new Lobby(100000, 10);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         Assert.assertEquals(0, lobby.getSingleplayerMatches().get("Ancona").getMatchId());
     }
 
@@ -69,33 +66,15 @@ public class ControllerTest {
     public void goThrough() throws RemoteException {
         Lobby lobby = new Lobby(100000, 100000);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         controller.goThrough("Ancona", true);
-        Assert.assertEquals(true, lobby.getSingleplayerMatches().get("Ancona").isEndsTurn());
+        Assert.assertTrue(lobby.getSingleplayerMatches().get("Ancona").isEndsTurn());
         controller.addPlayer("Bovalino");
         controller.addPlayer("Condofuri");
         lobby.startMatch();
         controller.goThrough("Bovalino", false);
-        Assert.assertEquals(true, lobby.getMultiplayerMatches().get("Bovalino").isEndsTurn());
+        Assert.assertTrue(lobby.getMultiplayerMatches().get("Bovalino").isEndsTurn());
     }
-
-    /*@Test
-    public void quitGame() throws RemoteException {
-        Lobby lobby = new Lobby(1000, 1000);
-        Controller controller = new Controller(lobby);
-        ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
-        controller.createMatch("Ancona",1,objectOutputStream);
-        controller.quitGame("Ancona", true);
-        Assert.assertEquals(0, lobby.getSingleplayerMatches().size());
-        lobby.addToWaitingPlayers("Ancona");
-        lobby.addToWaitingPlayers("Bagaladi");
-        lobby.addToWaitingPlayers("Condofuri");
-        lobby.startMatch();
-        controller.quitGame("Bagaladi", false);
-        Assert.assertEquals(ConnectionStatus.DISCONNECTED, lobby.getMultiplayerMatches().get("Bagaladi").getPlayer("Bagaladi").getStatus());
-        controller.reconnect("Bagaladi");
-        Assert.assertEquals(ConnectionStatus.CONNECTED, lobby.getMultiplayerMatches().get("Bagaladi").getPlayer("Bagaladi").getStatus());
-    }*/
 
     @Test
     public void askForDiceColor() throws RemoteException {
@@ -143,7 +122,7 @@ public class ControllerTest {
     public void chooseWindow() throws RemoteException {
         Lobby lobby = new Lobby(100000, 10);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").windowsToBeProposed();
         controller.chooseWindow("Ancona", 0, true);
         Assert.assertNotNull(lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard());
@@ -159,7 +138,7 @@ public class ControllerTest {
     public void placeDice() throws RemoteException {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
@@ -180,22 +159,22 @@ public class ControllerTest {
     public void placeDiceTool11() throws RemoteException {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         Dice d = new Dice(Colors.BLUE);
         d.setValue(3);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setDiceFromBag(d);
-        Assert.assertEquals(Colors.BLUE, controller.askForDiceColor("Ancona",true));
+        Assert.assertEquals(Colors.BLUE, controller.askForDiceColor("Ancona", true));
         controller.setDiceValue(4, "Ancona", true);
         Assert.assertEquals(4, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getDiceFromBag().getValue());
-        controller.placeDiceTool11(1,0,"Ancona", true);
+        controller.placeDiceTool11(1, 0, "Ancona", true);
         Assert.assertEquals(Colors.BLUE, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getWindow()[1][0].getDice().getColor());
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Bovalino");
         lobby.startMatch();
         lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setSchemeCard(new Firelight());
         lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setDiceFromBag(d);
-        controller.placeDiceTool11(1,0,"Archi", false);
+        controller.placeDiceTool11(1, 0, "Archi", false);
         Assert.assertEquals(Colors.BLUE, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getWindow()[1][0].getDice().getColor());
     }
 
@@ -204,7 +183,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
@@ -217,7 +196,7 @@ public class ControllerTest {
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(0).setValue(4);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Pinza Sgrossatrice", "tool1"));
         UseToolCard1Request useToolCard1Request = new UseToolCard1Request(1, 0, "+", "Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard1Request);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard1Request);
         Assert.assertTrue(response.isEffectApplied());
         Assert.assertEquals(5, lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(0).getValue());
         //Multi player
@@ -237,7 +216,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
@@ -255,9 +234,9 @@ public class ControllerTest {
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Pennello per Eglomise", "tool2"));
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Alesatore per Lamina di Rame", "tool3"));
         UseToolCard2or3Request useToolCard2or3Request = new UseToolCard2or3Request(0, 2, 0, 0, 2, 0, "Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard2or3Request);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard2or3Request);
         Assert.assertTrue(response.isEffectApplied());
-        Assert.assertEquals(3, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(2,0).getValue());
+        Assert.assertEquals(3, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(2, 0).getValue());
         Assert.assertFalse(lobby.getSingleplayerMatches().get("Ancona").useToolCard2or3(0, 2, 0, 0, 2, 0, "Ancona"));
         //Multi player
         lobby.addToWaitingPlayers("Archi");
@@ -280,7 +259,7 @@ public class ControllerTest {
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Pennello per Eglomise", "tool2"));
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Alesatore per Lamina di Rame", "tool3"));
         controller.useToolCard2or3(0, 2, 0, 0, 2, 0, "Archi", false);
-        Assert.assertEquals(3, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(2,0).getValue());
+        Assert.assertEquals(3, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(2, 0).getValue());
         Assert.assertFalse(lobby.getMultiplayerMatches().get("Archi").useToolCard2or3(0, 2, 0, 0, 2, 0, "Archi"));
     }
 
@@ -289,7 +268,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.YELLOW);
@@ -309,13 +288,13 @@ public class ControllerTest {
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(0).setValue(6);
         lobby.getSingleplayerMatches().get("Ancona").placeDice("Ancona", 0, 2, 0);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Lathekin", "tool4"));
-        UseToolCard4Request useToolCard4Request = new UseToolCard4Request(0,0,0,2,0,2,0,1,1, "Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard4Request);
+        UseToolCard4Request useToolCard4Request = new UseToolCard4Request(0, 0, 0, 2, 0, 2, 0, 1, 1, "Ancona", true);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard4Request);
         Assert.assertTrue(response.isEffectApplied());
-        Assert.assertEquals(3, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(2,0).getValue());
-        Assert.assertEquals(Colors.YELLOW, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(2,0).getColor());
-        Assert.assertEquals(6, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(1,1).getValue());
-        Assert.assertEquals(Colors.BLUE, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(1,1).getColor());
+        Assert.assertEquals(3, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(2, 0).getValue());
+        Assert.assertEquals(Colors.YELLOW, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(2, 0).getColor());
+        Assert.assertEquals(6, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(1, 1).getValue());
+        Assert.assertEquals(Colors.BLUE, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getSchemeCard().getDice(1, 1).getColor());
         //Multi player
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -339,12 +318,12 @@ public class ControllerTest {
         lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().get(0).setValue(6);
         lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 0, 2, 0);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Lathekin", "tool4"));
-        controller.useToolCard4(0,0,0,2,0,2,0,1,1, "Archi", false);
-        Assert.assertEquals(3, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(2,0).getValue());
-        Assert.assertEquals(Colors.YELLOW, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(2,0).getColor());
-        Assert.assertEquals(6, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(1,1).getValue());
-        Assert.assertEquals(Colors.BLUE, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(1,1).getColor());
-        Assert.assertFalse(lobby.getMultiplayerMatches().get("Archi").useToolCard4(0,0,0,2,0,2,0,1,1, "Archi"));
+        controller.useToolCard4(0, 0, 0, 2, 0, 2, 0, 1, 1, "Archi", false);
+        Assert.assertEquals(3, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(2, 0).getValue());
+        Assert.assertEquals(Colors.YELLOW, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(2, 0).getColor());
+        Assert.assertEquals(6, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(1, 1).getValue());
+        Assert.assertEquals(Colors.BLUE, lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").getSchemeCard().getDice(1, 1).getColor());
+        Assert.assertFalse(lobby.getMultiplayerMatches().get("Archi").useToolCard4(0, 0, 0, 2, 0, 2, 0, 1, 1, "Archi"));
     }
 
     @Test
@@ -352,7 +331,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.GREEN);
@@ -377,7 +356,7 @@ public class ControllerTest {
         MatchObserver matchObserver = mock(MatchObserver.class);
         lobby.getSingleplayerMatches().get("Ancona").observeMatchRemote(matchObserver);
         UseToolCard5Request useToolCard5Request = new UseToolCard5Request(0, 1, 2, 0, "Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard5Request);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard5Request);
         Assert.assertTrue(response.isEffectApplied());
         Assert.assertEquals(5, lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(0).getValue());
         Assert.assertEquals(Colors.YELLOW, lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(0).getColor());
@@ -408,9 +387,7 @@ public class ControllerTest {
         lobby.getMultiplayerMatches().get("Archi").getBoard().getRoundTrack().putDices(list10, 1);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Taglierina Circolare", "tool5"));
         MatchObserver matchObserver3 = mock(MatchObserver.class);
-        //MatchObserver matchObserver2 = mock(MatchObserver.class);
         lobby.getMultiplayerMatches().get("Archi").observeMatchRemote(matchObserver3, "Archi");
-        //matchMultiplayer.observeMatchRemote(matchObserver2, "Archi2");
         lobby.getMultiplayerMatches().get("Archi").setToolAction(false);
         controller.useToolCard5(0, 1, 2, 0, "Archi", false);
         Assert.assertEquals(5, lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().get(1).getValue());
@@ -423,7 +400,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.VIOLET);
@@ -433,12 +410,12 @@ public class ControllerTest {
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().throwDices(dices);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Pennello per Pasta Salda", "tool6"));
         lobby.getSingleplayerMatches().get("Ancona").setToolAction(false);
-        UseToolCard6Request useToolCard6Request = new UseToolCard6Request(0,1,"Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard6Request);
+        UseToolCard6Request useToolCard6Request = new UseToolCard6Request(0, 1, "Ancona", true);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard6Request);
         Assert.assertTrue(response.isEffectApplied());
         Assert.assertEquals(1, lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().size());
         Assert.assertEquals(Colors.BLUE, lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(0).getColor());
-        Assert.assertFalse(controller.useToolCard6(0,1,"Ancona", true));
+        Assert.assertFalse(controller.useToolCard6(0, 1, "Ancona", true));
         //Multi player
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -452,10 +429,10 @@ public class ControllerTest {
         lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().throwDices(dices2);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Pennello per Pasta Salda", "tool6"));
         lobby.getMultiplayerMatches().get("Archi").setToolAction(false);
-        Assert.assertTrue(controller.useToolCard6(0,1,"Archi", false));
+        Assert.assertTrue(controller.useToolCard6(0, 1, "Archi", false));
         Assert.assertEquals(2, lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().size());
         Assert.assertEquals(Colors.BLUE, lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().get(1).getColor());
-        Assert.assertFalse(controller.useToolCard6(0,1,"Archi", false));
+        Assert.assertFalse(controller.useToolCard6(0, 1, "Archi", false));
     }
 
     @Test
@@ -463,7 +440,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
@@ -476,11 +453,11 @@ public class ControllerTest {
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Martelletto", "tool7"));
         lobby.getSingleplayerMatches().get("Ancona").setToolAction(false);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setTurnsLeft(1);
-        UseToolCard7Request useToolCard7Request = new UseToolCard7Request(0,"Ancona", true);
+        UseToolCard7Request useToolCard7Request = new UseToolCard7Request(0, "Ancona", true);
         ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard7Request);
         Assert.assertTrue(response.isEffectApplied());
         Assert.assertEquals(2, lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().size());
-        Assert.assertFalse(controller.useToolCard7(0,"Ancona", true));
+        Assert.assertFalse(controller.useToolCard7(0, "Ancona", true));
         //Multi player
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -497,9 +474,9 @@ public class ControllerTest {
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Martelletto", "tool7"));
         lobby.getMultiplayerMatches().get("Archi").setToolAction(false);
         lobby.getMultiplayerMatches().get("Archi").getPlayer("Archi").setTurnsLeft(1);
-        Assert.assertTrue(controller.useToolCard7(0,"Archi", false));
+        Assert.assertTrue(controller.useToolCard7(0, "Archi", false));
         Assert.assertEquals(3, lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().size());
-        Assert.assertFalse(controller.useToolCard7(0,"Archi", false));
+        Assert.assertFalse(controller.useToolCard7(0, "Archi", false));
     }
 
     @Test
@@ -507,7 +484,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.RED);
@@ -520,7 +497,7 @@ public class ControllerTest {
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().throwDices(dices);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Tenaglia a Rotelle", "tool8"));
         UseToolCard8Request useToolCard8Request = new UseToolCard8Request(0, "Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard8Request);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard8Request);
         Assert.assertTrue(response.isEffectApplied());
         Assert.assertFalse(lobby.getSingleplayerMatches().get("Ancona").isDiceAction());
         Assert.assertFalse(controller.useToolCard8(0, "Ancona", true));
@@ -549,7 +526,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.YELLOW);
@@ -562,10 +539,10 @@ public class ControllerTest {
         lobby.getSingleplayerMatches().get("Ancona").placeDice("Archi", 1, 1, 0);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Riga in Sughero", "tool9"));
         lobby.getSingleplayerMatches().get("Ancona").setDiceAction(false);
-        UseToolCard9Request useToolCard9Request = new UseToolCard9Request(0,1,2,2, "Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard9Request);
+        UseToolCard9Request useToolCard9Request = new UseToolCard9Request(0, 1, 2, 2, "Ancona", true);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard9Request);
         Assert.assertTrue(response.isEffectApplied());
-        Assert.assertFalse(controller.useToolCard9(0,1,2,2, "Ancona", true));
+        Assert.assertFalse(controller.useToolCard9(0, 1, 2, 2, "Ancona", true));
         //Multi player
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -582,8 +559,8 @@ public class ControllerTest {
         lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 1, 1, 0);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Riga in Sughero", "tool9"));
         lobby.getMultiplayerMatches().get("Archi").setDiceAction(false);
-        Assert.assertTrue(controller.useToolCard9(0,1,2,2, "Archi", false));
-        Assert.assertFalse(controller.useToolCard9(0,1,2,2, "Archi", false));
+        Assert.assertTrue(controller.useToolCard9(0, 1, 2, 2, "Archi", false));
+        Assert.assertFalse(controller.useToolCard9(0, 1, 2, 2, "Archi", false));
     }
 
     @Test
@@ -591,7 +568,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.GREEN);
@@ -600,10 +577,10 @@ public class ControllerTest {
         dices.add(d1);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().throwDices(dices);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Tampone Diamantato", "tool10"));
-        UseToolCard10Request useToolCard10Request = new UseToolCard10Request(0,1, "Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard10Request);
+        UseToolCard10Request useToolCard10Request = new UseToolCard10Request(0, 1, "Ancona", true);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard10Request);
         Assert.assertTrue(response.isEffectApplied());
-        Assert.assertFalse(controller.useToolCard10(0,1, "Ancona", true));
+        Assert.assertFalse(controller.useToolCard10(0, 1, "Ancona", true));
         //Multi player
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -616,8 +593,8 @@ public class ControllerTest {
         dices2.add(d4);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().throwDices(dices2);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Tampone Diamantato", "tool10"));
-        Assert.assertTrue(controller.useToolCard10(0,1, "Archi", false));
-        Assert.assertFalse(controller.useToolCard10(0,1, "Archi", false));
+        Assert.assertTrue(controller.useToolCard10(0, 1, "Archi", false));
+        Assert.assertFalse(controller.useToolCard10(0, 1, "Archi", false));
     }
 
     @Test
@@ -625,7 +602,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.VIOLET);
@@ -634,10 +611,10 @@ public class ControllerTest {
         dices.add(d1);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().throwDices(dices);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getPickedToolCards().add(new ToolCard("Diluente per Pasta Salda", "tool11"));
-        UseToolCard11Request useToolCard11Request = new UseToolCard11Request(0,1, "Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard11Request);
+        UseToolCard11Request useToolCard11Request = new UseToolCard11Request(0, 1, "Ancona", true);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard11Request);
         Assert.assertTrue(response.isEffectApplied());
-        Assert.assertFalse(controller.useToolCard11(0,1, "Ancona", true));
+        Assert.assertFalse(controller.useToolCard11(0, 1, "Ancona", true));
         //Multi player
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -650,8 +627,8 @@ public class ControllerTest {
         dices2.add(d4);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().throwDices(dices2);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getPickedToolCards().add(new ToolCard("Diluente per Pasta Salda", "tool11"));
-        Assert.assertTrue(controller.useToolCard11(0,1, "Archi", false));
-        Assert.assertFalse(controller.useToolCard11(0,1, "Archi", false));
+        Assert.assertTrue(controller.useToolCard11(0, 1, "Archi", false));
+        Assert.assertFalse(controller.useToolCard11(0, 1, "Archi", false));
     }
 
     @Test
@@ -659,7 +636,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
@@ -686,17 +663,17 @@ public class ControllerTest {
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getRoundTrack().putDices(list0, 0);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getRoundTrack().putDices(list1, 1);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(1).setValue(3);
-        lobby.getSingleplayerMatches().get("Ancona").placeDice("Ancona",1,0,0);
+        lobby.getSingleplayerMatches().get("Ancona").placeDice("Ancona", 1, 0, 0);
         lobby.getSingleplayerMatches().get("Ancona").setDiceAction(false);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(1).setValue(5);
-        lobby.getSingleplayerMatches().get("Ancona").placeDice("Ancona",1,1,0);
+        lobby.getSingleplayerMatches().get("Ancona").placeDice("Ancona", 1, 1, 0);
         lobby.getSingleplayerMatches().get("Ancona").setDiceAction(false);
         lobby.getSingleplayerMatches().get("Ancona").getBoard().getReserve().getDices().get(1).setValue(4);
-        lobby.getSingleplayerMatches().get("Ancona").placeDice("Ancona",1,2,0);
-        UseToolCard12Request useToolCard12Request = new UseToolCard12Request(0,1,0,0,0,2,1,2,0,0,1,"Ancona", true);
-        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse)controller.handle(useToolCard12Request);
+        lobby.getSingleplayerMatches().get("Ancona").placeDice("Ancona", 1, 2, 0);
+        UseToolCard12Request useToolCard12Request = new UseToolCard12Request(0, 1, 0, 0, 0, 2, 1, 2, 0, 0, 1, "Ancona", true);
+        ToolCardEffectAppliedResponse response = (ToolCardEffectAppliedResponse) controller.handle(useToolCard12Request);
         Assert.assertTrue(response.isEffectApplied());
-        Assert.assertFalse(controller.useToolCard12(0,1,0,0,0,2,1,2,0,0,1,"Ancona", true));
+        Assert.assertFalse(controller.useToolCard12(0, 1, 0, 0, 0, 2, 1, 2, 0, 0, 1, "Ancona", true));
         //Multi player
         lobby.addToWaitingPlayers("Archi");
         lobby.addToWaitingPlayers("Archi2");
@@ -727,15 +704,15 @@ public class ControllerTest {
         lobby.getMultiplayerMatches().get("Archi").getBoard().getRoundTrack().putDices(list00, 0);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getRoundTrack().putDices(list10, 1);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().get(1).setValue(3);
-        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi",1,0,0);
+        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 1, 0, 0);
         lobby.getMultiplayerMatches().get("Archi").setDiceAction(false);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().get(1).setValue(5);
-        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi",1,1,0);
+        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 1, 1, 0);
         lobby.getMultiplayerMatches().get("Archi").setDiceAction(false);
         lobby.getMultiplayerMatches().get("Archi").getBoard().getReserve().getDices().get(1).setValue(4);
-        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi",1,2,0);
-        Assert.assertTrue(controller.useToolCard12(0,1,0,0,0,2,1,2,0,0,1,"Archi", false));
-        Assert.assertFalse(controller.useToolCard12(0,1,0,0,0,2,1,2,0,0,1,"Archi", false));
+        lobby.getMultiplayerMatches().get("Archi").placeDice("Archi", 1, 2, 0);
+        Assert.assertTrue(controller.useToolCard12(0, 1, 0, 0, 0, 2, 1, 2, 0, 0, 1, "Archi", false));
+        Assert.assertFalse(controller.useToolCard12(0, 1, 0, 0, 0, 2, 1, 2, 0, 0, 1, "Archi", false));
     }
 
     @Test
@@ -754,7 +731,7 @@ public class ControllerTest {
         Lobby lobby = new Lobby(1000, 1000);
         Controller controller = new Controller(lobby);
         //Single player
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         RmiGui rmiGui = mock(RmiGui.class);
         controller.observeMatch("Ancona", rmiGui, true, false);
         Assert.assertNotNull(lobby.getSingleplayerMatches().get("Ancona").getObserverRmi());
@@ -777,26 +754,6 @@ public class ControllerTest {
         Assert.assertEquals(1, lobby.getRemoteObservers().keySet().size());
     }
 
-    /*
-    @Test
-    public void handleAddPlayerRequest() throws IOException {
-        Lobby lobby = new Lobby(1000, 1000);
-        Controller controller = new Controller(lobby);
-        SocketHandler socketHandler = mock(SocketHandler.class);
-        SocketHandler socketHandler2 = mock(SocketHandler.class);
-        SocketHandler socketHandler3 = mock(SocketHandler.class);
-        ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
-        controller.addSocketHandler(socketHandler);
-        controller.addSocketHandler(socketHandler2);
-        controller.addSocketHandler(socketHandler3);
-        when(socketHandler.getOut()).thenReturn(objectOutputStream);
-        when(socketHandler2.getOut()).thenReturn(objectOutputStream);
-        when(socketHandler3.getOut()).thenReturn(objectOutputStream);
-        AddPlayerRequest request = new AddPlayerRequest("Archi");
-        controller.handle(request);
-    }
-    */
-
     @Test
     public void handleCheckUsernameRequest() throws RemoteException {
         Lobby lobby = new Lobby(1000, 1000);
@@ -808,7 +765,7 @@ public class ControllerTest {
         lobby.startMatch();
         CheckUsernameRequest checkUsernameRequest = new CheckUsernameRequest("Archi");
         Response response = controller.handle(checkUsernameRequest);
-        NameAlreadyTakenResponse response1 = (NameAlreadyTakenResponse)response;
+        NameAlreadyTakenResponse response1 = (NameAlreadyTakenResponse) response;
         ConnectionStatus connectionStatus = response1.getStatus();
         Assert.assertEquals(ConnectionStatus.CONNECTED, connectionStatus);
     }
@@ -823,20 +780,6 @@ public class ControllerTest {
         controller.handle(createMatchRequest);
         Assert.assertNotNull(lobby.getSingleplayerMatches().get("Ancona"));
     }
-
-    /*@Test
-    public void addPlayerRequest() throws RemoteException {
-        AddPlayerRequest addPlayerRequest = new AddPlayerRequest("Ancona");
-        Lobby lobby = new Lobby(1000, 1000);
-        Controller controller = new Controller(lobby);
-        SocketHandler socketHandler = mock(SocketHandler.class);
-        SocketHandler socketHandler2 = mock(SocketHandler.class);
-        controller.addSocketHandler(socketHandler);
-        controller.addSocketHandler(socketHandler2);
-        ObjectOutputStream objectOutputStream = mock(ObjectOutputStream.class);
-        when(socketHandler2.getOut()).thenReturn(objectOutputStream);
-        controller.handle(addPlayerRequest);
-    }*/
 
     @Test
     public void handleRemoveFromWaitingPlayersRequest() throws RemoteException {
@@ -875,7 +818,7 @@ public class ControllerTest {
         PlaceDiceRequest placeDiceRequest = new PlaceDiceRequest(0, 1, 0, "Ancona", true);
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         List<Dice> dices = new ArrayList<>();
         Dice d = new Dice(Colors.BLUE);
@@ -890,12 +833,12 @@ public class ControllerTest {
         PlaceDiceTool11Request placeDiceTool11Request = new PlaceDiceTool11Request(1, 0, "Ancona", true);
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setSchemeCard(new Firelight());
         Dice d = new Dice(Colors.BLUE);
         d.setValue(3);
         lobby.getSingleplayerMatches().get("Ancona").getPlayer().setDiceFromBag(d);
-        Assert.assertEquals(Colors.BLUE, controller.askForDiceColor("Ancona",true));
+        Assert.assertEquals(Colors.BLUE, controller.askForDiceColor("Ancona", true));
         controller.setDiceValue(4, "Ancona", true);
         Assert.assertEquals(4, lobby.getSingleplayerMatches().get("Ancona").getPlayer().getDiceFromBag().getValue());
         DicePlacedResponse response = (DicePlacedResponse) controller.handle(placeDiceTool11Request);
@@ -907,7 +850,7 @@ public class ControllerTest {
     public void choosePrivateCard() throws RemoteException {
         Lobby lobby = new Lobby(100000, 1000);
         Controller controller = new Controller(lobby);
-        controller.createMatch("Ancona",1,null);
+        controller.createMatch("Ancona", 1, null);
         PrivateCardChosenRequest privateCardChosenRequest = new PrivateCardChosenRequest("Ancona", 1);
         controller.handle(privateCardChosenRequest);
         Assert.assertTrue(lobby.getSingleplayerMatches().get("Ancona").isPrivateCardChosen());

@@ -11,7 +11,7 @@ import java.util.List;
 public class PlayerSingleplayerTest {
 
     @Test
-    public void PlayerSinglePlayer(){
+    public void PlayerSinglePlayer() {
         PlayerSingleplayer playerSingleplayer = new PlayerSingleplayer("CowboyBebop");
         Assert.assertEquals("CowboyBebop", playerSingleplayer.getName());
         Assert.assertEquals(Colors.NONE, playerSingleplayer.getColor());
@@ -19,7 +19,7 @@ public class PlayerSingleplayerTest {
     }
 
     @Test
-    public void setSchemeCard(){
+    public void setSchemeCard() {
         WindowPatternCard schemeCard = new KaleidoscopicDream();
         PlayerSingleplayer playerSingleplayer = new PlayerSingleplayer("CowboyBebop");
         playerSingleplayer.setSchemeCard(schemeCard);
