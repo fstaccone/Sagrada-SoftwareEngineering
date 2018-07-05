@@ -27,6 +27,7 @@ public class SocketController implements ResponseHandler {
 
     /**
      * SocketController constructor, client side to manage socket connections.
+     * There is one SocketController for each Client.
      *
      * @param in is the inputStream used to read socket responses from the server
      * @param out is the outputStream used to send socket requests to the server
@@ -183,6 +184,11 @@ public class SocketController implements ResponseHandler {
         } else socketGui.getGui().onRoundTrack(response.getRoundTrack());
     }
 
+    /**
+     * Handles the GameStartedResponse sent by the model and directed to the the view
+     *
+     * @param response is a GameStartedResponse, that says if the game has started
+     */
     @Override
     public void handle(GameStartedResponse response) {
         if (socketCli != null) {
@@ -192,6 +198,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the YourTurnResponse sent by the model and directed to the the view
+     *
+     * @param response is a YourTurnResponse, that tells the player is it is his turn
+     */
     @Override
     public void handle(YourTurnResponse response) {
         if (socketCli != null) {
@@ -200,6 +211,11 @@ public class SocketController implements ResponseHandler {
             socketGui.getGui().onYourTurn(response.isMyTurn(), response.getName(), response.getRound(), response.getTurn());
     }
 
+    /**
+     * Handles the ReserveResponse sent by the model and directed to the the view
+     *
+     * @param response is a ReserveResponse, that updates the Reserve state
+     */
     @Override
     public void handle(ReserveResponse response) {
         if (socketCli != null) {
@@ -207,6 +223,11 @@ public class SocketController implements ResponseHandler {
         } else socketGui.getGui().onReserve(response.getReserve());
     }
 
+    /**
+     * Handles the MyWindowResponse sent by the model and directed to the the view
+     *
+     * @param response is a MyWindowResponse, that updates the window state of the current player
+     */
     @Override
     public void handle(MyWindowResponse response) {
         if (socketCli != null) {
@@ -216,6 +237,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the AfterWindowChoiceResponse sent by the model and directed to the the view
+     *
+     * @param response is a AfterWindowChoiceResponse, that sets the after window state of the current player view
+     */
     @Override
     public void handle(AfterWindowChoiceResponse response) {
         if (socketCli != null) {
@@ -228,6 +254,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the InitializationResponse sent by the model and directed to the the view
+     *
+     * @param response is a InitializationResponse, that sets the Initialization state of the current player view
+     */
     @Override
     public void handle(InitializationResponse response) {
         if (socketCli != null) {
@@ -237,6 +268,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the OtherTurnResponse sent by the model and directed to the the view
+     *
+     * @param response is a OtherTurnResponse, that says whose is the current turn
+     */
     @Override
     public void handle(OtherTurnResponse response) {
         if (socketCli != null) {
@@ -246,17 +282,31 @@ public class SocketController implements ResponseHandler {
         }
     }
 
-
+    /**
+     * Handles the DicePlacedResponse sent by the model and directed to the the view
+     *
+     * @param response is a DicePlacedResponse, that says if the dice has been placed correctly
+     */
     @Override
     public void handle(DicePlacedResponse response) {
         dicePlaced = response.isDone();
     }
 
+    /**
+     * Handles the ToolCardEffectAppliedResponse sent by the model and directed to the the view
+     *
+     * @param response is a DicePlacedResponse, that says if the effect has been placed correctly
+     */
     @Override
     public void handle(ToolCardEffectAppliedResponse response) {
         effectApplied = response.isEffectApplied();
     }
 
+    /**
+     * Handles the ClosingGameResponse sent by the model and directed to the the view
+     *
+     * @param response is a ClosingGameResponse, that communicates the closing of the game to the player
+     */
     @Override
     public void handle(ClosingGameResponse response) {
         if (socketCli != null) {
@@ -266,6 +316,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the PlayerExitGameResponse sent by the model and directed to the the view
+     *
+     * @param response is a PlayerExitGameResponse, that communicates the exit of a player to the current player
+     */
     @Override
     public void handle(PlayerExitGameResponse response) {
         if (socketCli != null) {
@@ -275,6 +330,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the PlayerReconnectionResponse sent by the model and directed to the the view
+     *
+     * @param response is a PlayerReconnectionResponse, that communicates the reconnection of a player to the current player
+     */
     @Override
     public void handle(PlayerReconnectionResponse response) {
         if (socketCli != null) {
@@ -284,6 +344,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the MyFavorTokensResponse sent by the model and directed to the the view
+     *
+     * @param response is a MyFavorTokensResponse, that updates the favor tokens number of the current player
+     */
     @Override
     public void handle(MyFavorTokensResponse response) {
         if (socketCli != null) {
@@ -293,6 +358,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the OtherFavorTokensResponse sent by the model and directed to the the view
+     *
+     * @param response is a OtherFavorTokensResponse, that updates the favor tokens number of the other players
+     */
     @Override
     public void handle(OtherFavorTokensResponse response) {
         if (socketCli != null) {
@@ -302,6 +372,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the OtherSchemeCardsResponse sent by the model and directed to the the view
+     *
+     * @param response is a OtherSchemeCardsResponse, that updates the scheme cards of the other players
+     */
     @Override
     public void handle(OtherSchemeCardsResponse response) {
         if (socketCli != null) {
@@ -311,7 +386,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
-
+    /**
+     * Handles the GameEndResponse sent by the model and directed to the the view
+     *
+     * @param response is a GameEndResponse, that communicates the ending of the game to the player
+     */
     @Override
     public void handle(GameEndResponse response) {
         if (socketCli != null) {
@@ -321,6 +400,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the AfterReconnectionResponse sent by the model and directed to the the view
+     *
+     * @param response is a AfterReconnectionResponse, that recovers the current model state of the current player view
+     */
     @Override
     public void handle(AfterReconnectionResponse response) {
         if (socketCli != null) {
@@ -329,6 +413,11 @@ public class SocketController implements ResponseHandler {
             socketGui.getGui().onAfterReconnection(response.getToolcards(), response.getPublicCards(), response.getPrivateCard(), response.getReserve(), response.getRoundTrack(), response.getMyTokens(), response.getSchemeCard(), response.getSchemeCardName(), response.getOtherTokens(), response.getOtherSchemeCards(), response.getOtherSchemeCardNamesMap(), response.isSchemeCardChosen(), response.getToolcardsPrices());
     }
 
+    /**
+     * Handles the ProposeWindowResponse sent by the model and directed to the the view
+     *
+     * @param response is a ProposeWindowResponse, that proposes the possible window pattern cards to the player
+     */
     @Override
     public void handle(ProposeWindowResponse response) {
         if (socketCli != null) {
@@ -338,6 +427,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the CheckConnectionResponse sent by the model and directed to the the view
+     *
+     * @param response is a CheckConnectionResponse, that checks the connection of the player
+     */
     @Override
     public void handle(CheckConnectionResponse response) {
         if (loginHandler.isCli())
@@ -347,6 +441,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the ToolCardUsedByOthersResponse sent by the model and directed to the the view
+     *
+     * @param response is a ToolCardUsedByOthersResponse, that updates the current player in case of first use of a toolcard
+     */
     @Override
     public void handle(ToolCardUsedByOthersResponse response) {
         if (socketCli != null) {
@@ -356,6 +455,12 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+
+    /**
+     * Handles the GameEndSingleResponse sent by the model and directed to the the view
+     *
+     * @param response is a GameEndSingleResponse, that communicates the ending of the game to the player
+     */
     @Override
     public void handle(GameEndSingleResponse response) {
         if (socketCli != null) {
@@ -365,6 +470,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the ChoosePrivateCardResponse sent by the model and directed to the the view
+     *
+     * @param response is a ChoosePrivateCardResponse, that proposes the two possible private cards to the single player
+     */
     @Override
     public void handle(ChoosePrivateCardResponse response) {
         if (socketCli != null) {

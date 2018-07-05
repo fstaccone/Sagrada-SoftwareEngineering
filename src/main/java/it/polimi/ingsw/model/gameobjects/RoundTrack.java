@@ -35,7 +35,7 @@ public class RoundTrack {
         StringBuilder string = new StringBuilder();
 
         for (int i = 0; i < rounds.size(); i++) {
-            if (rounds.get(i).size() != 0) {
+            if (!rounds.get(i).isEmpty()) {
                 AtomicInteger j = new AtomicInteger();
                 string.append("Round ");
                 string.append(i + 1);
@@ -56,10 +56,8 @@ public class RoundTrack {
      * @return a dice from the roundTrack, useful to test putDice
      */
     public Dice getDice() {
-        System.out.println("Choose the number of the list from which you want to get a dice");
         Scanner scan = new Scanner(System.in);
         int listNumber = scan.nextInt();
-        System.out.println(("Choose the dice id"));
         int diceId = scan.nextInt();
         int j = 0;
         for (List<Dice> list : rounds) {
@@ -75,7 +73,6 @@ public class RoundTrack {
             }
             j++;
         }
-        System.out.println("Error: wrong parameters.");
         return null;
     }
 

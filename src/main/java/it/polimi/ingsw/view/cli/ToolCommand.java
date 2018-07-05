@@ -5,8 +5,13 @@ import it.polimi.ingsw.control.SocketController;
 import it.polimi.ingsw.socket.requests.*;
 
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ToolCommand {
+    private static final Logger LOGGER = Logger.getLogger(ToolCommand.class.getName());
+    private static final String TOOL_ERROR = "exception in creating the command to use a toolcard";
+
     private int i;
     String parametersNeeded;
     private RemoteController controller;
@@ -81,7 +86,7 @@ public class ToolCommand {
             }
             break;
 
-
+            default: LOGGER.log(Level.INFO, "this toolcard doesn't exist");
         }
     }
 
@@ -96,7 +101,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard1(diceToBeSacrificed, diceFromReserve, incrOrDecr, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -114,7 +119,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard2or3(diceToBeSacrificed, n, startX, startY, finalX, finalY, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -130,7 +135,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard4(diceToBeSacrificed, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -146,7 +151,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard5(diceToBeSacrificed, diceFromReserve, roundFromTrack, diceInRound, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -162,7 +167,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard6(diceToBeSacrificed, diceChosen, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -178,7 +183,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard7(diceToBeSacrificed, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -194,7 +199,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard8(diceToBeSacrificed, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -211,7 +216,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard9(diceToBeSacrificed, diceFromReserve, finalX, finalY, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -228,7 +233,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard10(diceToBeSacrificed, diceFromReserve, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -245,7 +250,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard11(diceToBeSacrificed, diceFromReserve, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -262,7 +267,7 @@ public class ToolCommand {
             try {
                 return controller.useToolCard12(diceToBeSacrificed, roundFromTrack, diceInRound, startX1, startY1, finalX1, finalY1, startX2, startY2, finalX2, finalY2, name, single);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, TOOL_ERROR, e);
             }
         }
         //SOCKET
@@ -277,7 +282,7 @@ public class ToolCommand {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "exception in sleep", e);
             Thread.currentThread().interrupt();
         }
         if (socketController.isEffectApplied()) {

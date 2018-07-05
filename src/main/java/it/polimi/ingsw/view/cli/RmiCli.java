@@ -7,10 +7,14 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RmiCli extends UnicastRemoteObject implements MatchObserver {
 
-    private Cli cli;
+    private static final Logger LOGGER = Logger.getLogger(RmiCli.class.getName());
+
+    private transient Cli cli;
     private transient RemoteController controller;
     private boolean reconnection;
     private boolean single;
@@ -39,7 +43,7 @@ public class RmiCli extends UnicastRemoteObject implements MatchObserver {
         try {
             controller.observeMatch(cli.getUsername(), this, single, reconnection);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "exception in trying to observe a match", e);
         }
     }
 

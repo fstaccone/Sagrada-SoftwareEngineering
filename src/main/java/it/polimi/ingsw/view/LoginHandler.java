@@ -39,9 +39,15 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class LoginHandler implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(LoginHandler.class.getName());
+    private static final String ERROR_SINGLEPLAYER = "Singleplayer match can't be created";
+    private static final int SOCKET_PORT = 1100;
 
     private static final String GAME_NAME = "Lobby";
     private transient Socket socket = null;
@@ -59,10 +65,6 @@ public class LoginHandler implements Initializable {
     private WaitingScreenHandler handler;
     private WaitingRoomCli waitingRoomCli;
 
-    // Values to be set by file on server, how can we set these here?
-    private transient int socketPort = 1100;
-
-    private transient Registry registry;
     private transient RemoteController controllerRmi;
 
     @FXML
@@ -165,7 +167,7 @@ public class LoginHandler implements Initializable {
      *
      */
     @FXML
-    private void playClicked() throws Exception {
+    private void playClicked() throws InterruptedException, IOException {
 
         AudioClip audioClip = Applet.newAudioClip(getClass().getResource("/sounds/button.au"));
         audioClip.play();
@@ -196,7 +198,7 @@ public class LoginHandler implements Initializable {
                         event.consume();
                         onClosing();
                     } catch (RemoteException e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "exception in closing GUI");
                     }
                 });
             } else {
@@ -310,9 +312,8 @@ public class LoginHandler implements Initializable {
         }
 
         if (status.equals(ConnectionStatus.CONNECTED)) {
-            System.out.println("Invalid username");
             showAlertWarning("Username non valido!", "Nome già in uso, inseriscine un altro!");
-            if (!isRmi) {
+            if (isSocket) {
                 socket.close();
             }
         } else if (status.equals(ConnectionStatus.DISCONNECTED)) {
@@ -357,7 +358,7 @@ public class LoginHandler implements Initializable {
         try {
             chooseCard = new Scene(fx.load());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "error in loading choosecardHandler GUI");
         }
 
         window.setScene(chooseCard);
@@ -372,20 +373,13 @@ public class LoginHandler implements Initializable {
      */
     private void setupRmiConnection() throws RemoteException {
 
-        //registry = LocateRegistry.getRegistry();
-
         try {
-            //this.controllerRmi = (RemoteController) registry.lookup(GAME_NAME);
-
             controllerRmi = (RemoteController) Naming.lookup(("//" + serverAddress + "/" + GAME_NAME));
-
         } catch (NotBoundException e) {
-            System.out.println("A client can't get the controller Rmi's reference");
-            e.printStackTrace();
-            //} catch (MalformedURLException e) {
-            //    e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "a client can't get the controller Rmi's reference", e);
+
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "url is not well formed", e);
         }
     }
 
@@ -398,13 +392,13 @@ public class LoginHandler implements Initializable {
         ObjectOutputStream out;
 
         try {
-            socket = new Socket(serverAddress, socketPort);
+            socket = new Socket(serverAddress, SOCKET_PORT);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
             controllerSocket = new SocketController(in, out, this, singleplayer);
 
         } catch (SocketException e) {
-            System.out.println("Unable to create socket connection");
+            LOGGER.log(Level.SEVERE, "Unable to create socket connection", e);
         }
     }
 
@@ -423,8 +417,7 @@ public class LoginHandler implements Initializable {
                     new RmiGui(window, username, controllerRmi, singleplayer).launch();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Singleplayer match can't be created!");
+                LOGGER.log(Level.SEVERE, ERROR_SINGLEPLAYER, e);
             }
         } else {
             try {
@@ -436,8 +429,7 @@ public class LoginHandler implements Initializable {
                 }
                 controllerRmi.addPlayer(this.username);
             } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Player " + this.username + " can't be added to a multiplayer match!");
+                LOGGER.log(Level.SEVERE,"Player " + this.username + " can't be added to a multiplayer match!", e);
             }
 
         }
@@ -459,18 +451,15 @@ public class LoginHandler implements Initializable {
                     new SocketGui(window, username, controllerSocket, singleplayer);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Singleplayer match can't be created!");
+                LOGGER.log(Level.SEVERE, ERROR_SINGLEPLAYER, e);
             }
         } else {
             try {
                 new Thread(new SocketListener(controllerSocket)).start();
                 controllerSocket.request(new AddPlayerRequest(this.username));
             } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Player " + username + " can't be added to a multiplayer match!");
+                LOGGER.log(Level.SEVERE,"Player " + username + " can't be added to a multiplayer match!", e);
             }
-
         }
     }
 
@@ -482,13 +471,13 @@ public class LoginHandler implements Initializable {
             try {
                 new RmiCli(username, controllerRmi, false).launch();
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "error in initializing cli with rmi");
             }
         } else {
             try {
                 new RmiGui(window, username, controllerRmi, false).launch();
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "error in initializing gui with rmi");
             }
         }
     }
