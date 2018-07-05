@@ -25,6 +25,14 @@ public class SocketController implements ResponseHandler {
     private Colors diceColor;
     private boolean single;
 
+    /**
+     * SocketController constructor, client side to manage socket connections.
+     *
+     * @param in is the inputStream used to read socket responses from the server
+     * @param out is the outputStream used to send socket requests to the server
+     * @param loginHandler is the handler of the login stage
+     * @param single is true in case of singleplayer match
+     */
     public SocketController(ObjectInputStream in, ObjectOutputStream out, LoginHandler loginHandler, boolean single) {
         this.in = in;
         this.out = out;
@@ -32,22 +40,33 @@ public class SocketController implements ResponseHandler {
         this.single = single;
     }
 
+    /**
+     * Sends every socket request to the server through the outputstream
+     *
+     * @param request is the socket request sent to the server
+     */
     public void request(Request request) {
         try {
             out.writeObject(request);
             out.reset();
         } catch (IOException e) {
-            System.err.println("Exception on network: " + e.getMessage());
+            System.err.println("Problema di connessione con il server!" );
+            System.exit(0);
         }
     }
 
+    /**
+     * Reads every socket response received by the server through the inputstream
+     *
+     * @return the response received from the server
+     */
     public Response nextResponse() {
         try {
             return ((Response) in.readObject());
         } catch (IOException e) {
-            System.err.println("Exception on network: " + e.getMessage());
+            System.err.println("Problema di connessione con il server!");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Wrong deserialization: " + e.getMessage());
+            throw new RuntimeException("Problema di deserializzazione!" );
         }
 
         return null;
@@ -81,16 +100,31 @@ public class SocketController implements ResponseHandler {
         return effectApplied;
     }
 
+    /**
+     * Handles the NameAlreadyTakenResponse sent by the model and directed to the the view
+     *
+     * @param response is a NameAlreadyTakenResponse, that says if the name is already taken
+     */
     @Override
     public void handle(NameAlreadyTakenResponse response) {
         this.nameStatus = response.getStatus();
     }
 
+    /**
+     * Handles the DiceColorResponse sent by the model and directed to the the view
+     *
+     * @param response is a DiceColorResponse, that says the dice color proposed by the toolcard 11
+     */
     @Override
     public void handle(DiceColorResponse response) {
         this.diceColor = response.getDiceColor();
     }
 
+    /**
+     * Handles the WaitingPlayersResponse sent by the model and directed to the the view
+     *
+     * @param response is a WaitingPlayersResponse, that says the current waiting players in the room
+     */
     @Override
     public void handle(WaitingPlayersResponse response) {
         if (loginHandler.isCli()) {
@@ -100,6 +134,11 @@ public class SocketController implements ResponseHandler {
         }
     }
 
+    /**
+     * Handles the PlayerExitRoomResponse sent by the model and directed to the the view
+     *
+     * @param response is a PlayerExitRoomResponse, that says the name of the player who has left the room
+     */
     @Override
     public void handle(PlayerExitRoomResponse response) {
         if (loginHandler.isCli())
@@ -108,6 +147,11 @@ public class SocketController implements ResponseHandler {
             loginHandler.getWaitingScreenHandler().onPlayerExit(response.getName());
     }
 
+    /**
+     * Handles the LastPlayerRoomResponse sent by the model and directed to the the view
+     *
+     * @param response is a LastPlayerRoomResponse, that says if the player is the only one in the room
+     */
     @Override
     public void handle(LastPlayerRoomResponse response) {
         if (loginHandler.isCli())
@@ -117,11 +161,21 @@ public class SocketController implements ResponseHandler {
     }
 
 
+    /**
+     * Handles the MatchStartedResponse sent by the model and directed to the the view
+     *
+     * @param response is a MatchStartedResponse, that says if the match has started
+     */
     @Override
     public void handle(MatchStartedResponse response) {
         loginHandler.onMatchStartedSocket();
     }
 
+    /**
+     * Handles the RoundTrackResponse sent by the model and directed to the the view
+     *
+     * @param response is a RoundTrackResponse, that updated the RoundTrack state
+     */
     @Override
     public void handle(RoundTrackResponse response) {
         if (socketCli != null) {

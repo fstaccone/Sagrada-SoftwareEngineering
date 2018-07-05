@@ -4,6 +4,12 @@ import it.polimi.ingsw.socket.requests.*;
 import it.polimi.ingsw.socket.responses.Response;
 
 public interface RequestHandler {
+
+    /**
+     *Every method is described in the actual implementation of this interface: check Controller.
+     *
+     */
+
     Response handle(CheckUsernameRequest request);
 
     Response handle(CreateMatchRequest request);

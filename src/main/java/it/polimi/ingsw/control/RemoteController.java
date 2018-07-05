@@ -12,6 +12,11 @@ import java.rmi.RemoteException;
 
 public interface RemoteController extends Remote {
 
+    /**
+     *Every method is described in the actual implementation of this interface: check Controller.
+     *
+     */
+
     void createMatch(String name, int difficulty, ObjectOutputStream socketOut) throws RemoteException;
 
     ConnectionStatus checkName(String name) throws RemoteException;

@@ -3,6 +3,12 @@ package it.polimi.ingsw.control;
 import it.polimi.ingsw.socket.responses.*;
 
 public interface ResponseHandler {
+
+    /**
+     *Every method is described in the actual implementation of this interface: check SocketController.
+     *
+     */
+
     void handle(NameAlreadyTakenResponse response);
 
     void handle(DiceColorResponse response);
