@@ -189,8 +189,8 @@ public abstract class Player {
         this.turnsLeft = turnsLeft;
     }
 
-    public void setSchemeCardSet(boolean schemeCardSet) {
-        this.schemeCardSet = schemeCardSet;
+    void setSchemeCardSet() {
+        schemeCardSet = true;
     }
 
     public void setPoints(int points) {

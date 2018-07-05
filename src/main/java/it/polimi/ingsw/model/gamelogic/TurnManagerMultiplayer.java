@@ -9,10 +9,13 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class TurnManagerMultiplayer implements Runnable {
 
+    private static final Logger LOGGER = Logger.getLogger(TurnManagerMultiplayer.class.getName());
     private static final int NUM_ROUNDS = 10;
     private Timer turnTimer;
     private int turnTime;
@@ -42,12 +45,8 @@ public class TurnManagerMultiplayer implements Runnable {
         try {
             initializeClients();
             turnManager();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            System.out.println("Remote exception from TurnManagerMultiplayer");
+        } catch (InterruptedException | RemoteException e) {
+            LOGGER.log(Level.SEVERE, "exception from TurnManagerMultiplayer", e);
             Thread.currentThread().interrupt();
         }
     }
@@ -157,9 +156,6 @@ public class TurnManagerMultiplayer implements Runnable {
     /**
      * Rearrange match.getPlayers() to keep the right order in next round
      * following the idea that the first player in this round will be the last in the next round
-     *
-     * @throws RemoteException
-     * @throws InterruptedException
      */
     private void terminateRound() throws RemoteException, InterruptedException {
         match.getPlayers().add(match.getPlayers().get(0));
@@ -237,7 +233,6 @@ public class TurnManagerMultiplayer implements Runnable {
      * manages the core actions of the turn, useful to maintain the right flow during the turn of the player.
      *
      * @param player is the player who is playing this turn
-     * @throws InterruptedException
      */
     private void playTurnCore(PlayerMultiplayer player) throws InterruptedException {
         notifyTurnBeginning(player);
@@ -254,7 +249,6 @@ public class TurnManagerMultiplayer implements Runnable {
      * checks if the player has the scheme card and waits for his actions
      *
      * @param player is the player who is playing this turn
-     * @throws InterruptedException
      */
     private void play(PlayerMultiplayer player) throws InterruptedException {
 
@@ -266,9 +260,6 @@ public class TurnManagerMultiplayer implements Runnable {
 
     /**
      * manages the rounds' and turns' flow
-     *
-     * @throws InterruptedException
-     * @throws RemoteException
      */
     private void turnManager() throws InterruptedException, RemoteException {
         if (match.isStillPlaying()) {
@@ -370,7 +361,7 @@ public class TurnManagerMultiplayer implements Runnable {
 
         if (match.getCurrentRound() >= NUM_ROUNDS) {
             match.calculateFinalScore();
-            match.setStillPlaying(false);
+            match.setStillPlayingFalse();
             match.deleteDisconnectedClients();
         } else {
             this.turnManager();

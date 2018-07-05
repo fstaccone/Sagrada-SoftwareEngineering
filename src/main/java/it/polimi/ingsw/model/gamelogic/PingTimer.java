@@ -11,7 +11,7 @@ public class PingTimer extends TimerTask {
      * @param username is the name of the player
      * @param lobby    is the lobby
      */
-    public PingTimer(String username, Lobby lobby) {
+    PingTimer(String username, Lobby lobby) {
         this.username = username;
         this.lobby = lobby;
     }
@@ -21,7 +21,7 @@ public class PingTimer extends TimerTask {
      */
     @Override
     public void run() {
-        System.out.println("disconnessione giocatore " +username);
+        System.out.println("disconnessione giocatore " + username);
         lobby.disconnect(username);
     }
 }

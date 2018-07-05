@@ -9,9 +9,9 @@ public class TurnTimer extends TimerTask {
     /**
      * Initializes the TurnTimer
      *
-     * @param match  is the current match
+     * @param match is the current match
      */
-    public TurnTimer(MatchMultiplayer match) {
+    TurnTimer(MatchMultiplayer match) {
         this.match = match;
     }
 

@@ -9,10 +9,15 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MatchSingleplayer extends Match implements Runnable {
 
-    private int matchId;
+    private static final Logger LOGGER = Logger.getLogger(MatchSingleplayer.class.getName());
+    private static final String MESSAGE_INTERRUPTED = "Match singleplayer interrupted";
+    private static final String MESSAGE_DISCONNECTED = "Match singleplayer ended due to disconnection";
+    private final int matchId;
     private PlayerSingleplayer player;
     private TurnManagerSingleplayer turnManager;
     private MatchObserver observerRmi;
@@ -39,12 +44,13 @@ public class MatchSingleplayer extends Match implements Runnable {
         this.player = new PlayerSingleplayer(name);
         turnManager = new TurnManagerSingleplayer(this, turnTime);
         board = new Board(decksContainer.getToolCardDeck().getPickedCards(), decksContainer.getPublicObjectiveCardDeck().getPickedCards());
-        System.out.println("New singleplayer matchId: " + this.matchId);
         observerSocket = socketOut;
         privateCardChosen = false;
         if (observerSocket != null) {
             startMatch();
         }
+
+        LOGGER.log(Level.INFO, "New multiplayer matchId: " + this.matchId);
     }
 
     /**
@@ -57,7 +63,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * @return the socket observer for the match
      */
-    public ObjectOutputStream getObserverSocket() {
+    ObjectOutputStream getObserverSocket() {
         return observerSocket;
     }
 
@@ -71,7 +77,7 @@ public class MatchSingleplayer extends Match implements Runnable {
     /**
      * @return the match turn manager
      */
-    public TurnManagerSingleplayer getTurnManager() {
+    TurnManagerSingleplayer getTurnManager() {
         return turnManager;
     }
 
@@ -120,14 +126,14 @@ public class MatchSingleplayer extends Match implements Runnable {
                 observerRmi.onGameEndSingle(targetPoints, player.getPoints());
             } catch (RemoteException e) {
                 terminateMatch();
-                System.out.println("Match singleplayer interrupted");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         } else if (observerSocket != null) {
             try {
                 observerSocket.writeObject(new GameEndSingleResponse(targetPoints, player.getPoints()));
             } catch (IOException e) {
                 terminateMatch();
-                System.out.println("Match singleplayer interrupted");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         }
     }
@@ -146,7 +152,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                 observerRmi.onGameStarted(player.isSchemeCardSet(), null, turnTime);
             } catch (RemoteException e) {
                 terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         } else if (observerSocket != null) {
             try {
@@ -159,7 +165,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                 observerSocket.reset();
             } catch (IOException e) {
                 terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         }
 
@@ -175,7 +181,7 @@ public class MatchSingleplayer extends Match implements Runnable {
 
         player.setSchemeCard(windowsProposed.get(index));
         decksContainer.getWindowPatternCardDeck().getPickedCards().removeAll(windowsProposed);
-        player.setSchemeCardSet(true);
+        player.setSchemeCardSet();
         setWindowChosen(true);
 
         schemeCardToBeUpdated(true);
@@ -185,7 +191,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                 observerRmi.onAfterWindowChoice();
             } catch (RemoteException e) {
                 terminateMatch();
-                System.out.println("Match terminato per disconnessione!");
+                LOGGER.log(Level.INFO, MESSAGE_DISCONNECTED);
             }
         } else if (observerSocket != null) {
             try {
@@ -193,7 +199,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                 observerSocket.reset();
             } catch (IOException e) {
                 terminateMatch();
-                System.out.println("Match ended due to disconnection!");
+                LOGGER.log(Level.INFO, MESSAGE_DISCONNECTED);
             }
         }
 
@@ -221,7 +227,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                     observerRmi.onMyWindow(schemeCard);
                 } catch (RemoteException e) {
                     terminateMatch();
-                    System.out.println("Match ended due to disconnection!");
+                    LOGGER.log(Level.INFO, MESSAGE_DISCONNECTED);
                 }
             } else if (observerSocket != null) {
                 try {
@@ -229,7 +235,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                     observerSocket.reset();
                 } catch (IOException e) {
                     terminateMatch();
-                    System.out.println("Match ended due to disconnection!");
+                    LOGGER.log(Level.INFO, MESSAGE_DISCONNECTED);
                 }
             }
         }
@@ -247,7 +253,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                     observerRmi.onReserve(board.getReserve().getDices().toString());
                 } catch (RemoteException e) {
                     terminateMatch();
-                    System.out.println("Match ended due to disconnection!");
+                    LOGGER.log(Level.INFO, MESSAGE_DISCONNECTED);
                 }
             } else if (observerSocket != null) {
                 try {
@@ -255,7 +261,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                     observerSocket.reset();
                 } catch (IOException e) {
                     terminateMatch();
-                    System.out.println("Match ended due to disconnection!");
+                    LOGGER.log(Level.INFO, MESSAGE_DISCONNECTED);
                 }
             }
         }
@@ -283,7 +289,7 @@ public class MatchSingleplayer extends Match implements Runnable {
                     observerSocket.reset();
                 } catch (IOException e) {
                     terminateMatch();
-                    System.out.println("Match ended due to disconnection!");
+                    LOGGER.log(Level.INFO, MESSAGE_DISCONNECTED);
                 }
             }
 
@@ -706,7 +712,6 @@ public class MatchSingleplayer extends Match implements Runnable {
      */
     @Override
     public void ping(String username) {
-        System.out.println("Timer cancellato, giocatore " + username);
         pingTimer.cancel();
     }
 
@@ -742,9 +747,8 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     void initializePingTimer(String name) {
-        System.out.println("Timer inizializzato, giocatore " + name);
         PingTimerSingle task = new PingTimerSingle(name, lobby);
-        pingTimer=new Timer();
+        pingTimer = new Timer();
         pingTimer.schedule(task, Match.PING_TIME);
     }
 }

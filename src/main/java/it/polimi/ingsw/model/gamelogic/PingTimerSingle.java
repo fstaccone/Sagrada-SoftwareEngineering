@@ -11,7 +11,7 @@ public class PingTimerSingle extends TimerTask {
      * @param username is the name of the player
      * @param lobby    is the lobby
      */
-    public PingTimerSingle(String username, Lobby lobby) {
+    PingTimerSingle(String username, Lobby lobby) {
         this.username = username;
         this.lobby = lobby;
     }
@@ -21,7 +21,7 @@ public class PingTimerSingle extends TimerTask {
      */
     @Override
     public void run() {
-        System.out.println("rimozione giocatore " +username);
+        System.out.println("rimozione giocatore " + username);
         lobby.removeMatchSingleplayer(username);
     }
 }

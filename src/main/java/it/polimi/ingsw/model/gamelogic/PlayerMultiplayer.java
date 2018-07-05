@@ -29,7 +29,7 @@ public class PlayerMultiplayer extends Player {
         this.privateObjectiveCard = privateObjectiveCard;
     }
 
-    public void setStatus(ConnectionStatus status) {
+    void setStatus(ConnectionStatus status) {
         this.status = status;
     }
 

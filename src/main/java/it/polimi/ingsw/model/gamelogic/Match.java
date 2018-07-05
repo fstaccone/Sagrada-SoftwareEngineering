@@ -12,13 +12,13 @@ import java.util.List;
 public abstract class Match {
 
 
-    public static final int PING_TIME = 1000; // max lasting of the waiting for the ping response
-    protected DecksContainer decksContainer;
+    static final int PING_TIME = 1000; // max lasting of the waiting for the ping response
+    DecksContainer decksContainer;
     private Bag bag;
     protected Board board;
     public static final int NUMBER_OF_ROUNDS = 10;
-    protected int roundCounter;
-    protected Thread localThread;
+    int roundCounter;
+    Thread localThread;
     private boolean stillPlaying;
 
     private boolean diceAction;
@@ -41,7 +41,7 @@ public abstract class Match {
     }
 
     // getters
-    public Object getLock() {
+    Object getLock() {
         return lock;
     }
 
@@ -49,7 +49,7 @@ public abstract class Match {
         return lobby;
     }
 
-    public DecksContainer getDecksContainer() {
+    DecksContainer getDecksContainer() {
         return decksContainer;
     }
 
@@ -61,15 +61,15 @@ public abstract class Match {
         return board;
     }
 
-    public boolean isStillPlaying() {
+    boolean isStillPlaying() {
         return stillPlaying;
     }
 
-    public List<WindowPatternCard> getWindowsProposed() {
+    List<WindowPatternCard> getWindowsProposed() {
         return windowsProposed;
     }
 
-    public int getCurrentRound() {
+    int getCurrentRound() {
         return roundCounter;
     }
 
@@ -77,7 +77,7 @@ public abstract class Match {
         return diceAction;
     }
 
-    public boolean isToolAction() {
+    boolean isToolAction() {
         return toolAction;
     }
 
@@ -85,7 +85,7 @@ public abstract class Match {
         return endsTurn;
     }
 
-    public boolean isWindowChosen() {
+    boolean isWindowChosen() {
         return windowChosen;
     }
     // end of getters
@@ -99,26 +99,26 @@ public abstract class Match {
         this.toolAction = toolAction;
     }
 
-    public void setEndsTurn(boolean endsTurn) {
+    void setEndsTurn(boolean endsTurn) {
         this.endsTurn = endsTurn;
     }
 
-    public void setWindowChosen(boolean windowChosen) {
+    void setWindowChosen(boolean windowChosen) {
         this.windowChosen = windowChosen;
     }
 
-    public void incrementRoundCounter() {
+    void incrementRoundCounter() {
         this.roundCounter++;
     }
 
-    public void setStillPlaying(boolean stillPlaying) {
-        this.stillPlaying = stillPlaying;
+    void setStillPlayingFalse() {
+        stillPlaying = false;
     }
 
     /**
      * At the end of each round, all the dices left on the reserve are taken and placed on the round track
      */
-    public void pushLeftDicesToRoundTrack() {
+    void pushLeftDicesToRoundTrack() {
         this.getBoard().getRoundTrack().putDices(this.getBoard().getReserve().removeAllDices(), this.roundCounter);
     }
 
@@ -152,8 +152,8 @@ public abstract class Match {
      *
      * @return true if the player can perform other actions
      */
-    public boolean checkCondition() {
-        return !(endsTurn);
+    boolean checkCondition() {
+        return !endsTurn;
     }
 
 
