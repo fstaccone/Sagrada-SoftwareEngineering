@@ -8,9 +8,14 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class TurnManagerSingleplayer implements Runnable {
+
+    private static final Logger LOGGER = Logger.getLogger(TurnManagerSingleplayer.class.getName());
+    private static final String MESSAGE_INTERRUPTED = "Match singleplayer interrupted";
 
     private static final int NUM_ROUNDS = 10;
     private static final int DICES_NUM = 4;
@@ -40,7 +45,7 @@ public class TurnManagerSingleplayer implements Runnable {
             turnManager();
         } catch (InterruptedException e) {
             match.terminateMatch();
-            System.out.println("Match singleplayer interrotto");
+            LOGGER.log(Level.SEVERE, "Match singleplayer interrotto", e);
             Thread.currentThread().interrupt();
         }
     }
@@ -56,7 +61,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverRmi().onInitialization(toolCards, publicCards, privateCards, null);
             } catch (RemoteException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         } else if (match.getObserverSocket() != null) {
             try {
@@ -64,7 +69,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrupted");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         }
     }
@@ -121,7 +126,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverRmi().onYourTurn(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn);
             } catch (RemoteException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrupted");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         } else if (match.getObserverSocket() != null) {
             try {
@@ -131,7 +136,7 @@ public class TurnManagerSingleplayer implements Runnable {
             } catch (IOException e) {
                 //CHIUSURA TIMER?
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrupted");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         }
     }
@@ -150,7 +155,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverRmi().onWindowChoice(windows);
             } catch (RemoteException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         } else if (match.getObserverSocket() != null) {
             try {
@@ -158,7 +163,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         }
         waitForSchemeChoise();
@@ -214,7 +219,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverRmi().onReserve(match.getBoard().getReserve().getDices().toString());
             } catch (RemoteException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         } else if (match.getObserverSocket() != null) {
             try {
@@ -223,7 +228,7 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverSocket().reset();
             } catch (IOException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         }
 
@@ -240,14 +245,14 @@ public class TurnManagerSingleplayer implements Runnable {
                 match.getObserverRmi().onChoosePrivateCard();
             } catch (RemoteException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         } else {
             try {
                 match.getObserverSocket().writeObject(new ChoosePrivateCardResponse());
             } catch (IOException e) {
                 match.terminateMatch();
-                System.out.println("Match singleplayer interrotto");
+                LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
         }
 
@@ -264,7 +269,7 @@ public class TurnManagerSingleplayer implements Runnable {
                     match.getLock().wait();
                 } catch (InterruptedException e) {
                     match.terminateMatch();
-                    System.out.println("Match singleplayer interrotto");
+                    LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
                     Thread.currentThread().interrupt();
                 }
             }

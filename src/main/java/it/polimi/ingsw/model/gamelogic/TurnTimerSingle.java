@@ -10,7 +10,7 @@ public class TurnTimerSingle extends TimerTask {
      *
      * @param match is the current match
      */
-    public TurnTimerSingle(MatchSingleplayer match) {
+    TurnTimerSingle(MatchSingleplayer match) {
         this.match = match;
     }
 

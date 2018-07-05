@@ -10,7 +10,7 @@ public class MatchStarter extends TimerTask {
 
     Lobby lobby;
 
-    public MatchStarter(Lobby lobby) {
+    MatchStarter(Lobby lobby) {
         this.lobby = lobby;
     }
 

@@ -44,6 +44,4 @@ public class Login extends Application {
             System.exit(1);
         }
     }
-
-
 }
