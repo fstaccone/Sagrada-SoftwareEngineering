@@ -12,6 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.mockito.Mockito.mock;
 
+/**
+ * All the @Test have the same name of the method they test, check the method implementation for a detailed description
+ */
 public class LobbyTest {
 
     @Test

@@ -15,7 +15,11 @@ public class SocketHandler implements Runnable {
     private final ObjectOutputStream out;
     private final Controller controller;
 
-
+    /**
+     * Constructor for SocketHandler.
+     * @param socket is the used socket to guarantee connection.
+     * @param controller is a Controller.
+     */
     public SocketHandler(Socket socket, Controller controller) throws IOException {
 
         this.socket = socket;
@@ -41,6 +45,11 @@ public class SocketHandler implements Runnable {
         }
     }
 
+    /**
+     * Sends a response.
+     *
+     * @param response is the response to send.
+     */
     public void respond(Response response) {
         try {
             out.writeObject(response);

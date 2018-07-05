@@ -16,6 +16,9 @@ import java.util.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * All the @Test have the same name of the method they test, check the method implementation for a detailed description
+ */
 public class MatchMultiplayerTest {
 
     @Test

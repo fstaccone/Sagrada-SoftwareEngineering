@@ -43,7 +43,12 @@ public class Lobby {
     // to simulate the timer before creating a match
     private Timer timer;
 
-
+    /**
+     * Constructor for Lobby.
+     *
+     * @param waitingTime is the waiting time after two players join the waiting room.
+     * @param turnTime    is the time limit for each player's turn.
+     */
     public Lobby(int waitingTime, int turnTime) {
         this.matchCounter = 0;
         this.takenUsernames = new HashMap<>();
@@ -82,6 +87,13 @@ public class Lobby {
         this.takenUsernames.remove(name);
     }
 
+    /**
+     * Creates a single player match.
+     *
+     * @param name is the player's username.
+     * @param difficulty is the player's chosen difficulty for the current match.
+     * @param socketOut represents the object output stream used to communicate with that player's view
+     */
     public synchronized void createSingleplayerMatch(String name, int difficulty, ObjectOutputStream socketOut) {
         singleplayerMatches.put(name, new MatchSingleplayer(matchCounter, name, difficulty, turnTime, this, socketOut));
         matchCounter++;
@@ -111,6 +123,11 @@ public class Lobby {
         }
     }
 
+    /**
+     * Removes a player from the list of players waiting for a match.
+     *
+     * @param name is the username of the player to be removed.
+     */
     public void removeFromWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
             try {
@@ -184,6 +201,11 @@ public class Lobby {
         return null;
     }
 
+    /**
+     * Sets the connection status of the chosen player to DISCONNECTED.
+     *
+     * @param name is the username of the player to disconnect.
+     */
     public void disconnect(String name) {
         try {
             PlayerMultiplayer p;
@@ -235,7 +257,7 @@ public class Lobby {
     }
 
     /**
-     * remove the names of disconnected players from the map multiplayerMatches and from takenUsernames
+     * Remove the names of disconnected players from the map multiplayerMatches and from takenUsernames
      *
      * @param name is the name of one player of the match considered in this action
      */
@@ -247,7 +269,11 @@ public class Lobby {
         }
     }
 
-
+    /**
+     * Removes the name of the player from the map multiPlayerMatches and from takenUsernames.
+     *
+     * @param name is the username of the player to remove.
+     */
     public void removeFromMatchMulti(String name) {
         multiplayerMatches.remove(name);
         removeUsername(name);
@@ -274,6 +300,12 @@ public class Lobby {
         }
     }
 
+    /**
+     * Puts a previously disconnected player's connection status to CONNECTED and notifies the reconnection
+     * to all the other players.
+     *
+     * @param name is the username of the player to reconnect.
+     */
     public void reconnect(String name) {
         MatchMultiplayer match;
 
@@ -314,6 +346,11 @@ public class Lobby {
         }
     }
 
+    /**
+     * Removes a player's username from the key values of the singlePlayerMatches map and from the list takenUsernames.
+     *
+     * @param name is the username to remove.
+     */
     void removeMatchSingleplayer(String name) {
         try {
             singleplayerMatches.remove(name);
@@ -323,10 +360,20 @@ public class Lobby {
         }
     }
 
+    /**
+     * Used after a player's reconnection. Transfers all the current game data.
+     *
+     * @param name is the username of the reconnected player.
+     */
     public void transferAllData(String name) {
         multiplayerMatches.get(name).afterReconnection(name);
     }
 
+    /**
+     * Adds a player's username to the list of waiting players and notifies it to all the other waiting players.
+     *
+     * @param name is the username of the player to add.
+     */
     public void addToWaitingPlayers(String name) {
         synchronized (waitingPlayers) {
 
@@ -381,6 +428,9 @@ public class Lobby {
         }
     }
 
+    /**
+     * Creates a new multi player match with all the players in the waitingPlayers list.
+     */
     public void startMatch() {
 
         synchronized (waitingPlayers) {
@@ -413,10 +463,23 @@ public class Lobby {
         return waitingPlayers;
     }
 
+    /**
+     * Adds a player username in the key values of the remoteObservers map.
+     *
+     * @param name is the player's username.
+     * @param lobbyObserver receives notifications from Lobby.
+     */
     public void observeLobbyRemote(String name, LobbyObserver lobbyObserver) {
         remoteObservers.put(name, lobbyObserver);
     }
 
+    /**
+     * Adds the current player's view to the match observers.
+     *
+     * @param username is the player's username.
+     * @param observer receives notifies from Match.
+     * @param single is true if the player's in a single player match, false otherwise.
+     */
     public void observeMatchRemote(String username, MatchObserver observer, boolean single) {
         if (single) {
             singleplayerMatches.get(username).observeMatchRemote(observer);
@@ -441,6 +504,10 @@ public class Lobby {
         }
     }
 
+    /**
+     * Removes the names of all disconnected players from the map multiPlayerMatches and from takenUsernames.
+     * @param players is the list of all players in the match.
+     */
     void deleteDisconnectedClients(List<String> players) {
         for (String player : players) {
             if (takenUsernames.get(player).equals(ConnectionStatus.DISCONNECTED)) {

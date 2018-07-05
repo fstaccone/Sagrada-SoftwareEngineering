@@ -156,6 +156,7 @@ public abstract class Match {
         return !endsTurn;
     }
 
+    //These methods are described in the current implementations.
 
     public abstract void terminateMatch();
 

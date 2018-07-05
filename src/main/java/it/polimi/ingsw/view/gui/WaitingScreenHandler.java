@@ -22,8 +22,6 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
 
     /**
      * Constructor of WaitingScreenHandler, instantiates two text areas.
-     *
-     * @throws RemoteException todo
      */
     public WaitingScreenHandler() throws RemoteException {
         super();
@@ -64,14 +62,19 @@ public class WaitingScreenHandler extends UnicastRemoteObject implements LobbyOb
         text.setText("Lista ordinata dei giocatori nella sala di attesa (tu incluso):\n" + wPlayers);
     }
 
+    /**
+     * Initializes gui or cli with rmi connection when the match starts.
+     */
     @Override
     public void onMatchStarted() {
         loginHandler.onMatchStartedRmi();
     }
 
+    /**
+     * just to check connection before the starting of the match in case other notifies didn't happen
+     */
     @Override
     public void onCheckConnection() {
-        //just to check connection before the starting of the match in case other notifies didn't happen
     }
 
     public void setString(String string) {

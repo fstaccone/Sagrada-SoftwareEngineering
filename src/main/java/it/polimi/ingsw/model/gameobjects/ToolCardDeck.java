@@ -4,6 +4,12 @@ import java.util.Random;
 
 public class ToolCardDeck extends Deck<ToolCard> {
 
+    /**
+     * Constructor for ToolCardDeck.
+     *
+     * @param numOfPlayers is the number of players in the match.
+     * @param difficulty is the difficulty of the match (if single player).
+     */
     public ToolCardDeck(int numOfPlayers, int difficulty) {
         super();
 

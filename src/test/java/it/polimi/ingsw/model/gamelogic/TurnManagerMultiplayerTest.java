@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * All the @Test have the same name of the method they test, check the method implementation for a detailed description
+ */
 public class TurnManagerMultiplayerTest {
 
     @Test

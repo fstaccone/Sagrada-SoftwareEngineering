@@ -10,10 +10,18 @@ public class MatchStarter extends TimerTask {
 
     Lobby lobby;
 
+    /**
+     * Constructor for MatchStarter.
+     *
+     * @param lobby is the game lobby.
+     */
     MatchStarter(Lobby lobby) {
         this.lobby = lobby;
     }
 
+    /**
+     * Launched by Lobby every time the waiting time expires and there are at least two waiting players.
+     */
     @Override
     public void run() {
         //RMI CHECK FOR REAL CONNECTION

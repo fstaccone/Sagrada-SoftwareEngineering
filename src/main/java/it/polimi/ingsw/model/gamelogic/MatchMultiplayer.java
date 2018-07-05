@@ -230,6 +230,11 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Restores all the updated game information after the player's reconnection.
+     *
+     * @param name is the username of the reconnected player.
+     */
     void afterReconnection(String name) {
         PlayerMultiplayer p = getPlayer(name);
         List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
@@ -390,6 +395,9 @@ public class MatchMultiplayer extends Match implements Runnable {
         return null;
     }
 
+    /**
+     * Assigns a private objective card to every player in a multi player match.
+     */
     @Override
     public void drawPrivateObjectiveCards() {
         for (PlayerMultiplayer p : players) {
@@ -397,6 +405,10 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Creates a list with the names of all the players in the match, notifies the start of the match and initializes
+     * the game.
+     */
     @Override
     public void run() {
 
@@ -440,6 +452,12 @@ public class MatchMultiplayer extends Match implements Runnable {
         turnManager.run();
     }
 
+    /**
+     * Adds a player to the map remoteObservers of the match observers connected with rmi.
+     *
+     * @param observer receives notifications from the match.
+     * @param username is the player's username.
+     */
     public void observeMatchRemote(MatchObserver observer, String username) {
 
         remoteObservers.put(getPlayer(username), observer);
@@ -463,6 +481,12 @@ public class MatchMultiplayer extends Match implements Runnable {
         return null;
     }
 
+    /**
+     * Updates the status of a player with the chosen window pattern card and notifies all the other players of the match.
+     *
+     * @param name  is the player's username.
+     * @param index of the chosen window pattern card.
+     */
     @Override
     public void setWindowPatternCard(String name, int index) {
         PlayerMultiplayer p = getPlayer(name);
@@ -500,6 +524,14 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * @param name  Player's name
+     * @param index index of the dice in the reserve that the player wants to place
+     * @param x     row index of the chosen dice new position in the player's scheme card
+     * @param y     column index of the chosen dice new position in the player's scheme card
+     * @return true if the player is allowed to place a dice (if isDiceAction()==true the player has already
+     * placed a dice in this turn) and the dice is placed correctly.
+     */
     @Override
     public boolean placeDice(String name, int index, int x, int y) {
         if (!isDiceAction()) {
@@ -530,6 +562,15 @@ public class MatchMultiplayer extends Match implements Runnable {
         return false;
     }
 
+    /**
+     * Places the dice taken from the bag after using tool card 11.
+     *
+     * @param name Player's name
+     * @param x    row index of the chosen dice new position in the player's scheme card
+     * @param y    column index of the chosen dice new position in the player's scheme card
+     * @return true if the player is allowed to place a dice (if isDiceAction()==true the player has already
+     * placed a dice in this turn) and the dice is placed correctly.
+     */
     @Override
     public boolean placeDiceTool11(String name, int x, int y) {
         if (!isDiceAction()) {
@@ -546,6 +587,17 @@ public class MatchMultiplayer extends Match implements Runnable {
         return false;
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool 1.
+     * This tool card allows the player to increment or decrement by 1 the value of a chosen dice in the reserve.
+     * The player can't increment the value of a dice with value 6 and can't decrement the value of a dice with value 1.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param diceChosen         Dice from the reserve whose value is modified.
+     * @param incrOrDecr         Choice made by the player.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard1(int diceToBeSacrificed, int diceChosen, String incrOrDecr, String name) {
         if (!isToolAction()) {
@@ -566,6 +618,19 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Method used to set the parameters needed by the effects of tool cards 2 and 3.
+     * Both tool cards allow the player to move a dice in his scheme card.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param n                  index of the tool card selected (it can be 2 or 3).
+     * @param startX             Row index of the chosen dice to move.
+     * @param startY             Column index of the chosen dice to move.
+     * @param finalX             Row index of the chosen dice new position.
+     * @param finalY             Column index of the chosen dice new position.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard2or3(int diceToBeSacrificed, int n, int startX, int startY, int finalX, int finalY, String name) {
         if (!isToolAction()) {
@@ -588,8 +653,25 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 4.
+     * This tool card allows the player to move exactly 2 dices in his scheme card.
+     * The player has to consider all placement rules.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param startX1            Row index of the first chosen dice to move.
+     * @param startY1            Column index of the first chosen dice to move.
+     * @param finalX1            Row index of the first chosen dice new position.
+     * @param finalY1            Column index of the first chosen dice new position.
+     * @param startX2            Row index of the second chosen dice to move.
+     * @param startY2            Column index of the second chosen dice to move.
+     * @param finalX2            Row index of the second chosen dice new position.
+     * @param finalY2            Column index of the second chosen dice new position.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
-    public boolean useToolCard4(int diceToBeSacrificedd, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
+    public boolean useToolCard4(int diceToBeSacrificed, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
         if (!isToolAction()) {
             getPlayer(name).setStartX1(startX1);
             getPlayer(name).setStartY1(startY1);
@@ -614,6 +696,17 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 5.
+     * This tool card allows the player to switch a dice chosen from the reserve with a dice in the round track.
+     *
+     * @param diceToBeSacrificed  Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param diceChosen          Dice from the reserve to swap with the dice from the round track.
+     * @param roundChosen         Round slot in the round track from which the player wants to take a dice.
+     * @param diceChosenFromRound Position index of the chosen dice in the round slot.
+     * @param name                Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard5(int diceToBeSacrificed, int diceChosen, int roundChosen, int diceChosenFromRound, String name) {
         if (!isToolAction()) {
@@ -647,6 +740,15 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 6.
+     * This tool card allows the player to re roll a chosen dice in the reserve.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param diceChosen         Dice from the reserve to re roll.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard6(int diceToBeSacrificed, int diceChosen, String name) {
         if (!isToolAction()) {
@@ -666,6 +768,14 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 7.
+     * This tool card allows the player to re roll all the dices in the reserve.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard7(int diceToBeSacrificed, String name) {
         if (!isToolAction()) {
@@ -684,6 +794,14 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 8.
+     * This tool card allows the player to choose and place a second dice in his first turn.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard8(int diceToBeSacrificed, String name) {
         if (!isToolAction()) {
@@ -700,6 +818,18 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 9.
+     * This tool card allows the player to place one chosen dice from the reserve anywhere in his scheme card.
+     * The new dice must not have any adjacent dice and the player has to consider all constraints.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param diceChosen         Dice from the reserve to place in the player's scheme card.
+     * @param finalX1            Row index of the chosen dice new position.
+     * @param finalY1            Column index of the chosen dice new position.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard9(int diceToBeSacrificed, int diceChosen, int finalX1, int finalY1, String name) {
         if (!isToolAction() && !isDiceAction()) {
@@ -723,6 +853,16 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 10.
+     * This tool card allows the player to put a chosen dice from the reserve upside down.
+     * It means that if the dice value is 6, after using the tool card it'll be 1, if it's 5, it'll be 2 and so on.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param diceChosen         Dice from the reserve to put upside down.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard10(int diceToBeSacrificed, int diceChosen, String name) {
         if (!isToolAction()) {
@@ -740,6 +880,16 @@ public class MatchMultiplayer extends Match implements Runnable {
         } else return false;
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 11.
+     * This tool card allows the player to put a dice of the reserve back in the dices bag, and get a new dice from the
+     * bag.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param diceChosen         Dice from the reserve to put back in the dices bag.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard11(int diceToBeSacrificed, int diceChosen, String name) {
         if (!(isToolAction() || isDiceAction())) {
@@ -752,6 +902,26 @@ public class MatchMultiplayer extends Match implements Runnable {
         } else return false;
     }
 
+    /**
+     * Method used to set the parameters needed by the effect of tool card 12.
+     * This tool card allows the player to move up to 2 dices in his scheme card. These dices must have the same color
+     * of a dice in the round track.
+     * The player has to consider all placement rules.
+     *
+     * @param diceToBeSacrificed Dice from the reserve to be sacrificed in order to use this tool card.
+     * @param roundFromTrack     Round slot in round track from which the player wants to choose a dice.
+     * @param diceInRound        Index of the chosen dice from the round slot.
+     * @param startX1            Row index of the first chosen dice to move.
+     * @param startY1            Column index of the first chosen dice to move.
+     * @param finalX1            Row index of the first chosen dice new position.
+     * @param finalY1            Column index of the first chosen dice new position.
+     * @param startX2            Row index of the second chosen dice to move.
+     * @param startY2            Column index of the second chosen dice to move.
+     * @param finalX2            Row index of the second chosen dice new position.
+     * @param finalY2            Column index of the second chosen dice new position.
+     * @param name               Player's name.
+     * @return True if the player hasn't used other tool cards in this turn and the card effect is applied correctly.
+     */
     @Override
     public boolean useToolCard12(int diceToBeSacrificed, int roundFromTrack, int diceInRound, int startX1, int startY1, int finalX1, int finalY1, int startX2, int startY2, int finalX2, int finalY2, String name) {
         if (!isToolAction()) {
@@ -890,6 +1060,12 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Send the response to a client's request.
+     *
+     * @param player   is the username of the player who sent a request.
+     * @param response is the server response.
+     */
     public void notifyToSocketClient(PlayerMultiplayer player, Response response) {
         if (socketObservers.get(player) != null) {
             try {
@@ -902,10 +1078,16 @@ public class MatchMultiplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Removes the names of all disconnected players from the map multiPlayerMatches and from takenUsernames.
+     */
     void deleteDisconnectedClients() {
         lobby.deleteDisconnectedClients(players.stream().map(Player::getName).collect(Collectors.toList()));
     }
 
+    /**
+     * Called when a match has to terminate. Removes the name of the player from the map multiPlayerMatches and from takenUsernames.
+     */
     @Override
     public void terminateMatch() {
         lobby.removeFromMatchMulti(players.get(0).getName());

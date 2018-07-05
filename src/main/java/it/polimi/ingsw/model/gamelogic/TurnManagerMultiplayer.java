@@ -23,6 +23,12 @@ public class TurnManagerMultiplayer implements Runnable {
     private boolean timerExpired; // it's used to avoid double canceling of timer
     private int currentTurn;
 
+    /**
+     * Constructor for TurnManagerMultiplayer.
+     *
+     * @param match is the current multi player match.
+     * @param turnTime is the time limit for each player's turn.
+     */
     TurnManagerMultiplayer(MatchMultiplayer match, int turnTime) {
         this.turnTime = turnTime;
         this.match = match;

@@ -25,6 +25,12 @@ public class TurnManagerSingleplayer implements Runnable {
     private boolean expired; // it's used to avoid double canceling of timer
     private int currentTurn;
 
+    /**
+     * Constructor for TurnManagerSingleplayer.
+     *
+     * @param match is the current single player match.
+     * @param turnTime is the time limit for each player's turn.
+     */
     TurnManagerSingleplayer(MatchSingleplayer match, int turnTime) {
         this.turnTime = turnTime;
         this.match = match;

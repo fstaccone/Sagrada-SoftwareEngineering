@@ -13,6 +13,12 @@ public class ToolCard {
     private String description;
     private Colors color;
 
+    /**
+     * Constructor for ToolCard.
+     *
+     * @param name of the tool card.
+     * @param toolID ID of the tool card.
+     */
     public ToolCard(String name, String toolID) {
         this.name = name;
         switch (this.name) {
@@ -92,6 +98,13 @@ public class ToolCard {
         this.toolID = toolID;
     }
 
+    /**
+     * Called when a player wants to use a tool card.
+     *
+     * @param caller is the player that wants to use a tool card.
+     * @param match is the player's match.
+     * @return true if the tool card effect is correctly applied.
+     */
     public boolean useCard(Player caller, Match match) {
         return effect.applyEffect(caller, match);
     }

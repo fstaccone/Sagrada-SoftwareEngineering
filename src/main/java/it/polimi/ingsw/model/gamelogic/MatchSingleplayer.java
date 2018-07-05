@@ -705,10 +705,9 @@ public class MatchSingleplayer extends Match implements Runnable {
     }
 
     /**
-     * +     * Cancel timer if the client linked to this match is connected. The client, after receiving a notify calls this method
-     * +     *
-     * +     * @param username is not useful in this method, but this is an abstract method of the superclass Match
-     * +
+     * Cancel timer if the client linked to this match is connected. The client, after receiving a notify calls this method
+     *
+     * @param username is not useful in this method, but this is an abstract method of the superclass Match
      */
     @Override
     public void ping(String username) {
@@ -746,6 +745,11 @@ public class MatchSingleplayer extends Match implements Runnable {
         }
     }
 
+    /**
+     * Initializes a timer waiting for a ping response.
+     *
+     * @param name is the username of the player from which the timer waits for a ping response.
+     */
     void initializePingTimer(String name) {
         PingTimerSingle task = new PingTimerSingle(name, lobby);
         pingTimer = new Timer();

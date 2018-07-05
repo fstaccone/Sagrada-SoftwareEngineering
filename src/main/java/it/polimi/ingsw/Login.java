@@ -13,6 +13,11 @@ import javafx.stage.Stage;
 public class Login extends Application {
     private Stage window;
 
+    /**
+     * Launches the login window.
+     *
+     * @param primaryStage is the stage where the login window is shown.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 

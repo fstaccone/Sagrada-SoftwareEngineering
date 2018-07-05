@@ -28,6 +28,9 @@ public class Server {
     private static int waitingTime;
     private static int turnTime;
 
+    /**
+     * Reads the configuration file and starts RMI registry and socket server.
+     */
     public static void main(String[] args) throws IOException {
 
         //read configuration file

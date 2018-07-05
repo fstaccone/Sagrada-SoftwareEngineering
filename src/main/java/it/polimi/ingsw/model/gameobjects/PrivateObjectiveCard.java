@@ -9,6 +9,11 @@ public class PrivateObjectiveCard {
 
     private Colors color;
 
+    /**
+     * Constructor for PrivateObjectiveCard.
+     *
+     * @param color is the color of the dices considered by the private objective card for calculating the score.
+     */
     public PrivateObjectiveCard(Colors color) {
         this.color = color;
     }
@@ -17,6 +22,12 @@ public class PrivateObjectiveCard {
         return color;
     }
 
+    /**
+     * Sums the values of all the dices of the same color of the private objective card that are placed in a
+     * player's window pattern card.
+     *
+     * @param player is the player considered for calculating the score.
+     */
     public void useCard(Player player) {
         player.setPointsByPrivateObjective(Arrays.stream(player.getSchemeCard().getWindow())
                 .flatMap(Arrays::stream)

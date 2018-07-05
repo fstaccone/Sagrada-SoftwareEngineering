@@ -11,6 +11,11 @@ public class PublicObjectiveCard {
     private String description;
     private int value;
 
+    /**
+     * Constructor for PublicObjectiveCard.
+     *
+     * @param name is the name of the public objective card.
+     */
     public PublicObjectiveCard(String name) {
         this.name = name;
         switch (this.name) {
@@ -65,6 +70,12 @@ public class PublicObjectiveCard {
 
     }
 
+    /**
+     * Called when a player wants to use a public objective card to calculate his score.
+     *
+     * @param caller is the player that uses the public objective card.
+     * @param match is the match of the player.
+     */
     public void useCard(Player caller, Match match) {
 
         this.effect.applyEffect(caller, match);

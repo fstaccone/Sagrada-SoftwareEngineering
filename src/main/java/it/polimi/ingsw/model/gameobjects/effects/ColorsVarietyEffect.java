@@ -16,7 +16,7 @@ public class ColorsVarietyEffect implements Effect {
      *
      * @param caller is the player that uses this public objective card
      * @param match  is the player's current match
-     * @return
+     * @return false as a default value
      */
     @Override
     public boolean applyEffect(Player caller, Match match) {

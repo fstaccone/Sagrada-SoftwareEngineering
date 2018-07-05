@@ -6,6 +6,11 @@ public class SocketListener implements Runnable {
 
     private SocketController clientController;
 
+    /**
+     * Constructor of SocketListener.
+     *
+     * @param socketController is a client-side controller with socket connection.
+     */
     public SocketListener(SocketController socketController) {
         this.clientController = socketController;
     }

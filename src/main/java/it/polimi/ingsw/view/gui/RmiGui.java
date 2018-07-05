@@ -21,6 +21,14 @@ public class RmiGui extends UnicastRemoteObject implements MatchObserver {
     private boolean reconnection;
     private boolean single;
 
+    /**
+     * Constructor for RmiGui.
+     *
+     * @param fromLogin    is the Stage where the login scene was showed.
+     * @param username     is the name of the GUI owner.
+     * @param controller   is a controller with rmi connection.
+     * @param singleplayer is true if the GUI refers to a single player match, false otherwise.
+     */
     public RmiGui(Stage fromLogin, String username, RemoteController controller, boolean singleplayer) throws RemoteException {
         super();
         this.gui = new Gui(fromLogin, username, controller, null, singleplayer);

@@ -176,6 +176,11 @@ public abstract class Player {
     public int getTurnsLeft() {
         return turnsLeft;
     }
+
+    public Dice getDiceFromBag() {
+        return diceFromBag;
+    }
+
     // end of getters
 
     // setters
@@ -200,14 +205,11 @@ public abstract class Player {
     public void setColor(Colors color) {
         this.color = color;
     }
-    // end of setters
 
     public void setDiceFromBag(Dice diceFromBag) {
         this.diceFromBag = diceFromBag;
     }
 
-    public Dice getDiceFromBag() {
-        return diceFromBag;
-    }
+    // end of setters
 
 }

@@ -101,6 +101,10 @@ public class RoundTrack {
         } else return null;
     }
 
+    /**
+     * @return the score the player has to beat. It's the sum of the values of all the dices in the round track
+     * at the end of the single player match.
+     */
     public int sumForSinglePlayer() {
         return rounds.stream().flatMap(Collection::stream).filter(Objects::nonNull).mapToInt(Dice::getValue).sum();
     }

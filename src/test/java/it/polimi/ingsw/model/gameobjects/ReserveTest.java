@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * All the @Test have the same name of the method they test, check the method implementation for a detailed description
+ */
 public class ReserveTest {
     @Test
     public void Reserve() {

@@ -163,7 +163,6 @@ public class LoginHandler implements Initializable {
      * character. After that, it checks the choices made by the player (single/multi, cli/gui) and initializes the corresponding
      * window.
      *
-     * @throws Exception todo:
      */
     @FXML
     private void playClicked() throws Exception {
@@ -215,7 +214,6 @@ public class LoginHandler implements Initializable {
      * It shows an alert message and if the player clicks on YES it closes the login window and removes the player from
      * the game.
      *
-     * @throws RemoteException todo
      */
     private void onClosing() throws RemoteException {
         ButtonType yes = new ButtonType("SÌ", ButtonBar.ButtonData.YES);
@@ -294,8 +292,6 @@ public class LoginHandler implements Initializable {
      *
      * @param waiting is the new scene (waiting room), to show only if the player chose to play with gui in a
      *                multi player match.
-     * @throws IOException          todo
-     * @throws InterruptedException todo
      */
     private void connectionSetup(Scene waiting) throws IOException, InterruptedException {
         ConnectionStatus status;
@@ -373,7 +369,6 @@ public class LoginHandler implements Initializable {
     /**
      * The connection is established between client and lobby
      *
-     * @throws RemoteException todo
      */
     private void setupRmiConnection() throws RemoteException {
 
@@ -397,7 +392,6 @@ public class LoginHandler implements Initializable {
     /**
      * Sets up the socket connection
      *
-     * @throws IOException todo
      */
     private void setupSocketConnection() throws IOException {
         ObjectInputStream in;
