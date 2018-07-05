@@ -19,9 +19,12 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
 
+    private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
     private static final String SERVER_CONFIG = "/server.config";
     private static int socketPort;
     private static String lobbyName;
@@ -43,21 +46,19 @@ public class Server {
         try {
             LocateRegistry.createRegistry(1099);
             Naming.rebind("//localhost/" + lobbyName, controller);
-
-            System.out.println("RMI server online on port 1099");
+            LOGGER.log(Level.INFO,"RMI server online on port 1099");
         } catch (RemoteException e) {
-            System.out.println("Cannot start RMI registry");
+            LOGGER.log(Level.INFO,"Cannot start RMI registry");
         }
 
         //start Socket connection
         ExecutorService threadPool;
         try (ServerSocket serverSocket = new ServerSocket(socketPort)) {
             threadPool = Executors.newCachedThreadPool();
-            System.out.println("Socket server online on port " + socketPort);
-
+            LOGGER.log(Level.INFO,"Socket server online on port " + socketPort);
             while (serverSocket != null) {
                 Socket Socket = serverSocket.accept();
-                System.out.println("New socket connection: " + Socket.getRemoteSocketAddress());
+                LOGGER.log(Level.INFO,"New socket connection: " + Socket.getRemoteSocketAddress());
                 threadPool.submit(new SocketHandler(Socket, controller));
             }
             serverSocket.close();
@@ -94,7 +95,6 @@ public class Server {
                         lineParser.close();
                     }
                 }
-
             }
 
         } finally {
@@ -102,7 +102,6 @@ public class Server {
                 scanner.close();
             }
         }
-
 
         //values assignment from map to server's attributes
         configValues(valuesMap);
@@ -130,9 +129,8 @@ public class Server {
                     break;
 
                 default:
-                    System.out.println("Unknown parameter in config file");
+                    LOGGER.log(Level.INFO,"Unknown parameter in config file");
             }
         }
-
     }
 }

@@ -6,8 +6,8 @@
 * Staccone Francesco: 		847605 - 10504541
 
 ## Test coverage:
-* global: 42.3
-* related to the model: 
+* global: 42.3% (from Sonar)
+* related to the model: 83% (from IntelliJ)
 
 ## **UML** diagram link:
 * https://github.com/fstaccone/ing-sw-2018-Romeo-Sergi-Staccone/blob/master/uml/uml_final.pdf
@@ -25,7 +25,7 @@
 
 ### Main design patterns used
 We have adopted the *MVC* pattern to develop the whole software structure.
-In particular, we have implemented two different solutions for RMI and Socket. In the first case the controller is placed server side, while in the second case it is logically divided between server and client. This choice is mainly due to the *visitor pattern* used to parse the socket requests and responses, that allow us an easy serialization management through the network. 
+In particular, we have implemented two different solutions for RMI and Socket. In the first case the controller is placed server side, while in the second case it is logically divided between server and client. This choice is mainly due to the *visitor pattern* used to parse the socket requests and responses, that allows us an easy serialization management through the network.
 Moreover, as a consequence of the *MVC*, we have used the *observer pattern* for the sending of notifies from server to client. About design patterns, we have also decided to create the toolcards's effects adopting an hybrid solution between a factory and a *strategy pattern*. (Note about cards: we create only the actual cards randomically drawn to preserve memory)
 We have just differed from regular *MVC* for some requests' syntax checks in view side, to lighten the server load.   
 ### Network management and choices
@@ -40,8 +40,8 @@ There is a minor bug concerning the names management and the reconnection: we ha
 ### Limits
 Since we have tested the whole software using three different operating systems (Windows 10, Ubuntu Linux, MacOS X) and three different screen sizes and resolutions, we have been oblidged to find a compromise. This is represented by the current size of the GameBoard, but in MacBook Pro 13" we need to scale the screen size to obtain the wanted result.
 Then we report the problem met during the JAR execution in the Linux laptop regarding the JavaFX window cutting.
-Finally we have not managed correctly an exception thrown in case of voluntary closure in Match Singleplayer socket.
+Finally, we have not managed correctly an exception thrown in case of voluntary closure in Match Singleplayer, but the server state seems to be preserved.
 
 
-#### note by Francesco Staccone:
+#### Minor note by Francesco Staccone:
 Please note that from 6th may I have changed my local Git username, due to some problems I had with the synchronization of local username and GitHub username. To be more clear, I had to change that because I was committing as "francescostaccone" while my GitHub username was actually "fstaccone", so that I was present neither as a contributor in the folder nor in the statistics made by GitHub. Currently I am present both in the contributors and in the statistics, but my preovious 63 commits (made with "francescostaccone") are not visible there. If you want to check them, they are located in the global list of commits. 
