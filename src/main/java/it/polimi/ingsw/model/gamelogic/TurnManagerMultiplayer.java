@@ -308,9 +308,7 @@ public class TurnManagerMultiplayer implements Runnable {
                 match.getSocketObservers().get(player).writeObject(response);
             } catch (IOException e) {
                 match.getLobby().disconnect(player.getName());
-                //TO BE CHECKED
-                if (response instanceof YourTurnResponse) {
-                    if (match.getPingTimers().get(player.getName()) != null)
+                if (response instanceof YourTurnResponse && match.getPingTimers().get(player.getName()) != null) {
                         match.getPingTimers().get(player.getName()).cancel();
                 }
             }

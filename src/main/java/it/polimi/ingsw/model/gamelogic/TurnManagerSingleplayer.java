@@ -138,9 +138,7 @@ public class TurnManagerSingleplayer implements Runnable {
             try {
                 match.initializePingTimer(match.getPlayer().getName());
                 match.getObserverSocket().writeObject(new YourTurnResponse(true, match.getBoard().getReserve().getDices().toString(), match.getCurrentRound() + 1, currentTurn));
-                //match.getObserverSocket().reset();
             } catch (IOException e) {
-                //CHIUSURA TIMER?
                 match.terminateMatch();
                 LOGGER.log(Level.INFO, MESSAGE_INTERRUPTED);
             }
