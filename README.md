@@ -1,9 +1,9 @@
-# ing-sw-2018-Romeo-Sergi-Staccone
+# Software Engineering 1
 
-## Students' Matricola and Codice persona:
-* Romeo Paolo: 			846080 - 10542300
-* Sergi Guido: 			844175 - 10494956
-* Staccone Francesco: 		847605 - 10504541
+## Team
+* Romeo Paolo
+* Sergi Guido
+* Staccone Francesco
 
 ## Test coverage:
 * global: 42.3% (from Sonar)
